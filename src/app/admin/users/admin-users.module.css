@@ -1,0 +1,324 @@
+/* Admin Users Page Styles */
+
+.page {
+    background-color: var(--color-gray-light);
+    min-height: 100vh;
+    padding: var(--space-2xl) var(--container-padding);
+    margin-top: 80px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2xl);
+    flex-wrap: wrap;
+    gap: var(--space-md);
+}
+
+.header h1 {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 900;
+    color: var(--color-black);
+}
+
+.backLink {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-lg);
+    background: transparent;
+    color: var(--color-gray-dark);
+    border: 2px solid var(--color-gray);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all var(--transition-normal);
+}
+
+.backLink:hover {
+    background: var(--color-black);
+    color: var(--color-white);
+    border-color: var(--color-black);
+}
+
+/* Users Grid */
+.usersGrid {
+    display: grid;
+    gap: var(--space-lg);
+}
+
+.userCard {
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all var(--transition-normal);
+}
+
+.userCard:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+/* User Header */
+.userHeader {
+    background: var(--color-black);
+    padding: var(--space-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+}
+
+.userInfo h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-white);
+    margin-bottom: var(--space-xs);
+}
+
+.userInfo p {
+    font-size: 0.95rem;
+    color: var(--color-gray-light);
+}
+
+.userBadges {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 0.375rem 0.875rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badgeVerified {
+    background: var(--color-success);
+    color: white;
+}
+
+.badgeNotVerified {
+    background: var(--color-warning);
+    color: white;
+}
+
+.badgeRole {
+    background: var(--color-yellow);
+    color: var(--color-black);
+}
+
+/* Purchases Section */
+.purchasesSection {
+    padding: var(--space-lg);
+}
+
+.sectionTitle {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-black);
+    margin-bottom: var(--space-md);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.purchasesList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-md);
+}
+
+.purchaseItem {
+    background: var(--color-gray-light);
+    padding: var(--space-lg);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-normal);
+}
+
+.purchaseItem:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.purchaseHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    gap: var(--space-md);
+}
+
+.courseTitle {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-black);
+    flex: 1;
+}
+
+.purchaseAmount {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: var(--color-success);
+    white-space: nowrap;
+}
+
+.discountsInfo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    font-size: 0.875rem;
+}
+
+.discountRow {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: var(--space-md);
+    color: var(--color-gray-dark);
+    align-items: center;
+}
+
+.discountLabel {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-weight: 500;
+}
+
+.discountValue {
+    font-weight: 700;
+    color: var(--color-black);
+    text-align: right;
+}
+
+.originalPrice {
+    text-decoration: line-through;
+    opacity: 0.6;
+    color: var(--color-error);
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-md);
+    margin-top: var(--space-2xl);
+    padding: var(--space-lg);
+}
+
+.paginationButton {
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-black);
+    color: var(--color-white);
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.paginationButton:hover:not(:disabled) {
+    background: var(--color-yellow);
+    color: var(--color-black);
+    transform: translateY(-2px);
+}
+
+.paginationButton:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.pageInfo {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-black);
+    padding: 0 var(--space-md);
+}
+
+.noPurchases {
+    text-align: center;
+    padding: var(--space-xl);
+    color: var(--color-gray-dark);
+    font-style: italic;
+}
+
+/* Empty State */
+.emptyState {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.emptyState svg {
+    font-size: 3rem;
+    color: var(--color-gray);
+    margin-bottom: var(--space-md);
+}
+
+.emptyState p {
+    color: var(--color-gray-dark);
+    font-size: 1.125rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .page {
+        padding: var(--space-xl) var(--container-padding);
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .userHeader {
+        flex-direction: column;
+    }
+
+    .purchaseHeader {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .discountRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-xs);
+    }
+}
+
+@media (max-width: 480px) {
+    .userHeader {
+        padding: var(--space-md);
+    }
+
+    .purchasesSection {
+        padding: var(--space-md);
+    }
+
+    .userBadges {
+        width: 100%;
+    }
+}
+
+/* 4K and Large Screens */
+@media (min-width: 2560px) {
+    .usersGrid {
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+}

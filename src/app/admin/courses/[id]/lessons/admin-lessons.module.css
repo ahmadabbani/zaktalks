@@ -1,0 +1,494 @@
+/* Admin Lessons Page Styles */
+
+.page {
+    background-color: var(--color-gray-light);
+    min-height: 100vh;
+    padding: var(--space-2xl) var(--container-padding);
+    margin-top: 80px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.backLink {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: var(--color-gray-dark);
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    transition: all var(--transition-normal);
+}
+
+.backLink:hover {
+    opacity: 0.7;
+}
+
+.pageTitle {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 900;
+    color: var(--color-black);
+    margin-bottom: var(--space-2xl);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+    flex-wrap: wrap;
+    gap: var(--space-md);
+}
+
+.header h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-black);
+    margin: 0;
+}
+
+.headerActions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.saveOrderButton {
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-black);
+    color: var(--color-white);
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.saveOrderButton:hover:not(:disabled) {
+    opacity: 0.85;
+    transform: translateY(-2px);
+}
+
+.saveOrderButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.addButton {
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-yellow);
+    color: var(--color-black);
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.addButton:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+}
+
+/* Form Styles */
+.formCard {
+    background: white;
+    padding: var(--space-2xl);
+    border-radius: 1rem;
+    margin-bottom: var(--space-xl);
+    border: 2px solid var(--color-yellow);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.formTitle {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-black);
+    margin-bottom: var(--space-lg);
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+}
+
+.formSection {
+    margin-bottom: var(--space-lg);
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.formGroup label {
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--color-black);
+    margin-bottom: 4px;
+}
+
+.formGroup input,
+.formGroup textarea,
+.formGroup select {
+    padding: var(--space-sm) var(--space-md);
+    border: 2px solid var(--color-gray);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all var(--transition-normal);
+    background: white;
+    color: var(--color-black);
+    font-family: inherit;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus,
+.formGroup select:focus {
+    outline: none;
+    border-color: var(--color-yellow);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+}
+
+/* Custom Select Dropdown */
+.formGroup select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23000' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+.formGroup select:hover {
+    border-color: var(--color-yellow);
+}
+
+.formGroup select option {
+    background: white;
+    color: var(--color-black);
+    padding: 12px;
+    line-height: 1.5;
+}
+
+.formGroup textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.formActions {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-2xl);
+}
+
+.submitButton {
+    padding: var(--space-sm) var(--space-xl);
+    background: var(--color-yellow);
+    color: var(--color-black);
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.submitButton:hover:not(:disabled) {
+    opacity: 0.85;
+    transform: translateY(-2px);
+}
+
+.submitButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cancelButton {
+    padding: var(--space-sm) var(--space-xl);
+    background: transparent;
+    color: var(--color-black);
+    border: 2px solid var(--color-gray);
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.cancelButton:hover {
+    background: var(--color-gray-light);
+}
+
+/* Lesson List */
+.lessonList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.lessonItem {
+    background: white;
+    padding: var(--space-md) var(--space-lg);
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all var(--transition-normal);
+    cursor: grab;
+    border: 2px solid transparent;
+}
+
+.lessonItem:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-yellow);
+}
+
+.lessonItem.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+.lessonItem.dragOver {
+    border-color: var(--color-yellow);
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.dragHandle {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: var(--color-gray-dark);
+    cursor: grab;
+    padding: var(--space-xs);
+}
+
+.dragHandle:active {
+    cursor: grabbing;
+}
+
+.lessonIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 0.5rem;
+    color: var(--color-yellow);
+    font-size: 1.25rem;
+}
+
+.lessonContent {
+    flex: 1;
+}
+
+.lessonTitle {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--color-black);
+    margin-bottom: 4px;
+}
+
+.lessonMeta {
+    font-size: 0.75rem;
+    color: var(--color-gray-dark);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.lessonActions {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.iconButton {
+    background: var(--color-gray-light);
+    border: none;
+    cursor: pointer;
+    padding: var(--space-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    transition: all var(--transition-normal);
+    color: var(--color-gray-dark);
+}
+
+.iconButton.edit {
+    color: var(--color-yellow);
+}
+
+.iconButton.edit:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+}
+
+.iconButton.delete {
+    color: var(--color-error);
+}
+
+.iconButton.delete:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+}
+
+/* Empty State */
+.emptyState {
+    background: white;
+    padding: 4rem 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.emptyState p {
+    color: var(--color-gray-dark);
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Delete Lesson Modal */
+.lessonDeleteModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: var(--space-md);
+}
+
+.lessonDeleteModalContent {
+    background: white;
+    border-radius: 1rem;
+    padding: var(--space-2xl);
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.lessonDeleteModalTitle {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--color-error);
+    margin-bottom: var(--space-md);
+}
+
+.lessonDeleteModalMessage {
+    font-size: 1rem;
+    color: var(--color-black);
+    margin-bottom: var(--space-md);
+    line-height: 1.5;
+}
+
+.lessonDeleteModalMessage strong {
+    color: var(--color-error);
+}
+
+.lessonDeleteModalWarning {
+    font-size: 0.875rem;
+    color: var(--color-gray-dark);
+    margin-bottom: var(--space-lg);
+    font-weight: 600;
+}
+
+.lessonDeleteModalActions {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+}
+
+.lessonDeleteCancelButton {
+    flex: 1;
+    padding: 12px 24px;
+    background: transparent;
+    color: var(--color-black);
+    border: 2px solid var(--color-gray);
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.lessonDeleteCancelButton:hover:not(:disabled) {
+    background: var(--color-gray-light);
+}
+
+.lessonDeleteCancelButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.lessonDeleteConfirmButton {
+    flex: 1;
+    padding: 12px 24px;
+    background: var(--color-error);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.lessonDeleteConfirmButton:hover:not(:disabled) {
+    background: #c53030;
+    transform: translateY(-2px);
+}
+
+.lessonDeleteConfirmButton:disabled {
+    cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .headerActions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .saveOrderButton,
+    .addButton {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .lessonItem {
+        flex-wrap: wrap;
+    }
+
+    .lessonContent {
+        flex-basis: 100%;
+        order: 2;
+    }
+
+    .lessonActions {
+        order: 3;
+    }
+}

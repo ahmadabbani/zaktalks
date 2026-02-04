@@ -1,0 +1,15 @@
+.authContainer {
+    min-height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xl) 0;
+    margin-top: 80px;
+    background: var(--color-white)
+}
+
+@media (max-width: 768px) {
+    .authContainer {
+        min-height: calc(100vh - 70px);
+    }
+}

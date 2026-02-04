@@ -1,0 +1,342 @@
+/* Coupon Modal Styles */
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: var(--space-md);
+}
+
+.modalContent {
+    background: white;
+    border-radius: 1rem;
+    padding: var(--space-2xl);
+    width: 100%;
+    max-width: 750px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+}
+
+.modalTitle {
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: var(--color-black);
+    margin: 0;
+}
+
+.closeButton {
+    background: var(--color-gray-light);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-black);
+    transition: all var(--transition-normal);
+}
+
+.closeButton:hover {
+    opacity: 0.65;
+}
+
+/* Error Message */
+.errorMessage {
+    padding: var(--space-md) var(--space-lg);
+    margin-bottom: var(--space-lg);
+    border-radius: 0.75rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 2px solid rgba(239, 68, 68, 0.3);
+    color: #dc2626;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+/* Form Sections */
+.formSection {
+    margin-bottom: var(--space-xl);
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.formLabel {
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--color-black);
+    margin-bottom: 4px;
+}
+
+.required::after {
+    content: ' *';
+    color: var(--color-error);
+}
+
+.formInput {
+    padding: var(--space-sm) var(--space-md);
+    border: 2px solid var(--color-gray);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all var(--transition-normal);
+    background: white;
+    color: var(--color-black);
+    font-family: inherit;
+}
+
+.formInput:focus {
+    outline: none;
+    border-color: var(--color-yellow);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+}
+
+.formInput::placeholder {
+    color: var(--color-gray-dark);
+}
+
+.codeInput {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+}
+
+.formSelect {
+    padding: var(--space-sm) var(--space-md);
+    border: 2px solid var(--color-gray);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all var(--transition-normal);
+    background: white;
+    color: var(--color-black);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23000' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 40px;
+}
+
+.formSelect:focus {
+    outline: none;
+    border-color: var(--color-yellow);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+}
+
+.formSelect option {
+    background: white;
+    color: var(--color-black);
+}
+
+.formHint {
+    font-size: 0.75rem;
+    color: var(--color-gray-dark);
+    margin-top: 4px;
+}
+
+/* Toggle Checkbox */
+.toggleWrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    cursor: pointer;
+    padding: var(--space-md);
+    border-radius: 0.5rem;
+    transition: all var(--transition-normal);
+}
+
+.toggleWrapper:hover {
+    background: var(--color-gray-light);
+}
+
+.toggleSwitch {
+    position: relative;
+    width: 50px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.toggleInput {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.toggleSlider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-gray);
+    border-radius: 14px;
+    transition: all 0.3s ease;
+}
+
+.toggleSlider::before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggleInput:checked+.toggleSlider {
+    background: var(--color-yellow);
+}
+
+.toggleInput:checked+.toggleSlider::before {
+    transform: translateX(22px);
+}
+
+.toggleLabel {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-black);
+    user-select: none;
+}
+
+/* Course Selection */
+.courseSelectionWrapper {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 2px solid var(--color-gray);
+    border-radius: 0.5rem;
+    padding: var(--space-sm);
+}
+
+.courseCheckbox {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    cursor: pointer;
+    border-radius: 0.5rem;
+    transition: all var(--transition-normal);
+    margin-bottom: 4px;
+}
+
+.courseCheckboxSelected {
+    background: rgba(255, 215, 0, 0.15);
+    border: 1px solid var(--color-yellow);
+}
+
+.courseCheckbox:hover {
+    background: var(--color-gray-light);
+}
+
+.courseCheckboxSelected:hover {
+    background: rgba(255, 215, 0, 0.2);
+}
+
+.courseCheckboxInput {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--color-yellow);
+}
+
+.courseCheckboxLabel {
+    font-size: 0.875rem;
+    color: var(--color-black);
+    flex: 1;
+}
+
+/* Form Actions */
+.formActions {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-2xl);
+}
+
+.cancelButton {
+    flex: 1;
+    padding: 12px 16px;
+    background: transparent;
+    color: var(--color-black);
+    border: 2px solid var(--color-gray);
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.cancelButton:hover {
+    background: var(--color-gray-light);
+}
+
+.submitButton {
+    flex: 1;
+    padding: 12px 16px;
+    background: var(--color-yellow);
+    color: var(--color-black);
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    transition: all var(--transition-normal);
+}
+
+.submitButton:hover:not(:disabled) {
+    opacity: 0.85;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+.submitButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .modalContent {
+        padding: var(--space-lg);
+    }
+}

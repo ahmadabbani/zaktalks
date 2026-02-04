@@ -1,0 +1,572 @@
+/* Dashboard Page Styles */
+
+.dashboardWrapper {
+  background-color: var(--color-gray-light);
+  min-height: 100vh;
+  padding-top: 8rem;
+  padding-bottom: 6rem;
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+}
+
+.headerContent h1 {
+  margin-bottom: 0.5rem;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.headerContent h1 .highlight {
+  color: var(--color-yellow-dark);
+  position: relative;
+}
+
+.headerContent p {
+  opacity: 0.6;
+  font-size: clamp(0.95rem, 2vw, 1.125rem);
+  max-width: 500px;
+}
+
+/* Stats Card */
+.statsCard {
+  display: flex;
+  gap: var(--space-md);
+  background: var(--color-black);
+  padding: 1.5rem 2rem;
+  border-radius: 1.25rem;
+  color: var(--color-yellow);
+  box-shadow: 0 8px 24px rgba(241, 196, 15, 0.25);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.statsCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(241, 196, 15, 0.35);
+}
+
+.statItem {
+  text-align: center;
+  padding: 0 1.5rem;
+}
+
+.statItem:not(:last-child) {
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: var(--color-yellow);
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.statValue {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--color-yellow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.resetPasswordBtn {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--color-black);
+  background: var(--color-yellow);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  margin-top: 0.25rem;
+  display: inline-block;
+  transition: all var(--transition-normal);
+}
+
+.resetPasswordBtn:hover {
+  background: white;
+  transform: translateY(-2px);
+}
+
+/* Section Title */
+.sectionTitle {
+  margin-bottom: var(--space-xl);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.sectionTitle svg {
+  color: var(--color-yellow);
+}
+
+/* Courses Grid */
+.coursesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--space-2xl);
+}
+
+/* Course Card */
+.courseCard {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 1rem;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.courseCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  border-color: var(--color-yellow-light);
+}
+
+/* Course Header */
+.courseHeader {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.courseHeader img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.courseCard:hover .courseHeader img {
+  transform: scale(1.05);
+}
+
+.coursePlaceholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--color-yellow) 0%, var(--color-yellow-dark) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coursePlaceholder svg {
+  font-size: 4rem;
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.courseOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
+  color: white;
+}
+
+.courseOverlay h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* Course Content */
+.courseContent {
+  padding: 1.75rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.progressLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-gray);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.progressPercent {
+  font-size: 0.875rem;
+  font-weight: 900;
+  color: var(--color-yellow-dark);
+}
+
+.progressBarWrapper {
+  height: 8px;
+  background: var(--color-gray-light);
+  border-radius: 100px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.progressBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-yellow) 0%, var(--color-yellow-dark) 100%);
+  border-radius: 100px;
+  transition: width var(--transition-slow);
+  position: relative;
+  overflow: hidden;
+}
+
+.progressBarFill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.courseStats {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-bottom: 2rem;
+}
+
+.completedBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-success);
+  font-weight: 700;
+}
+
+.courseActions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* Primary Button */
+.courseActions :global(.btn-primary) {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.875rem 1.5rem;
+  background: var(--color-black);
+  color: var(--color-white);
+  border: 2px solid var(--color-black);
+  border-radius: 0.625rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+
+.courseActions :global(.btn-primary):hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(241, 196, 15, 0.3);
+}
+
+.courseActions :global(.btn-primary) svg {
+  font-size: 0.875rem;
+  position: relative;
+  z-index: 1;
+}
+
+.courseActions :global(.btn-primary)>* {
+  position: relative;
+  z-index: 1;
+}
+
+/* Outline Button */
+.courseActions :global(.btn-outline) {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.875rem 1.5rem;
+  background: transparent;
+  color: var(--color-black);
+  border: 2px solid var(--color-gray);
+  border-radius: 0.625rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+}
+
+.courseActions :global(.btn-outline):hover {
+  background: var(--color-gray-light);
+  border-color: var(--color-black);
+  transform: translateY(-2px);
+}
+
+.courseActions :global(.btn-outline) svg {
+  font-size: 0.875rem;
+}
+
+/* Secondary Button (Yellow) */
+.courseActions :global(.btn-secondary) {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.875rem 1.5rem;
+  background: var(--color-yellow);
+  color: var(--color-black);
+  border: 2px solid var(--color-yellow);
+  border-radius: 0.625rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(241, 196, 15, 0.2);
+}
+
+.courseActions :global(.btn-secondary):hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(241, 196, 15, 0.4);
+}
+
+.courseActions :global(.btn-secondary) svg {
+  font-size: 0.875rem;
+}
+
+/* Success Button (Green - Review Lessons) */
+.courseActions :global(.btn-success) {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.875rem 1.5rem;
+  background: var(--color-success);
+  color: var(--color-white);
+  border: 2px solid var(--color-success);
+  border-radius: 0.625rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+}
+
+.courseActions :global(.btn-success):hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.courseActions :global(.btn-success) svg {
+  font-size: 0.875rem;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 6rem 2rem;
+  background: white;
+  border-radius: 1.25rem;
+  border: 2px dashed var(--color-gray);
+  opacity: 0.8;
+}
+
+.emptyState svg {
+  font-size: 4rem;
+  color: var(--color-gray);
+  margin-bottom: var(--space-md);
+}
+
+.emptyState h3 {
+  margin-bottom: var(--space-sm);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.emptyState p {
+  opacity: 0.6;
+  margin-bottom: 2rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Download Certificate Button Styles */
+.certificateBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: var(--space-md);
+  background: var(--color-black);
+  color: var(--color-white);
+  padding: 0.875rem 1.5rem;
+  border-radius: 0.625rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all var(--transition-normal);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(241, 196, 15, 0.2);
+}
+
+.certificateBtn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(241, 196, 15, 0.35);
+}
+
+.certificateBtn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.certificateBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.certificateBtn svg {
+  font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .coursesGrid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboardWrapper {
+    padding-top: 6rem;
+    padding-bottom: 4rem;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .statsCard {
+    width: 100%;
+    padding: 1.25rem 1.5rem;
+    gap: var(--space-sm);
+  }
+
+  .statItem {
+    padding: 0 1rem;
+  }
+
+  .statValue {
+    font-size: 1.5rem;
+  }
+
+  .coursesGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .courseHeader {
+    height: 160px;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .statsCard {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .statItem {
+    padding: 0;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: var(--space-sm);
+  }
+
+  .statItem:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .courseContent {
+    padding: 1.5rem;
+  }
+
+  .emptyState {
+    padding: 4rem 1.5rem;
+  }
+}
+
+/* 4K and Large Screens */
+@media (min-width: 2560px) {
+  .coursesGrid {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
+
+  .courseHeader {
+    height: 220px;
+  }
+
+  .headerContent h1 {
+    font-size: 3rem;
+  }
+
+  .sectionTitle {
+    font-size: 2.25rem;
+  }
+}

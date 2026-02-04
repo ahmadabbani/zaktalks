@@ -1,0 +1,242 @@
+/* Lesson Player Page Styles */
+
+.lessonPage {
+    padding: var(--space-xl);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Lesson Description at Top */
+.lessonDescription {
+    background: white;
+    padding: var(--space-lg);
+    border-radius: 1rem;
+    margin-bottom: var(--space-xl);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.descriptionTitle {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-yellow);
+    margin-bottom: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.descriptionText {
+    color: var(--color-gray-dark);
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+/* Lesson Header */
+.lessonHeader {
+    margin-bottom: var(--space-xl);
+}
+
+.lessonTitle {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 900;
+    margin-bottom: var(--space-sm);
+    color: var(--color-black);
+    line-height: 1.2;
+}
+
+.lessonMeta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    flex-wrap: wrap;
+}
+
+.completedBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: #22c55e;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    background: rgba(34, 197, 94, 0.1);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: 2rem;
+}
+
+.lessonProgress {
+    font-size: 0.9375rem;
+    color: var(--color-gray-dark);
+    font-weight: 600;
+}
+
+/* Video Content */
+.videoContainer {
+    background: black;
+    border-radius: 1rem;
+    overflow: hidden;
+    margin-bottom: var(--space-xl);
+    width: 100%;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    aspect-ratio: 16/9;
+}
+
+/* Assessment Content */
+.assessmentContainer {
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    margin-bottom: var(--space-xl);
+    width: 100%;
+    min-height: calc(100vh - 300px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.assessmentContent {
+    padding: var(--space-2xl);
+    background: white;
+}
+
+/* Congratulations Card */
+.congratsCard {
+    background: linear-gradient(135deg, var(--color-yellow) 0%, #ffd700 100%);
+    padding: var(--space-2xl);
+    border-radius: 1rem;
+    margin-bottom: var(--space-xl);
+    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xl);
+    flex-wrap: wrap;
+}
+
+.congratsContent {
+    flex: 1;
+    min-width: 250px;
+}
+
+.congratsTitle {
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: var(--color-black);
+    margin: 0 0 var(--space-sm) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.congratsIcon {
+    font-size: 2rem;
+}
+
+.congratsMessage {
+    font-size: 1rem;
+    color: var(--color-black);
+    margin: 0;
+    opacity: 0.85;
+    font-weight: 600;
+}
+
+.certificateButton {
+    padding: var(--space-md) var(--space-2xl);
+    background: var(--color-black);
+    color: var(--color-yellow);
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 1.125rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    white-space: nowrap;
+}
+
+.certificateButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Navigation */
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-2xl);
+}
+
+.navButton {
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    border: 2px solid;
+}
+
+.prevButton {
+    background: white;
+    color: var(--color-black);
+    border-color: var(--color-gray);
+}
+
+.prevButton:hover {
+    background: var(--color-gray-light);
+    transform: translateX(-4px);
+}
+
+.nextButton {
+    background: var(--color-yellow);
+    color: var(--color-black);
+    border-color: var(--color-yellow);
+}
+
+.nextButton:hover {
+    opacity: 0.9;
+    transform: translateX(4px);
+}
+
+.dashboardButton {
+    background: var(--color-black);
+    color: var(--color-yellow);
+    border-color: var(--color-black);
+}
+
+.dashboardButton:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .lessonPage {
+        padding: var(--space-lg) var(--space-md);
+    }
+
+    .congratsCard {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .congratsTitle {
+        justify-content: center;
+    }
+
+    .navigation {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .navButton {
+        width: 100%;
+        justify-content: center;
+    }
+}

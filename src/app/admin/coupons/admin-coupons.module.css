@@ -1,0 +1,383 @@
+/* Admin Coupons Page Styles */
+
+.page {
+    background-color: var(--color-gray-light);
+    min-height: 100vh;
+    padding: var(--space-2xl) var(--container-padding);
+    margin-top: 80px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.headerIcon {
+    color: var(--color-yellow);
+    font-size: 2rem;
+}
+
+.backLink {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: var(--color-gray-dark);
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+    transition: all var(--transition-normal);
+}
+
+.backLink:hover {
+    opacity: 0.85;
+}
+
+.pageTitle {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 900;
+    color: var(--color-black);
+    margin: 0;
+}
+
+.description {
+    color: var(--color-gray-dark);
+    margin-bottom: var(--space-xl);
+    max-width: 700px;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Create Button */
+.createButton {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-yellow);
+    color: var(--color-black);
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    transition: all var(--transition-normal);
+}
+
+.createButton:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+/* Empty State */
+.emptyState {
+    background: white;
+    padding: 4rem 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.emptyIcon {
+    font-size: 3rem;
+    color: var(--color-gray);
+    margin-bottom: var(--space-lg);
+}
+
+.emptyText {
+    color: var(--color-gray-dark);
+    font-size: 1rem;
+}
+
+/* Table Styles */
+.tableWrapper {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableHead {
+    background: var(--color-black);
+}
+
+.tableHeadCell {
+    padding: var(--space-md) var(--space-lg);
+    text-align: left;
+    font-weight: 800;
+    font-size: 0.875rem;
+    color: var(--color-white);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tableHeadCellCenter {
+    text-align: center;
+}
+
+.tableBody {
+    background: white;
+}
+
+.tableRow {
+    border-bottom: 1px solid var(--color-gray-light);
+    transition: all var(--transition-normal);
+}
+
+.tableRowInactive {
+    opacity: 0.5;
+}
+
+.tableCell {
+    padding: var(--space-md) var(--space-lg);
+    color: var(--color-black);
+}
+
+.tableCellCenter {
+    text-align: center;
+}
+
+/* Coupon Code Badge */
+.codebadge {
+    display: inline-block;
+    background: rgba(255, 215, 0, 0.15);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: 0.5rem;
+    color: var(--color-black);
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+    border: 2px solid var(--color-yellow);
+}
+
+/* Discount Display */
+.discountDisplay {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-weight: 600;
+}
+
+.discountIcon {
+    color: var(--color-yellow);
+}
+
+/* Usage Display */
+.usageDisplay {
+    font-weight: 600;
+}
+
+.usageLabel {
+    font-size: 0.75rem;
+    color: var(--color-gray-dark);
+    display: block;
+    margin-top: 2px;
+}
+
+/* Expiry Display */
+.expiryText {
+    font-size: 0.875rem;
+}
+
+.expiryExpired {
+    color: var(--color-error);
+    font-weight: 600;
+}
+
+/* Course Names */
+.courseNames {
+    font-size: 0.875rem;
+    color: var(--color-gray-dark);
+}
+
+/* Toggle Button */
+.toggleButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--space-xs);
+    transition: all var(--transition-normal);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggleButton:hover {
+    opacity: 0.7;
+}
+
+.toggleActive {
+    color: var(--color-yellow);
+}
+
+.toggleInactive {
+    color: var(--color-gray);
+}
+
+/* Action Buttons */
+.actionButtons {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.actionButton {
+    background: var(--color-gray-light);
+    border: none;
+    padding: var(--space-sm);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: normal;
+}
+
+.actionButton:hover:not(:disabled) {
+    opacity: 0.85;
+    transform: translateY(-2px);
+}
+
+.actionButton:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.editButton {
+    color: var(--color-yellow);
+}
+
+.deleteButton {
+    color: var(--color-error);
+}
+
+/* Delete Modal */
+.deleteModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: var(--space-md);
+}
+
+.deleteModalContent {
+    background: white;
+    border-radius: 1rem;
+    padding: vaR(--space-2xl);
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.deleteModalTitle {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--color-error);
+    margin-bottom: var(--space-md);
+}
+
+.deleteModalMessage {
+    font-size: 1rem;
+    color: var(--color-black);
+    margin-bottom: var(--space-md);
+    line-height: 1.5;
+}
+
+.deleteModalMessage strong {
+    color: var(--color-error);
+}
+
+.deleteModalWarning {
+    font-size: 0.875rem;
+    color: var(--color-gray-dark);
+    margin-bottom: var(--space-lg);
+    font-weight: 600;
+}
+
+.deleteModalActions {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+}
+
+.deleteCancelButton {
+    flex: 1;
+    padding: 12px 24px;
+    background: transparent;
+    color: var(--color-black);
+    border: 2px solid var(--color-gray);
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.deleteCancelButton:hover:not(:disabled) {
+    background: var(--color-gray-light);
+}
+
+.deleteCancelButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.deleteConfirmButton {
+    flex: 1;
+    padding: 12px 24px;
+    background: var(--color-error);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.deleteConfirmButton:hover:not(:disabled) {
+    background: #c53030;
+    transform: translateY(-2px);
+}
+
+.deleteConfirmButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .tableWrapper {
+        overflow-x: auto;
+    }
+
+    .table {
+        min-width: 1000px;
+    }
+}
+
+@media (max-width: 768px) {
+    .page {
+        padding: var(--space-xl) var(--space-md);
+    }
+}

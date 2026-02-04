@@ -1,0 +1,415 @@
+.pageWrapper {
+    background-color: var(--color-white);
+    min-height: 100vh;
+}
+
+.hero {
+    padding-top: 10rem;
+    padding-bottom: 6rem;
+    background: var(--color-black);
+    color: var(--color-white);
+    position: relative;
+    overflow: hidden;
+}
+
+.heroBackground {
+    position: absolute;
+    top: -10%;
+    right: -10%;
+    width: 40%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(241, 196, 15, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.heroContainer {
+    position: relative;
+    z-index: 2;
+}
+
+.heroGrid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--space-2xl);
+    align-items: center;
+}
+
+.badgeWrapper {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: var(--space-md);
+}
+
+.premiumBadge {
+    background-color: var(--color-yellow);
+    color: var(--color-black);
+    padding: 0.2rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.lessonsBadge {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--color-white);
+    padding: 0.2rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+}
+
+.title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    margin-bottom: var(--space-md);
+    color: var(--color-white);
+    line-height: 1.1;
+    letter-spacing: -1px;
+}
+
+.heroDescription {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    margin-bottom: var(--space-2xl);
+    line-height: 1.6;
+    max-width: 600px;
+}
+
+.tutorHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: var(--color-yellow);
+}
+
+.cardWrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.detailsCard {
+    width: 100%;
+    max-width: 400px;
+    background: #3a3a3a;
+    border: 1px solid rgba(241, 196, 15, 0.2);
+    color: var(--color-white);
+    padding: var(--space-xl);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    border-radius: 30px;
+    position: relative;
+}
+
+.priceTag {
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: var(--space-xs);
+    color: var(--color-yellow);
+}
+
+.priceSub {
+    opacity: 0.6;
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-xl);
+}
+
+.cardFeatures {
+    margin-top: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.featureItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: var(--font-size-sm);
+    opacity: 0.9;
+}
+
+.gallerySection {
+    padding: var(--space-3xl) 0;
+    background-color: var(--color-gray-light);
+    position: relative;
+}
+
+.galleryContent {
+    display: flex;
+    justify-content: center;
+}
+
+.galleryWrapper {
+    width: 100%;
+    max-width: 900px;
+}
+
+@media (max-width: 768px) {
+    .gallerySection {
+        padding: var(--space-2xl) 0;
+    }
+}
+
+.mainContent {
+    padding: 6rem 0;
+}
+
+.mainGrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 4rem;
+}
+
+.infoBlock {
+    margin-bottom: 4rem;
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: var(--space-lg);
+}
+
+.sectionHeader h2 {
+    margin-bottom: 0;
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.benefitsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.benefitCard {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: var(--color-gray-light);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.benefitText {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-black);
+    font-weight: 500;
+}
+
+.offersList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.offerItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.paragraph {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--color-gray-dark);
+}
+
+.tutorBlock {
+    padding: 3rem;
+    background: var(--color-black);
+    color: var(--color-white);
+    border-radius: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.instructorName {
+    color: var(--color-yellow);
+    margin-bottom: var(--space-sm);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.instructorBio {
+    opacity: 0.8;
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+.faqSection {
+    margin-top: 4rem;
+}
+
+.guaranteeBox {
+    margin-top: 4rem;
+    padding: 3rem;
+    background: var(--color-white);
+    border: 2px solid var(--color-yellow);
+    border-radius: 30px;
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+    box-shadow: var(--shadow-lg);
+}
+
+.guaranteeIcon {
+    background: var(--color-black);
+    color: var(--color-yellow);
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    flex-shrink: 0;
+    box-shadow: 0 10px 30px rgba(241, 196, 15, 0.3);
+}
+
+.guaranteeTitle {
+    margin-bottom: 0.5rem;
+    color: var(--color-black);
+    font-weight: 800;
+}
+
+.guaranteeText {
+    opacity: 0.8;
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.curriculumColumn {
+    position: relative;
+}
+
+.stickySide {
+    position: sticky;
+    top: 120px;
+}
+
+.curriculumList {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 25px;
+    overflow: hidden;
+    background: var(--color-white);
+    box-shadow: var(--shadow-md);
+}
+
+.curriculumItem {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    transition: background 0.3s ease;
+}
+
+.curriculumItem:last-child {
+    border-bottom: none;
+}
+
+.curriculumItem:hover {
+    background: var(--color-gray-light);
+}
+
+.itemIndex {
+    opacity: 0.3;
+    font-size: 0.85rem;
+    font-weight: 700;
+    min-width: 24px;
+}
+
+.itemContent {
+    flex: 1;
+}
+
+.itemTitle {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    color: var(--color-black);
+}
+
+.itemMeta {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.upsellBox {
+    margin-top: 2rem;
+    padding: 2rem;
+    /*background: linear-gradient(135deg, rgba(241, 196, 15, 0.1) 0%, rgba(241, 196, 15, 0.05) 100%);*/
+    background-color: var(--color-white);
+    border-radius: 25px;
+    text-align: center;
+    border: 1px dashed var(--color-yellow);
+}
+
+.upsellText {
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    margin-bottom: var(--space-md);
+    color: var(--color-black);
+}
+
+.enrolledBtn {
+    width: 100%;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-yellow);
+    color: var(--color-black);
+    border-radius: 50px;
+    transition: all var(--transition-normal);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.enrolledBtn:hover {
+    background-color: var(--color-black);
+    color: var(--color-yellow);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 1024px) {
+
+    .heroGrid,
+    .mainGrid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .stickySide {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding-top: 8rem;
+    }
+
+    .benefitsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .guaranteeBox {
+        flex-direction: column;
+        text-align: center;
+        padding: 2rem;
+    }
+}

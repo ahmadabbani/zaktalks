@@ -1,0 +1,224 @@
+/* Admin Settings Page Styles */
+
+.page {
+    background-color: var(--color-gray-light);
+    min-height: 100vh;
+    padding: var(--space-2xl) var(--container-padding);
+    margin-top: 80px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.headerIcon {
+    color: var(--color-yellow);
+    font-size: 2rem;
+}
+
+.backLink {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: var(--color-gray-dark);
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+    transition: all var(--transition-normal);
+}
+
+.backLink:hover {
+    opacity: 0.85;
+}
+
+.pageTitle {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 900;
+    color: var(--color-black);
+    margin: 0;
+}
+
+.description {
+    color: var(--color-gray-dark);
+    margin-bottom: var(--space-2xl);
+    max-width: 700px;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Form Styles */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+}
+
+.settingCard {
+    background: white;
+    padding: var(--space-2xl);
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all var(--transition-normal);
+}
+
+.settingCard:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.settingHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.settingIcon {
+    color: var(--color-yellow);
+    font-size: 1.5rem;
+}
+
+.settingTitle {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-black);
+    margin: 0;
+}
+
+.settingDescription {
+    color: var(--color-gray-dark);
+    font-size: 0.875rem;
+    margin-bottom: var(--space-lg);
+    line-height: 1.5;
+}
+
+.inputGroup {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.numberInput {
+    width: 150px;
+    padding: var(--space-md);
+    border: 2px solid var(--color-gray);
+    border-radius: 0.5rem;
+    background: white;
+    color: var(--color-black);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    transition: all var(--transition-normal);
+}
+
+.numberInput:focus {
+    outline: none;
+    border-color: var(--color-yellow);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+}
+
+.numberInput:disabled {
+    background: var(--color-gray-light);
+    color: var(--color-gray-dark);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.percentIcon {
+    color: var(--color-yellow);
+    font-size: 1.25rem;
+}
+
+.label {
+    color: var(--color-gray-dark);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.labelDisabled {
+    opacity: 0.5;
+}
+
+/* Message Alert */
+.message {
+    padding: var(--space-md) var(--space-lg);
+    border-radius: 0.75rem;
+    margin-bottom: var(--space-xl);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.messageSuccess {
+    background: rgba(34, 197, 94, 0.1);
+    border: 2px solid rgba(34, 197, 94, 0.3);
+    color: #16a34a;
+}
+
+.messageError {
+    background: rgba(239, 68, 68, 0.1);
+    border: 2px solid rgba(239, 68, 68, 0.3);
+    color: #dc2626;
+}
+
+/* Save Button */
+.saveButton {
+    margin-top: var(--space-sm);
+    padding: var(--space-md) var(--space-2xl);
+    background: var(--color-yellow);
+    color: var(--color-black);
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    transition: all var(--transition-normal);
+    align-self: flex-start;
+}
+
+.saveButton:hover:not(:disabled) {
+    opacity: 0.85;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+.saveButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.saveIcon {
+    font-size: 1.125rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page {
+        padding: var(--space-xl) var(--space-md);
+    }
+
+    .settingCard {
+        padding: var(--space-lg);
+    }
+
+    .inputGroup {
+        flex-wrap: wrap;
+    }
+
+    .numberInput {
+        width: 120px;
+        font-size: 1.25rem;
+    }
+}

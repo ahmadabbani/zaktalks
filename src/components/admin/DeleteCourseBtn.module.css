@@ -1,0 +1,127 @@
+/* Delete Course Modal Styles */
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: var(--space-md);
+}
+
+.modalContent {
+    background: white;
+    border-radius: 1rem;
+    padding: var(--space-2xl);
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modalTitle {
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: var(--color-error);
+    margin-bottom: var(--space-md);
+}
+
+.modalMessage {
+    font-size: 1rem;
+    color: var(--color-black);
+    margin-bottom: var(--space-md);
+    line-height: 1.5;
+}
+
+.modalMessage strong {
+    color: var(--color-error);
+}
+
+.modalWarning {
+    font-size: 0.875rem;
+    color: var(--color-gray-dark);
+    margin-bottom: var(--space-sm);
+    font-weight: 600;
+}
+
+.deleteList {
+    list-style: disc;
+    padding-left: var(--space-xl);
+    margin-bottom: var(--space-lg);
+    color: var(--color-gray-dark);
+}
+
+.deleteList li {
+    margin-bottom: var(--space-xs);
+    font-size: 0.875rem;
+}
+
+.modalActions {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+}
+
+.cancelButton {
+    flex: 1;
+    padding: 12px 24px;
+    background: transparent !important;
+    color: var(--color-black) !important;
+    border: 2px solid var(--color-gray) !important;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.cancelButton:hover:not(:disabled) {
+    background: var(--color-gray) !important;
+}
+
+.cancelButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.deleteButton {
+    flex: 1;
+    padding: 12px 24px;
+    background: var(--color-error);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.deleteButton:hover:not(:disabled) {
+    background: #c53030;
+    transform: translateY(-2px);
+}
+
+.deleteButton:disabled {
+    cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .modalContent {
+        padding: var(--space-lg);
+    }
+
+    .modalActions {
+        flex-direction: column;
+    }
+
+    .cancelButton,
+    .deleteButton {
+        width: 100%;
+    }
+}

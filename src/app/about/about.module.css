@@ -1,0 +1,198 @@
+/* Main Container */
+.container {
+    min-height: 100vh;
+    background-color: var(--color-white);
+    color: var(--color-black);
+    padding: 6rem 1rem;
+    overflow-x: hidden;
+    margin-top: 80px;
+}
+
+.content {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+/* Typography */
+.bigTitle {
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 900;
+    line-height: 0.9;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    color: var(--color-black);
+}
+
+.highlightText {
+    color: var(--color-yellow);
+    display: inline-block;
+}
+
+.topParagraph {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.paragraph {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.sectionTitle {
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--color-black);
+    border-bottom: 5px solid var(--color-yellow);
+    display: inline-block;
+    padding-bottom: 0.5rem;
+}
+
+.funkyBox {
+    background-color: var(--color-black);
+    color: var(--color-yellow);
+    padding: 2rem;
+    font-size: clamp(1.5rem, 3vw, 3rem);
+    font-weight: 800;
+    transform: rotate(-2deg);
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.textBlock {
+    font-size: clamp(1.25rem, 2.5vw, 2rem);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* Image */
+.imgContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+}
+
+.centerImg {
+    max-width: 100%;
+    width: 75%;
+    height: auto;
+    border-radius: 1rem;
+    box-shadow: 10px 10px 0px var(--color-yellow);
+    transition: all 0.3s ease;
+}
+
+.centerImg:hover {
+    transform: translate(-5px, -5px);
+    box-shadow: 15px 15px 0px var(--color-yellow);
+}
+
+/* List Style */
+.listContainer {
+    background-color: var(--color-gray-light);
+    padding: 3rem;
+    border-left: 10px solid var(--color-yellow);
+}
+
+.listItem {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.listItem::before {
+    content: 'If';
+    /* Replaced bullet with custom text or style if needed, but solid circle is fine */
+    content: '•';
+    color: var(--color-yellow);
+    font-size: 2rem;
+    line-height: 1;
+}
+
+/* Call to Action */
+.ctaSection {
+    text-align: center;
+    margin-top: 4rem;
+}
+
+.bookButton {
+    width: 100%;
+    background-color: var(--color-yellow);
+    color: var(--color-black);
+    font-size: clamp(1.5rem, 4vw, 3rem);
+    font-weight: 900;
+    padding: 2rem;
+    border: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    text-decoration: none;
+}
+
+.bookButton:hover {
+    background-color: var(--color-black);
+    color: var(--color-white);
+    transform: scale(1.02);
+}
+
+/* Footer Section */
+.footerGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 2rem;
+}
+
+.footerLeft {
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 900;
+    color: var(--color-black);
+}
+
+.footerRight {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.footerLogo {
+    width: 150px;
+    height: auto;
+}
+
+/* Animations */
+.animateUp {
+    animation: slideUp 0.8s ease-out both;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .footerGrid {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footerRight {
+        justify-content: center;
+    }
+}

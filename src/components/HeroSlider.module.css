@@ -1,0 +1,120 @@
+.sliderContainer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    position: relative;
+}
+
+.sliderBtn {
+    background: var(--color-yellow);
+    backdrop-filter: blur(10px);
+    border: none;
+    color: var(--color-black);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    flex-shrink: 0;
+}
+
+.sliderBtn:hover {
+    background: var(--color-yellow-light);
+    color: var(--color-black);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(239, 196, 29, 0.4);
+}
+
+.sliderTrack {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-sm);
+    flex: 1;
+    overflow: hidden;
+    width: 100%;
+}
+
+.widget {
+    background: var(--color-yellow);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--color-yellow);
+    border-radius: 20px;
+    padding: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    text-align: center;
+    transition: all var(--transition-normal);
+    animation: slideIn 0.8s ease-in-out;
+    min-height: 200px;
+    aspect-ratio: 1;
+    width: 100%;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+.widget:hover {
+    background: var(--color-yellow-light);
+    border-color: var(--color-yellow-light);
+    box-shadow: 0 10px 30px rgba(239, 196, 29, 0.4);
+}
+
+.widgetIcon {
+    font-size: 3rem;
+    color: var(--color-black);
+    transition: transform var(--transition-normal);
+}
+
+.widget:hover .widgetIcon {
+    transform: scale(1.2) rotate(5deg);
+}
+
+.widgetText {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-black);
+    line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .sliderTrack {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .sliderTrack {
+        grid-template-columns: 1fr;
+    }
+
+    .sliderBtn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+    }
+
+    .widget {
+        min-height: 180px;
+    }
+
+    .widgetIcon {
+        font-size: 2rem;
+    }
+}
