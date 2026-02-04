@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { FaTag, FaGift, FaCoins, FaSpinner } from 'react-icons/fa'
+import styles from './DiscountSection.module.css'
 
 /**
  * Discount Section Component
@@ -14,7 +15,7 @@ export default function DiscountSection({
   disabled = false 
 }) {
   const [couponCode, setCouponCode] = useState('')
-  const [pointsToUse, setPointsToUse] = useState(0) // Changed from boolean to number
+  const [pointsToUse, setPointsToUse] = useState(0)
   const [loading, setLoading] = useState(true)
   const [discountData, setDiscountData] = useState(null)
   const [error, setError] = useState(null)
@@ -108,16 +109,8 @@ export default function DiscountSection({
 
   if (loading && !discountData) {
     return (
-      <div style={{ 
-        padding: 'var(--space-md)', 
-        textAlign: 'center',
-        opacity: 0.7 
-      }}>
-        <FaSpinner className="spin" /> Loading pricing...
-        <style jsx>{`
-          .spin { animation: spin 1s linear infinite; }
-          @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        `}</style>
+      <div className={styles.loadingContainer}>
+        <FaSpinner className={styles.spin} /> Loading pricing...
       </div>
     )
   }
@@ -129,40 +122,25 @@ export default function DiscountSection({
   const { course, userPoints, discounts } = discountData
 
   return (
-    <div style={{ 
-      backgroundColor: 'rgba(255, 215, 0, 0.05)', 
-      borderRadius: 'var(--radius-md)',
-      padding: 'var(--space-lg)',
-      marginTop: 'var(--space-md)'
-    }}>
-      <h3 style={{ 
-        marginBottom: 'var(--space-md)', 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: 'var(--space-sm)',
-        fontSize: 'var(--font-size-md)'
-      }}>
-        <FaTag style={{ color: 'var(--color-primary)' }} />
+    <div className={styles.container}>
+      <h3 className={styles.title}>
+        <FaTag className={styles.icon} />
         Price Breakdown
-        {loading && <FaSpinner className="spin" style={{ fontSize: '0.8em', marginLeft: 'auto' }} />}
+        {loading && <FaSpinner className={styles.spin} style={{ fontSize: '0.8em', marginLeft: 'auto' }} />}
       </h3>
 
       {/* Price Breakdown */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)' }}>
+      <div className={styles.breakdown}>
         {/* Original Price */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', opacity: 0.8 }}>
+        <div className={`${styles.row} ${styles.rowStandard}`}>
           <span>Original Price</span>
           <span>{formatPrice(course.originalPrice)}</span>
         </div>
 
         {/* First Purchase Discount */}
         {discounts.firstPurchase.eligible && (
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            color: '#4ade80' 
-          }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-xs)' }}>
+          <div className={`${styles.row} ${styles.rowDiscount}`}>
+            <span className={styles.discountLabel}>
               <FaGift /> First Purchase ({discounts.firstPurchase.discountPercent}%)
             </span>
             <span>-{formatPrice(discounts.firstPurchase.discountCents)}</span>
@@ -171,12 +149,8 @@ export default function DiscountSection({
 
         {/* Points Discount - only show if actually used */}
         {discounts.points.eligible && pointsToUse > 0 && (
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            color: '#4ade80' 
-          }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-xs)' }}>
+          <div className={`${styles.row} ${styles.rowDiscount}`}>
+            <span className={styles.discountLabel}>
               <FaCoins /> Points ({pointsToUse} pts = {discounts.points.discountPercent}%)
             </span>
             <span>-{formatPrice(discounts.points.discountCents)}</span>
@@ -185,12 +159,8 @@ export default function DiscountSection({
 
         {/* Coupon Discount */}
         {discounts.coupon.valid && (
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            color: '#4ade80' 
-          }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-xs)' }}>
+          <div className={`${styles.row} ${styles.rowDiscount}`}>
+            <span className={styles.discountLabel}>
               <FaTag /> Coupon: {discounts.coupon.couponCode}
             </span>
             <span>-{formatPrice(discounts.coupon.discountCents)}</span>
@@ -198,26 +168,16 @@ export default function DiscountSection({
         )}
 
         {/* Divider */}
-        <hr style={{ border: 'none', borderTop: '1px solid rgba(255, 255, 255, 0.1)', margin: 'var(--space-sm) 0' }} />
+        <hr className={styles.divider} />
 
         {/* Final Price */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          fontWeight: 'bold',
-          fontSize: '1.2rem',
-          color: 'var(--color-primary)'
-        }}>
+        <div className={`${styles.row} ${styles.finalRow}`}>
           <span>Final Price</span>
           <span>{formatPrice(discounts.finalPrice)}</span>
         </div>
 
         {discounts.totalDiscount > 0 && (
-          <div style={{ 
-            textAlign: 'right', 
-            fontSize: 'var(--font-size-sm)', 
-            color: '#4ade80' 
-          }}>
+          <div className={styles.savingsText}>
             You save {formatPrice(discounts.totalDiscount)}!
           </div>
         )}
@@ -225,35 +185,17 @@ export default function DiscountSection({
 
       {/* Points Selector - only show if user has 1000+ points */}
       {userPoints >= 1000 && (
-        <div style={{ 
-          marginTop: 'var(--space-lg)',
-          padding: 'var(--space-md)',
-          backgroundColor: 'rgba(0, 0, 0, 0.2)',
-          borderRadius: 'var(--radius-sm)'
-        }}>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: 'var(--space-sm)',
-            flexWrap: 'wrap'
-          }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-xs)' }}>
-              <FaCoins style={{ color: 'var(--color-primary)' }} />
+        <div className={styles.pointsSection}>
+          <div className={styles.pointsWrapper}>
+            <span className={styles.discountLabel}>
+              <FaCoins className={styles.icon} />
               Use Points:
             </span>
             <select
               value={pointsToUse}
               onChange={(e) => setPointsToUse(parseInt(e.target.value))}
               disabled={disabled}
-              style={{
-                padding: 'var(--space-sm) var(--space-md)',
-                borderRadius: 'var(--radius-sm)',
-                border: '1px solid rgba(255, 215, 0, 0.3)',
-                backgroundColor: 'rgba(255, 215, 0, 0.05)',
-                color: 'white',
-                cursor: disabled ? 'not-allowed' : 'pointer',
-                minWidth: '140px'
-              }}
+              className={styles.pointsSelect}
             >
               <option value={0}>Don't use points</option>
               {/* Generate options for 1000, 2000, 3000, etc. up to user's balance */}
@@ -263,7 +205,7 @@ export default function DiscountSection({
                 </option>
               ))}
             </select>
-            <span style={{ marginLeft: 'auto', opacity: 0.7, fontSize: 'var(--font-size-sm)' }}>
+            <span className={styles.pointsBalance}>
               Balance: {userPoints} pts
             </span>
           </div>
@@ -271,45 +213,25 @@ export default function DiscountSection({
       )}
 
       {/* Coupon Input */}
-      <div style={{ marginTop: 'var(--space-lg)' }}>
-        <label style={{ 
-          display: 'block', 
-          marginBottom: 'var(--space-xs)',
-          fontSize: 'var(--font-size-sm)',
-          fontWeight: 'bold'
-        }}>
+      <div className={styles.couponSection}>
+        <label className={styles.couponLabel}>
           Have a coupon?
         </label>
-        <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
+        <div className={styles.couponInputWrapper}>
           <input
             type="text"
             value={couponCode}
             onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
             placeholder="Enter code"
             disabled={disabled || discounts.coupon.valid}
-            style={{
-              flex: 1,
-              padding: 'var(--space-sm)',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid rgba(255, 215, 0, 0.3)',
-              backgroundColor: 'rgba(255, 215, 0, 0.05)',
-              color: 'white',
-              textTransform: 'uppercase'
-            }}
+            className={styles.couponInput}
           />
           {discounts.coupon.valid ? (
             <button
               type="button"
               onClick={handleRemoveCoupon}
               disabled={disabled}
-              style={{
-                padding: 'var(--space-sm) var(--space-md)',
-                borderRadius: 'var(--radius-sm)',
-                border: '1px solid rgba(255, 100, 100, 0.5)',
-                backgroundColor: 'rgba(255, 100, 100, 0.1)',
-                color: '#ff6464',
-                cursor: 'pointer'
-              }}
+              className={styles.removeButton}
             >
               Remove
             </button>
@@ -318,40 +240,18 @@ export default function DiscountSection({
               type="button"
               onClick={handleApplyCoupon}
               disabled={disabled || loading || !couponCode.trim()}
-              style={{
-                padding: 'var(--space-sm) var(--space-md)',
-                borderRadius: 'var(--radius-sm)',
-                border: '1px solid var(--color-primary)',
-                backgroundColor: 'transparent',
-                color: 'var(--color-primary)',
-                cursor: couponCode.trim() ? 'pointer' : 'not-allowed',
-                opacity: couponCode.trim() ? 1 : 0.5
-              }}
+              className={styles.applyButton}
             >
               {loading ? '...' : 'Apply'}
             </button>
           )}
         </div>
         {discounts.coupon.error && (
-          <p style={{ color: '#ff6464', fontSize: 'var(--font-size-sm)', marginTop: 'var(--space-xs)' }}>
+          <p className={styles.errorText}>
             {discounts.coupon.error}
           </p>
         )}
       </div>
-
-      {error && (
-        <p style={{ color: '#ff6464', marginTop: 'var(--space-md)' }}>{error}</p>
-      )}
-
-      <style jsx>{`
-        .spin {
-          animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   )
 }

@@ -1,0 +1,222 @@
+.container {
+    background-color: #f9f9f9;
+    /* Light background */
+    border-radius: 12px;
+    padding: var(--space-lg);
+    margin-top: var(--space-md);
+    border: 1px solid #eee;
+}
+
+.loadingContainer {
+    padding: var(--space-md);
+    text-align: center;
+    opacity: 0.7;
+    color: var(--color-gray);
+}
+
+.title {
+    margin-bottom: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--font-size-md);
+    color: var(--color-black);
+    /* Dark title */
+    font-weight: 700;
+}
+
+.icon {
+    color: var(--color-primary);
+}
+
+.breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+}
+
+.rowStandard {
+    color: var(--color-gray-dark);
+    /* Dark gray text */
+}
+
+.rowDiscount {
+    color: #16a34a;
+    /* Darker green for visibility on white */
+    font-weight: 500;
+}
+
+.discountLabel {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #ddd;
+    /* Light divider */
+    margin: var(--space-sm) 0;
+}
+
+.finalRow {
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--color-black);
+    /* Dark final price text, or Primary if you prefer */
+}
+
+.finalRow span:last-child {
+    color: var(--color-primary);
+    /* Keep the price itself gold/primary */
+}
+
+.savingsText {
+    text-align: right;
+    font-size: var(--font-size-sm);
+    color: #16a34a;
+    font-weight: 600;
+}
+
+/* Points Selector */
+.pointsSection {
+    margin-top: var(--space-lg);
+    padding: var(--space-md);
+    background-color: #fff;
+    border-radius: var(--radius-sm);
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.pointsWrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.pointsSelect {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: var(--color-black);
+    cursor: pointer;
+    min-width: 140px;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.pointsSelect:disabled {
+    opacity: 0.6;
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.pointsBalance {
+    margin-left: auto;
+    opacity: 0.75;
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-dark);
+}
+
+/* Coupon Section */
+.couponSection {
+    margin-top: var(--space-lg);
+}
+
+.couponLabel {
+    display: block;
+    margin-bottom: var(--space-xs);
+    font-size: var(--font-size-sm);
+    font-weight: bold;
+    color: var(--color-gray-dark);
+}
+
+.couponInputWrapper {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.couponInput {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: var(--color-black);
+    text-transform: uppercase;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.couponInput:disabled {
+    opacity: 0.6;
+    background-color: #f5f5f5;
+}
+
+.applyButton {
+    padding: 0 1.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-primary);
+    background-color: transparent;
+    color: var(--color-primary-dark, #b8860b);
+    /* Darker gold for contrast */
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.applyButton:hover:not(:disabled) {
+    background-color: var(--color-primary);
+    color: var(--color-black);
+}
+
+.applyButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #ccc;
+    color: #ccc;
+}
+
+.removeButton {
+    padding: 0 1.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid #ff6464;
+    background-color: #fff0f0;
+    color: #ff4444;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.removeButton:hover {
+    background-color: #ffdede;
+}
+
+.errorText {
+    color: #dc2626;
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-xs);
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -3,6 +3,7 @@
 import { useState, Suspense, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import DiscountSection from '@/components/DiscountSection'
+import styles from './guest.module.css'
 
 function GuestForm() {
   const searchParams = useSearchParams()
@@ -80,36 +81,46 @@ function GuestForm() {
   }
 
   return (
-    <div className="container" style={{ padding: 'var(--space-xl) 0' }}>
-      <div className="card" style={{ maxWidth: '550px', margin: '0 auto', padding: 'var(--space-xl)' }}>
-        <h2 style={{ marginBottom: 'var(--space-sm)' }}>Express Checkout</h2>
-        {courseName && (
-          <p style={{ 
-            color: 'var(--color-primary)', 
-            fontWeight: 'bold',
-            marginBottom: 'var(--space-md)'
-          }}>
-            {courseName}
+    <div className={`container ${styles.page}`}>
+      <div className={styles.guestCard}>
+        <div className={styles.header}>
+          <h2 className={styles.title}>Guest Checkout</h2>
+          {courseName && (
+            <p className={styles.courseName}>
+              {courseName}
+            </p>
+          )}
+          <p className={styles.subtitle}>
+            Please provide your details to receive access to the course and your receipt.
           </p>
-        )}
-        <p style={{ opacity: 0.7, marginBottom: 'var(--space-lg)', fontSize: 'var(--font-size-sm)' }}>
-          Please provide your details to receive access to the course and your receipt.
-        </p>
+        </div>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-md)' }}>
-            <div className="form-group">
-              <label>First Name</label>
-              <input type="text" name="first_name" required placeholder="John" />
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.row}>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>First Name</label>
+              <input 
+                type="text" 
+                name="first_name" 
+                required 
+                placeholder="John" 
+                className={styles.input}
+              />
             </div>
-            <div className="form-group">
-              <label>Last Name</label>
-              <input type="text" name="last_name" required placeholder="Doe" />
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Last Name</label>
+              <input 
+                type="text" 
+                name="last_name" 
+                required 
+                placeholder="Doe" 
+                className={styles.input}
+              />
             </div>
           </div>
 
-          <div className="form-group">
-            <label>Email Address</label>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Email Address</label>
             <input 
               type="email" 
               name="email" 
@@ -117,6 +128,7 @@ function GuestForm() {
               placeholder="john@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className={styles.input}
             />
           </div>
 
@@ -131,39 +143,19 @@ function GuestForm() {
           <button 
             type="submit" 
             disabled={loading} 
-            className="btn btn-primary" 
-            style={{ marginTop: 'var(--space-md)', padding: 'var(--space-md)' }}
+            className={styles.submitButton}
           >
             {loading ? 'Processing...' : 'Proceed to Payment'}
           </button>
         </form>
       </div>
-
-      <style jsx>{`
-        .form-group {
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-xs);
-        }
-        label {
-          font-weight: bold;
-          font-size: var(--font-size-sm);
-        }
-        input {
-          padding: var(--space-sm);
-          border-radius: var(--radius-sm);
-          border: 1px solid rgba(255, 215, 0, 0.2);
-          background: rgba(255, 215, 0, 0.05);
-          color: white;
-        }
-      `}</style>
     </div>
   )
 }
 
 export default function GuestCheckoutPage() {
   return (
-    <Suspense fallback={<div className="container" style={{ textAlign: 'center', padding: 'var(--space-xl)' }}>Loading...</div>}>
+    <Suspense fallback={<div className="container" style={{ textAlign: 'center', padding: 'var(--space-xl)' }}>Loading Checkout...</div>}>
       <GuestForm />
     </Suspense>
   )

@@ -1,0 +1,150 @@
+.page {
+    padding: var(--space-2xl) 0;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-white);
+    margin-top: 80px;
+    /* White Background */
+}
+
+.guestCard {
+    width: 100%;
+    max-width: 600px;
+    background: var(--color-white);
+    border-radius: 30px;
+    padding: var(--space-2xl);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    /* Simpler, cleaner shadow */
+    position: relative;
+    overflow: hidden;
+}
+
+.guestCard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary, #f39c12));
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: var(--space-xs);
+    color: var(--color-black);
+    /* Dark Text */
+}
+
+.courseName {
+    color: var(--color-gray-dark);
+    /* Gold/Primary */
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: var(--space-sm);
+}
+
+.subtitle {
+    color: var(--color-gray);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-black);
+    /* Dark Label */
+    margin-left: 4px;
+}
+
+.input {
+    width: 100%;
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    background: #f9f9f9;
+    /* Light Input BG */
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    color: var(--color-black);
+    /* Dark Input Text */
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(241, 196, 15, 0.1);
+}
+
+.submitButton {
+    background: var(--color-black);
+    color: var(--color-white);
+    /* Dark text on Yellow button */
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: var(--space-md);
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.submitButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(241, 196, 15, 0.3);
+    opacity: 0.9;
+}
+
+.submitButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    filter: grayscale(0.5);
+}
+
+@media (max-width: 600px) {
+    .guestCard {
+        padding: var(--space-lg);
+        border: none;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .row {
+        grid-template-columns: 1fr;
+    }
+}
