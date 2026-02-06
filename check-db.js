@@ -5,9 +5,11 @@ const { createClient } = require('@supabase/supabase-js');
 const envFile = fs.readFileSync('.env.local', 'utf8');
 const env = {};
 envFile.split('\n').forEach(line => {
-  const [key, value] = line.split('=');
-  if (key && value) {
-    env[key.trim()] = value.trim().replace(/"/g, '').replace(/'/g, '');
+  const parts = line.split('=');
+  if (parts.length >= 2) {
+    const key = parts[0].trim();
+    const value = parts.slice(1).join('=').trim().replace(/"/g, '').replace(/'/g, '');
+    env[key] = value;
   }
 });
 
