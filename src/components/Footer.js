@@ -48,21 +48,18 @@ export default function Footer() {
               <a href="#" target="_blank" rel="noopener noreferrer" className={styles.socialIcon} aria-label="Facebook">
                 <FaFacebookF />
               </a>
-              <a href="#" target="_blank" rel="noopener noreferrer" className={styles.socialIcon} aria-label="WhatsApp">
-                <FaWhatsapp />
-              </a>
             </div>
           </div>
 
           {/* Middle: Main Navigation (Big Fonts) */}
-          <nav className={styles.mainNav}>
+         {/* <nav className={styles.mainNav}>
             <Link href="/" className={styles.navLink}>Home</Link>
             <Link href="/about" className={styles.navLink}>About</Link>
             <Link href="/courses" className={styles.navLink}>Courses</Link>
             <Link href="/speaking" className={styles.navLink}>The Podcast</Link>
             <Link href="/coaching" className={styles.navLink}>Coaching</Link>
             {/* Contact is handled by the button below */}
-          </nav>
+         {/* </nav>*/}
 
           {/* Contact CTA */}
           <Link href="/contact" className={styles.contactBtn}>

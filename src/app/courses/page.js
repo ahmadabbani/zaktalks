@@ -31,11 +31,10 @@ export default async function CoursesPage() {
       <div className={styles.contentWrapper}>
         <header className={styles.header}>
             <h1 className={styles.title}>
-              Unlock Your <span className={styles.highlight}>Potential</span> with Expert Guidance
+              A Place For Lasting <span className={styles.highlight}>Transformation</span>
             </h1>
             <p className={styles.subtitle}>
-              Start your journey today with our curated selection of professional courses designed to help you grow and succeed.
-            </p>
+Explore thoughtfully designed learning experiences supporting deep personal development and meaningful change.            </p>
         </header>
 
         <div className={styles.grid}>

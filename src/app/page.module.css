@@ -16,8 +16,8 @@
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   gap: var(--space-sm);
-  align-items: center;
-  padding: var(--space-xl) 0;
+  align-items: start;
+  padding: var(--space-2xl) 0;
   min-height: 70vh;
 }
 
@@ -25,7 +25,7 @@
 .heroLeft {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
   animation: fadeInUp 0.8s ease-out;
 }
 
@@ -221,14 +221,14 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-3xl);
-  align-items: center;
+  align-items: start;
 }
 
 /* Left Side */
 .aboutLeft {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
 }
 
 .aboutTitle {
@@ -333,7 +333,7 @@
   line-height: 1.2;
   color: var(--color-white);
   margin-bottom: var(--space-3xl);
-  text-align: left;
+  text-align: center;
 }
 
 .servicesHighlight {
@@ -441,7 +441,6 @@
 
   .servicesTitle {
     margin-bottom: var(--space-2xl);
-    text-align: center;
   }
 
   .servicesGrid {
@@ -489,10 +488,10 @@
 
 .zakName {
   font-size: clamp(2.5rem, 5vw, 4.5rem);
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1;
   color: var(--color-black);
-  letter-spacing: -2px;
+  letter-spacing: 3px;
 }
 
 .zakDescription {
@@ -569,9 +568,10 @@
 
 .coursesHeader {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: var(--space-3xl);
+  margin-bottom: var(--space-xl);
+  gap: var(--space-lg);
 }
 
 .coursesTitle {
@@ -583,13 +583,12 @@
 
 .coursesHighlight {
   color: var(--color-yellow);
-  position: relative;
-  display: inline-block;
 }
 
 .btnExplore {
-  padding: 0.9rem 3rem;
-  font-size: 1rem;
+  display: block;
+  padding: 0.9rem 4.5rem;
+  font-size: 1.1rem;
   font-weight: 600;
   background-color: var(--color-black);
   color: var(--color-white);
@@ -598,7 +597,8 @@
   cursor: pointer;
   transition: all var(--transition-normal);
   position: relative;
-  margin-top: auto;
+  margin-left: auto;
+  margin-right: 140px;
   overflow: hidden;
 }
 
@@ -759,7 +759,6 @@
   }
 
   .coursesHeader {
-    flex-direction: column;
     gap: var(--space-lg);
     align-items: flex-start;
     margin-bottom: var(--space-2xl);
@@ -813,7 +812,7 @@
   padding: var(--space-2xl) 0 var(--space-xl) 0;
   background-color: var(--color-white);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .processTitle {
@@ -827,16 +826,27 @@
 
 .processHighlight {
   color: var(--color-yellow);
+  display: inline-block;
 }
 
 .processFlow {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 0;
   position: relative;
   padding: var(--space-2xl) 0;
-  flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
+}
+
+.processStepWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  overflow: visible;
 }
 
 .processStep {
@@ -846,6 +856,14 @@
   gap: var(--space-md);
   position: relative;
   z-index: 2;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.processStep.active .processCircle {
+  transform: scale(1.15);
+  border-color: var(--color-yellow);
+  box-shadow: 0 10px 30px rgba(239, 196, 29, 0.3);
 }
 
 .step1 {
@@ -948,32 +966,65 @@
   color: var(--color-gray);
   z-index: 1;
   flex-shrink: 0;
+  margin: 0 -60px;
 }
 
 .connector1 {
-  margin: 0 -20px;
-  transform: translateY(-10px);
+  transform: translateY(-5px);
 }
 
 .connector2 {
-  margin: 0 -20px;
-  transform: translateY(10px);
+  transform: translateY(5px);
 }
 
 .connector3 {
-  margin: 0 -20px;
-  transform: translateY(-15px);
+  transform: translateY(-7px);
 }
 
 .connector4 {
-  margin: 0 -20px;
-  transform: translateY(15px);
+  transform: translateY(7px);
+}
+
+.processDescription {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-gray-light);
+  border-radius: 16px;
+  width: 280px;
+  min-width: 280px;
+  animation: fadeIn 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  top: 100%;
+  z-index: 10;
+}
+
+.processDescription p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-gray-dark);
+  margin: 0;
+  font-weight: 500;
+  text-align: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 /* Responsive */
 @media (max-width: 1200px) {
   .processFlow {
-    gap: var(--space-lg);
+    gap: var(--space-md);
+    justify-content: center;
   }
 
   .connector {
@@ -1001,6 +1052,15 @@
     font-size: 1rem;
     max-width: 100px;
   }
+
+  .processDescription {
+    max-width: 220px;
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .processDescription p {
+    font-size: 0.85rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1016,6 +1076,12 @@
     flex-direction: column;
     gap: var(--space-xl);
     padding: var(--space-xl) 0;
+    align-items: center;
+  }
+
+  .processStepWrapper {
+    width: 100%;
+    max-width: 300px;
   }
 
   .processCircle {
@@ -1030,6 +1096,17 @@
   .processLabel {
     font-size: 1.05rem;
     max-width: 140px;
+  }
+
+  .processDescription {
+    width: 100%;
+    max-width: 100%;
+    margin-top: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .processDescription p {
+    font-size: 0.9rem;
   }
 }
 

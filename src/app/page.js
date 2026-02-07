@@ -3,6 +3,7 @@ import Link from 'next/link'
 import styles from './page.module.css'
 import HeroSlider from '@/components/HeroSlider'
 import TestimonialsSlider from '@/components/TestimonialsSlider'
+import CoachingProcess from '@/components/CoachingProcess'
 import { MdOutlineHandshake, MdOutlineRecordVoiceOver, MdOutlineWavingHand, MdOutlineLightbulb, MdOutlineSchool, MdOutlineWatchLater, MdOutlineInsights, MdOutlineExplore, MdOutlineAutoAwesome  } from 'react-icons/md'
 import { createClient } from '@/lib/supabase/server'
 
@@ -33,13 +34,13 @@ export default async function Home() {
             {/* Left Side */}
             <div className={styles.heroLeft}>
               <h1 className={styles.heroTitle}>
-                Do you feel like there's <span className={styles.highlight}>more to life</span>, but you're not sure how to get there?
+                Do you feel like there's <span className={styles.highlight}>more to life</span>, but you're not sure <span className={styles.highlight}>how to get there?</span>
               </h1>
               <p className={styles.heroDescription}>
                 Would you like to develop effective communication skills and set healthy boundaries to enhance the quality of your relationships?
               </p>
               <Link href="/courses" className={styles.btnCourses}>
-                Get Started
+                Enroll Now
               </Link>
             </div>
 
@@ -78,75 +79,8 @@ export default async function Home() {
         </div>  */}
       </section>
        {/* Coaching Process Section */}
-      <section className={styles.processSection}>
-        <div className="container">
-          <h2 className={styles.processTitle}>
-            Your Journey to <span className={styles.processHighlight}>Growth</span>
-          </h2>
+      <CoachingProcess />
 
-          <div className={styles.processFlow}>
-            {/* Step 1 */}
-            <div className={`${styles.processStep} ${styles.step1}`}>
-              <div className={styles.processCircle}>
-                <MdOutlineWavingHand   className={styles.processIcon} />
-              </div>
-              <p className={styles.processLabel}>Getting In</p>
-            </div>
-
-            {/* Connector 1 */}
-            <svg className={`${styles.connector} ${styles.connector1}`} viewBox="0 0 200 100">
-              <path d="M 0 50 Q 100 0, 200 50" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="5,5" />
-            </svg>
-
-            {/* Step 2 */}
-            <div className={`${styles.processStep} ${styles.step2}`}>
-              <div className={styles.processCircle}>
-                <MdOutlineSchool className={styles.processIcon} />
-              </div>
-              <p className={styles.processLabel}>Guided Learning</p>
-            </div>
-
-            {/* Connector 2 */}
-            <svg className={`${styles.connector} ${styles.connector2}`} viewBox="0 0 200 100">
-              <path d="M 0 50 Q 100 100, 200 50" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="5,5" />
-            </svg>
-
-            {/* Step 3 */}
-            <div className={`${styles.processStep} ${styles.step3}`}>
-              <div className={styles.processCircle}>
-                <MdOutlineInsights className={styles.processIcon} />
-              </div>
-              <p className={styles.processLabel}>See Your Progress</p>
-            </div>
-
-            {/* Connector 3 */}
-            <svg className={`${styles.connector} ${styles.connector3}`} viewBox="0 0 200 100">
-              <path d="M 0 50 Q 100 0, 200 50" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="5,5" />
-            </svg>
-
-            {/* Step 4 */}
-            <div className={`${styles.processStep} ${styles.step4}`}>
-              <div className={styles.processCircle}>
-                <MdOutlineLightbulb   className={styles.processIcon} />
-              </div>
-              <p className={styles.processLabel}>New Perspectives</p>
-            </div>
-
-            {/* Connector 4 */}
-            <svg className={`${styles.connector} ${styles.connector4}`} viewBox="0 0 200 100">
-              <path d="M 0 50 Q 100 100, 200 50" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="5,5" />
-            </svg>
-
-            {/* Step 5 */}
-            <div className={`${styles.processStep} ${styles.step5}`}>
-              <div className={`${styles.processCircle} ${styles.finalCircle}`}>
-                <MdOutlineAutoAwesome className={styles.processIcon} />
-              </div>
-              <p className={styles.processLabel}>Personal Improvement</p>
-            </div>
-          </div>
-        </div>
-      </section>
 {/* About Me Section */}
       <section className={styles.aboutSection}>
         <div className="container">
@@ -271,7 +205,7 @@ export default async function Home() {
         <div className="container">
           <div className={styles.coursesHeader}>
             <h2 className={styles.coursesTitle}>
-              Let’s Move Forward<br></br><span className={styles.coursesHighlight}>Together</span>
+              Let’s Move Forward <span className={styles.coursesHighlight}>Together</span>
             </h2>
             <Link href="/courses" className={styles.btnExplore}>
               Explore More
