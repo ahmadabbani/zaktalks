@@ -208,20 +208,11 @@ export async function calculatePointsDiscount(userId, priceAfterOtherDiscounts, 
 export async function spendPoints(userId, points, referenceId, description) {
   const supabase = await createAdminClient()
   
-  // Deduct points from user
-  const { data: user } = await supabase
-    .from('users')
-    .select('points')
-    .eq('id', userId)
-    .single()
+  // Atomically deduct points (single DB call, no race condition)
+  const { data: newBalance } = await supabase
+    .rpc('adjust_user_points', { p_user_id: userId, p_delta: -points })
   
-  const currentPoints = user?.points || 0
-  const newPoints = Math.max(0, currentPoints - points)
-  
-  await supabase
-    .from('users')
-    .update({ points: newPoints })
-    .eq('id', userId)
+  const newPoints = newBalance ?? 0
   
   // Log transaction
   await supabase
@@ -244,20 +235,11 @@ export async function earnPoints(userId, referenceId, description) {
   const supabase = await createAdminClient()
   const points = POINTS_PER_PURCHASE
   
-  // Add points to user
-  const { data: user } = await supabase
-    .from('users')
-    .select('points')
-    .eq('id', userId)
-    .single()
+  // Atomically add points (single DB call, no race condition)
+  const { data: newBalance } = await supabase
+    .rpc('adjust_user_points', { p_user_id: userId, p_delta: points })
   
-  const currentPoints = user?.points || 0
-  const newPoints = currentPoints + points
-  
-  await supabase
-    .from('users')
-    .update({ points: newPoints })
-    .eq('id', userId)
+  const newPoints = newBalance ?? 0
   
   // Log transaction
   await supabase

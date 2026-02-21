@@ -29,10 +29,10 @@ export default function AboutPage() {
         {/* Philosophy 1 */}
         <section className={styles.animateUp}>
           <h2 className={styles.sectionTitle}>HERE'S WHY THAT'S A GOOD THING</h2>
-          <div className={styles.textBlock} style={{ marginTop: '2rem' }}>
-            <p style={{ marginBottom: '1rem' }}>I’m not here to be your <span className={styles.highlightText} style={{textTransform: 'uppercase'}}>Guru</span></p>
+          <div className={styles.textBlock}>
+            <p className={styles.textBlockPara}>I’m not here to be your <span className={styles.highlightText} style={{textTransform: 'uppercase'}}>Guru</span></p>
             <p>I’m here to be your <span className={styles.highlightText}>Powerful Supporter</span></p>
-            <p className={styles.highlightText} style={{ marginTop: '2.3rem', marginBottom: '1rem' }}>Let’s agree on one thing:</p>
+            <p className={styles.highlightText + ' ' + styles.specialHighlightText } >Let’s agree on one thing:</p>
             <p>Enough with putting coaches on pedestals.</p>
           </div>
         </section>
@@ -53,15 +53,15 @@ export default function AboutPage() {
           <p className={styles.paragraph}>
             I’m not here for bullshit buzzwords that have no practical impact on your life.
           </p>
-          <div className={styles.textBlock} style={{ marginTop: '2rem' }}>
-            <p style={{ marginBottom: '1rem' }}><span className={styles.highlightText}>“Self-love”</span> makes me want to barf.</p>
+          <div className={styles.textBlock}>
+            <p className={styles.textBlockTwoPara}><span className={styles.highlightText}>“Self-love”</span> makes me want to barf.</p>
             <p><span className={styles.highlightText}>“Be your best self”</span> makes me grind my teeth.</p>
           </div>
         </section>
 
         {/* Deep End Section */}
         <section className={styles.animateUp}>
-          <h2 className={styles.bigTitle} style={{ fontSize: 'clamp(1.8rem, 5vw, 4rem)' }}>
+          <h2 className={styles.bigTitle + ' ' + styles.specialBigTitle} style={{ fontSize: 'clamp(1.8rem, 5vw, 4rem)' }}>
             I COACH ON THE <span className={styles.highlightText}>DEEP END</span>
           </h2>
           <p className={styles.paragraph} style={{ marginTop: '0rem' }}>
@@ -71,7 +71,7 @@ export default function AboutPage() {
 
         {/* Checklist */}
         <section className={styles.listContainer}>
-          <h3 className={styles.sectionTitle} style={{ borderBottom: 'none', marginBottom: '1rem', textTransform: 'initial' }}>
+          <h3 className={styles.sectionTitle + ' ' + styles.specialSectionTitle} style={{ borderBottom: 'none', textTransform: 'initial' }}>
             Here’s how to know you’re ready:
           </h3>
           <ul style={{ listStyle: 'none' }}>

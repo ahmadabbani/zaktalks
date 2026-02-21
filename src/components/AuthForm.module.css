@@ -240,6 +240,12 @@
     }
 }
 
+@media (max-width: 685px) {
+    .authWrapper {
+        max-width: 100%;
+    }
+}
+
 @media (max-width: 480px) {
     .authWrapper {
         padding: 0;

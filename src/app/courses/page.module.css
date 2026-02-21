@@ -4,7 +4,7 @@
 }
 
 .contentWrapper {
-    max-width: 1200px;
+    max-width: 1800px;
     margin: 0 auto;
 }
 
@@ -171,6 +171,12 @@
     opacity: 0.6;
 }
 
+@media (max-width: 810px) {
+    .imageWrapper {
+        height: 300px;
+    }
+}
+
 @media (max-width: 768px) {
     .coursesContainer {
         padding-top: 6rem;
@@ -179,5 +185,11 @@
     .grid {
         grid-template-columns: 1fr;
         gap: var(--space-xl);
+    }
+}
+
+@media (max-width: 580px) {
+    .header {
+        margin-bottom: 3rem;
     }
 }

@@ -34,9 +34,8 @@ export default async function CoursesPage() {
               A Place For Lasting <span className={styles.highlight}>Transformation</span>
             </h1>
             <p className={styles.subtitle}>
-Explore thoughtfully designed learning experiences supporting deep personal development and meaningful change.            </p>
+            Explore thoughtfully designed learning experiences supporting deep personal development and meaningful change.</p>
         </header>
-
         <div className={styles.grid}>
           {courses?.map((course) => (
             <div key={course.id} className={styles.courseCard}>

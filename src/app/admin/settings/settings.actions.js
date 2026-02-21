@@ -3,11 +3,13 @@
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
+import { requireAdmin } from '@/lib/auth-utils'
 
 /**
  * Fetch all admin settings
  */
 export async function getAdminSettings() {
+  await requireAdmin()
   const supabase = await createClient()
   
   const { data, error } = await supabase
@@ -30,6 +32,7 @@ export async function getAdminSettings() {
  * Update a single admin setting
  */
 export async function updateAdminSetting(key, value) {
+  await requireAdmin()
   const supabaseAdmin = await createAdminClient()
   
   const { error } = await supabaseAdmin
@@ -53,6 +56,7 @@ export async function updateAdminSetting(key, value) {
  * Update multiple admin settings at once
  */
 export async function updateAdminSettings(formData) {
+  await requireAdmin()
   const supabaseAdmin = await createAdminClient()
   
   const firstPurchasePercent = formData.get('first_purchase_discount_percent')

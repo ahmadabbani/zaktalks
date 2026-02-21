@@ -29,12 +29,16 @@ export async function POST(req) {
 
     // If it's a guest providing an email, check if they actually have an account
     if (!user && email) {
-      // Note: listUsers with filters doesn't work correctly in some Supabase versions
-      const { data: { users } } = await supabaseAdmin.auth.admin.listUsers()
-      const matchingUser = users?.find(u => u.email?.toLowerCase() === email.toLowerCase())
+      const { data: matchingUser } = await supabaseAdmin
+        .from('users')
+        .select('id')
+        .eq('email', email.toLowerCase())
+        .single()
       if (matchingUser) {
-        finalIsGuest = 'false'
-        finalUserId = matchingUser.id
+        return NextResponse.json(
+          { error: 'An account with this email already exists. Please log in to continue your purchase.' },
+          { status: 400 }
+        )
       }
     }
 

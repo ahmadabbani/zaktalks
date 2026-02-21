@@ -203,13 +203,229 @@
     text-decoration: none;
     font-weight: 600;
     transition: all var(--transition-normal);
-    margin-top: var(--space-xl);
 }
 
 .backLink:hover {
     background: var(--color-black);
     color: var(--color-white);
     border-color: var(--color-black);
+}
+
+/* Create Admin Button */
+.createAdminBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-black);
+    color: var(--color-yellow);
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.createAdminBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Create Admin Modal */
+.createAdminOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: var(--space-lg);
+}
+
+.createAdminModal {
+    background: white;
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.createAdminHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg) var(--space-xl);
+    border-bottom: 1px solid #eee;
+}
+
+.createAdminHeader h3 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-black);
+    margin: 0;
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    color: var(--color-gray);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: 50%;
+    transition: all var(--transition-normal);
+}
+
+.closeBtn:hover {
+    background: #f0f0f0;
+    color: var(--color-black);
+}
+
+/* Form Styles */
+.createAdminForm {
+    padding: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+}
+
+.formField {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.fieldLabel {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-black);
+}
+
+.fieldInput {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: var(--color-black);
+    background: #fafafa;
+    transition: all var(--transition-normal);
+}
+
+.fieldInput:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(241, 196, 15, 0.15);
+}
+
+.fieldInput:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.passwordWrapper {
+    position: relative;
+}
+
+.passwordWrapper .fieldInput {
+    padding-right: 2.5rem;
+}
+
+.passwordToggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-gray);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
+}
+
+.passwordToggle:hover {
+    color: var(--color-black);
+}
+
+/* Form Messages */
+.formMessage {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.formSuccess {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.formError {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Submit Button */
+.submitAdminBtn {
+    padding: 0.85rem;
+    background: var(--color-black);
+    color: var(--color-yellow);
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    margin-top: var(--space-xs);
+}
+
+.submitAdminBtn:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.submitAdminBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Bottom Actions Row */
+.bottomActions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    padding: 0;
+    margin-top: var(--space-3xl);
 }
 
 /* Responsive Design */
@@ -244,6 +460,10 @@
     .widgetsGrid {
         grid-template-columns: 1fr;
         gap: var(--space-md);
+    }
+
+    .formRow {
+        grid-template-columns: 1fr;
     }
 
     .statValue {

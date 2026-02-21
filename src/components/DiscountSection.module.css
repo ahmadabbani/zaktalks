@@ -88,43 +88,84 @@
 /* Points Selector */
 .pointsSection {
     margin-top: var(--space-lg);
-    padding: var(--space-md);
-    background-color: #fff;
-    border-radius: var(--radius-sm);
-    border: 1px solid #e5e5e5;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    padding: var(--space-lg);
+    background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+    border-radius: 12px;
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 4px 12px rgba(241, 196, 15, 0.15);
+}
+
+.pointsHeader {
+    margin-bottom: var(--space-md);
+}
+
+.pointsHeader .discountLabel {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-black);
+    margin-bottom: var(--space-xs);
+}
+
+.pointsHint {
+    margin: var(--space-xs) 0 0 0;
+    font-size: 0.875rem;
+    color: #666;
+    font-style: italic;
 }
 
 .pointsWrapper {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: var(--space-md);
     flex-wrap: wrap;
 }
 
 .pointsSelect {
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid #ccc;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    border-radius: 8px;
+    border: 2px solid #e5e5e5;
     background-color: #fff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 12px;
     color: var(--color-black);
     cursor: pointer;
-    min-width: 140px;
+    min-width: 200px;
     font-family: inherit;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all var(--transition-normal);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.pointsSelect:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(241, 196, 15, 0.2);
+}
+
+.pointsSelect:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(241, 196, 15, 0.1);
 }
 
 .pointsSelect:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     background-color: #f5f5f5;
     cursor: not-allowed;
 }
 
 .pointsBalance {
-    margin-left: auto;
-    opacity: 0.75;
-    font-size: var(--font-size-sm);
-    color: var(--color-gray-dark);
+    padding: 0.5rem 1rem;
+    background: rgba(241, 196, 15, 0.1);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-black);
+    white-space: nowrap;
 }
 
 /* Coupon Section */

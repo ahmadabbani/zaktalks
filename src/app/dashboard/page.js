@@ -176,7 +176,7 @@ export default async function DashboardPage() {
             </div>
             <h3>No courses yet</h3>
             <p>You haven't enrolled in any courses yet. Start your journey today!</p>
-            <Link href="/courses" className="btn btn-primary">Browse Courses</Link>
+            <Link href="/courses" className="coursesbtn">Browse Courses</Link>
           </div>
         )}
       </div>

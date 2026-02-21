@@ -1,0 +1,942 @@
+/* src/app/coaching/coaching.module.css */
+
+.coachingPage {
+    background-color: var(--color-bg-coaching, #F3F3F3);
+    color: var(--color-black);
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    overflow-x: hidden;
+    margin-top: 60px;
+}
+
+.container {
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    width: 100%;
+}
+
+@media (min-width: 1801px) {
+    .container {
+        max-width: 2500px;
+    }
+}
+
+.section {
+    padding: 4rem 0;
+}
+
+/* Base Typography */
+.coachingPage p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+/* Helpers */
+.blueBox {
+    background-color: var(--color-yellow);
+    color: var(--color-black);
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(27, 117, 188, 0.15);
+    margin-bottom: 2rem;
+    font-size: 1.3rem;
+}
+
+.subtextItalic {
+    font-style: italic;
+    color: var(--color-gray-dark);
+    font-size: 1.15rem;
+    margin-top: 1rem;
+}
+
+.subtextItalicCentered {
+    font-style: italic;
+    color: var(--color-gray-dark);
+    font-size: 1.15rem;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.sectionTitle {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--color-black);
+    margin-bottom: 1rem;
+}
+
+/* --- Hero Section --- */
+.heroSection {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 4rem 2rem 4rem 2rem;
+    min-height: 85vh;
+}
+
+.heroContent {
+    flex: 1;
+    max-width: 800px;
+    /*padding-right: 2rem;*/
+    z-index: 2;
+}
+
+@media (min-width: 1801px) {
+    .heroSection {
+        max-width: 2200px;
+    }
+
+    .heroContent {
+        max-width: 1400px;
+    }
+}
+
+.logoContainer {
+    margin-bottom: 3rem;
+}
+
+.logo {
+    object-fit: contain;
+    margin-bottom: 8px;
+}
+
+.logoSubtext {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--color-black);
+}
+
+.heroTitle {
+    font-size: 4.5rem;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+}
+
+.titleRegular {
+    font-weight: 400;
+    color: var(--color-black);
+}
+
+.titleBold {
+    font-weight: 800;
+    color: var(--color-yellow);
+}
+
+.heroSubtitle {
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.6;
+    color: var(--color-black);
+    margin-bottom: 1rem;
+}
+
+.ctaButton {
+    display: inline-block;
+    background-color: var(--color-yellow);
+    color: var(--color-black);
+    padding: 1rem 3rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    /* Kept original button font size */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgb(250, 212, 75, 0.3);
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.ctaButton:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 25px rgb(250, 212, 75, 0.4);
+    color: var(--color-black);
+}
+
+.heroImageContainer {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+}
+
+.heroImage {
+    object-fit: contain;
+    max-height: 85vh;
+    width: auto;
+}
+
+@media (min-width: 1801px) {
+    .heroImage {
+        min-width: 1000px;
+    }
+}
+
+/* --- Vision Banner --- */
+.visionBanner {
+    background-color: var(--color-yellow);
+    color: var(--color-black);
+    padding: 4rem 0;
+    width: 90%;
+    border-radius: 0 20px 20px 0;
+}
+
+.visionBanner p {
+    font-size: 1.8rem;
+    line-height: 1.6;
+    margin: 0 0;
+    font-weight: 400;
+}
+
+/* --- Philosophy & Results Section --- */
+.philosophySection {
+    background-color: var(--color-bg-coaching, #F3F3F3);
+    padding: 6rem 0;
+}
+
+.staggeredLeft {
+    background-color: var(--color-yellow);
+    color: var(--color-black);
+    padding: 2.5rem 3rem;
+    border-radius: 20px;
+    font-size: 1.8rem;
+    font-weight: 600;
+    max-width: 800px;
+    margin: 0 auto 3rem 0;
+    box-shadow: 0 10px 20px rgba(27, 117, 188, 0.15);
+}
+
+.staggeredRight {
+    background-color: var(--color-yellow);
+    color: var(--color-black);
+    padding: 2.5rem 3rem;
+    border-radius: 20px;
+    font-size: 1.8rem;
+    font-weight: 600;
+    max-width: 800px;
+    margin: 0 0 6rem auto;
+    text-align: left;
+    box-shadow: 0 10px 20px rgba(27, 117, 188, 0.15);
+}
+
+@media (min-width: 1400px) {
+    .staggeredLeft {
+        max-width: 1000px;
+    }
+
+    .staggeredRight {
+        max-width: 1000px;
+    }
+}
+
+@media (min-width: 1800px) {
+    .staggeredLeft {
+        max-width: 1300px;
+    }
+
+    .staggeredRight {
+        max-width: 1300px;
+    }
+}
+
+@media (min-width: 2440px) {
+    .staggeredLeft {
+        max-width: 1500px;
+    }
+
+    .staggeredRight {
+        max-width: 1500px;
+    }
+}
+
+.blueBoxCentered {
+    background-color: var(--color-yellow);
+    color: var(--color-black);
+    padding: 2.5rem 3rem;
+    border-radius: 20px;
+    max-width: 800px;
+    margin: 0 auto 2rem auto;
+    box-shadow: 0 10px 20px rgba(27, 117, 188, 0.15);
+}
+
+@media (min-width: 1800px) {
+    .blueBoxCentered {
+        max-width: 1300px;
+        text-align: center;
+    }
+
+    .causeList li::before {
+        left: 18% !important;
+
+    }
+}
+
+@media (min-width: 2440px) {
+    .blueBoxCentered {
+        max-width: 1500px;
+    }
+}
+
+.blueBoxCentered p {
+    font-size: 1.7rem;
+    text-align: center;
+    margin: 0;
+}
+
+.causeList {
+    list-style: none;
+    padding: 0;
+}
+
+.causeList li {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.causeList li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--color-black);
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.causeList li:last-child {
+    margin-bottom: 0;
+}
+
+/* --- Methodology Section --- */
+.methodologySection {
+    background-color: var(--color-white);
+    padding: 6rem 0;
+}
+
+.methodologyHeader {
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.sectionSubtitle {
+    font-size: 1.4rem;
+    color: var(--color-gray-dark);
+    font-style: italic;
+}
+
+.methodologyGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+@media (min-width: 1400px) {
+    .methodologyGrid {
+        max-width: 1200px;
+    }
+}
+
+@media (min-width: 1800px) {
+    .methodologyGrid {
+        max-width: 1500px;
+    }
+}
+
+@media (min-width: 2440px) {
+    .methodologyGrid {
+        max-width: 1800px;
+    }
+}
+
+.methodCard {
+    background: var(--color-bg-coaching, #F3F3F3);
+    padding: 2.5rem;
+    border-radius: 12px;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.methodCard:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    background-color: var(--color-white);
+    border-color: transparent;
+}
+
+.methodNumber {
+    color: var(--color-yellow-light);
+    font-size: 4rem;
+    font-weight: 800;
+    opacity: 0.5;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    line-height: 1;
+    transition: all 0.3s ease;
+}
+
+.methodCard:hover .methodNumber {
+    color: var(--color-yellow);
+    opacity: 0.8;
+}
+
+.methodTitle {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--color-black);
+    position: relative;
+    z-index: 1;
+}
+
+.methodDesc {
+    color: var(--color-gray-dark);
+    font-size: 1.25rem;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+    margin: 0;
+}
+
+/* --- Pinwheel Section --- */
+.pinwheelSection {
+    background-color: var(--color-bg-coaching, #F3F3F3);
+}
+
+.pinwheelSection .container {
+    display: flex;
+    align-items: flex-start;
+    gap: 4rem;
+}
+
+.pinwheelContent {
+    flex: 3;
+}
+
+.pinwheelImageContainer {
+    flex: 1.8;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.pinwheelImage {
+    max-width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.pinwheelText {
+    margin-top: 2rem;
+}
+
+.pinwheelText p {
+    font-size: 1.35rem;
+    margin-bottom: 0.25rem;
+}
+
+.pinwheelList {
+    font-size: 1.5rem;
+    color: var(--color-yellow);
+    margin: 1.5rem 0 !important;
+    letter-spacing: 0.5px;
+}
+
+.pinwheelEmphasis {
+    color: var(--color-yellow);
+    font-size: 1.5rem;
+    margin-top: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+/* --- CTA Banners Section --- */
+.ctaSection {
+    background-color: var(--color-white);
+    padding: 6rem 0;
+}
+
+.ctaBannerLeft {
+    background-color: var(--color-yellow);
+    color: var(--color-black);
+    padding: 2.5rem 3rem;
+    border-radius: 20px;
+    margin: 0 auto 1.5rem 0;
+    max-width: 85%;
+    box-shadow: 0 10px 20px rgba(27, 117, 188, 0.15);
+}
+
+.ctaBannerRight {
+    background-color: var(--color-yellow);
+    color: var(--color-black);
+    padding: 2.5rem 3rem;
+    border-radius: 20px;
+    margin: 0 0 1.5rem auto;
+    max-width: 85%;
+    box-shadow: 0 10px 20px rgba(27, 117, 188, 0.15);
+}
+
+@media (min-width: 1800px) {
+    .ctaBannerLeft {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .ctaBannerRight {
+        text-align: center;
+    }
+}
+
+
+.ctaBannerLeft h2,
+.ctaBannerRight h2 {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* --- FAQ Section --- */
+.faqSection {
+    background-color: var(--color-bg-coaching, #F3F3F3);
+    padding: 6rem 0;
+}
+
+.faqGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.faqCard {
+    background: var(--color-white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.faqHeader {
+    background-color: var(--color-yellow-light);
+    padding: 1.5rem;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+}
+
+.faqHeader h3 {
+    color: var(--color-black);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.faqBody {
+    padding: 2rem;
+    flex-grow: 1;
+}
+
+.faqBody p {
+    color: var(--color-gray-dark);
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+/* --- Page Footer --- */
+.pageFooter {
+    background-color: var(--color-white);
+    padding: 6rem 0 0 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.footerGrid {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.footerImageContainer {
+    flex: 0 0 40%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.footerImage {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+.footerContent {
+    flex: 1;
+    padding-left: 4rem;
+    padding-right: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@media (min-width: 1800px) {
+    .footerContent {
+        padding-left: 8rem;
+    }
+}
+
+@media (min-width: 2200px) {
+    .footerContent {
+        padding-left: 12rem;
+    }
+}
+
+.footerTitleBold {
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--color-black);
+    line-height: 1.1;
+    display: block;
+}
+
+.footerTitleBlue {
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--color-yellow);
+    line-height: 1.1;
+    display: block;
+    margin-bottom: 2rem;
+}
+
+.footerContact {
+    margin-bottom: 3rem;
+}
+
+.footerContact p {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-black);
+    margin-bottom: 0.2rem;
+}
+
+.contactButton {
+    display: inline-block;
+    background-color: var(--color-yellow);
+    color: var(--color-black);
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    margin-top: 1rem;
+    text-transform: lowercase;
+    transition: all 0.3s ease;
+    /* Maintained original button font-size */
+}
+
+.contactButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(27, 117, 188, 0.2);
+}
+
+.footerLogoContainer {
+    margin-top: 45px;
+}
+
+.footerLogo {
+    max-width: 300px;
+    margin-bottom: 8px;
+}
+
+.footerLogoSubtext {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--color-black);
+}
+
+/* --- Typography Scaling for Large Screens --- */
+@media (min-width: 1800px) {
+    .blueBox {
+        font-size: 1.5rem;
+    }
+
+    .subtextItalic,
+    .subtextItalicCentered {
+        font-size: 1.35rem;
+    }
+
+    .sectionTitle {
+        font-size: 3.5rem;
+    }
+
+    .logoSubtext {
+        font-size: 1.25rem;
+    }
+
+    .heroTitle {
+        font-size: 5.5rem;
+    }
+
+    .heroSubtitle {
+        font-size: 1.8rem;
+    }
+
+    .visionBanner p {
+        font-size: 2.2rem;
+    }
+
+    .staggeredLeft,
+    .staggeredRight {
+        font-size: 2.2rem;
+    }
+
+    .blueBoxCentered p {
+        font-size: 2.1rem;
+    }
+
+    .causeList li {
+        font-size: 1.7rem;
+    }
+
+    .causeList li::before {
+        font-size: 2.2rem;
+    }
+
+    .sectionSubtitle {
+        font-size: 1.7rem;
+    }
+
+    .methodNumber {
+        font-size: 5.5rem;
+    }
+
+    .methodTitle {
+        font-size: 2.1rem;
+    }
+
+    .methodDesc {
+        font-size: 1.5rem;
+    }
+
+    .pinwheelText p {
+        font-size: 1.6rem;
+    }
+
+    .pinwheelList,
+    .pinwheelEmphasis {
+        font-size: 1.8rem;
+    }
+
+    .ctaBannerLeft h2,
+    .ctaBannerRight h2 {
+        font-size: 2.6rem;
+    }
+
+    .faqHeader h3 {
+        font-size: 1.8rem;
+    }
+
+    .faqBody p {
+        font-size: 1.5rem;
+    }
+
+    .footerTitleBold,
+    .footerTitleBlue {
+        font-size: 5rem;
+    }
+
+    .footerContact p {
+        font-size: 1.5rem;
+    }
+
+    .footerLogoSubtext {
+        font-size: 1.3rem;
+    }
+}
+
+@media (min-width: 2200px) {
+    .blueBox {
+        font-size: 1.7rem;
+    }
+
+    .subtextItalic,
+    .subtextItalicCentered {
+        font-size: 1.55rem;
+    }
+
+    .sectionTitle {
+        font-size: 4.2rem;
+    }
+
+    .logoSubtext {
+        font-size: 1.45rem;
+    }
+
+    .heroTitle {
+        font-size: 6.5rem;
+    }
+
+    .heroSubtitle {
+        font-size: 2.2rem;
+    }
+
+    .visionBanner p {
+        font-size: 2.6rem;
+    }
+
+    .staggeredLeft,
+    .staggeredRight {
+        font-size: 2.6rem;
+    }
+
+    .blueBoxCentered p {
+        font-size: 2.5rem;
+    }
+
+    .causeList li {
+        font-size: 2.1rem;
+    }
+
+    .causeList li::before {
+        font-size: 2.6rem;
+        left: 11% !important;
+    }
+
+    .sectionSubtitle {
+        font-size: 2.1rem;
+    }
+
+    .methodNumber {
+        font-size: 7rem;
+    }
+
+    .methodTitle {
+        font-size: 2.5rem;
+    }
+
+    .methodDesc {
+        font-size: 1.75rem;
+    }
+
+    .pinwheelText p {
+        font-size: 1.85rem;
+    }
+
+    .pinwheelList,
+    .pinwheelEmphasis {
+        font-size: 2.1rem;
+    }
+
+    .ctaBannerLeft h2,
+    .ctaBannerRight h2 {
+        font-size: 3rem;
+    }
+
+    .faqHeader h3 {
+        font-size: 2.1rem;
+    }
+
+    .faqBody p {
+        font-size: 1.8rem;
+    }
+
+    .footerTitleBold,
+    .footerTitleBlue {
+        font-size: 6rem;
+    }
+
+    .footerContact p {
+        font-size: 1.8rem;
+    }
+
+    .footerLogoSubtext {
+        font-size: 1.55rem;
+    }
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1024px) {
+    .heroTitle {
+        font-size: 3.5rem;
+    }
+
+    .heroImageContainer {
+        max-width: 50%;
+    }
+
+    .pinwheelSection .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .faqGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .heroSection {
+        flex-direction: column;
+        text-align: center;
+        padding-top: 2rem;
+    }
+
+    .heroContent {
+        padding-right: 0;
+        margin-bottom: 3rem;
+    }
+
+    .heroImageContainer {
+        max-width: 100%;
+        justify-content: center;
+    }
+
+    .logoContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .heroSubtitle {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .visionBanner p {
+        font-size: 1.5rem;
+    }
+
+    .methodologyGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .faqGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .footerGrid {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footerImageContainer,
+    .footerContent {
+        flex: none;
+        width: 100%;
+        padding: 0;
+        justify-content: center;
+    }
+
+    .footerImage {
+        max-width: 100%;
+    }
+
+    .footerLogoContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}

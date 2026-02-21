@@ -1,0 +1,190 @@
+/* Payment Success Page Styles */
+
+.container {
+    margin-top: 80px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xl);
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+.card {
+    max-width: 800px;
+    width: 100%;
+    background: #0f0f0f;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: var(--space-xl);
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.iconWrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    border-radius: 50%;
+    margin-bottom: var(--space-lg);
+    box-shadow: 0 8px 24px rgba(76, 175, 80, 0.4);
+    animation: scaleIn 0.5s ease-out 0.2s both;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+.icon {
+    font-size: 3.5rem;
+    color: white;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: white;
+    margin: 0 0 var(--space-lg) 0;
+    animation: fadeIn 0.5s ease-out 0.3s both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.messageBox {
+    margin-bottom: var(--space-xl);
+    animation: fadeIn 0.5s ease-out 0.4s both;
+}
+
+.guestMessage {
+    background: linear-gradient(135deg, rgba(241, 196, 15, 0.15) 0%, rgba(241, 196, 15, 0.05) 100%);
+    border: 2px solid var(--color-primary);
+    border-radius: 12px;
+    padding: var(--space-lg);
+}
+
+.actionRequired {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--color-primary);
+    margin: 0 0 var(--space-md) 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.actionRequired::before {
+    content: '⚠️';
+    font-size: 1.3rem;
+}
+
+.guestInstructions {
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.registeredMessage {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    animation: fadeIn 0.5s ease-out 0.5s both;
+}
+
+.button {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    border-radius: 12px;
+    background: var(--color-yellow);
+    color: var(--color-black);
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 12px rgba(241, 196, 15, 0.3);
+}
+
+.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(241, 196, 15, 0.4);
+}
+
+.orderId {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0;
+    font-family: monospace;
+    word-break: break-all;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .container {
+        padding: var(--space-lg);
+    }
+
+    .card {
+        padding: var(--space-xl);
+    }
+
+    .iconWrapper {
+        width: 80px;
+        height: 80px;
+    }
+
+    .icon {
+        font-size: 2.5rem;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .actionRequired {
+        font-size: 1rem;
+    }
+
+    .guestInstructions,
+    .registeredMessage {
+        font-size: 0.9rem;
+    }
+}

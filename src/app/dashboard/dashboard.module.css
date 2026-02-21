@@ -420,6 +420,8 @@
 }
 
 .emptyState svg {
+  margin-left: auto;
+  margin-right: auto;
   font-size: 4rem;
   color: var(--color-gray);
   margin-bottom: var(--space-md);
@@ -437,6 +439,26 @@
   max-width: 400px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.coursesbtn {
+  display: block;
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
+  background: var(--color-yellow);
+  color: var(--color-black);
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all var(--transition-normal);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(241, 196, 15, 0.2);
+}
+
+.coursesbtn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(241, 196, 15, 0.35);
 }
 
 /* Download Certificate Button Styles */

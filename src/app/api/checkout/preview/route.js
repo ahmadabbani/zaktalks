@@ -28,17 +28,16 @@ export async function POST(req) {
     const { data: { user } } = await supabase.auth.getUser()
     let userId = user?.id || null
 
-    // If guest with email, check if they have an account
+    // If guest with email, check if they already have an account
     if (!user && email) {
-      // Note: listUsers with filters doesn't work correctly in some Supabase versions
-      // We need to manually check if the specific email exists
-      const { data: { users } } = await supabaseAdmin.auth.admin.listUsers()
-      
-      // Find user with matching email (case-insensitive)
-      const matchingUser = users?.find(u => u.email?.toLowerCase() === email.toLowerCase())
-      
+      const { data: matchingUser } = await supabaseAdmin
+        .from('users')
+        .select('id')
+        .eq('email', email.toLowerCase())
+        .single()
+
       if (matchingUser) {
-        userId = matchingUser.id
+        return NextResponse.json({ emailExists: true })
       }
     }
 

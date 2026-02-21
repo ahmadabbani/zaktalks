@@ -78,6 +78,19 @@ export async function POST(req) {
     })
     
     const supabaseAdmin = await createAdminClient()
+
+    // Idempotency check: skip if this session was already processed
+    // This prevents duplicate point spend/earn on Stripe webhook retries
+    const { data: existingSession } = await supabaseAdmin
+      .from('checkout_sessions')
+      .select('status')
+      .eq('stripe_session_id', stripeSessionId)
+      .single()
+
+    if (existingSession?.status === 'completed') {
+      console.log('Webhook already processed for session:', stripeSessionId)
+      return NextResponse.json({ received: true })
+    }
     let userId = session.client_reference_id
     let isBrandNewUser = false
 
@@ -85,9 +98,12 @@ export async function POST(req) {
     if (isGuest === 'true' && !userId) {
       console.log('Guest logic triggered...')
       
-      // Fix: listUsers with filters doesn't work correctly - manually find by email
-      const { data: { users: allUsers } } = await supabaseAdmin.auth.admin.listUsers()
-      const existingUser = allUsers?.find(u => u.email?.toLowerCase() === email.toLowerCase())
+      // Check if user already exists in public.users table (scales to any number of users)
+      const { data: existingUser } = await supabaseAdmin
+        .from('users')
+        .select('id')
+        .eq('email', email.toLowerCase())
+        .single()
       
       if (existingUser) {
         userId = existingUser.id
@@ -105,8 +121,11 @@ export async function POST(req) {
         if (createError) {
           console.error('User creation failed:', createError)
           // Recheck - maybe user was created by another process
-          const { data: { users: recheckUsers } } = await supabaseAdmin.auth.admin.listUsers()
-          const recheckUser = recheckUsers?.find(u => u.email?.toLowerCase() === email.toLowerCase())
+          const { data: recheckUser } = await supabaseAdmin
+            .from('users')
+            .select('id')
+            .eq('email', email.toLowerCase())
+            .single()
           userId = recheckUser?.id
         } else {
           userId = newUser.user.id

@@ -42,7 +42,7 @@
 }
 
 .heroTitle {
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(2.2rem, 5.2vw, 3.7rem);
   font-weight: 800;
   line-height: 1.25;
   letter-spacing: 1px;
@@ -161,36 +161,12 @@
   }
 }
 
-@media (max-width: 968px) {
-  .heroGrid {
-    grid-template-columns: 1fr;
-    gap: var(--space-xl);
-  }
-
-  .heroRight {
-    order: -1;
-  }
-
-  .heroImageWrapper {
-    max-width: 500px;
-  }
-
-  .heroBottomGrid {
-    grid-template-columns: 1fr;
-    gap: var(--space-xl);
-  }
-}
-
 @media (max-width: 768px) {
   .main {
     padding-top: 70px;
   }
 
   .heroSection {
-    min-height: auto;
-  }
-
-  .heroGrid {
     min-height: auto;
   }
 
@@ -203,7 +179,61 @@
   }
 }
 
+@media (max-width: 635px) {
+  .heroLeft {
+    gap: var(--space-sm);
+  }
+
+  .heroTitle {
+    font-weight: 800;
+    line-height: 1.15;
+  }
+
+  .heroDescription {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    line-height: 1.6;
+    max-width: 100%;
+  }
+
+  .btnCourses {
+    padding: 0.75rem 3rem;
+    font-size: 1.1rem;
+  }
+
+  .heroGrid {
+    gap: var(--space-sm);
+  }
+}
+
+@media (max-width: 580px) {
+
+  .heroGrid {
+    grid-template-columns: 1fr;
+    padding: var(--space-xl) 0 var(--space-2xl) 0;
+    gap: var(--space-lg);
+    min-height: auto;
+
+  }
+
+  .heroRight {
+    order: 1;
+  }
+
+  .heroImageWrapper {
+    max-width: 300px;
+  }
+
+  .heroBottomGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+}
+
 @media (max-width: 480px) {
+  .heroGrid {
+    padding-top: var(--space-lg);
+  }
+
   .btnCourses {
     width: 100%;
     text-align: center;
@@ -232,7 +262,7 @@
 }
 
 .aboutTitle {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(2.2rem, 4.7vw, 3.7rem);
   font-weight: 800;
   line-height: 1.2;
   color: var(--color-black);
@@ -317,6 +347,26 @@
   .aboutGrid {
     gap: var(--space-xl);
   }
+
+  .aboutLeft {
+    gap: var(--space-md);
+  }
+}
+
+@media (max-width: 580px) {
+
+  .aboutText {
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  .btnAbout {
+    align-self: center;
+  }
+
+  .aboutTitle {
+    text-align: center;
+  }
 }
 
 /* Services Section */
@@ -328,7 +378,7 @@
 }
 
 .servicesTitle {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(2.2rem, 4.7vw, 3.7rem);
   font-weight: 800;
   line-height: 1.2;
   color: var(--color-white);
@@ -436,11 +486,11 @@
 
 @media (max-width: 768px) {
   .servicesSection {
-    padding: var(--space-2xl) 0;
+    padding: var(--space-xl) 0;
   }
 
   .servicesTitle {
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-md);
   }
 
   .servicesGrid {
@@ -465,6 +515,21 @@
   }
 }
 
+@media (max-width: 580px) {
+  .servicesGrid {
+    gap: var(--space-md);
+  }
+
+  .serviceCard {
+    padding: var(--space-md);
+    gap: var(--space-sm);
+  }
+
+  .serviceDescription {
+    line-height: 1.6;
+  }
+}
+
 /* Zak Section */
 .zakSection {
   padding: var(--space-3xl) 0;
@@ -483,13 +548,14 @@
 .zakLeft {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
 }
 
 .zakName {
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-size: clamp(2.2rem, 4.7vw, 3.7rem);
   font-weight: 700;
   line-height: 1;
+
   color: var(--color-black);
   letter-spacing: 3px;
 }
@@ -539,6 +605,10 @@
   .zakDescription {
     max-width: 100%;
   }
+
+  .zakLeft {
+    gap: var(--space-md);
+  }
 }
 
 @media (max-width: 768px) {
@@ -559,6 +629,12 @@
   }
 }
 
+@media (max-width: 580px) {
+  .zakDescription {
+    line-height: 1.6;
+  }
+}
+
 /* Latest Courses Section */
 .coursesSection {
   padding: var(--space-3xl) 0;
@@ -575,7 +651,7 @@
 }
 
 .coursesTitle {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(2.2rem, 4.7vw, 3.7rem);
   font-weight: 800;
   line-height: 1.2;
   color: var(--color-black);
@@ -598,7 +674,6 @@
   transition: all var(--transition-normal);
   position: relative;
   margin-left: auto;
-  margin-right: 140px;
   overflow: hidden;
 }
 
@@ -747,6 +822,12 @@
 }
 
 /* Responsive */
+@media (min-width: 1440px) {
+  .courseImageWrapper {
+    height: 320px;
+  }
+}
+
 @media (max-width: 1024px) {
   .coursesGrid {
     grid-template-columns: repeat(2, 1fr);
@@ -755,13 +836,13 @@
 
 @media (max-width: 768px) {
   .coursesSection {
-    padding: var(--space-2xl) 0;
+    padding: var(--space-3xl) 0;
   }
 
   .coursesHeader {
     gap: var(--space-lg);
     align-items: flex-start;
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-xl);
   }
 
   .coursesTitle {
@@ -778,7 +859,7 @@
   }
 
   .courseImageWrapper {
-    height: 220px;
+    height: 300px;
   }
 
   .courseContent {
@@ -807,6 +888,18 @@
   }
 }
 
+@media (max-width: 660px) {
+  .coursesHeader {
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .btnExplore {
+    display: block;
+    padding: 0.75rem 2.5rem;
+  }
+}
+
 /* Coaching Process Section */
 .processSection {
   padding: var(--space-2xl) 0 var(--space-xl) 0;
@@ -816,7 +909,7 @@
 }
 
 .processTitle {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(2.2rem, 4.7vw, 3.7rem);
   font-weight: 800;
   line-height: 1.2;
   color: var(--color-black);
@@ -1022,6 +1115,11 @@
 
 /* Responsive */
 @media (max-width: 1200px) {
+
+  .processTitle {
+    margin-bottom: var(--space-xl);
+  }
+
   .processFlow {
     gap: var(--space-md);
     justify-content: center;
@@ -1064,12 +1162,12 @@
 }
 
 @media (max-width: 768px) {
-  .processSection {
-    padding: var(--space-xl) 0;
+  .processTitle {
+    margin-bottom: var(--space-md);
   }
 
-  .processTitle {
-    margin-bottom: var(--space-2xl);
+  .processSection {
+    padding: var(--space-xl) 0;
   }
 
   .processFlow {
@@ -1205,15 +1303,35 @@
   }
 
   .podcastLeft {
-    padding: var(--space-3xl) var(--space-2xl);
-    order: 2;
+    padding: var(--space-2xl) var(--space-xl);
+    order: 1;
   }
+
+  .podcastContent {
+    gap: var(--space-lg);
+  }
+
+  /*.podcastLeft {
+  background-color: var(--color-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3xl);
+  position: relative;
+}
+
+.podcastContent {
+  max-width: 550px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}*/
 
   .podcastRight {
     border-left: none;
     border-bottom: 3px solid var(--color-yellow);
-    min-height: 400px;
-    order: 1;
+    min-height: auto;
+    order: 2;
   }
 
   .podcastContent {

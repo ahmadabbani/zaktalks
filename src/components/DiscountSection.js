@@ -43,6 +43,17 @@ export default function DiscountSection({
 
       const data = await res.json()
       
+      // Check if email already exists (guest trying to use a registered email)
+      if (data.emailExists) {
+        setDiscountData(null)
+        setError(null)
+        if (onDiscountsCalculated) {
+          onDiscountsCalculated({ emailExists: true })
+        }
+        setLoading(false)
+        return
+      }
+
       if (res.ok) {
         setDiscountData(data)
         if (onDiscountsCalculated) {
@@ -186,11 +197,16 @@ export default function DiscountSection({
       {/* Points Selector - only show if user has 1000+ points */}
       {userPoints >= 1000 && (
         <div className={styles.pointsSection}>
-          <div className={styles.pointsWrapper}>
+          <div className={styles.pointsHeader}>
             <span className={styles.discountLabel}>
               <FaCoins className={styles.icon} />
-              Use Points:
+              Use Your Points
             </span>
+            <p className={styles.pointsHint}>
+              You can use your points to get a discount on this course!
+            </p>
+          </div>
+          <div className={styles.pointsWrapper}>
             <select
               value={pointsToUse}
               onChange={(e) => setPointsToUse(parseInt(e.target.value))}
@@ -206,7 +222,7 @@ export default function DiscountSection({
               ))}
             </select>
             <span className={styles.pointsBalance}>
-              Balance: {userPoints} pts
+              Balance: {userPoints.toLocaleString()} pts
             </span>
           </div>
         </div>

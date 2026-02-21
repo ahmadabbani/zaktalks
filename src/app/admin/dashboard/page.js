@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { FaChartLine, FaUsers, FaDollarSign, FaGraduationCap, FaCog, FaTicketAlt, FaArrowLeft } from 'react-icons/fa'
+import CreateAdminButton from './CreateAdminButton'
 import styles from './admin-dashboard.module.css'
 
 export default async function AdminDashboardPage() {
@@ -114,11 +115,12 @@ export default async function AdminDashboardPage() {
         </div>
       </section>
 
-      {/* Back to Site Link */}
-      <div>
+      {/* Bottom Actions */}
+      <div className={styles.bottomActions}>
         <Link href="/dashboard" className={styles.backLink}>
           <FaArrowLeft /> Back to Site
         </Link>
+        <CreateAdminButton />
       </div>
     </div>
   )

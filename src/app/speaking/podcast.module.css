@@ -9,14 +9,14 @@
 }
 
 .contentWrapper {
-    max-width: 1400px;
+    max-width: 1800px;
     margin: 0 auto;
     padding: 0 var(--space-xl);
 }
 
 /* Header Grid Layout */
 .headerSection {
-    margin-bottom: 6rem;
+    margin-bottom: 5rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
@@ -44,6 +44,7 @@
 .headerImage {
     width: 100%;
     height: auto;
+
     /* Changed to auto to maintain aspect ratio */
     object-fit: contain;
     /* Changed to contain */
@@ -87,7 +88,7 @@
 /* Slider Section */
 .sliderSection {
     position: relative;
-    margin-bottom: 6rem;
+    margin-bottom: 3rem;
     animation: fadeIn 1s ease-out 0.4s both;
 }
 
@@ -306,9 +307,23 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
+    .sliderSection {
+        margin-bottom: 0rem;
+    }
+
     .headerSection {
         margin-bottom: 4rem;
+    }
+
+    .ctaSection {
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .headerSection {
+        margin-bottom: 5rem;
         grid-template-columns: 1fr;
         gap: var(--space-xl);
     }
@@ -317,12 +332,14 @@
         text-align: left;
     }
 
-    .title {
-        font-size: 3rem;
-    }
-
     .contentWrapper {
         padding: 0 var(--space-lg);
+    }
+
+    .headerImageContainer {
+        height: auto;
+        min-height: auto;
+
     }
 
     .sliderControls {
@@ -332,5 +349,41 @@
     .videoCard {
         min-width: 280px;
         max-width: 280px;
+    }
+}
+
+@media (max-width: 580px) {
+    .headerSection {
+        margin-bottom: 4rem;
+        gap: var(--space-lg);
+    }
+
+    .title {
+        font-size: 3.5rem;
+    }
+
+    .channelBtn {
+        font-size: 1rem;
+        padding: 1.25rem 1.5rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* Show exactly 1 card at a time, centered */
+    .sliderTrack {
+        scroll-snap-type: x mandatory;
+        gap: 0;
+    }
+
+    .videoCard {
+        min-width: 100%;
+        max-width: 100%;
+        scroll-snap-align: center;
+    }
+}
+
+@media (max-width: 405px) {
+    .channelBtn {
+        gap: 0.5rem;
+        padding: 1.25rem 1.1rem;
     }
 }

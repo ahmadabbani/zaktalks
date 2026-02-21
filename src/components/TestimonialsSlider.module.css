@@ -170,3 +170,23 @@
         gap: var(--space-lg);
     }
 }
+
+@media (max-width: 430px) {
+    .testimonialAuthor {
+        margin-top: var(--space-sm);
+        padding-top: var(--space-sm);
+    }
+
+    .testimonialText {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    /* .authorName {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--color-gray-light);
+        opacity: 0.9;
+        margin-bottom: 0.25rem;
+    }*/
+}

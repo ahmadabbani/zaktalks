@@ -2,6 +2,7 @@
 
 import { useState, Suspense, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import DiscountSection from '@/components/DiscountSection'
 import styles from './guest.module.css'
 
@@ -14,6 +15,7 @@ function GuestForm() {
     couponCode: null,
     pointsToUse: 0
   })
+  const [emailExists, setEmailExists] = useState(false)
   const [courseName, setCourseName] = useState('')
 
   // Fetch course name on load
@@ -37,6 +39,11 @@ function GuestForm() {
   }, [courseId])
 
   const handleDiscountsCalculated = (discounts) => {
+    if (discounts.emailExists) {
+      setEmailExists(true)
+      return
+    }
+    setEmailExists(false)
     setDiscountOptions({
       couponCode: discounts.couponCode,
       pointsToUse: discounts.pointsToUse || 0
@@ -103,7 +110,7 @@ function GuestForm() {
                 type="text" 
                 name="first_name" 
                 required 
-                placeholder="John" 
+                placeholder="name" 
                 className={styles.input}
               />
             </div>
@@ -113,7 +120,7 @@ function GuestForm() {
                 type="text" 
                 name="last_name" 
                 required 
-                placeholder="Doe" 
+                placeholder="last name" 
                 className={styles.input}
               />
             </div>
@@ -125,7 +132,7 @@ function GuestForm() {
               type="email" 
               name="email" 
               required 
-              placeholder="john@example.com"
+              placeholder="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={styles.input}
@@ -140,9 +147,16 @@ function GuestForm() {
             disabled={loading}
           />
 
+          {emailExists && (
+            <div className={styles.emailExistsWarning}>
+              <p>An account with this email already exists.</p>
+              <p>Please <Link href="/login" className={styles.loginLink}>log in</Link> to continue your purchase.</p>
+            </div>
+          )}
+
           <button 
             type="submit" 
-            disabled={loading} 
+            disabled={loading || emailExists} 
             className={styles.submitButton}
           >
             {loading ? 'Processing...' : 'Proceed to Payment'}

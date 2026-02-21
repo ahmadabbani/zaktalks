@@ -22,29 +22,17 @@ export default function NavbarClient({ user, role, signout }) {
     { href: '/contact', label: 'Contact' },
   ]
 
+  const toggleMenu = () => setIsMobileMenuOpen(prev => !prev)
+  const closeMenu = () => setIsMobileMenuOpen(false)
+
   useEffect(() => {
-    const burgerMenu = document.querySelector('[aria-label="Toggle menu"]')
-    const mobileMenuOverlay = document.querySelector(`.${styles.mobileMenuOverlay}`)
-    
-    if (burgerMenu && mobileMenuOverlay) {
-      const handleToggle = () => {
-        setIsMobileMenuOpen(prev => !prev)
-      }
-
-      burgerMenu.addEventListener('click', handleToggle)
-
-      const mobileLinks = mobileMenuOverlay.querySelectorAll('a')
-      mobileLinks.forEach(link => {
-        link.addEventListener('click', () => {
-          setIsMobileMenuOpen(false)
-        })
-      })
-
-      return () => {
-        burgerMenu.removeEventListener('click', handleToggle)
-      }
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
     }
-  }, [])
+    return () => { document.body.style.overflow = '' }
+  }, [isMobileMenuOpen])
 
   return (
     <nav className={styles.navbar}>
@@ -108,6 +96,7 @@ export default function NavbarClient({ user, role, signout }) {
           <button 
             className={`${styles.burgerMenu} ${isMobileMenuOpen ? styles.active : ''}`}
             aria-label="Toggle menu"
+            onClick={toggleMenu}
           >
             <span></span>
             <span></span>
@@ -124,6 +113,7 @@ export default function NavbarClient({ user, role, signout }) {
               key={link.href}
               href={link.href}
               className={`${styles.mobileNavLink} ${pathname === link.href ? styles.mobileActive : ''}`}
+              onClick={closeMenu}
             >
               {link.label}
             </Link>
@@ -134,11 +124,12 @@ export default function NavbarClient({ user, role, signout }) {
               <Link 
                 href={dashboardLink}
                 className={`${styles.mobileNavLink} ${pathname === dashboardLink ? styles.mobileActive : ''}`}
+                onClick={closeMenu}
               >
                 {dashboardText}
               </Link>
               <form action={signout}>
-                <button type="submit" className={styles.mobileBtnPrimary}>
+                <button type="submit" className={styles.mobileBtnPrimary} onClick={closeMenu}>
                   Sign Out
                 </button>
               </form>
@@ -148,10 +139,11 @@ export default function NavbarClient({ user, role, signout }) {
               <Link 
                 href="/login" 
                 className={`${styles.mobileNavLink} ${pathname === '/login' ? styles.mobileActive : ''}`}
+                onClick={closeMenu}
               >
                 Login
               </Link>
-              <Link href="/courses" className={styles.mobileBtnPrimary}>
+              <Link href="/courses" className={styles.mobileBtnPrimary} onClick={closeMenu}>
                 Get Started
               </Link>
             </>
