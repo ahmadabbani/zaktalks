@@ -1,8 +1,8 @@
 /* src/app/coaching/coaching.module.css */
 
 .coachingPage {
-    background-color: var(--color-bg-coaching, #F3F3F3);
-    color: var(--color-black);
+    background-color: var(--color-black);
+    color: var(--color-white);
     font-family: var(--font-montserrat, 'Montserrat', sans-serif);
     overflow-x: hidden;
     margin-top: 60px;
@@ -44,14 +44,14 @@
 
 .subtextItalic {
     font-style: italic;
-    color: var(--color-gray-dark);
+    color: var(--color-gray-light);
     font-size: 1.15rem;
     margin-top: 1rem;
 }
 
 .subtextItalicCentered {
     font-style: italic;
-    color: var(--color-gray-dark);
+    color: var(--color-gray-light);
     font-size: 1.15rem;
     text-align: center;
     margin-top: 2rem;
@@ -60,7 +60,7 @@
 .sectionTitle {
     font-size: 2.8rem;
     font-weight: 700;
-    color: var(--color-black);
+    color: var(--color-white);
     margin-bottom: 1rem;
 }
 
@@ -105,7 +105,7 @@
     font-size: 1.05rem;
     font-weight: 600;
     letter-spacing: 2px;
-    color: var(--color-black);
+    color: var(--color-white);
 }
 
 .heroTitle {
@@ -116,7 +116,7 @@
 
 .titleRegular {
     font-weight: 400;
-    color: var(--color-black);
+    color: var(--color-white);
 }
 
 .titleBold {
@@ -128,7 +128,7 @@
     font-size: 1.4rem;
     font-weight: 700;
     line-height: 1.6;
-    color: var(--color-black);
+    color: var(--color-white);
     margin-bottom: 1rem;
 }
 
@@ -192,7 +192,7 @@
 
 /* --- Philosophy & Results Section --- */
 .philosophySection {
-    background-color: var(--color-bg-coaching, #F3F3F3);
+    background-color: var(--color-black);
     padding: 6rem 0;
 }
 
@@ -312,7 +312,7 @@
 
 /* --- Methodology Section --- */
 .methodologySection {
-    background-color: var(--color-white);
+    background-color: var(--color-black);
     padding: 6rem 0;
 }
 
@@ -323,7 +323,7 @@
 
 .sectionSubtitle {
     font-size: 1.4rem;
-    color: var(--color-gray-dark);
+    color: var(--color-gray-light);
     font-style: italic;
 }
 
@@ -354,20 +354,20 @@
 }
 
 .methodCard {
-    background: var(--color-bg-coaching, #F3F3F3);
+    background: #1a1a1a;
     padding: 2.5rem;
     border-radius: 12px;
     position: relative;
     transition: all 0.3s ease;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: 0 6px 15px rgba(255, 255, 255, 0.05);
+    border: 1px solid #1a1a1a;
 }
 
 .methodCard:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    background-color: var(--color-white);
-    border-color: transparent;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    background-color: #252525;
+    border-color: var(--color-yellow);
 }
 
 .methodNumber {
@@ -391,13 +391,13 @@
     font-size: 1.7rem;
     font-weight: 700;
     margin-bottom: 1rem;
-    color: var(--color-black);
+    color: var(--color-white);
     position: relative;
     z-index: 1;
 }
 
 .methodDesc {
-    color: var(--color-gray-dark);
+    color: var(--color-gray-light);
     font-size: 1.25rem;
     line-height: 1.6;
     position: relative;
@@ -407,7 +407,7 @@
 
 /* --- Pinwheel Section --- */
 .pinwheelSection {
-    background-color: var(--color-bg-coaching, #F3F3F3);
+    background-color: var(--color-black);
 }
 
 .pinwheelSection .container {
@@ -458,7 +458,7 @@
 
 /* --- CTA Banners Section --- */
 .ctaSection {
-    background-color: var(--color-white);
+    background-color: var(--color-black);
     padding: 6rem 0;
 }
 
@@ -503,7 +503,7 @@
 
 /* --- FAQ Section --- */
 .faqSection {
-    background-color: var(--color-bg-coaching, #F3F3F3);
+    background-color: var(--color-black);
     padding: 6rem 0;
 }
 
@@ -514,16 +514,17 @@
 }
 
 .faqCard {
-    background: var(--color-white);
+    background: var(--color-black);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     flex-direction: column;
 }
 
 .faqHeader {
-    background-color: var(--color-yellow-light);
+    background-color: var(--color-yellow);
     padding: 1.5rem;
     min-height: 100px;
     display: flex;
@@ -543,16 +544,16 @@
 }
 
 .faqBody p {
-    color: var(--color-gray-dark);
+    color: var(--color-gray-light);
     font-size: 1.2rem;
     margin: 0;
 }
 
 /* --- Page Footer --- */
 .pageFooter {
-    background-color: var(--color-white);
+    background-color: var(--color-black);
     padding: 6rem 0 0 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footerGrid {
@@ -598,7 +599,7 @@
 .footerTitleBold {
     font-size: 4rem;
     font-weight: 800;
-    color: var(--color-black);
+    color: var(--color-white);
     line-height: 1.1;
     display: block;
 }
@@ -619,7 +620,7 @@
 .footerContact p {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--color-black);
+    color: var(--color-white);
     margin-bottom: 0.2rem;
 }
 
@@ -654,7 +655,7 @@
     font-size: 1rem;
     font-weight: 600;
     letter-spacing: 2px;
-    color: var(--color-black);
+    color: var(--color-white);
 }
 
 /* --- Typography Scaling for Large Screens --- */

@@ -15,7 +15,7 @@ export default function CoachingPage() {
         <div className={styles.heroContent}>
           <div className={styles.logoContainer}>
             <Image 
-              src="/vector11.png" 
+              src="/vector0.png" 
               alt="Coaching Logo" 
               width={300} 
               height={80} 
@@ -240,7 +240,7 @@ export default function CoachingPage() {
             
             <div className={styles.footerLogoContainer}>
               <Image 
-                src="/vector11.png" 
+                src="/vector0.png" 
                 alt="Coaching Logo" 
                 width={300} 
                 height={80} 
