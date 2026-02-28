@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { FaChevronLeft } from 'react-icons/fa'
 import LessonList from './LessonList'
+import SidebarWrapper from './SidebarWrapper'
 import styles from './player-layout.module.css'
 
 export default async function PlayerLayout({ children, params }) {
@@ -52,7 +53,7 @@ export default async function PlayerLayout({ children, params }) {
   return (
     <div className={styles.playerContainer}>
       {/* Sidebar */}
-      <aside className={styles.sidebar}>
+      <SidebarWrapper>
         {/* Sidebar Header */}
         <div className={styles.sidebarHeader}>
           <Link href="/dashboard" className={styles.backLink}>
@@ -63,7 +64,7 @@ export default async function PlayerLayout({ children, params }) {
 
         {/* Lesson List */}
         <LessonList lessons={lessons} slug={slug} completedMap={completedMap} />
-      </aside>
+      </SidebarWrapper>
 
       {/* Content Area */}
       <main className={styles.mainContent}>

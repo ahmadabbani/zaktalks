@@ -2,8 +2,7 @@
 
 .playerContainer {
     display: flex;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
     background-color: var(--color-gray-light);
     margin-top: 80px;
 }
@@ -49,8 +48,6 @@
 }
 
 .lessonList {
-    flex: 1;
-    overflow-y: auto;
     padding: var(--space-md);
 }
 
@@ -129,9 +126,23 @@
 /* Main Content Area */
 .mainContent {
     flex: 1;
-    overflow-y: auto;
     position: relative;
     background: var(--color-gray-light);
+    overflow-x: hidden;
+}
+
+/* Sidebar Toggle Button - Hidden on desktop */
+.sidebarToggle {
+    display: none;
+}
+
+.sidebarBackdrop {
+    display: none;
+}
+
+/* Dropdown panel styles (used only on <=992px) */
+.dropdownPanel {
+    display: none;
 }
 
 /* Responsive */
@@ -141,16 +152,97 @@
     }
 }
 
-@media (max-width: 768px) {
-    .sidebar {
-        position: fixed;
-        left: -100%;
-        height: 100vh;
-        transition: left 0.3s ease;
-        width: 280px;
+@media (max-width: 992px) {
+    .playerContainer {
+        flex-direction: column;
     }
 
-    .sidebarOpen {
-        left: 0;
+    /* Hide the sidebar as a side panel */
+    .sidebar {
+        display: none;
+    }
+
+    /* Show the dropdown toggle button */
+    .sidebarToggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        background: var(--color-black);
+        color: var(--color-yellow);
+        border: none;
+        padding: var(--space-md) var(--space-lg);
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .sidebarToggle:hover {
+        background: #1a1a1a;
+    }
+
+    .sidebarToggleLabel {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        font-size: 0.9375rem;
+    }
+
+    .toggleIcon {
+        transition: transform 0.3s ease;
+        font-size: 0.75rem;
+    }
+
+    .toggleIconOpen {
+        transform: rotate(180deg);
+    }
+
+    /* Dropdown panel */
+    .dropdownPanel {
+        display: block;
+        max-height: 0;
+        overflow: hidden;
+        background: white;
+        border-bottom: 2px solid var(--color-gray);
+        transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dropdownPanelOpen {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    .mainContent {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebarToggle {
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .sidebarToggleLabel {
+        font-size: 0.875rem;
+    }
+
+    .lessonItem {
+        padding: var(--space-sm) var(--space-md);
+        margin-bottom: var(--space-xs);
+    }
+
+    .lessonTitle {
+        font-size: 0.875rem;
+    }
+
+    .lessonMeta {
+        font-size: 0.6875rem;
+    }
+
+    .lessonNumber {
+        min-width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
     }
 }
