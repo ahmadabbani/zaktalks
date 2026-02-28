@@ -25,7 +25,6 @@ export async function createLesson(courseId, formData) {
     lessonData.youtube_url = formData.get('youtube_url')
   } else {
     lessonData.assessment_key = formData.get('assessment_key')
-    lessonData.passing_score = parseInt(formData.get('passing_score') || '70')
   }
 
   const { error } = await supabase
@@ -96,7 +95,6 @@ export async function updateLesson(courseId, lessonId, formData) {
     lessonData.passing_score = null
   } else {
     lessonData.assessment_key = formData.get('assessment_key')
-    lessonData.passing_score = parseInt(formData.get('passing_score') || '70')
     lessonData.youtube_url = null
   }
 

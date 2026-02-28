@@ -272,3 +272,107 @@
         /* Hide labels on very small screens or stack them */
     }
 }
+
+/* ===== Correct/Incorrect Engine Styles ===== */
+
+/* Option Buttons */
+.ciOptionsSection {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-md);
+    margin-bottom: var(--space-2xl);
+}
+
+.ciOptionBtn {
+    width: 100%;
+    padding: var(--space-lg) var(--space-xl);
+    font-size: 1.125rem;
+    font-weight: 700;
+    background: white;
+    border: 2px solid var(--color-gray);
+    color: var(--color-black);
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-align: left;
+}
+
+.ciOptionBtn:hover {
+    border-color: var(--color-gray-dark);
+    background: rgba(0, 0, 0, 0.02);
+    transform: translateX(4px);
+}
+
+.ciOptionBtnSelected {
+    background: var(--color-black);
+    border-color: var(--color-black);
+    color: var(--color-yellow);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Review Section */
+.ciReviewSection {
+    text-align: left;
+    margin-bottom: var(--space-2xl);
+}
+
+.ciReviewTitle {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-black);
+    margin-bottom: var(--space-lg);
+}
+
+.ciReviewList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.ciReviewItem {
+    background: var(--color-gray-light);
+    border-radius: 0.75rem;
+    padding: var(--space-lg);
+    border-left: 4px solid #dc2626;
+}
+
+.ciReviewQuestion {
+    font-weight: 700;
+    color: var(--color-black);
+    margin-bottom: var(--space-sm);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.ciReviewAnswers {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.ciWrongAnswer {
+    color: #dc2626;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.ciCorrectAnswer {
+    color: #16a34a;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+/* Responsive - Correct/Incorrect */
+@media (max-width: 640px) {
+    .ciOptionBtn {
+        font-size: 1rem;
+        padding: var(--space-md) var(--space-lg);
+    }
+}

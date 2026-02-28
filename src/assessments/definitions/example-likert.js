@@ -1,4 +1,5 @@
 export const exampleLikert = {
+  type: 'likert',
   id: 'likert-sample-v1',
   title: 'Self-Reflection Assessment',
   description: 'A simple self-reflection using a 1-5 scale.',

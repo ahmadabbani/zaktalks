@@ -198,19 +198,13 @@ export default function LessonListUI({ courseId, initialLessons = [], assessment
                 <input type="url" name="youtube_url" defaultValue={editingLesson?.youtube_url} required placeholder="https://www.youtube.com/watch?v=..." />
               </div>
             ) : (
-              <div className={styles.formGrid}>
-                <div className={styles.formGroup}>
-                  <label>Select Assessment</label>
-                  <select name="assessment_key" defaultValue={editingLesson?.assessment_key} required>
-                    {assessments.map(a => (
-                      <option key={a.id} value={a.id}>{a.title}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className={styles.formGroup}>
-                  <label>Passing Score (%)</label>
-                  <input type="number" name="passing_score" defaultValue={editingLesson?.passing_score || 70} min="0" max="100" />
-                </div>
+              <div className={styles.formGroup}>
+                <label>Select Assessment</label>
+                <select name="assessment_key" defaultValue={editingLesson?.assessment_key} required>
+                  {assessments.map(a => (
+                    <option key={a.id} value={a.id}>{a.title}</option>
+                  ))}
+                </select>
               </div>
             )}
           </div>

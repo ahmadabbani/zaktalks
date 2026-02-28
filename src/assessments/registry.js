@@ -1,7 +1,9 @@
 import { exampleLikert } from './definitions/example-likert';
+import { moneyEgoStates } from './definitions/money-ego-states';
 
 export const ASSESSMENTS = {
   [exampleLikert.id]: exampleLikert,
+  [moneyEgoStates.id]: moneyEgoStates,
 };
 
 export const getAssessmentList = () => {
