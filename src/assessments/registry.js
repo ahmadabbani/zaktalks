@@ -1,9 +1,11 @@
 import { exampleLikert } from './definitions/example-likert';
 import { moneyEgoStates } from './definitions/money-ego-states';
+import { energySelfAssessment } from './definitions/energy-self-assessment';
 
 export const ASSESSMENTS = {
   [exampleLikert.id]: exampleLikert,
   [moneyEgoStates.id]: moneyEgoStates,
+  [energySelfAssessment.id]: energySelfAssessment,
 };
 
 export const getAssessmentList = () => {

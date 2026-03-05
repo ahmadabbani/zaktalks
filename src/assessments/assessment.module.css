@@ -545,3 +545,225 @@
         font-size: 0.8125rem;
     }
 }
+
+/* ===== Cathexis Engine Result Styles ===== */
+
+.cathResultContainer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--space-2xl);
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.cathResultHeader {
+    text-align: center;
+    color: var(--color-success);
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: var(--space-xs);
+}
+
+.cathResultSubtitle {
+    text-align: center;
+    color: var(--color-gray-dark);
+    font-size: 1rem;
+    margin-bottom: var(--space-2xl);
+}
+
+/* Category Cards */
+.cathCategoryCards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+}
+
+.cathCategoryCard {
+    position: relative;
+    background: var(--color-gray-light);
+    border-radius: 0.75rem;
+    padding: var(--space-lg);
+    border: 2px solid transparent;
+    transition: all var(--transition-normal);
+}
+
+.cathCategoryDominant {
+    background: white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transform: scale(1.02);
+}
+
+.cathCategoryHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.cathCategoryDot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.cathCategoryLabel {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: var(--color-black);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.cathCategorySubtitle {
+    font-size: 0.8rem;
+    color: var(--color-gray-dark);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cathScoreRow {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: var(--space-sm);
+}
+
+.cathScoreValue {
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.cathScoreMax {
+    font-size: 1rem;
+    color: var(--color-gray-dark);
+    font-weight: 600;
+}
+
+/* Score Bar */
+.cathBarTrack {
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: var(--space-sm);
+}
+
+.cathBarFill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cathCategoryDesc {
+    font-size: 0.875rem;
+    color: var(--color-gray-dark);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.cathDominantBadge {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Interpretation Panel */
+.cathInterpretation {
+    background: var(--color-black);
+    border-radius: 1rem;
+    padding: var(--space-xl);
+    margin-bottom: var(--space-2xl);
+    border-left: 5px solid;
+}
+
+.cathInterpTitle {
+    font-size: 1.375rem;
+    font-weight: 800;
+    color: var(--color-yellow);
+    margin: 0 0 var(--space-xs) 0;
+}
+
+.cathInterpSubtitle {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-md);
+}
+
+.cathInterpText {
+    color: var(--color-white);
+    line-height: 1.7;
+    font-size: 1.0625rem;
+    margin: 0;
+}
+
+/* Responsive - Cathexis */
+@media (max-width: 768px) {
+    .cathResultContainer {
+        padding: var(--space-lg);
+    }
+
+    .cathResultHeader {
+        font-size: 1.5rem;
+    }
+
+    .cathCategoryDominant {
+        transform: none;
+    }
+
+    .cathScoreValue {
+        font-size: 1.5rem;
+    }
+
+    .cathInterpTitle {
+        font-size: 1.125rem;
+    }
+
+    .cathInterpText {
+        font-size: 0.9375rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .cathResultContainer {
+        padding: var(--space-md);
+    }
+
+    .cathResultHeader {
+        font-size: 1.25rem;
+    }
+
+    .cathResultSubtitle {
+        font-size: 0.875rem;
+    }
+
+    .cathCategoryCard {
+        padding: var(--space-md);
+    }
+
+    .cathDominantBadge {
+        top: var(--space-sm);
+        right: var(--space-sm);
+        font-size: 0.625rem;
+    }
+
+    .cathInterpretation {
+        padding: var(--space-md);
+    }
+}

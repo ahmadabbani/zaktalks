@@ -3,6 +3,7 @@
 import { getAssessmentById } from '@/assessments/registry';
 import LikertEngine from '@/assessments/LikertEngine';
 import CorrectIncorrectEngine from '@/assessments/CorrectIncorrectEngine';
+import CathexisEngine from '@/assessments/CathexisEngine';
 import { updateLessonProgress } from '@/app/courses/actions';
 
 import styles from '@/assessments/assessment.module.css';
@@ -36,6 +37,9 @@ export default function AssessmentRenderer({ assessmentKey, lessonId, userId, is
   // Branch based on assessment type
   if (definition.type === 'correct-incorrect') {
     return <CorrectIncorrectEngine definition={definition} onComplete={handleComplete} />;
+  }
+  if (definition.type === 'cathexis') {
+    return <CathexisEngine definition={definition} onComplete={handleComplete} />;
   }
 
   // Default: Likert scale engine
