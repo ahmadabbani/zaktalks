@@ -36,6 +36,11 @@ export default function LikertEngine({ definition, onComplete }) {
     }
   };
 
+  const handleRetake = () => {
+    window.sessionStorage.setItem('assessment_retake_scroll_top', '1');
+    window.location.reload();
+  };
+
   const calculateResult = () => {
     const values = Object.values(answers);
     const sum = values.reduce((a, b) => a + b, 0);
@@ -72,7 +77,7 @@ export default function LikertEngine({ definition, onComplete }) {
           <h3 className={styles.resultLabel}>Your Result: {result?.label}</h3>
           <p className={styles.resultMessage}>{result?.message}</p>
         </div>
-        <button className={styles.retakeBtn} onClick={() => window.location.reload()}>
+        <button className={styles.retakeBtn} onClick={handleRetake}>
           <FaRedo style={{ marginRight: '8px' }} />
           Retake Assessment
         </button>

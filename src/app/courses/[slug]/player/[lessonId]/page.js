@@ -52,7 +52,7 @@ export default async function LessonPage({ params }) {
   return (
     <div className={styles.lessonPage}>
       {/* Lesson Description at Top (if exists) */}
-      {lesson.description && (
+      {lesson.type === 'video' && lesson.description && (
         <div className={styles.lessonDescription}>
           <h2 className={styles.descriptionTitle}>
             <FaInfoCircle />
@@ -95,6 +95,8 @@ export default async function LessonPage({ params }) {
               lessonId={lesson.id}
               userId={user.id}
               isCompleted={progress?.is_completed}
+              showIntro={true}
+              lessonDescription={lesson.description}
             />
           </div>
         </div>

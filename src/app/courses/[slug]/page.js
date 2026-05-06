@@ -10,7 +10,12 @@ import styles from './CourseDetails.module.css'
 export async function generateMetadata({ params }) {
   const { slug } = await params
   const supabase = await createClient()
-  const { data: course } = await supabase.from('courses').select('title').eq('slug', slug).single()
+  const { data: course } = await supabase
+    .from('courses')
+    .select('title')
+    .eq('slug', slug)
+    .is('deleted_at', null)
+    .single()
   
   return {
     title: course ? `${course.title} | ZakTalks` : 'Course Details',
@@ -26,6 +31,7 @@ export default async function CourseDetailPage({ params }) {
     .from('courses')
     .select('*')
     .eq('slug', slug)
+    .is('deleted_at', null)
     .single()
 
   if (courseError || !course) {

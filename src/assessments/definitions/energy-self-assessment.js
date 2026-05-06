@@ -17,30 +17,30 @@ export const energySelfAssessment = {
   ],
   categories: {
     bound: {
-      label: 'Bound Cathexis',
-      subtitle: 'Frozen Energy',
+      label: 'Bound Result',
+      subtitle: 'Your strongest pattern is Bound Energy.',
       description: 'Tendency to lock energy, get stuck, or avoid flow.',
       color: '#F59E0B',
-      interpretation: 'You may struggle with avoidance, fear, or over-control.'
+      interpretation: 'You may tend to hold back, over-control, or avoid financial decisions when things feel uncertain. This can make money feel restrictive or emotionally heavy. Your next step is to practice small, steady choices that build trust in yourself.'
     },
     unbound: {
-      label: 'Unbound Cathexis',
-      subtitle: 'Reactive Energy',
+      label: 'Unbound Result',
+      subtitle: 'Your strongest pattern is Unbound Energy.',
       description: 'Energy leaks into impulsive or reactive behavior.',
       color: '#EF4444',
-      interpretation: 'You may struggle with impulsivity, money drama, or nervous system overdrive.'
+      interpretation: 'You may be more likely to react emotionally or impulsively with money. This can create financial stress or inconsistency over time. Your next step is to slow down and create more pause between feeling and acting.'
     },
     free: {
-      label: 'Free Cathexis',
-      subtitle: 'Directed Energy',
+      label: 'Free Result',
+      subtitle: 'Your strongest pattern is Free Energy.',
       description: 'Consciously managing and releasing energy, using money as a resource.',
       color: '#22C55E',
-      interpretation: 'You can consciously use money energy in balance (healthy Adult ego-state).'
+      interpretation: 'You are showing a more balanced and intentional relationship with money. You can pause, reflect, and make choices that align with your goals. Your next step is to keep strengthening this steady, conscious approach.'
     }
   },
   mixedResult: {
-    label: 'Mixed Pattern',
-    subtitle: 'Transitional Phase',
-    interpretation: "If your scores were spread out without a clear winner, it doesn't mean you failed. It means you're in transition. You may recognize yourself in all three patterns at different times. The opportunity is to practice staying longer in your Adult, so money feels steady and not like a pendulum swinging between extremes."
+    label: 'Mixed Result',
+    subtitle: 'Your pattern is mixed right now.',
+    interpretation: 'You may move between caution, reactivity, and balance depending on the moment. This often means you are in a transitional phase rather than stuck in one pattern. Your next step is to build more consistency so money feels steadier and less extreme.'
   }
 };

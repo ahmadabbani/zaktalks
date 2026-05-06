@@ -347,6 +347,9 @@ export async function deleteCourse(id) {
   // Delete lessons
   await supabase.from('lessons').delete().eq('course_id', id)
 
+  // Delete user enrollments for this course so it no longer appears in user dashboards
+  await supabase.from('user_enrollments').delete().eq('course_id', id)
+
   // Finally, delete the course (soft delete)
   const { error } = await supabase
     .from('courses')

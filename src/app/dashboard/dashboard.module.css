@@ -416,7 +416,7 @@
   background: white;
   border-radius: 1.25rem;
   border: 2px dashed var(--color-gray);
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .emptyState svg {
@@ -442,13 +442,17 @@
 }
 
 .coursesbtn {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 1rem 2.5rem;
   border-radius: 12px;
   background: var(--color-yellow);
   color: var(--color-black);
   font-weight: 700;
   font-size: 0.95rem;
+  text-decoration: none;
+  width: auto;
   transition: all var(--transition-normal);
   border: none;
   cursor: pointer;

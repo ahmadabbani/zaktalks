@@ -11,6 +11,25 @@ import {
   POINTS_PER_PURCHASE 
 } from '@/lib/discount-utils'
 
+function getWebhookSecret() {
+  if (process.env.NODE_ENV !== 'production') {
+    return process.env.STRIPE_WEBHOOK_SECRET_LOCAL || process.env.STRIPE_WEBHOOK_SECRET
+  }
+
+  return process.env.STRIPE_WEBHOOK_SECRET
+}
+
+function getAuthRedirectBaseUrl(req) {
+  const requestOrigin = req.nextUrl.origin
+  const isLocalRequest = requestOrigin.includes('localhost') || requestOrigin.includes('127.0.0.1')
+
+  if (process.env.NODE_ENV !== 'production' && isLocalRequest) {
+    return requestOrigin
+  }
+
+  return process.env.NEXT_PUBLIC_APP_URL || requestOrigin
+}
+
 async function sendWelcomeEmail(email, link) {
   try {
     const res = await resend.emails.send({
@@ -34,7 +53,8 @@ async function sendWelcomeEmail(email, link) {
 export async function POST(req) {
   const body = await req.text()
   const sig = (await headers()).get('stripe-signature')
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
+  const webhookSecret = getWebhookSecret()
+  const authRedirectBaseUrl = getAuthRedirectBaseUrl(req)
 
   let event
 
@@ -143,7 +163,7 @@ export async function POST(req) {
       const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
         type: linkType,
         email,
-        options: { redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/auth/update-password` }
+        options: { redirectTo: `${authRedirectBaseUrl}/auth/callback?next=/auth/update-password` }
       })
 
       if (linkError) {
@@ -152,7 +172,7 @@ export async function POST(req) {
         const { data: mgLink } = await supabaseAdmin.auth.admin.generateLink({
           type: 'magiclink',
           email,
-          options: { redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/auth/update-password` }
+          options: { redirectTo: `${authRedirectBaseUrl}/auth/callback?next=/auth/update-password` }
         })
         if (mgLink) await sendWelcomeEmail(email, mgLink.properties.action_link)
       } else {

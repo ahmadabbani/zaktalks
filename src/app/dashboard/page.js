@@ -34,6 +34,7 @@ export default async function DashboardPage() {
         title,
         slug,
         logo_url,
+        deleted_at,
         certificate_template_url,
         certificate_template_url,
         lessons:lessons (
@@ -46,6 +47,7 @@ export default async function DashboardPage() {
     `)
     .eq('user_id', user.id)
     .eq('payment_status', 'completed')
+    .is('course.deleted_at', null)
 
   // 3. Fetch Lesson Progress
   const { data: progress } = await supabase
@@ -98,7 +100,7 @@ export default async function DashboardPage() {
 
         {/* Courses Grid */}
         <div className={styles.coursesGrid}>
-          {enrollments?.map((enrollment) => {
+          {(enrollments || []).filter(e => e.course && !e.course.deleted_at).map((enrollment) => {
             const course = enrollment.course
             const lessons = course.lessons || []
             const completedCount = lessons.filter(l => progressMap[l.id]?.is_completed).length
@@ -176,7 +178,7 @@ export default async function DashboardPage() {
             </div>
             <h3>No courses yet</h3>
             <p>You haven't enrolled in any courses yet. Start your journey today!</p>
-            <Link href="/courses" className="coursesbtn">Browse Courses</Link>
+            <Link href="/courses" className={styles.coursesbtn}>Browse Courses</Link>
           </div>
         )}
       </div>

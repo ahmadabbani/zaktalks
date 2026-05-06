@@ -60,15 +60,15 @@
   line-height: 1.8;
   font-weight: 600;
   color: var(--color-black);
-  max-width: 90%;
+  max-width: 68%;
 }
 
 .btnCourses {
   padding: 1rem 4rem;
   font-size: 1.2rem;
   font-weight: 700;
-  background-color: var(--color-black);
-  color: var(--color-white);
+  background: linear-gradient(135deg, #d4a914 0%, #e9c547 72%, #f3dc86 100%);
+  color: var(--color-black);
   border-radius: 50px;
   cursor: pointer;
   transition: all var(--transition-normal);
@@ -76,15 +76,15 @@
   align-self: flex-start;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 6px 18px rgba(83, 82, 81, 0.25);
+  box-shadow: 0 3px 10px rgba(160, 120, 10, 0.2);
 }
 
 .btnCourses:hover {
-  background-color: var(--color-yellow);
+  background: linear-gradient(135deg, #e0b421 0%, #f0cf60 78%, #f7e6a3 100%);
   color: var(--color-black);
   border: none;
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(239, 196, 29, 0.4);
+  box-shadow: 0 8px 20px rgba(201, 153, 13, 0.34);
 }
 
 /* Right Side */
@@ -108,14 +108,26 @@
 .heroImageWrapper {
   position: relative;
   width: 100%;
-  max-width: 400px;
-  overflow: hidden;
+  max-width: 520px;
+}
+
+.heroImageWrapper::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, transparent, var(--color-white));
+  pointer-events: none;
+  z-index: 1;
 }
 
 .heroImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 /* Hero Bottom Section */
@@ -220,7 +232,7 @@
   }
 
   .heroImageWrapper {
-    max-width: 300px;
+    max-width: 360px;
   }
 
   .heroBottomGrid {

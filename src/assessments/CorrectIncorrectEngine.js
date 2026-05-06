@@ -41,6 +41,11 @@ export default function CorrectIncorrectEngine({ definition, onComplete }) {
     }
   };
 
+  const handleRetake = () => {
+    window.sessionStorage.setItem('assessment_retake_scroll_top', '1');
+    window.location.reload();
+  };
+
   const calculateResult = () => {
     let correctCount = 0;
     for (const question of definition.questions) {
@@ -102,7 +107,7 @@ export default function CorrectIncorrectEngine({ definition, onComplete }) {
           </div>
         )}
 
-        <button className={styles.retakeBtn} onClick={() => window.location.reload()}>
+        <button className={styles.retakeBtn} onClick={handleRetake}>
           <FaRedo style={{ marginRight: '8px' }} />
           Retake Assessment
         </button>

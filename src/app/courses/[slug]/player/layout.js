@@ -18,6 +18,7 @@ export default async function PlayerLayout({ children, params }) {
     .from('courses')
     .select('id, title, slug')
     .eq('slug', slug)
+    .is('deleted_at', null)
     .single()
 
   if (courseError || !course) notFound()

@@ -1,11 +1,21 @@
 import { exampleLikert } from './definitions/example-likert';
 import { moneyEgoStates } from './definitions/money-ego-states';
 import { energySelfAssessment } from './definitions/energy-self-assessment';
+import { archetypeScriptReframingWorksheet } from './definitions/archetype-script-reframing-worksheet';
+import { unlockFinancialFrequency } from './definitions/unlock-financial-frequency';
+import { relationNeeds } from './definitions/relation-needs';
+import { transactionalAnalysisQuestionnaire } from './definitions/transactional-analysis-questionnaire';
+import { strokingQuestionnaire } from './definitions/stroking-questionnaire';
 
 export const ASSESSMENTS = {
   [exampleLikert.id]: exampleLikert,
   [moneyEgoStates.id]: moneyEgoStates,
   [energySelfAssessment.id]: energySelfAssessment,
+  [archetypeScriptReframingWorksheet.id]: archetypeScriptReframingWorksheet,
+  [unlockFinancialFrequency.id]: unlockFinancialFrequency,
+  [relationNeeds.id]: relationNeeds,
+  [transactionalAnalysisQuestionnaire.id]: transactionalAnalysisQuestionnaire,
+  [strokingQuestionnaire.id]: strokingQuestionnaire,
 };
 
 export const getAssessmentList = () => {
