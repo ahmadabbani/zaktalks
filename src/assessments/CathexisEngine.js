@@ -86,11 +86,22 @@ export default function CathexisEngine({ definition, onComplete }) {
     const resultMode = definition.resultMode || '';
     const rankedNeeds = resultMode === 'ranked-needs';
     const scoreTableOnly = resultMode === 'score-table-only';
-    const scoresOnly = resultMode === 'scores-only' || rankedNeeds || scoreTableOnly;
+    const roleRanges = resultMode === 'role-ranges';
+    const scoresOnly = resultMode === 'scores-only' || rankedNeeds || scoreTableOnly || roleRanges;
 
     const sortedByScore = [...entries];
     const topThree = sortedByScore.slice(0, 3);
     const bottomThree = [...sortedByScore].reverse().slice(0, 3);
+    const getRoleRangeLabel = (score) => {
+      const range = definition.roleRanges?.find(item => score >= item.min && score <= item.max);
+      return range?.label || '';
+    };
+    const primaryRoles = roleRanges
+      ? entries.filter(([, score]) => getRoleRangeLabel(score).toLowerCase().includes('primary'))
+      : [];
+    const secondaryRoles = roleRanges
+      ? entries.filter(([, score]) => getRoleRangeLabel(score).toLowerCase().includes('secondary'))
+      : [];
 
     return (
       <div className={styles.cathResultContainer}>
@@ -131,7 +142,12 @@ export default function CathexisEngine({ definition, onComplete }) {
                     <span style={{ color: cat.color, fontWeight: 900 }}>{score}</span>
                     <span className={styles.cathScoreMax}>/ {maxPerCategory}</span>
                   </div>
-                  {isDominant && !scoreTableOnly && (
+                  {roleRanges && (
+                    <div className={styles.cathScoreOnlyDominantBadge} style={{ backgroundColor: cat.color }}>
+                      {getRoleRangeLabel(score)}
+                    </div>
+                  )}
+                  {isDominant && !scoreTableOnly && !roleRanges && (
                     <div className={styles.cathScoreOnlyDominantBadge} style={{ backgroundColor: cat.color }}>
                       Dominant
                     </div>
@@ -216,7 +232,7 @@ export default function CathexisEngine({ definition, onComplete }) {
           </div>
         )}
 
-        {scoresOnly && !scoreTableOnly && (
+        {scoresOnly && !scoreTableOnly && !roleRanges && (
           <div
             className={styles.cathScoreOnlyResult}
             style={{
@@ -259,6 +275,61 @@ export default function CathexisEngine({ definition, onComplete }) {
                   </li>
                 ))}
               </ul>
+            </div>
+          </div>
+        )}
+
+        {roleRanges && (
+          <div className={styles.cathRoleResultGrid}>
+            <div className={`${styles.cathRoleResultCard} ${styles.cathRoleResultCardPrimary}`}>
+              <div className={styles.cathRoleResultEyebrow}>My prominent role</div>
+              {primaryRoles.length ? primaryRoles.map(([key, score]) => {
+                const category = definition.categories[key];
+
+                return (
+                  <div
+                    key={`primary-${key}`}
+                    className={styles.cathRoleResultItem}
+                    style={{
+                      '--role-color': category?.color || '#2563EB',
+                      '--role-soft': hexToRgba(category?.color || '#2563EB', 0.12)
+                    }}
+                  >
+                    <span className={styles.cathRoleResultName}>{category?.label || key}</span>
+                    <span className={styles.cathRoleResultScore}>{score}<small>/20</small></span>
+                  </div>
+                );
+              }) : (
+                <div className={styles.cathRoleResultEmpty}>
+                  <span>No primary role in this range</span>
+                  <strong>Primary range: 13-20</strong>
+                </div>
+              )}
+            </div>
+            <div className={`${styles.cathRoleResultCard} ${styles.cathRoleResultCardSecondary}`}>
+              <div className={styles.cathRoleResultEyebrow}>My secondary role</div>
+              {secondaryRoles.length ? secondaryRoles.map(([key, score]) => {
+                const category = definition.categories[key];
+
+                return (
+                  <div
+                    key={`secondary-${key}`}
+                    className={styles.cathRoleResultItem}
+                    style={{
+                      '--role-color': category?.color || '#16A34A',
+                      '--role-soft': hexToRgba(category?.color || '#16A34A', 0.12)
+                    }}
+                  >
+                    <span className={styles.cathRoleResultName}>{category?.label || key}</span>
+                    <span className={styles.cathRoleResultScore}>{score}<small>/20</small></span>
+                  </div>
+                );
+              }) : (
+                <div className={styles.cathRoleResultEmpty}>
+                  <span>No secondary role in this range</span>
+                  <strong>Secondary range: 7-12</strong>
+                </div>
+              )}
             </div>
           </div>
         )}

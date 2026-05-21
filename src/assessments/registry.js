@@ -6,6 +6,7 @@ import { unlockFinancialFrequency } from './definitions/unlock-financial-frequen
 import { relationNeeds } from './definitions/relation-needs';
 import { transactionalAnalysisQuestionnaire } from './definitions/transactional-analysis-questionnaire';
 import { strokingQuestionnaire } from './definitions/stroking-questionnaire';
+import { dramaTriangleAssessment } from './definitions/drama-triangle-assessment';
 
 export const ASSESSMENTS = {
   [exampleLikert.id]: exampleLikert,
@@ -16,6 +17,7 @@ export const ASSESSMENTS = {
   [relationNeeds.id]: relationNeeds,
   [transactionalAnalysisQuestionnaire.id]: transactionalAnalysisQuestionnaire,
   [strokingQuestionnaire.id]: strokingQuestionnaire,
+  [dramaTriangleAssessment.id]: dramaTriangleAssessment,
 };
 
 export const getAssessmentList = () => {

@@ -1451,7 +1451,11 @@
     border-radius: 20px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    white-space: nowrap;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
+    line-height: 1.25;
 }
 
 .cathScoreOnlyResult {
@@ -1532,6 +1536,117 @@
     font-weight: 900;
 }
 
+.cathRoleResultGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-md);
+    margin: 0 0 var(--space-2xl) 0;
+}
+
+.cathRoleResultCard {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    padding: var(--space-lg);
+    background: #ffffff;
+    border: 1px solid rgba(59, 143, 214, 0.18);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    min-width: 0;
+}
+
+.cathRoleResultCardPrimary {
+    border-width: 2px;
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.1);
+}
+
+.cathRoleResultCardSecondary {
+    background: #ffffff;
+}
+
+.cathRoleResultEyebrow {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: var(--space-md);
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.08);
+    color: #0f172a;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.cathRoleResultItem {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: stretch;
+    min-width: 0;
+    padding: var(--space-md);
+    border-radius: 1rem;
+    background: var(--role-soft);
+    border: 2px solid var(--role-color);
+}
+
+.cathRoleResultName {
+    min-width: 0;
+    color: var(--role-color);
+    font-size: clamp(1.25rem, 2.4vw, 1.8rem);
+    font-weight: 900;
+    line-height: 1.12;
+    overflow-wrap: normal;
+    text-align: center;
+}
+
+.cathRoleResultScore {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-shrink: 0;
+    width: fit-content;
+    min-width: 84px;
+    margin: 0 auto;
+    padding: 9px 12px;
+    border-radius: 0.9rem;
+    background: var(--role-color);
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.cathRoleResultScore small {
+    margin-left: 2px;
+    font-size: 0.78rem;
+    font-weight: 900;
+    opacity: 0.86;
+}
+
+.cathRoleResultEmpty {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    min-height: 150px;
+    justify-content: center;
+    padding: var(--space-lg);
+    border-radius: 1rem;
+    background: rgba(15, 23, 42, 0.04);
+    border: 1px dashed rgba(15, 23, 42, 0.22);
+}
+
+.cathRoleResultEmpty span {
+    color: var(--color-black);
+    font-size: 1.15rem;
+    font-weight: 900;
+}
+
+.cathRoleResultEmpty strong {
+    color: var(--color-gray-dark);
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
 /* Responsive - Cathexis */
 @media (max-width: 768px) {
     .cathResultContainer {
@@ -1559,7 +1674,7 @@
     }
 
     .cathScoreOnlyRow {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
         gap: var(--space-sm);
     }
 
@@ -1569,6 +1684,18 @@
 
     .cathNeedSummaryGrid {
         grid-template-columns: 1fr;
+    }
+
+    .cathRoleResultGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .cathRoleResultCard {
+        padding: var(--space-lg);
+    }
+
+    .cathRoleResultItem {
+        align-items: stretch;
     }
 }
 
@@ -1597,5 +1724,10 @@
 
     .cathInterpretation {
         padding: var(--space-md);
+    }
+
+    .cathScoreOnlyDominantBadge {
+        justify-self: start;
+        text-align: left;
     }
 }
