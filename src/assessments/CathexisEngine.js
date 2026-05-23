@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaChevronLeft, FaChevronRight, FaRedo } from 'react-icons/fa';
+import ResultScreenshotButton from '@/components/ResultScreenshotButton';
 import styles from './assessment.module.css';
 
 function hexToRgba(hex, alpha) {
@@ -14,7 +15,7 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-export default function CathexisEngine({ definition, onComplete }) {
+export default function CathexisEngine({ definition, onComplete, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture' }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
@@ -104,7 +105,7 @@ export default function CathexisEngine({ definition, onComplete }) {
       : [];
 
     return (
-      <div className={styles.cathResultContainer}>
+      <div className={styles.cathResultContainer} id={enableResultScreenshot ? resultCaptureId : undefined}>
         <h2 className={styles.cathResultHeader}>Assessment Complete!</h2>
         <p className={styles.cathResultSubtitle}>
           {rankedNeeds ? 'Relational needs score breakdown' : (scoresOnly ? 'Score breakdown' : "Here's your energy profile breakdown")}
@@ -334,7 +335,11 @@ export default function CathexisEngine({ definition, onComplete }) {
           </div>
         )}
 
-        <button className={styles.retakeBtn} onClick={handleRetake}>
+        {enableResultScreenshot && (
+          <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} />
+        )}
+
+        <button className={styles.retakeBtn} onClick={handleRetake} data-screenshot-exclude="true">
           <FaRedo style={{ marginRight: '8px' }} />
           Retake Assessment
         </button>
@@ -343,7 +348,7 @@ export default function CathexisEngine({ definition, onComplete }) {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${definition.externalOnly ? styles.externalQuestionContainer : ''}`}>
       <div className={styles.header}>
         <div className={styles.progressInfo}>
           <span className={styles.questionCount}>Question {currentIndex + 1} of {totalQuestions}</span>

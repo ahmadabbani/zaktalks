@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaChevronLeft, FaChevronRight, FaRedo, FaCheck, FaTimes } from 'react-icons/fa';
+import ResultScreenshotButton from '@/components/ResultScreenshotButton';
 import styles from './assessment.module.css';
 
-export default function CorrectIncorrectEngine({ definition, onComplete }) {
+export default function CorrectIncorrectEngine({ definition, onComplete, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture' }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
@@ -67,7 +68,7 @@ export default function CorrectIncorrectEngine({ definition, onComplete }) {
     const correctCount = totalQuestions - wrongAnswers.length;
 
     return (
-      <div className={styles.resultContainer} style={{ maxWidth: '800px' }}>
+      <div className={styles.resultContainer} style={{ maxWidth: '800px' }} id={enableResultScreenshot ? resultCaptureId : undefined}>
         <h2 className={styles.resultHeader}>Assessment Complete!</h2>
 
         <div className={styles.resultContent}>
@@ -107,7 +108,11 @@ export default function CorrectIncorrectEngine({ definition, onComplete }) {
           </div>
         )}
 
-        <button className={styles.retakeBtn} onClick={handleRetake}>
+        {enableResultScreenshot && (
+          <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} />
+        )}
+
+        <button className={styles.retakeBtn} onClick={handleRetake} data-screenshot-exclude="true">
           <FaRedo style={{ marginRight: '8px' }} />
           Retake Assessment
         </button>
@@ -118,7 +123,7 @@ export default function CorrectIncorrectEngine({ definition, onComplete }) {
   const options = getOptions(currentQuestion);
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${definition.externalOnly ? styles.externalQuestionContainer : ''}`}>
       {/* Header / Progress */}
       <div className={styles.header}>
         <div className={styles.progressInfo}>

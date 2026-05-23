@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaChevronLeft, FaChevronRight, FaRedo } from 'react-icons/fa';
+import ResultScreenshotButton from '@/components/ResultScreenshotButton';
 import styles from './assessment.module.css';
 
-export default function LikertEngine({ definition, onComplete }) {
+export default function LikertEngine({ definition, onComplete, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture' }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
@@ -71,13 +72,16 @@ export default function LikertEngine({ definition, onComplete }) {
     const result = definition.scoring.thresholds.find(t => scoreToUse <= t.max);
 
     return (
-      <div className={styles.resultContainer}>
+      <div className={styles.resultContainer} id={enableResultScreenshot ? resultCaptureId : undefined}>
         <h2 className={styles.resultHeader}>Assessment Complete!</h2>
         <div className={styles.resultContent}>
           <h3 className={styles.resultLabel}>Your Result: {result?.label}</h3>
           <p className={styles.resultMessage}>{result?.message}</p>
         </div>
-        <button className={styles.retakeBtn} onClick={handleRetake}>
+        {enableResultScreenshot && (
+          <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} />
+        )}
+        <button className={styles.retakeBtn} onClick={handleRetake} data-screenshot-exclude="true">
           <FaRedo style={{ marginRight: '8px' }} />
           Retake Assessment
         </button>
@@ -86,7 +90,7 @@ export default function LikertEngine({ definition, onComplete }) {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${definition.externalOnly ? styles.externalQuestionContainer : ''}`}>
       {/* Header / Progress */}
       <div className={styles.header}>
         <div className={styles.progressInfo}>

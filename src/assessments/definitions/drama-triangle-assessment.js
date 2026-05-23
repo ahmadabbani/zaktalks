@@ -2,6 +2,7 @@ export const dramaTriangleAssessment = {
   type: 'cathexis',
   id: 'drama-triangle-assessment-v1',
   title: 'Drama triangle assessment',
+  externalOnly: true,
   description: 'Identify your prominent role in the Drama Triangle.',
   intro: `Assign a score to each of these statements as they apply to you:
 

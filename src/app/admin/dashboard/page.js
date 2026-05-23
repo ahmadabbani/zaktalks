@@ -1,11 +1,15 @@
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import Link from 'next/link'
 import { FaChartLine, FaUsers, FaDollarSign, FaGraduationCap, FaCog, FaTicketAlt, FaArrowLeft } from 'react-icons/fa'
+import { ASSESSMENTS } from '@/assessments/registry'
 import CreateAdminButton from './CreateAdminButton'
+import ExternalAssessmentLinks from './ExternalAssessmentLinks'
 import styles from './admin-dashboard.module.css'
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient()
+  const adminSupabase = await createAdminClient()
 
   // Fetch total courses (non-deleted)
   const { count: coursesCount } = await supabase
@@ -28,6 +32,19 @@ export default async function AdminDashboardPage() {
   
   const totalRevenueCents = enrollments?.reduce((sum, e) => sum + (e.amount_paid_cents || 0), 0) || 0
   const totalRevenue = (totalRevenueCents / 100).toFixed(2)
+  const assessments = Object.values(ASSESSMENTS)
+    .filter((assessment) => assessment.externalOnly === true)
+    .map((assessment) => ({
+      id: assessment.id,
+      title: assessment.title,
+      description: assessment.description
+    }))
+
+  const { data: externalLinks } = await adminSupabase
+    .from('external_assessment_links')
+    .select('id, assessment_key, token, created_at, expires_at, revoked_at')
+    .order('created_at', { ascending: false })
+    .limit(20)
 
   return (
     <div className={styles.dashboard}>
@@ -114,6 +131,14 @@ export default async function AdminDashboardPage() {
           </Link>
         </div>
       </section>
+
+      <ExternalAssessmentLinks
+        assessments={assessments}
+        initialLinks={(externalLinks || []).map((link) => ({
+          ...link,
+          path: `/assessments/external/${link.token}`
+        }))}
+      />
 
       {/* Bottom Actions */}
       <div className={styles.bottomActions}>

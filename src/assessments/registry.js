@@ -7,6 +7,7 @@ import { relationNeeds } from './definitions/relation-needs';
 import { transactionalAnalysisQuestionnaire } from './definitions/transactional-analysis-questionnaire';
 import { strokingQuestionnaire } from './definitions/stroking-questionnaire';
 import { dramaTriangleAssessment } from './definitions/drama-triangle-assessment';
+import { codependencyAssessment } from './definitions/codependency-assessment';
 
 export const ASSESSMENTS = {
   [exampleLikert.id]: exampleLikert,
@@ -18,14 +19,17 @@ export const ASSESSMENTS = {
   [transactionalAnalysisQuestionnaire.id]: transactionalAnalysisQuestionnaire,
   [strokingQuestionnaire.id]: strokingQuestionnaire,
   [dramaTriangleAssessment.id]: dramaTriangleAssessment,
+  [codependencyAssessment.id]: codependencyAssessment,
 };
 
 export const getAssessmentList = () => {
-  return Object.values(ASSESSMENTS).map(a => ({
-    id: a.id,
-    title: a.title,
-    description: a.description
-  }));
+  return Object.values(ASSESSMENTS)
+    .filter(a => a.externalOnly !== true)
+    .map(a => ({
+      id: a.id,
+      title: a.title,
+      description: a.description
+    }));
 };
 
 export const getAssessmentById = (id) => {

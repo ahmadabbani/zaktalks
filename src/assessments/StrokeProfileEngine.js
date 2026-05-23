@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaChevronLeft, FaChevronRight, FaRedo } from 'react-icons/fa';
+import ResultScreenshotButton from '@/components/ResultScreenshotButton';
 import styles from './assessment.module.css';
 
 const MAX_GROUP_SCORE = 24;
@@ -47,7 +48,7 @@ function ProfileBar({ group, score }) {
   );
 }
 
-export default function StrokeProfileEngine({ definition, onComplete }) {
+export default function StrokeProfileEngine({ definition, onComplete, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture' }) {
   const questions = useMemo(() => buildQuestions(definition.groups), [definition.groups]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -101,7 +102,7 @@ export default function StrokeProfileEngine({ definition, onComplete }) {
     const negativeGroups = definition.groups.filter((group) => group.polarity === 'negative');
 
     return (
-      <div className={styles.strokeResultContainer}>
+      <div className={styles.strokeResultContainer} id={enableResultScreenshot ? resultCaptureId : undefined}>
         <div className={styles.strokeResultHeader}>
           <h2>{definition.resultTitle}</h2>
           <p>{definition.profileTitle}</p>
@@ -144,7 +145,11 @@ export default function StrokeProfileEngine({ definition, onComplete }) {
           ))}
         </div>
 
-        <button className={styles.retakeBtn} onClick={handleRetake}>
+        {enableResultScreenshot && (
+          <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} />
+        )}
+
+        <button className={styles.retakeBtn} onClick={handleRetake} data-screenshot-exclude="true">
           <FaRedo style={{ marginRight: '8px' }} />
           Retake Assessment
         </button>
@@ -153,7 +158,7 @@ export default function StrokeProfileEngine({ definition, onComplete }) {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${definition.externalOnly ? styles.externalQuestionContainer : ''}`}>
       <div className={styles.header}>
         <div className={styles.progressInfo}>
           <span className={styles.questionCount}>Question {currentIndex + 1} of {totalQuestions}</span>

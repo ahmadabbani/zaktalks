@@ -428,6 +428,189 @@
     margin-top: var(--space-3xl);
 }
 
+/* External Assessment Links */
+.externalLinksSection {
+    margin-bottom: var(--space-2xl);
+    background: white;
+    border-radius: 1rem;
+    padding: var(--space-xl);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.externalLinksHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.externalLinksHeader p {
+    margin: 0;
+    color: var(--color-gray-dark);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.externalLinkForm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    background: var(--color-gray-light);
+    border-radius: 0.75rem;
+}
+
+.externalLinkForm label {
+    color: var(--color-black);
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.externalLinkFormRow {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-md);
+}
+
+.externalLinkForm select {
+    width: 100%;
+    min-width: 0;
+    padding: 0.8rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.65rem;
+    color: var(--color-black);
+    background: white;
+    font: inherit;
+    font-weight: 650;
+}
+
+.externalLinkForm button,
+.externalLinkActions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 0.65rem;
+    background: var(--color-black);
+    color: var(--color-yellow);
+    font-weight: 850;
+    cursor: pointer;
+    transition: transform var(--transition-normal), opacity var(--transition-normal);
+}
+
+.externalLinkForm button:hover:not(:disabled),
+.externalLinkActions button:hover:not(:disabled) {
+    opacity: 0.92;
+    transform: translateY(-1px);
+}
+
+.externalLinkForm button:disabled,
+.externalLinkActions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.externalLinksList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.externalLinksEmpty {
+    padding: var(--space-lg);
+    border: 1px dashed rgba(0, 0, 0, 0.2);
+    border-radius: 0.75rem;
+    color: var(--color-gray-dark);
+    font-weight: 700;
+    text-align: center;
+}
+
+.externalLinkCard {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-md);
+    align-items: center;
+    padding: var(--space-md);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 0.85rem;
+    background: #fbfbfb;
+}
+
+.externalLinkMain {
+    min-width: 0;
+}
+
+.externalLinkTitleRow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-xs);
+}
+
+.externalLinkTitleRow h3 {
+    margin: 0;
+    color: var(--color-black);
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.externalLinkStatus {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.externalLinkStatusActive {
+    background: #16a34a;
+}
+
+.externalLinkStatusExpired {
+    background: #64748b;
+}
+
+.externalLinkStatusRevoked {
+    background: #dc2626;
+}
+
+.externalLinkUrl {
+    margin: 0 0 var(--space-xs) 0;
+    color: #0f766e;
+    font-family: monospace;
+    font-size: 0.88rem;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.externalLinkMeta {
+    margin: 0;
+    color: var(--color-gray-dark);
+    font-size: 0.82rem;
+    font-weight: 650;
+}
+
+.externalLinkActions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.externalLinkActions .externalLinkRevokeBtn {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     .statsGrid {
@@ -468,6 +651,20 @@
 
     .statValue {
         font-size: 2rem;
+    }
+
+    .externalLinkFormRow,
+    .externalLinkCard {
+        grid-template-columns: 1fr;
+    }
+
+    .externalLinkActions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .externalLinkActions button {
+        width: 100%;
     }
 }
 
