@@ -8,6 +8,8 @@ import { transactionalAnalysisQuestionnaire } from './definitions/transactional-
 import { strokingQuestionnaire } from './definitions/stroking-questionnaire';
 import { dramaTriangleAssessment } from './definitions/drama-triangle-assessment';
 import { codependencyAssessment } from './definitions/codependency-assessment';
+import { driverQuestionnaire } from './definitions/driver-questionnaire';
+import { egoStateAnalysis } from './definitions/ego-state-analysis';
 
 export const ASSESSMENTS = {
   [exampleLikert.id]: exampleLikert,
@@ -20,6 +22,8 @@ export const ASSESSMENTS = {
   [strokingQuestionnaire.id]: strokingQuestionnaire,
   [dramaTriangleAssessment.id]: dramaTriangleAssessment,
   [codependencyAssessment.id]: codependencyAssessment,
+  [driverQuestionnaire.id]: driverQuestionnaire,
+  [egoStateAnalysis.id]: egoStateAnalysis,
 };
 
 export const getAssessmentList = () => {

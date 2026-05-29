@@ -334,7 +334,7 @@
 
 .externalAssessmentPage {
     min-height: 100vh;
-    padding: var(--space-3xl) var(--container-padding);
+    padding: calc(var(--space-3xl) + 28px) var(--container-padding) var(--space-3xl);
     background:
         radial-gradient(circle at top left, rgba(255, 215, 0, 0.16), transparent 34%),
         linear-gradient(135deg, #f8fafc 0%, #eef6ff 100%);
@@ -408,6 +408,10 @@
         #ffffff;
 }
 
+.externalIntroWithTopSpace {
+    margin-top: var(--space-xl);
+}
+
 .externalIntroLogo {
     width: min(220px, 70%);
     height: auto;
@@ -433,6 +437,16 @@
     font-size: 1rem;
     font-weight: 650;
     line-height: 1.7;
+    white-space: pre-line;
+}
+
+.externalIntroDescriptionBlock {
+    padding: var(--space-lg);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 1rem;
+    background: #f8fafc;
+    color: var(--color-black);
+    text-align: left;
 }
 
 .externalIntroScoring {
@@ -445,6 +459,30 @@
     font-size: 0.92rem;
     font-weight: 800;
     line-height: 1.55;
+    white-space: pre-line;
+}
+
+.driverIntroContainer {
+    margin-top: var(--space-lg);
+}
+
+.driverIntroBlock,
+.driverScoringBlock {
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    text-align: left;
+}
+
+.driverIntroBlock {
+    padding: var(--space-lg);
+    border-radius: 1rem;
+    background: #f8fafc;
+    color: var(--color-black);
+}
+
+.driverScoringBlock {
+    background:
+        linear-gradient(135deg, rgba(241, 196, 15, 0.2) 0%, rgba(241, 196, 15, 0.08) 100%),
+        #fffaf0;
 }
 
 .binaryOptions {
@@ -587,6 +625,493 @@
     line-height: 1.5;
     white-space: normal;
     overflow-wrap: anywhere;
+}
+
+.driverOptions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-2xl);
+}
+
+.driverOptionBtn {
+    min-height: 72px;
+    padding: var(--space-md);
+    border: 2px solid rgba(0, 0, 0, 0.14);
+    border-radius: 0.9rem;
+    background: white;
+    color: var(--color-black);
+    font-size: 1rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal), background var(--transition-normal);
+}
+
+.driverOptionBtn:hover {
+    transform: translateY(-2px);
+    border-color: #f1c40f;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.1);
+}
+
+.driverOptionBtnSelected {
+    background: var(--color-black);
+    border-color: var(--color-black);
+    color: var(--color-yellow);
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.18);
+}
+
+.driverResultContainer {
+    width: min(100%, 980px);
+    margin: 0 auto;
+    padding: var(--space-2xl);
+    border-radius: 1.25rem;
+    background:
+        radial-gradient(circle at top right, rgba(241, 196, 15, 0.18), transparent 32%),
+        #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+    animation: fadeIn 0.5s ease-out;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+}
+
+.driverResultTitle {
+    margin: 0 0 var(--space-lg) 0;
+    color: var(--color-black);
+    font-size: clamp(1.55rem, 3vw, 2.35rem);
+    font-weight: 950;
+    line-height: 1.15;
+    text-align: center;
+}
+
+.driverScoringNote {
+    margin: 0 0 var(--space-xl) 0;
+    padding: var(--space-md);
+    border-radius: 0.85rem;
+    background: rgba(241, 196, 15, 0.16);
+    color: #4b3a00;
+    font-size: 0.92rem;
+    font-weight: 800;
+    line-height: 1.55;
+    text-align: center;
+    white-space: pre-line;
+}
+
+.driverTotalsGrid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.driverTendenciesCard {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    border-radius: 1rem;
+    background:
+        linear-gradient(135deg, rgba(241, 196, 15, 0.22) 0%, rgba(241, 196, 15, 0.08) 100%),
+        #ffffff;
+    border: 2px solid rgba(241, 196, 15, 0.55);
+    color: var(--color-black);
+}
+
+.driverTendenciesCard h3 {
+    margin: 0 0 var(--space-md) 0;
+    font-size: clamp(1.25rem, 2vw, 1.55rem);
+    font-weight: 950;
+    text-align: center;
+}
+
+.driverTendenciesCard ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.driverTendenciesCard li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    max-width: 100%;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: var(--color-black);
+    color: var(--color-yellow);
+    font-size: 0.95rem;
+    font-weight: 900;
+}
+
+.driverTendenciesCard li span {
+    overflow-wrap: anywhere;
+}
+
+.driverTendenciesCard li strong {
+    color: white;
+    font-weight: 950;
+}
+
+.driverTendenciesCard p {
+    margin: 0;
+    color: var(--color-black);
+    font-size: 1rem;
+    font-weight: 850;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.driverTotalCard {
+    min-width: 0;
+    padding: var(--space-md);
+    border-radius: 1rem;
+    background: #f8fafc;
+    border: 2px solid rgba(15, 23, 42, 0.08);
+    text-align: center;
+}
+
+.driverTotalCardStrong {
+    background: rgba(241, 196, 15, 0.14);
+    border-color: #f1c40f;
+}
+
+.driverTotalCard span {
+    display: block;
+    margin-bottom: var(--space-xs);
+    color: var(--color-gray-dark);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+}
+
+.driverTotalCard h3 {
+    min-height: 2.6em;
+    margin: 0 0 var(--space-sm) 0;
+    color: var(--color-black);
+    font-size: 0.95rem;
+    font-weight: 900;
+    line-height: 1.25;
+}
+
+.driverTotalCard strong {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    min-height: 46px;
+    padding: 8px 12px;
+    border-radius: 0.8rem;
+    background: var(--color-black);
+    color: var(--color-yellow);
+    font-size: 1.4rem;
+    font-weight: 950;
+    line-height: 1;
+}
+
+.driverExerciseCard {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    border-radius: 1rem;
+    background: rgba(15, 23, 42, 0.04);
+    color: var(--color-black);
+}
+
+.driverExerciseCard h3 {
+    margin: 0 0 var(--space-sm) 0;
+    font-size: 1.15rem;
+    font-weight: 900;
+}
+
+.driverExerciseCard p {
+    margin: 0 0 var(--space-sm) 0;
+    font-weight: 750;
+}
+
+.driverExerciseCard ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    font-weight: 750;
+    line-height: 1.6;
+}
+
+.driverCharacteristicsList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+}
+
+.driverCharacteristicsTitle {
+    margin: 0 0 var(--space-md) 0;
+    color: var(--color-black);
+    font-size: 1.25rem;
+    font-weight: 950;
+    text-align: center;
+}
+
+.driverCharacteristic {
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: 0.9rem;
+    background: white;
+    overflow: hidden;
+}
+
+.driverCharacteristic summary {
+    padding: var(--space-md);
+    color: var(--color-black);
+    font-size: 1rem;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.driverCharacteristic p {
+    margin: 0;
+    padding: 0 var(--space-md) var(--space-md) var(--space-md);
+    color: var(--color-black);
+    font-size: 0.95rem;
+    font-weight: 650;
+    line-height: 1.65;
+}
+
+.egoChoiceLegend {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    margin: 0 0 var(--space-lg) 0;
+}
+
+.egoChoiceLegend span {
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(241, 196, 15, 0.18);
+    color: #4b3a00;
+    font-size: 0.82rem;
+    font-weight: 900;
+}
+
+.egoOptions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-2xl);
+}
+
+.egoOptionCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-md);
+    min-width: 0;
+    padding: var(--space-md);
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: 1rem;
+    background: white;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+}
+
+.egoOptionCard p {
+    margin: 0;
+    color: var(--color-black);
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.egoOptionCard p strong {
+    font-weight: 950;
+    text-transform: lowercase;
+}
+
+.egoOptionActions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-sm);
+}
+
+.egoRankBtn,
+.egoRankBtnSelected {
+    min-height: 44px;
+    padding: 10px 12px;
+    border-radius: 0.75rem;
+    border: 2px solid rgba(15, 23, 42, 0.14);
+    font-size: 0.78rem;
+    font-weight: 950;
+    cursor: pointer;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal), background var(--transition-normal), border-color var(--transition-normal);
+}
+
+.egoRankBtn {
+    background: #f8fafc;
+    color: var(--color-black);
+}
+
+.egoRankBtn:hover {
+    transform: translateY(-1px);
+    border-color: #f1c40f;
+}
+
+.egoRankBtnSelected {
+    background: var(--color-black);
+    border-color: var(--color-black);
+    color: var(--color-yellow);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14);
+}
+
+.egoResultContainer {
+    width: min(100%, 980px);
+    margin: 0 auto;
+    padding: var(--space-2xl);
+    border-radius: 1.25rem;
+    background:
+        radial-gradient(circle at top right, rgba(241, 196, 15, 0.18), transparent 32%),
+        #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+    animation: fadeIn 0.5s ease-out;
+    overflow: hidden;
+}
+
+.egoResultTitle {
+    margin: 0 0 var(--space-xl) 0;
+    color: var(--color-black);
+    font-size: clamp(1.7rem, 3vw, 2.45rem);
+    font-weight: 950;
+    line-height: 1.1;
+    text-align: center;
+}
+
+.egoChart {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: var(--space-md);
+    align-items: end;
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    border-radius: 1rem;
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.egoChartColumn {
+    min-width: 0;
+    display: grid;
+    grid-template-rows: 220px auto auto;
+    gap: var(--space-xs);
+    justify-items: center;
+}
+
+.egoBarFrame {
+    position: relative;
+    width: min(100%, 64px);
+    height: 220px;
+    overflow: hidden;
+    border: 2px solid rgba(15, 23, 42, 0.16);
+    border-radius: 0.55rem;
+    background:
+        repeating-linear-gradient(
+            to top,
+            rgba(15, 23, 42, 0.08) 0,
+            rgba(15, 23, 42, 0.08) 1px,
+            transparent 1px,
+            transparent 5%
+        ),
+        white;
+}
+
+.egoBarFill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.egoChartColumn strong {
+    color: var(--color-black);
+    font-size: 1.25rem;
+    font-weight: 950;
+    line-height: 1;
+}
+
+.egoChartColumn span {
+    color: var(--color-black);
+    font-size: 1rem;
+    font-weight: 950;
+}
+
+.egoTotalsGrid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+}
+
+.egoTotalCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    min-width: 0;
+    padding: var(--space-sm);
+    border-radius: 0.85rem;
+    background: white;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+.egoTotalCard span,
+.egoStateDetail summary span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    min-height: 32px;
+    padding: 4px 8px;
+    border-radius: 0.65rem;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 950;
+}
+
+.egoTotalCard strong {
+    color: var(--color-black);
+    font-size: 1.25rem;
+    font-weight: 950;
+}
+
+.egoStateDetails {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+}
+
+.egoStateDetail {
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: 0.9rem;
+    background: white;
+    overflow: hidden;
+}
+
+.egoStateDetail summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    color: var(--color-black);
+    font-size: 0.98rem;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.egoStateDetail p {
+    margin: 0;
+    padding: 0 var(--space-md) var(--space-md) var(--space-md);
+    color: var(--color-black);
+    font-size: 0.95rem;
+    font-weight: 650;
 }
 
 /* ===== Correct/Incorrect Engine Styles ===== */
@@ -1323,6 +1848,48 @@
         padding: var(--space-lg);
     }
 
+    .driverOptions {
+        grid-template-columns: 1fr;
+    }
+
+    .driverResultContainer {
+        padding: var(--space-lg);
+    }
+
+    .driverTotalsGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .egoOptions {
+        grid-template-columns: 1fr;
+    }
+
+    .egoResultContainer {
+        padding: var(--space-lg);
+    }
+
+    .egoChart {
+        gap: var(--space-sm);
+        padding: var(--space-md);
+    }
+
+    .egoChartColumn {
+        grid-template-rows: 170px auto auto;
+    }
+
+    .egoBarFrame {
+        width: min(100%, 48px);
+        height: 170px;
+    }
+
+    .egoTotalsGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .egoStateDetails {
+        grid-template-columns: 1fr;
+    }
+
     .retakeBtn {
         padding: 14px 24px;
         font-size: 1rem;
@@ -1560,6 +2127,60 @@
 
     .binaryScoreCard span {
         font-size: 2rem;
+    }
+
+    .driverResultContainer {
+        padding: var(--space-md);
+        border-radius: 0.85rem;
+    }
+
+    .driverTotalsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .driverOptionBtn {
+        min-height: 58px;
+        font-size: 0.95rem;
+    }
+
+    .driverTotalCard h3 {
+        min-height: 0;
+    }
+
+    .egoResultContainer {
+        padding: var(--space-md);
+        border-radius: 0.85rem;
+    }
+
+    .egoChoiceLegend {
+        justify-content: flex-start;
+    }
+
+    .egoOptionActions {
+        grid-template-columns: 1fr;
+    }
+
+    .egoChart {
+        grid-template-columns: repeat(7, minmax(32px, 1fr));
+        gap: 6px;
+        overflow-x: auto;
+    }
+
+    .egoChartColumn {
+        grid-template-rows: 140px auto auto;
+    }
+
+    .egoBarFrame {
+        width: 34px;
+        height: 140px;
+    }
+
+    .egoChartColumn span {
+        font-size: 0.82rem;
+    }
+
+    .egoTotalsGrid {
+        grid-template-columns: 1fr;
     }
 
     .retakeBtn {

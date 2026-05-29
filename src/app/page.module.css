@@ -17,7 +17,7 @@
   grid-template-columns: 1.5fr 1fr;
   gap: var(--space-sm);
   align-items: start;
-  padding: var(--space-2xl) 0;
+  padding: var(--space-3xl) 0 var(--space-2xl) 0;
   min-height: 70vh;
 }
 
@@ -26,6 +26,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
+  padding-top: var(--space-lg);
   animation: fadeInUp 0.8s ease-out;
 }
 
@@ -109,6 +110,7 @@
   position: relative;
   width: 100%;
   max-width: 520px;
+  height: min(64vh, 660px);
 }
 
 .heroImageWrapper::after {
@@ -117,8 +119,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 120px;
-  background: linear-gradient(to bottom, transparent, var(--color-white));
+  height: 105px;
+  background: linear-gradient(to bottom, transparent, #fffdf4 78%, var(--color-white));
   pointer-events: none;
   z-index: 1;
 }
@@ -126,7 +128,8 @@
 .heroImage {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center bottom;
   display: block;
 }
 
@@ -171,6 +174,10 @@
   .heroBottomGrid {
     gap: var(--space-2xl);
   }
+
+  .heroImageWrapper {
+    height: min(60vh, 610px);
+  }
 }
 
 @media (max-width: 768px) {
@@ -189,11 +196,16 @@
   .heroBottom {
     padding: var(--space-2xl) 0;
   }
+
+  .heroLeft {
+    padding-top: var(--space-md);
+  }
 }
 
 @media (max-width: 635px) {
   .heroLeft {
     gap: var(--space-sm);
+    padding-top: var(--space-sm);
   }
 
   .heroTitle {
@@ -221,7 +233,7 @@
 
   .heroGrid {
     grid-template-columns: 1fr;
-    padding: var(--space-xl) 0 var(--space-2xl) 0;
+    padding: var(--space-2xl) 0 var(--space-2xl) 0;
     gap: var(--space-lg);
     min-height: auto;
 
@@ -233,6 +245,7 @@
 
   .heroImageWrapper {
     max-width: 360px;
+    height: 450px;
   }
 
   .heroBottomGrid {
@@ -244,6 +257,10 @@
 @media (max-width: 480px) {
   .heroGrid {
     padding-top: var(--space-lg);
+  }
+
+  .heroImageWrapper {
+    height: 390px;
   }
 
   .btnCourses {

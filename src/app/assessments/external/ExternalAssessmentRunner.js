@@ -7,6 +7,8 @@ import CorrectIncorrectEngine from '@/assessments/CorrectIncorrectEngine'
 import CathexisEngine from '@/assessments/CathexisEngine'
 import StrokeProfileEngine from '@/assessments/StrokeProfileEngine'
 import BinaryScoredEngine from '@/assessments/BinaryScoredEngine'
+import DriverQuestionnaireEngine from '@/assessments/DriverQuestionnaireEngine'
+import EgoStateAnalysisEngine from '@/assessments/EgoStateAnalysisEngine'
 import styles from '@/assessments/assessment.module.css'
 
 export default function ExternalAssessmentRunner({ assessmentKey }) {
@@ -34,7 +36,7 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
 
   if (!hasStarted) {
     return (
-      <div className={`${styles.introContainer} ${styles.externalIntroContainer}`}>
+      <div className={`${styles.introContainer} ${styles.externalIntroContainer} ${styles.externalIntroWithTopSpace} ${definition.introVariant === 'driver' ? styles.driverIntroContainer : ''}`}>
         {definition.logo && (
           <img
             src={definition.logo}
@@ -44,13 +46,19 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
         )}
         <h2 className={styles.introTitle}>{definition.title}</h2>
         {definition.description && (
-          <p className={styles.introDescription}>{definition.description}</p>
+          <p className={`${styles.introDescription} ${styles.externalIntroDescriptionBlock}`}>
+            {definition.description}
+          </p>
         )}
         {definition.intro && (
-          <p className={styles.externalIntroInstructions}>{definition.intro}</p>
+          <p className={`${styles.externalIntroInstructions} ${definition.introVariant === 'driver' ? styles.driverIntroBlock : ''}`}>
+            {definition.intro}
+          </p>
         )}
         {definition.scoring?.instructions && (
-          <p className={styles.externalIntroScoring}>{definition.scoring.instructions}</p>
+          <p className={`${styles.externalIntroScoring} ${definition.introVariant === 'driver' ? styles.driverScoringBlock : ''}`}>
+            {definition.scoring.instructions}
+          </p>
         )}
         <button
           type="button"
@@ -84,6 +92,14 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
 
     if (definition.type === 'binary-scored') {
       return <BinaryScoredEngine {...engineProps} />
+    }
+
+    if (definition.type === 'driver-questionnaire') {
+      return <DriverQuestionnaireEngine {...engineProps} />
+    }
+
+    if (definition.type === 'ego-state-analysis') {
+      return <EgoStateAnalysisEngine {...engineProps} />
     }
 
     return <LikertEngine {...engineProps} />
