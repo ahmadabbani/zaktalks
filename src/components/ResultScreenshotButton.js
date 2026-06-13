@@ -12,7 +12,7 @@ function safeFileName(value) {
     .replace(/^-+|-+$/g, '')
 }
 
-export default function ResultScreenshotButton({ targetId, fileName }) {
+export default function ResultScreenshotButton({ targetId, fileName, label = 'Download Result Screenshot' }) {
   const [isPending, startTransition] = useTransition()
 
   const handleDownload = () => {
@@ -50,7 +50,7 @@ export default function ResultScreenshotButton({ targetId, fileName }) {
       disabled={isPending}
       data-screenshot-exclude="true"
     >
-      <FaCamera /> {isPending ? 'Preparing...' : 'Download Result Screenshot'}
+      <FaCamera /> {isPending ? 'Preparing...' : label}
     </button>
   )
 }

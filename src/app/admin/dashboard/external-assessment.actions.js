@@ -17,7 +17,7 @@ export async function generateExternalAssessmentLink(formData) {
   const assessmentKey = formData.get('assessment_key')?.trim()
   const definition = getAssessmentById(assessmentKey)
 
-  if (!definition || definition.externalOnly !== true) {
+  if (!definition) {
     return { success: false, error: 'Please select a valid assessment.' }
   }
 

@@ -9,6 +9,7 @@ import StrokeProfileEngine from '@/assessments/StrokeProfileEngine'
 import BinaryScoredEngine from '@/assessments/BinaryScoredEngine'
 import DriverQuestionnaireEngine from '@/assessments/DriverQuestionnaireEngine'
 import EgoStateAnalysisEngine from '@/assessments/EgoStateAnalysisEngine'
+import ExternalFillableWorksheetEngine from '@/assessments/ExternalFillableWorksheetEngine'
 import styles from '@/assessments/assessment.module.css'
 
 export default function ExternalAssessmentRunner({ assessmentKey }) {
@@ -21,15 +22,6 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
       <div className={styles.errorContainer}>
         <h3>Assessment not found</h3>
         <p>This external assessment link is not configured correctly.</p>
-      </div>
-    )
-  }
-
-  if (definition.type === 'fillable-worksheet') {
-    return (
-      <div className={styles.errorContainer}>
-        <h3>Worksheet not available externally</h3>
-        <p>This worksheet type requires the course flow because it saves a completed PDF.</p>
       </div>
     )
   }
@@ -72,7 +64,7 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
   }
 
   const engineProps = {
-    definition,
+    definition: { ...definition, externalOnly: true },
     enableResultScreenshot: true,
     resultCaptureId
   }
@@ -100,6 +92,10 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
 
     if (definition.type === 'ego-state-analysis') {
       return <EgoStateAnalysisEngine {...engineProps} />
+    }
+
+    if (definition.type === 'fillable-worksheet') {
+      return <ExternalFillableWorksheetEngine {...engineProps} />
     }
 
     return <LikertEngine {...engineProps} />

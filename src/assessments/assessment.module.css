@@ -1232,6 +1232,10 @@
     animation: fadeIn 0.5s ease-out;
 }
 
+.externalWorksheetShell {
+    max-width: 1120px;
+}
+
 .worksheetHeader {
     margin-bottom: var(--space-2xl);
 }
@@ -1448,6 +1452,20 @@
     cursor: not-allowed;
 }
 
+.worksheetAnswerText {
+    display: inline-flex;
+    max-width: 100%;
+    margin: 2px 4px;
+    padding: 4px 10px;
+    color: #075985;
+    background: rgba(186, 230, 253, 0.72);
+    border-bottom: 2px solid rgba(3, 105, 161, 0.34);
+    border-radius: 0.45rem 0.45rem 0 0;
+    font-weight: 900;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
 .worksheetProvidedText {
     margin: 0 0 var(--space-md) 0;
     color: var(--color-black);
@@ -1463,6 +1481,10 @@
     margin-top: var(--space-2xl);
     padding-top: var(--space-xl);
     border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.worksheetActions .screenshotBtn {
+    margin: 0;
 }
 
 /* ===== Stroke Profile Engine Styles ===== */
@@ -1746,7 +1768,8 @@
 
     .worksheetDownloadBtn,
     .worksheetSubmitBtn,
-    .worksheetEditBtn {
+    .worksheetEditBtn,
+    .worksheetActions .screenshotBtn {
         width: 100%;
     }
 

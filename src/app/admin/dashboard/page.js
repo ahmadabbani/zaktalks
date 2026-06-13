@@ -32,13 +32,11 @@ export default async function AdminDashboardPage() {
   
   const totalRevenueCents = enrollments?.reduce((sum, e) => sum + (e.amount_paid_cents || 0), 0) || 0
   const totalRevenue = (totalRevenueCents / 100).toFixed(2)
-  const assessments = Object.values(ASSESSMENTS)
-    .filter((assessment) => assessment.externalOnly === true)
-    .map((assessment) => ({
-      id: assessment.id,
-      title: assessment.title,
-      description: assessment.description
-    }))
+  const assessments = Object.values(ASSESSMENTS).map((assessment) => ({
+    id: assessment.id,
+    title: assessment.title,
+    description: assessment.description
+  }))
 
   const { data: externalLinks } = await adminSupabase
     .from('external_assessment_links')
