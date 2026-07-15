@@ -1,6 +1,6 @@
 import { stripe } from '@/lib/stripe'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
-import { resend } from '@/lib/resend'
+import { resend, ZAKTALKS_EMAIL_FROM } from '@/lib/resend'
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { 
@@ -33,7 +33,7 @@ function getAuthRedirectBaseUrl(req) {
 async function sendWelcomeEmail(email, link) {
   try {
     const res = await resend.emails.send({
-      from: 'onboarding@resend.dev',
+      from: ZAKTALKS_EMAIL_FROM,
       to: email,
       subject: 'Welcome to ZakTalks! Set your password',
       html: `
@@ -43,6 +43,12 @@ async function sendWelcomeEmail(email, link) {
         <p>Or copy this link: ${link}</p>
       `
     })
+
+    if (res.error) {
+      console.error('Resend error:', res.error)
+      return null
+    }
+
     console.log('Email response:', res)
     return res
   } catch (err) {

@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { resend } from '@/lib/resend'
+import { resend, ZAKTALKS_EMAIL_FROM } from '@/lib/resend'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 
 export async function login(formData) {
@@ -70,8 +70,8 @@ export async function signup(formData) {
   const confirmationLink = properties.action_link
   
   try {
-    await resend.emails.send({
-      from: 'onboarding@resend.dev', // TODO: Change to real domain later
+    const { error: emailError } = await resend.emails.send({
+      from: ZAKTALKS_EMAIL_FROM,
       to: email,
       subject: 'Welcome to ZakTalks! Confirm your email',
       html: `
@@ -81,9 +81,14 @@ export async function signup(formData) {
         <p>Or copy this link: ${confirmationLink}</p>
       `
     })
+
+    if (emailError) {
+      console.error('Resend error:', emailError)
+      return { error: 'Account created but failed to send confirmation email. Please contact support.' }
+    }
   } catch (emailError) {
     console.error('Resend error:', emailError)
-    return { error: 'Account created but failed to send email. Please contact support.' }
+    return { error: 'Account created but failed to send confirmation email. Please contact support.' }
   }
 
   return { success: true, message: 'Check your email to confirm registration!' }
@@ -121,8 +126,8 @@ export async function resetPassword(formData) {
   const resetLink = properties.action_link
 
   try {
-    await resend.emails.send({
-      from: 'onboarding@resend.dev',
+    const { error: emailError } = await resend.emails.send({
+      from: ZAKTALKS_EMAIL_FROM,
       to: email,
       subject: 'Reset your ZakTalks Password',
       html: `
@@ -133,6 +138,11 @@ export async function resetPassword(formData) {
         <p>If you didn't request this, please ignore this email.</p>
       `
     })
+
+    if (emailError) {
+      console.error('Resend error:', emailError)
+      return { error: 'Failed to send email.' }
+    }
   } catch (emailError) {
     console.error('Resend error:', emailError)
     return { error: 'Failed to send email.' }
