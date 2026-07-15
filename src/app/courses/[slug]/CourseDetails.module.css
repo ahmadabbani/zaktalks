@@ -69,9 +69,21 @@
 .heroDescription {
     font-size: 1.25rem;
     opacity: 0.9;
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-sm);
     line-height: 1.6;
     max-width: 600px;
+}
+
+.heroSubheadline {
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: var(--space-2xl);
+    max-width: 600px;
+}
+
+.heroDescription + .tutorHeader {
+    margin-top: var(--space-2xl);
 }
 
 .tutorHeader {
@@ -131,6 +143,63 @@
     padding: var(--space-3xl) 0;
     background-color: var(--color-gray-light);
     position: relative;
+}
+
+.problemShiftSection {
+    padding: var(--space-2xl) 0;
+    background: linear-gradient(180deg, #fffefa 0%, #f8f8f6 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.problemShiftGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-xl);
+}
+
+.problemShiftBlock {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 230px;
+    padding: clamp(2rem, 4vw, 3.5rem);
+    border: 1px solid transparent;
+    border-radius: 24px;
+    box-shadow: 0 16px 35px rgba(48, 48, 48, 0.08);
+}
+
+.problemBlock {
+    background: linear-gradient(135deg, #fff9dd 0%, #fcecab 100%);
+    border-color: rgba(212, 168, 23, 0.55);
+}
+
+.shiftBlock {
+    background: linear-gradient(135deg, #f0fbf2 0%, #d5f1dc 100%);
+    border-color: rgba(76, 175, 80, 0.45);
+}
+
+.problemShiftTitle {
+    align-self: flex-start;
+    padding: 0.4rem 0.75rem;
+    border-radius: 50px;
+    margin-bottom: var(--space-md);
+    color: #806600;
+    background: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.shiftBlock .problemShiftTitle {
+    color: #237436;
+}
+
+.problemShiftText {
+    color: var(--color-gray-dark);
+    font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+    font-weight: 600;
+    line-height: 1.7;
+    white-space: pre-line;
 }
 
 .galleryContent {
@@ -216,6 +285,66 @@
     font-size: 1.1rem;
     line-height: 1.8;
     color: var(--color-gray-dark);
+}
+
+.audienceGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: 4rem;
+}
+
+.audienceGridSingle {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.audienceBlock {
+    padding: var(--space-xl);
+    background: var(--color-gray-light);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 20px;
+}
+
+.notForBlock {
+    background: #fff8f7;
+    border-color: rgba(244, 67, 54, 0.35);
+}
+
+.notForHeader,
+.notForHeader h2 {
+    color: var(--color-error);
+}
+
+.audienceList {
+    display: flex;
+    flex-direction: column;
+}
+
+.audienceListItem {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.9rem 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    color: var(--color-gray-dark);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.audienceListItem svg {
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+    color: var(--color-yellow);
+}
+
+.notForList .audienceListItem {
+    border-color: rgba(244, 67, 54, 0.16);
+    color: #a52d25;
+}
+
+.notForList .audienceListItem svg {
+    color: var(--color-error);
 }
 
 .tutorBlock {
@@ -405,6 +534,16 @@
 
     .benefitsGrid {
         grid-template-columns: 1fr;
+    }
+
+    .problemShiftGrid,
+    .audienceGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .problemShiftBlock,
+    .audienceBlock {
+        padding: var(--space-lg);
     }
 
     .guaranteeBox {

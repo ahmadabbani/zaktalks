@@ -21,9 +21,17 @@ function SubmitButton({ buttonText }) {
   )
 }
 
+function toList(value) {
+  if (Array.isArray(value)) return value
+  return value ? [value] : []
+}
+
 export default function CourseForm({ initialData = {}, action, buttonText = "Save Course" }) {
   const [offers, setOffers] = useState(initialData.course_offers || [])
   const [benefits, setBenefits] = useState(initialData.course_benefits || [])
+  const [targetAudience, setTargetAudience] = useState(toList(initialData.target_audience))
+  const [notForAudience, setNotForAudience] = useState(toList(initialData.who_this_is_not_for))
+  const [results, setResults] = useState(toList(initialData.why_attend))
   const [faqs, setFaqs] = useState(initialData.faqs || [])
   const [existingImages, setExistingImages] = useState(initialData.images || [])
   const [deletedImageUrls, setDeletedImageUrls] = useState([])
@@ -148,15 +156,20 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         <textarea name="description" rows="4" defaultValue={initialData.description} placeholder="Describe what this course is about..."></textarea>
       </div>
 
+      <div className={styles.formGroup}>
+        <label>Course Subheadline</label>
+        <textarea name="subheadline" rows="3" defaultValue={initialData.subheadline} placeholder="A short supporting line shown below the course description..."></textarea>
+      </div>
+
       <div className={styles.gridTwo}>
         <div className={styles.formGroup}>
-          <label>Target Audience</label>
-          <textarea name="target_audience" rows="4" defaultValue={initialData.target_audience} placeholder="Who is this course for?"></textarea>
+          <label>The Problem</label>
+          <textarea name="the_problem" rows="4" defaultValue={initialData.the_problem} placeholder="Describe the problem this course helps solve..."></textarea>
         </div>
 
         <div className={styles.formGroup}>
-          <label>Why Attend?</label>
-          <textarea name="why_attend" rows="4" defaultValue={initialData.why_attend} placeholder="Why should someone take this course?"></textarea>
+          <label>The Shift</label>
+          <textarea name="the_shift" rows="4" defaultValue={initialData.the_shift} placeholder="Describe the transformation this course creates..."></textarea>
         </div>
       </div>
 
@@ -296,6 +309,74 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
             </div>
           ))}
           {benefits.length === 0 && <p className={styles.emptyState}>No benefits added yet.</p>}
+        </div>
+      </div>
+
+      <div className={styles.gridTwo}>
+        <div className={styles.listSection}>
+          <div className={styles.listHeader}>
+            <label>Who This Is For (List)</label>
+            <button type="button" onClick={() => addItem(setTargetAudience, targetAudience)} className={styles.addButton}>+ Add Item</button>
+          </div>
+          <div className={styles.listItems}>
+            {targetAudience.map((item, index) => (
+              <div key={index} className={styles.listItem}>
+                <input
+                  type="text"
+                  name="target_audience"
+                  value={item}
+                  onChange={(e) => updateItem(setTargetAudience, targetAudience, index, e.target.value)}
+                  placeholder="e.g. Professionals ready to improve..."
+                />
+                <button type="button" onClick={() => removeItem(setTargetAudience, targetAudience, index)} className={styles.deleteSlotButton}>&times;</button>
+              </div>
+            ))}
+            {targetAudience.length === 0 && <p className={styles.emptyState}>No audience items added yet.</p>}
+          </div>
+        </div>
+
+        <div className={styles.listSection}>
+          <div className={styles.listHeader}>
+            <label className={styles.notForLabel}>Who This Is Not For (List)</label>
+            <button type="button" onClick={() => addItem(setNotForAudience, notForAudience)} className={styles.addButton}>+ Add Item</button>
+          </div>
+          <div className={styles.listItems}>
+            {notForAudience.map((item, index) => (
+              <div key={index} className={styles.listItem}>
+                <input
+                  type="text"
+                  name="who_this_is_not_for"
+                  value={item}
+                  onChange={(e) => updateItem(setNotForAudience, notForAudience, index, e.target.value)}
+                  placeholder="e.g. Anyone looking for a quick fix..."
+                />
+                <button type="button" onClick={() => removeItem(setNotForAudience, notForAudience, index)} className={styles.deleteSlotButton}>&times;</button>
+              </div>
+            ))}
+            {notForAudience.length === 0 && <p className={styles.emptyState}>No not-for items added yet.</p>}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.listSection}>
+        <div className={styles.listHeader}>
+          <label>Results (List)</label>
+          <button type="button" onClick={() => addItem(setResults, results)} className={styles.addButton}>+ Add Item</button>
+        </div>
+        <div className={styles.listItems}>
+          {results.map((item, index) => (
+            <div key={index} className={styles.listItem}>
+              <input
+                type="text"
+                name="why_attend"
+                value={item}
+                onChange={(e) => updateItem(setResults, results, index, e.target.value)}
+                placeholder="e.g. A clear plan for..."
+              />
+              <button type="button" onClick={() => removeItem(setResults, results, index)} className={styles.deleteSlotButton}>&times;</button>
+            </div>
+          ))}
+          {results.length === 0 && <p className={styles.emptyState}>No results added yet.</p>}
         </div>
       </div>
 

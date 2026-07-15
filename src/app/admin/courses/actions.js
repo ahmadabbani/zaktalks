@@ -18,9 +18,13 @@ export async function createCourse(formData) {
               : title.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '')
 
   const description = formData.get('description')
+  const subheadline = formData.get('subheadline')
   const tutor_name = formData.get('tutor_name')
-  const target_audience = formData.get('target_audience')
-  const why_attend = formData.get('why_attend')
+  const the_problem = formData.get('the_problem')
+  const the_shift = formData.get('the_shift')
+  const target_audience = formData.getAll('target_audience').filter(Boolean)
+  const who_this_is_not_for = formData.getAll('who_this_is_not_for').filter(Boolean)
+  const why_attend = formData.getAll('why_attend').filter(Boolean)
   const meet_the_tutor = formData.get('meet_the_tutor')
   const money_back_guarantee = formData.get('money_back_guarantee') === 'on'
   const price_cents = Math.round(parseFloat(formData.get('price')) * 100)
@@ -80,7 +84,11 @@ export async function createCourse(formData) {
       title,
       slug,
       description,
+      subheadline,
+      the_problem,
+      the_shift,
       target_audience,
+      who_this_is_not_for,
       why_attend,
       meet_the_tutor,
       money_back_guarantee,
@@ -156,9 +164,13 @@ export async function updateCourse(id, formData) {
               : title.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '')
 
   const description = formData.get('description')
+  const subheadline = formData.get('subheadline')
   const tutor_name = formData.get('tutor_name')
-  const target_audience = formData.get('target_audience')
-  const why_attend = formData.get('why_attend')
+  const the_problem = formData.get('the_problem')
+  const the_shift = formData.get('the_shift')
+  const target_audience = formData.getAll('target_audience').filter(Boolean)
+  const who_this_is_not_for = formData.getAll('who_this_is_not_for').filter(Boolean)
+  const why_attend = formData.getAll('why_attend').filter(Boolean)
   const meet_the_tutor = formData.get('meet_the_tutor')
   const money_back_guarantee = formData.get('money_back_guarantee') === 'on'
   const price_cents = Math.round(parseFloat(formData.get('price')) * 100)
@@ -170,7 +182,11 @@ export async function updateCourse(id, formData) {
     title,
     slug,
     description,
+    subheadline,
+    the_problem,
+    the_shift,
     target_audience,
+    who_this_is_not_for,
     why_attend,
     meet_the_tutor,
     money_back_guarantee,

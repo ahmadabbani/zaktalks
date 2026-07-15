@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import EnrollButton from '@/components/EnrollButton'
 import Link from 'next/link'
-import { FaPlayCircle, FaClipboardList, FaLock, FaCheckCircle, FaUserTie, FaBullseye, FaLightbulb, FaRocket, FaQuestionCircle, FaShieldAlt } from 'react-icons/fa'
+import { FaPlayCircle, FaClipboardList, FaLock, FaCheckCircle, FaUserTie, FaBullseye, FaLightbulb, FaRocket, FaQuestionCircle, FaShieldAlt, FaExclamationCircle } from 'react-icons/fa'
 import { notFound } from 'next/navigation'
 import GalleryCarousel from '@/components/GalleryCarousel'
 import FAQAccordion from '@/components/FAQAccordion'
@@ -37,6 +37,11 @@ export default async function CourseDetailPage({ params }) {
   if (courseError || !course) {
     return notFound()
   }
+
+  const asList = (value) => Array.isArray(value) ? value : value ? [value] : []
+  const targetAudience = asList(course.target_audience)
+  const notForAudience = asList(course.who_this_is_not_for)
+  const results = asList(course.why_attend)
 
   // 2. Fetch Lessons
   const { data: lessons } = await supabase
@@ -96,6 +101,7 @@ export default async function CourseDetailPage({ params }) {
                 </div>
                 <h1 className={styles.title}>{course.title}</h1>
                 <p className={styles.heroDescription}>{course.description}</p>
+                {course.subheadline && <p className={styles.heroSubheadline}>{course.subheadline}</p>}
                 <div className={styles.tutorHeader}>
                     <FaUserTie />
                     <span>{course.tutor_name || 'Expert Tutor'}</span>
@@ -136,6 +142,28 @@ export default async function CourseDetailPage({ params }) {
         </div>
       </section>
 
+      {/* Problem and Shift */}
+      {(course.the_problem || course.the_shift) && (
+          <section className={styles.problemShiftSection}>
+              <div className="container">
+                  <div className={styles.problemShiftGrid}>
+                      {course.the_problem && (
+                          <div className={`${styles.problemShiftBlock} ${styles.problemBlock}`}>
+                              <h2 className={styles.problemShiftTitle}>THE PROBLEM</h2>
+                              <p className={styles.problemShiftText}>{course.the_problem}</p>
+                          </div>
+                      )}
+                      {course.the_shift && (
+                          <div className={`${styles.problemShiftBlock} ${styles.shiftBlock}`}>
+                              <h2 className={styles.problemShiftTitle}>THE SHIFT</h2>
+                              <p className={styles.problemShiftText}>{course.the_shift}</p>
+                          </div>
+                      )}
+                  </div>
+              </div>
+          </section>
+      )}
+
       {/* Gallery Section Under Hero */}
       {galleryImages?.length > 0 && (
           <section className={styles.gallerySection}>
@@ -155,24 +183,6 @@ export default async function CourseDetailPage({ params }) {
             <div className={styles.mainGrid}>
                 {/* Left Column: Course Details */}
                 <div>
-                    {/* Benefits Section */}
-                    {course.course_benefits?.length > 0 && (
-                        <div className={styles.infoBlock}>
-                            <div className={styles.sectionHeader}>
-                                <FaLightbulb style={{ color: 'var(--color-yellow)', fontSize: '1.5rem' }} />
-                                <h2>Benefits</h2>
-                            </div>
-                            <div className={styles.benefitsGrid}>
-                                {course.course_benefits.map((benefit, i) => (
-                                    <div key={i} className={styles.benefitCard}>
-                                        <FaCheckCircle style={{ color: 'var(--color-yellow)', marginTop: '0.2rem', flexShrink: 0 }} />
-                                        <span className={styles.benefitText}>{benefit}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                    
                     {/* Course Offers */}
                     {course.course_offers?.length > 0 && (
                         <div className={styles.infoBlock}>
@@ -191,25 +201,77 @@ export default async function CourseDetailPage({ params }) {
                         </div>
                     )}
 
-                    {/* Target Audience */}
-                    {course.target_audience && (
+                    {/* Benefits Section */}
+                    {course.course_benefits?.length > 0 && (
                         <div className={styles.infoBlock}>
                             <div className={styles.sectionHeader}>
-                                <FaBullseye style={{ color: 'var(--color-yellow)', fontSize: '1.5rem' }} />
-                                <h2>Target Audience</h2>
+                                <FaLightbulb style={{ color: 'var(--color-yellow)', fontSize: '1.5rem' }} />
+                                <h2>Benefits</h2>
                             </div>
-                            <p className={styles.paragraph}>{course.target_audience}</p>
+                            <div className={styles.benefitsGrid}>
+                                {course.course_benefits.map((benefit, i) => (
+                                    <div key={i} className={styles.benefitCard}>
+                                        <FaCheckCircle style={{ color: 'var(--color-yellow)', marginTop: '0.2rem', flexShrink: 0 }} />
+                                        <span className={styles.benefitText}>{benefit}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
 
-                    {/* Why Attend */}
-                    {course.why_attend && (
+                    {/* Who This Is For / Not For */}
+                    {(targetAudience.length > 0 || notForAudience.length > 0) && (
+                        <div className={`${styles.audienceGrid} ${(!targetAudience.length || !notForAudience.length) ? styles.audienceGridSingle : ''}`}>
+                            {targetAudience.length > 0 && (
+                                <div className={styles.audienceBlock}>
+                                    <div className={styles.sectionHeader}>
+                                        <FaBullseye style={{ color: 'var(--color-yellow)', fontSize: '1.5rem' }} />
+                                        <h2>WHO THIS IS FOR</h2>
+                                    </div>
+                                    <div className={styles.audienceList}>
+                                        {targetAudience.map((item, i) => (
+                                            <div key={i} className={styles.audienceListItem}>
+                                                <FaCheckCircle />
+                                                <span>{item}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                            {notForAudience.length > 0 && (
+                                <div className={`${styles.audienceBlock} ${styles.notForBlock}`}>
+                                    <div className={`${styles.sectionHeader} ${styles.notForHeader}`}>
+                                        <FaExclamationCircle style={{ fontSize: '1.5rem' }} />
+                                        <h2>WHO THIS IS NOT FOR</h2>
+                                    </div>
+                                    <div className={`${styles.audienceList} ${styles.notForList}`}>
+                                        {notForAudience.map((item, i) => (
+                                            <div key={i} className={styles.audienceListItem}>
+                                                <FaExclamationCircle />
+                                                <span>{item}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Results */}
+                    {results.length > 0 && (
                         <div className={styles.infoBlock}>
                              <div className={styles.sectionHeader}>
                                 <FaRocket style={{ color: 'var(--color-yellow)', fontSize: '1.5rem' }} />
-                                <h2>Why attend?</h2>
+                                <h2>RESULTS</h2>
                             </div>
-                            <p className={styles.paragraph}>{course.why_attend}</p>
+                            <div className={styles.offersList}>
+                                {results.map((result, i) => (
+                                    <div key={i} className={styles.offerItem}>
+                                        <FaCheckCircle style={{ color: 'var(--color-yellow)', opacity: 0.6 }} />
+                                        <span style={{ opacity: 0.8 }}>{result}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
 

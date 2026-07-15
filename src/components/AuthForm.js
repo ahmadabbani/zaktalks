@@ -22,6 +22,7 @@ function SubmitButton({ label, loadingLabel }) {
 
 export default function AuthForm({ type, action }) {
   const [error, setError] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
   const [validationErrors, setValidationErrors] = useState({})
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -43,6 +44,10 @@ function handleInputChange(e) {
     ...prev,
     [name]: value
   }))
+
+  if (successMessage) {
+    setSuccessMessage(null)
+  }
 
   // Clear validation error for this field when user starts typing
   if (validationErrors[name]) {
@@ -129,6 +134,7 @@ function validateForm() {
 
  async function clientAction(formData) {
   setError(null)
+  setSuccessMessage(null)
   setValidationErrors({})
 
   // Frontend validation
@@ -146,6 +152,9 @@ function validateForm() {
     toast.error(result.error)
   } else if (result?.success) {
     toast.success(result.message)
+    if (!isLogin) {
+      setSuccessMessage(result.message)
+    }
   }
 }
 
@@ -173,7 +182,7 @@ function validateForm() {
                 <input 
                   id="first_name" 
                   name="first_name"
-                  placeholder="firt name"
+                  placeholder="first name"
                   value={formValues.first_name}
                   onChange={handleInputChange}
                   className={`${styles.input} ${validationErrors.first_name ? styles.inputError : ''}`}
@@ -287,6 +296,12 @@ function validateForm() {
           {error && (
             <div className={styles.errorBox}>
               {error}
+            </div>
+          )}
+
+          {successMessage && (
+            <div className={styles.successBox}>
+              {successMessage}
             </div>
           )}
 

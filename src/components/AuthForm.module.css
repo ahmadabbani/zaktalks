@@ -105,6 +105,16 @@
     font-weight: 500;
 }
 
+.successBox {
+    background-color: #ecfdf5;
+    color: #047857;
+    padding: 0.9rem 1.2rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    border: 1px solid #86efac;
+    font-weight: 500;
+}
+
 .submitBtn {
     width: 100%;
     padding: 1rem 2rem;

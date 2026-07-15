@@ -73,6 +73,10 @@
     letter-spacing: 0.5px;
 }
 
+.notForLabel {
+    color: var(--color-error);
+}
+
 .formGroup input[type="text"],
 .formGroup input[type="number"],
 .formGroup textarea {
