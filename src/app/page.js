@@ -2,8 +2,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import styles from './page.module.css'
 import HeroSlider from '@/components/HeroSlider'
-import TestimonialsSlider from '@/components/TestimonialsSlider'
 import CoachingProcess from '@/components/CoachingProcess'
+import ForWhomSection from '@/components/ForWhomSection'
+import SocialProofSection from '@/components/SocialProofSection'
+import WhatIDoSection from '@/components/WhatIDoSection'
+import PodcastFeatureSection from '@/components/PodcastFeatureSection'
+import AboutTeaserSection from '@/components/AboutTeaserSection'
 import { MdOutlineHandshake, MdOutlineRecordVoiceOver, MdOutlineWavingHand, MdOutlineLightbulb, MdOutlineSchool, MdOutlineWatchLater, MdOutlineInsights, MdOutlineExplore, MdOutlineAutoAwesome  } from 'react-icons/md'
 import { createClient } from '@/lib/supabase/server'
 
@@ -29,19 +33,24 @@ export default async function Home() {
     <main className={styles.main}>
       {/* Hero Section */}
       <section className={styles.heroSection}>
-        <div className="container">
+        <div className={styles.heroContainer}>
           <div className={styles.heroGrid}>
             {/* Left Side */}
             <div className={styles.heroLeft}>
               <h1 className={styles.heroTitle}>
-                Do you feel like there's <span className={styles.highlight}>more to life</span>, but you're not sure <span className={styles.highlight}>how to get there?</span>
+                Stop repeating the patterns that keep you stuck.
               </h1>
               <p className={styles.heroDescription}>
-                Would you like to develop effective communication skills and set healthy boundaries to enhance the quality of your relationships?
+                Zak helps adults move from survival patterns into self-awareness, stronger communication, healthier relationships, and a more intentional life through coaching, courses, and honest conversations.
               </p>
-              <Link href="/courses" className={styles.btnCourses}>
-                Enroll Now
-              </Link>
+              <div className={styles.heroActions}>
+                <Link href="/courses/interpersonal-communication-dynamics" className={styles.primaryHeroCta}>
+                  <span className={styles.ctaLabel}>Enroll in Interpersonal Communication Dynamics</span>
+                </Link>
+                <Link href="/coaching" className={styles.secondaryHeroCta}>
+                  <span className={styles.ctaLabel}>Explore how I work</span>
+                </Link>
+              </div>
             </div>
 
             {/* Right Side */}
@@ -54,6 +63,7 @@ export default async function Home() {
                   height={800}
                   priority
                   className={styles.heroImage}
+                  sizes="(max-width: 700px) 94vw, (max-width: 1200px) 48vw, 42vw"
                 />
               </div>
             </div>
@@ -78,33 +88,16 @@ export default async function Home() {
           </div>
         </div>  */}
       </section>
+
+      <ForWhomSection />
+      <SocialProofSection />
+      <WhatIDoSection />
+      <PodcastFeatureSection />
+      <AboutTeaserSection />
+
        {/* Coaching Process Section */}
       <CoachingProcess />
 
-{/* About Me Section */}
-      <section className={styles.aboutSection}>
-        <div className="container">
-          <div className={styles.aboutGrid}>
-            {/* Left Side */}
-            <div className={styles.aboutLeft}>
-              <h2 className={styles.aboutTitle}>
-                A Little About <span className={styles.aboutHighlight}>Me</span>
-              </h2>
-              <p className={styles.aboutText}>
-                I am Zak, a Purpose-Driven Coach, passionate about helping individuals and groups discover and achieve their full potential. My coaching services are tailored to meet the unique needs of each client, whether it be through private one-on-one sessions, group coaching, or workshops.
-              </p>
-              <Link href="/about" className={styles.btnAbout}>
-                About Zak
-              </Link>
-            </div>
-
-            {/* Right Side - Testimonials */}
-            <div className={styles.aboutRight}>
-              <TestimonialsSlider />
-            </div>
-          </div>
-        </div>
-      </section>
     {/* Services Section */}
       <section className={styles.servicesSection}>
         <div className="container">
@@ -164,39 +157,6 @@ export default async function Home() {
                 className={styles.zakLogo}
               />
             </div>
-          </div>
-        </div>
-      </section>
-{/* Podcast Section */}
-      <section className={styles.podcastSection}>
-        <div className={styles.podcastGrid}>
-          {/* Left Side */}
-          <div className={styles.podcastLeft}>
-            <div className={styles.podcastContent}>
-              <h2 className={styles.podcastTitle}>
-                The Elephant <span className={styles.podcastHighlight}>Speaks</span>
-              </h2>
-              <p className={styles.podcastDescription}>
-                This is where the elephant in the room finally speaks. Unfiltered conversations, untold truths, and the questions everyone avoids. Tune in if you're ready for honesty that inspires change!
-              </p>
-              <Link 
-                href="/speaking" 
-                className={styles.btnPodcast}
-              >
-                Listen to Podcast
-              </Link>
-            </div>
-          </div>
-
-          {/* Right Side */}
-          <div className={styles.podcastRight}>
-            <Image 
-              src="/podcast.png" 
-              alt="Podcast" 
-              width={800}
-              height={800}
-              className={styles.podcastImage}
-            />
           </div>
         </div>
       </section>

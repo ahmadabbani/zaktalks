@@ -1,0 +1,324 @@
+.section {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(5rem, 9vw, 10rem) 0;
+  background: var(--color-gray-light);
+}
+
+.container {
+  width: auto;
+  margin-inline: var(--site-edge-gutter);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(24rem, 0.98fr);
+  gap: clamp(2.75rem, 7vw, 8rem);
+  align-items: center;
+}
+
+.content {
+  display: flex;
+  max-width: 52rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1.4rem, 2.2vw, 2rem);
+}
+
+.title {
+  max-width: 13ch;
+  color: var(--color-dark-blue);
+  font-size: clamp(2.5rem, 4.5vw, 5.5rem);
+  font-weight: 850;
+  letter-spacing: -0.055em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.copy {
+  max-width: 66ch;
+  color: var(--color-black);
+  font-size: clamp(0.98rem, 0.4vw + 0.86rem, 1.2rem);
+  font-weight: 500;
+  line-height: 1.72;
+}
+
+.cta {
+  display: inline-flex;
+  min-height: 3.35rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  padding: 0.72rem 0.82rem 0.72rem 1.45rem;
+  color: var(--color-white);
+  border: 2px solid var(--color-black);
+  border-radius: 999px;
+  background: var(--color-black);
+  font-size: clamp(0.86rem, 0.2vw + 0.81rem, 1rem);
+  font-weight: 760;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+
+.cta svg {
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0.34rem;
+  color: var(--color-deep-slate);
+  border-radius: 50%;
+  background: var(--color-white);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cta:hover {
+  color: var(--color-black);
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  transform: translateY(-0.22rem);
+}
+
+.cta:hover svg {
+  transform: translate(0.12rem, -0.12rem) rotate(5deg);
+}
+
+.visual {
+  position: relative;
+  width: 100%;
+  max-width: 43rem;
+  justify-self: end;
+}
+
+.imageFrame {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(60, 90, 103, 0.16);
+  border-radius: clamp(1.75rem, 3vw, 3rem);
+  background: var(--color-white);
+  box-shadow: 0 1.8rem 4rem rgba(33, 44, 45, 0.14);
+}
+
+.imageFrame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: clamp(0.45rem, 0.8vw, 0.8rem) solid rgba(255, 255, 255, 0.28);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.imageFrame:hover .image {
+  transform: scale(1.025);
+}
+
+.episodePrompt {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(1.1rem, 2.2vw, 2.25rem);
+  align-items: center;
+  margin-top: clamp(2rem, 4vw, 4rem);
+  padding: clamp(1.1rem, 1.8vw, 1.6rem) clamp(1.2rem, 2.2vw, 2.2rem);
+  color: var(--color-white);
+  border-radius: clamp(1.25rem, 2vw, 2rem);
+  background: var(--color-deep-slate);
+}
+
+.episodePrompt p {
+  font-size: clamp(1rem, 0.5vw + 0.86rem, 1.3rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.45;
+}
+
+.audioMark {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  color: var(--color-yellow);
+}
+
+.audioMark > svg {
+  width: clamp(1.8rem, 2.4vw, 2.6rem);
+  height: auto;
+  flex: 0 0 auto;
+}
+
+.waveform {
+  display: flex;
+  height: 2.5rem;
+  align-items: center;
+  gap: 0.22rem;
+}
+
+.waveform span {
+  width: 0.22rem;
+  height: 22%;
+  border-radius: 999px;
+  background: currentColor;
+  transform-origin: center;
+}
+
+.motionReady .content,
+.motionReady .visual,
+.motionReady .episodePrompt {
+  opacity: 0;
+}
+
+.content.itemVisible {
+  animation: contentIn 0.82s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.visual.itemVisible {
+  animation: visualIn 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.episodePrompt.itemVisible {
+  animation: episodeIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.episodePrompt.itemVisible .waveform span {
+  animation: audioPulse 1.05s ease-in-out infinite alternate;
+}
+
+.episodePrompt.itemVisible .waveform span:nth-child(2),
+.episodePrompt.itemVisible .waveform span:nth-child(7) {
+  animation-delay: -0.72s;
+}
+
+.episodePrompt.itemVisible .waveform span:nth-child(3),
+.episodePrompt.itemVisible .waveform span:nth-child(6) {
+  animation-delay: -0.38s;
+}
+
+.episodePrompt.itemVisible .waveform span:nth-child(4),
+.episodePrompt.itemVisible .waveform span:nth-child(8) {
+  animation-delay: -0.9s;
+}
+
+.episodePrompt.itemVisible .waveform span:nth-child(5) {
+  animation-delay: -0.16s;
+}
+
+@keyframes contentIn {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateX(-2.5rem);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+  }
+}
+
+@keyframes visualIn {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 0 75% round 3rem);
+    transform: translateX(2rem) rotate(1.5deg) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0 round 3rem);
+    transform: translateX(0) rotate(0) scale(1);
+  }
+}
+
+@keyframes episodeIn {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scaleX(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleX(1);
+  }
+}
+
+@keyframes audioPulse {
+  from {
+    height: 20%;
+  }
+
+  to {
+    height: 88%;
+  }
+}
+
+@media (max-width: 980px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 2.75rem;
+  }
+
+  .content {
+    max-width: 56rem;
+  }
+
+  .title {
+    max-width: 14ch;
+  }
+
+  .visual {
+    max-width: 39rem;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 620px) {
+  .section {
+    padding: 4.5rem 0;
+  }
+
+  .title {
+    font-size: clamp(2.35rem, 11vw, 3.35rem);
+  }
+
+  .cta {
+    width: 100%;
+  }
+
+  .episodePrompt {
+    grid-template-columns: 1fr;
+  }
+
+  .audioMark {
+    justify-content: space-between;
+  }
+
+  .waveform {
+    flex: 1;
+    justify-content: flex-end;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content.itemVisible,
+  .visual.itemVisible,
+  .episodePrompt.itemVisible,
+  .episodePrompt.itemVisible .waveform span {
+    animation: none;
+  }
+
+  .motionReady .content,
+  .motionReady .visual,
+  .motionReady .episodePrompt {
+    opacity: 1;
+  }
+
+  .image,
+  .cta,
+  .cta svg {
+    transition-duration: 0.01ms;
+  }
+}

@@ -1,0 +1,495 @@
+.section {
+  --service-card-closed: #d5e2e9;
+  --service-card-open: #ecece9;
+  --service-card-border: rgba(85, 135, 166, 0.3);
+  --service-card-open-border: rgba(60, 90, 103, 0.24);
+  position: relative;
+  overflow: hidden;
+  padding: clamp(5rem, 9vw, 10rem) 0;
+  background: var(--color-gray-light);
+}
+
+.container {
+  width: auto;
+  margin-inline: var(--site-edge-gutter);
+}
+
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(2rem, 6vw, 7rem);
+  align-items: end;
+  margin-bottom: clamp(2.5rem, 5vw, 5rem);
+}
+
+.headingBlock {
+  max-width: 78rem;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+  color: var(--color-yellow-dark);
+  font-size: clamp(0.72rem, 0.2vw + 0.66rem, 0.86rem);
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 2.6rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--color-yellow);
+}
+
+.title {
+  max-width: 16ch;
+  color: var(--color-dark-blue);
+  font-size: clamp(2.45rem, 4.5vw, 5.5rem);
+  font-weight: 850;
+  letter-spacing: -0.055em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.intro {
+  max-width: 68ch;
+  margin-top: clamp(1.25rem, 2vw, 2rem);
+  color: var(--color-gray-dark);
+  font-size: clamp(1rem, 0.45vw + 0.86rem, 1.24rem);
+  font-weight: 500;
+  line-height: 1.72;
+}
+
+.servicesLink {
+  display: inline-flex;
+  min-height: 3.35rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.8rem 1.35rem 0.8rem 1.6rem;
+  color: var(--color-white);
+  border: 2px solid var(--color-black);
+  border-radius: 999px;
+  background: var(--color-black);
+  font-size: clamp(0.86rem, 0.2vw + 0.81rem, 1rem);
+  font-weight: 750;
+  white-space: nowrap;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+
+.servicesLink svg {
+  font-size: 1.25em;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.servicesLink:hover {
+  color: var(--color-black);
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  transform: translateY(-0.2rem);
+}
+
+.servicesLink:hover svg {
+  transform: translate(0.15rem, -0.15rem);
+}
+
+.rail {
+  display: flex;
+  height: clamp(20rem, 20vw, 22rem);
+  gap: clamp(0.75rem, 1.2vw, 1.25rem);
+}
+
+.card {
+  --active-image-width: clamp(12rem, 15vw, 15.5rem);
+  position: relative;
+  display: grid;
+  min-width: 0;
+  flex: 1 1 0;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(0.8rem, 1.15vw, 1.15rem);
+  overflow: hidden;
+  padding: clamp(1.1rem, 1.45vw, 1.5rem);
+  color: var(--color-deep-slate);
+  border: 1px solid var(--service-card-border);
+  border-radius: clamp(1.4rem, 2.2vw, 2.25rem);
+  background: var(--service-card-closed);
+  box-shadow: 0 0 0 rgba(33, 44, 45, 0);
+  isolation: isolate;
+  transition:
+    flex-grow 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-right 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.42s ease,
+    border-color 0.42s ease;
+}
+
+.card:not(.cardActive):hover {
+  transform: translateY(-0.35rem);
+}
+
+.cardActive {
+  flex-grow: 1.3;
+  padding-right: calc(var(--active-image-width) + clamp(1.75rem, 2.4vw, 2.5rem));
+  border-color: var(--service-card-open-border);
+  background: var(--service-card-open);
+  box-shadow: 0 1.25rem 2.8rem rgba(60, 90, 103, 0.15);
+}
+
+.toneLight,
+.toneBlue,
+.toneDark,
+.toneYellow {
+  color: var(--color-deep-slate);
+  border-color: var(--service-card-border);
+  background: var(--service-card-closed);
+}
+
+.toneLight.cardActive,
+.toneBlue.cardActive,
+.toneDark.cardActive,
+.toneYellow.cardActive {
+  border-color: var(--service-card-open-border);
+  background: var(--service-card-open);
+}
+
+.cardToggle {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  gap: 0.85rem;
+  color: inherit;
+  text-align: left;
+}
+
+.cardNumber {
+  color: currentColor;
+  font-size: clamp(0.78rem, 0.24vw + 0.72rem, 0.9rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  opacity: 0.55;
+}
+
+.cardTitle {
+  max-width: 15ch;
+  font-size: clamp(1.15rem, 0.55vw + 1rem, 1.55rem);
+  font-weight: 820;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+  text-wrap: balance;
+  transition: font-size 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cardActive .cardTitle {
+  max-width: 20ch;
+  font-size: clamp(1.4rem, 1.05vw, 1.75rem);
+}
+
+.details {
+  display: block;
+  min-width: 0;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(1rem);
+  visibility: hidden;
+  transition:
+    max-height 0.58s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.32s ease,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.42s;
+}
+
+.cardActive .details {
+  max-height: 18rem;
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  transition-delay: 0.12s, 0.18s, 0.12s, 0s;
+}
+
+.copy {
+  min-width: 0;
+  font-size: clamp(0.84rem, 0.18vw + 0.8rem, 0.96rem);
+  font-weight: 520;
+  line-height: 1.48;
+}
+
+.imageWrap {
+  position: absolute;
+  top: clamp(0.75rem, 1.1vw, 1.1rem);
+  right: clamp(0.75rem, 1.1vw, 1.1rem);
+  bottom: clamp(0.75rem, 1.1vw, 1.1rem);
+  width: var(--active-image-width);
+  overflow: hidden;
+  border: 1px solid rgba(33, 44, 45, 0.08);
+  border-radius: clamp(1.25rem, 1.8vw, 1.75rem);
+  background: rgba(255, 255, 255, 0.42);
+  box-shadow: 0 0.7rem 1.6rem rgba(33, 44, 45, 0.1);
+  opacity: 0;
+  transform: translateX(1.25rem) scale(0.97);
+  visibility: hidden;
+  transition:
+    opacity 0.35s ease,
+    transform 0.62s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.42s;
+}
+
+.cardActive .imageWrap {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  visibility: visible;
+  transition-delay: 0.16s, 0.1s, 0s;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cardActive:hover .image {
+  transform: scale(1.035);
+}
+
+.cardCta {
+  display: inline-flex;
+  min-width: 0;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 2.8rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.65rem 0.9rem;
+  color: var(--color-white);
+  border-radius: 999px;
+  background: var(--color-deep-slate);
+  font-size: clamp(0.73rem, 0.2vw + 0.67rem, 0.86rem);
+  font-weight: 750;
+  line-height: 1.2;
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease, padding 0.5s ease;
+}
+
+.cardCta span {
+  overflow-wrap: anywhere;
+}
+
+.cardCta svg {
+  flex: 0 0 auto;
+  width: 1.55rem;
+  height: 1.55rem;
+  padding: 0.28rem;
+  color: var(--color-deep-slate);
+  border-radius: 50%;
+  background: var(--color-white);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cardActive .cardCta {
+  padding-inline: 1.2rem;
+}
+
+.toneDark .cardCta,
+.toneYellow .cardCta {
+  color: var(--color-white);
+  background: var(--color-deep-slate);
+}
+
+.cardCta:hover {
+  color: var(--color-black);
+  background: var(--color-yellow);
+  transform: translateY(-0.18rem);
+}
+
+.cardCta:hover svg {
+  transform: translate(0.14rem, -0.14rem);
+}
+
+.motionReady .header,
+.motionReady .card {
+  opacity: 0;
+}
+
+.header.itemVisible {
+  animation: headerIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.card1.itemVisible {
+  animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.card2.itemVisible {
+  animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.07s both;
+}
+
+.card3.itemVisible {
+  animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both;
+}
+
+.card4.itemVisible {
+  animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.21s both;
+}
+
+@keyframes headerIn {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(2rem) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 900px) {
+  .header {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  .servicesLink {
+    width: fit-content;
+  }
+
+}
+
+@media (max-width: 1180px) {
+  .rail {
+    display: grid;
+    height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .card,
+  .cardActive {
+    min-height: 9.5rem;
+    flex: none;
+    gap: 1rem;
+    transition:
+      min-height 0.62s cubic-bezier(0.22, 1, 0.36, 1),
+      padding-right 0.62s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.42s ease,
+      border-color 0.42s ease;
+  }
+
+  .cardActive {
+    min-height: 24rem;
+  }
+
+  .cardTitle,
+  .cardActive .cardTitle {
+    max-width: 24ch;
+    font-size: clamp(1.35rem, 6vw, 1.8rem);
+  }
+
+  .cardActive .details {
+    max-height: 18rem;
+  }
+
+  .cardCta,
+  .cardActive .cardCta {
+    padding: 0.7rem 1rem;
+    font-size: 0.83rem;
+  }
+
+  .card2.itemVisible,
+  .card3.itemVisible,
+  .card4.itemVisible {
+    animation-delay: 0s;
+  }
+}
+
+@media (max-width: 720px) {
+  .section {
+    padding: 4.5rem 0;
+  }
+
+  .title {
+    font-size: clamp(2.35rem, 11vw, 3.35rem);
+  }
+
+  .servicesLink {
+    width: 100%;
+  }
+
+  .card,
+  .cardActive {
+    display: flex;
+    min-height: 9.5rem;
+    flex-direction: column;
+    padding-right: clamp(1.2rem, 1.8vw, 1.85rem);
+  }
+
+  .cardActive {
+    min-height: 0;
+  }
+
+  .cardActive .details {
+    max-height: 24rem;
+  }
+
+  .imageWrap {
+    position: relative;
+    inset: auto;
+    width: min(100%, 18rem);
+    max-height: 0;
+    align-self: flex-start;
+    aspect-ratio: 1;
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.98);
+  }
+
+  .cardActive .imageWrap {
+    max-height: 18rem;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .cardCta {
+    margin-top: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .details,
+  .image,
+  .servicesLink,
+  .servicesLink svg,
+  .cardCta,
+  .cardCta svg {
+    transition-duration: 0.01ms;
+  }
+
+  .header.itemVisible,
+  .card.itemVisible {
+    animation: none;
+  }
+
+  .motionReady .header,
+  .motionReady .card {
+    opacity: 1;
+  }
+}

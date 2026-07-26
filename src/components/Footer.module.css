@@ -1,197 +1,420 @@
 .footer {
-    background: linear-gradient(180deg, var(--color-black) 0%, #1a1a1a 100%);
-    color: var(--color-white);
-    padding: 4.5rem 0 3rem;
-    overflow: hidden;
     position: relative;
-    border-top: 5px solid var(--color-yellow);
+    overflow: hidden;
+    padding: clamp(3.5rem, 6vw, 6.5rem) 0 1.6rem;
+    background: var(--color-black);
+    color: var(--color-white);
+    border-top: 4px solid var(--color-yellow);
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
 
 .footer::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: radial-gradient(circle at 50% -20%, rgba(241, 196, 15, 0.1) 0%, transparent 70%);
+    inset: 0;
     pointer-events: none;
+    background-image: radial-gradient(circle at 7% 10%, rgba(255, 255, 255, 0.09) 0 1px, transparent 1.5px);
+    background-size: 20px 20px;
+    opacity: 0.35;
+    transition: opacity 0.4s ease;
+}
+
+.footer:hover,
+.footer:focus-within {
+    background: var(--color-yellow);
+    color: var(--color-black);
+    border-color: var(--color-black);
+}
+
+.footer:hover::before,
+.footer:focus-within::before {
+    opacity: 0.16;
 }
 
 .footerContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2.5rem;
     position: relative;
     z-index: 1;
 }
 
-/* Top Section: Logo & Socials */
-.topSection {
-    display: flex;
-    flex-direction: column;
+.footerGrid {
+    display: grid;
+    grid-template-columns: minmax(230px, 1.25fr) repeat(3, minmax(160px, 1fr));
+    gap: clamp(2rem, 4vw, 5rem);
+    align-items: start;
+}
+
+.brandColumn,
+.footerColumn {
+    min-width: 0;
+}
+
+.logoFrame {
+    display: inline-flex;
     align-items: center;
-    gap: 2.5rem;
-    width: 100%;
+    justify-content: center;
+    width: min(100%, 220px);
+    transition: transform var(--transition-fast);
+}
+
+.logoFrame:hover,
+.logoFrame:focus-visible {
+    transform: scale(1.035);
+}
+
+.logoFrame:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 6px;
 }
 
 .logo {
-    width: clamp(200px, 20vw, 300px);
-    /* Responsive Bigger Logo */
+    width: 100%;
     height: auto;
-    transition: transform 0.4s ease;
 }
 
-.logo:hover {
-    transform: scale(1.05);
+.brandText,
+.socialText {
+    margin-top: 1.2rem;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.92rem;
+    line-height: 1.75;
+    transition: color 0.4s ease;
+}
+
+.footerTitle {
+    margin: 0;
+    color: var(--color-white);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    transition: color 0.4s ease;
+}
+
+.footerTitle::after {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 2px;
+    margin-top: 0.75rem;
+    background: var(--color-yellow);
+    transition: background-color 0.4s ease;
+}
+
+.contactLinks,
+.quickLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-top: 1rem;
+}
+
+.contactLink,
+.quickLink {
+    border-radius: 9px;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.92rem;
+    font-weight: 550;
+    line-height: 1.45;
+    transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+
+.contactLink {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.45rem 0.5rem;
+    margin-left: -0.5rem;
+}
+
+.contactLink svg {
+    width: 1rem;
+    flex: 0 0 auto;
+    margin-top: 0.2rem;
+    color: var(--color-yellow);
+    transition: color 0.4s ease;
+}
+
+.contactLink span {
+    display: flex;
+    flex-direction: column;
+}
+
+.contactLink strong {
+    font-weight: 700;
+}
+
+.contactLink small {
+    margin-top: 0.08rem;
+    color: rgba(255, 255, 255, 0.56);
+    font-size: 0.8rem;
+    transition: color 0.4s ease;
+}
+
+.quickLink {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 0.35rem 0.5rem;
+    margin-left: -0.5rem;
+}
+
+.quickLink::before {
+    content: '↗';
+    margin-right: 0.45rem;
+    color: var(--color-yellow);
+    font-weight: 700;
+    transition: color 0.4s ease;
+}
+
+.contactLink:hover,
+.contactLink:focus-visible,
+.quickLink:hover,
+.quickLink:focus-visible {
+    background: var(--color-yellow);
+    color: var(--color-black);
+    transform: translateX(3px);
+    outline: none;
+}
+
+.contactLink:hover svg,
+.contactLink:focus-visible svg,
+.quickLink:hover::before,
+.quickLink:focus-visible::before {
+    color: var(--color-black);
+}
+
+.contactLink:hover small,
+.contactLink:focus-visible small {
+    color: rgba(48, 48, 48, 0.72);
 }
 
 .socialLinks {
     display: flex;
-    gap: clamp(2.5rem, 5.5vw, 4.5rem);
-    /* Increased Gap */
-    align-items: center;
     flex-wrap: wrap;
-    justify-content: center;
+    gap: 0.55rem;
+    margin-top: 1.1rem;
 }
 
 .socialIcon {
-    font-size: clamp(2rem, 3vw, 2.5rem);
-    /* Bigger Social Icons */
-    color: var(--color-white);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.socialIcon:hover {
-    color: var(--color-yellow);
-    transform: translateY(-5px) scale(1.1);
-}
-
-/* Main Navigation */
-.mainNav {
-    display: flex;
-    flex-wrap: wrap;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    /* Keep centered but wide */
-    gap: clamp(2.5rem, 6vw, 5rem);
-    /* Significantly Increased Gap */
-    text-align: center;
-    max-width: 1400px;
-    /* Increased Width Limit */
-    width: 100%;
-}
-
-.navLink {
-    font-size: clamp(1.5rem, 4vw, 3rem);
-    /* Big Font Size */
-    font-weight: 800;
+    width: 2.35rem;
+    height: 2.35rem;
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    border-radius: 50%;
     color: var(--color-white);
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    position: relative;
-    line-height: 1.1;
+    font-size: 1rem;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
 }
 
-.navLink:hover {
-    color: var(--color-yellow);
-    transform: skewX(-5deg);
-}
-
-/* Contact CTA Button */
-.contactBtn {
-    margin-top: 2rem;
-    background: transparent;
-    border: 2px solid var(--color-yellow);
-    color: var(--color-yellow);
-    padding: 1rem 3rem;
-    font-size: clamp(1.2rem, 2vw, 1.5rem);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    border-radius: 50px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    position: relative;
-    overflow: hidden;
-}
-
-.contactBtn:hover {
+.socialIcon:hover,
+.socialIcon:focus-visible {
+    border-color: var(--color-yellow);
     background: var(--color-yellow);
     color: var(--color-black);
-    box-shadow: 0 0 30px rgba(241, 196, 15, 0.4);
     transform: translateY(-3px);
+    outline: none;
 }
 
-/* Bottom Section */
 .footerBottom {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    gap: 2rem;
-    margin-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 3rem;
-    width: 100%;
+    gap: 1.25rem;
+    margin-top: clamp(3rem, 6vw, 5.5rem);
+    padding-top: 1.4rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    transition: border-color 0.4s ease;
 }
 
 .legalLinks {
     display: flex;
-    gap: 2rem;
     flex-wrap: wrap;
-    justify-content: center;
+    gap: 0.35rem;
 }
 
 .legalLink {
-    font-size: 1rem;
-    color: var(--color-gray);
-    text-decoration: none;
-    transition: color 0.3s ease;
+    padding: 0.32rem 0.45rem;
+    border-radius: 7px;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 0.72rem;
+    font-weight: 650;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 500;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
-.legalLink:hover {
-    color: var(--color-white);
+.legalLink:hover,
+.legalLink:focus-visible {
+    background: var(--color-yellow);
+    color: var(--color-black);
+    outline: none;
 }
 
 .copyright {
-    color: var(--color-gray-dark);
-    font-size: 0.9rem;
-    font-weight: 500;
+    color: rgba(255, 255, 255, 0.52);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-align: right;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    text-align: center;
+    transition: color 0.4s ease;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
+/* The whole footer changes to yellow; individual controls invert to black so they remain distinct. */
+.footer:hover .brandText,
+.footer:hover .socialText,
+.footer:focus-within .brandText,
+.footer:focus-within .socialText {
+    color: rgba(48, 48, 48, 0.76);
+}
+
+.footer:hover .footerTitle,
+.footer:focus-within .footerTitle,
+.footer:hover .contactLink,
+.footer:hover .quickLink,
+.footer:hover .legalLink,
+.footer:focus-within .contactLink,
+.footer:focus-within .quickLink,
+.footer:focus-within .legalLink {
+    color: var(--color-black);
+}
+
+.footer:hover .footerTitle::after,
+.footer:focus-within .footerTitle::after {
+    background-color: var(--color-black);
+}
+
+.footer:hover .contactLink svg,
+.footer:focus-within .contactLink svg,
+.footer:hover .quickLink::before,
+.footer:focus-within .quickLink::before {
+    color: var(--color-black);
+}
+
+.footer:hover .contactLink small,
+.footer:focus-within .contactLink small,
+.footer:hover .copyright,
+.footer:focus-within .copyright {
+    color: rgba(48, 48, 48, 0.68);
+}
+
+.footer:hover .socialIcon,
+.footer:focus-within .socialIcon {
+    border-color: rgba(48, 48, 48, 0.55);
+    color: var(--color-black);
+}
+
+.footer:hover .footerBottom,
+.footer:focus-within .footerBottom {
+    border-color: rgba(48, 48, 48, 0.28);
+}
+
+.footer:hover .contactLink:hover,
+.footer:hover .contactLink:focus-visible,
+.footer:hover .quickLink:hover,
+.footer:hover .quickLink:focus-visible,
+.footer:hover .legalLink:hover,
+.footer:hover .legalLink:focus-visible,
+.footer:focus-within .contactLink:hover,
+.footer:focus-within .contactLink:focus-visible,
+.footer:focus-within .quickLink:hover,
+.footer:focus-within .quickLink:focus-visible,
+.footer:focus-within .legalLink:hover,
+.footer:focus-within .legalLink:focus-visible {
+    background: var(--color-black);
+    color: var(--color-white);
+}
+
+.footer:hover .contactLink:hover svg,
+.footer:hover .contactLink:focus-visible svg,
+.footer:hover .quickLink:hover::before,
+.footer:hover .quickLink:focus-visible::before,
+.footer:focus-within .contactLink:hover svg,
+.footer:focus-within .contactLink:focus-visible svg,
+.footer:focus-within .quickLink:hover::before,
+.footer:focus-within .quickLink:focus-visible::before {
+    color: var(--color-yellow);
+}
+
+.footer:hover .contactLink:hover small,
+.footer:hover .contactLink:focus-visible small,
+.footer:focus-within .contactLink:hover small,
+.footer:focus-within .contactLink:focus-visible small {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.footer:hover .socialIcon:hover,
+.footer:hover .socialIcon:focus-visible,
+.footer:focus-within .socialIcon:hover,
+.footer:focus-within .socialIcon:focus-visible {
+    border-color: var(--color-black);
+    background: var(--color-black);
+    color: var(--color-white);
+}
+
+@media (max-width: 1050px) {
+    .footerGrid {
+        grid-template-columns: minmax(210px, 1.2fr) repeat(2, minmax(160px, 1fr));
+        row-gap: 3rem;
+    }
+
+    .socialColumn {
+        grid-column: 2 / -1;
+    }
+}
+
+@media (max-width: 700px) {
     .footer {
-        padding: 4rem 0 2rem;
+        padding-top: 3.4rem;
+    }
+
+    .footerGrid {
+        grid-template-columns: 1fr;
+        gap: 2.35rem;
+    }
+
+    .socialColumn {
+        grid-column: auto;
+    }
+
+    .brandText {
+        max-width: 34rem;
+    }
+
+    .footerBottom {
+        align-items: flex-start;
+        flex-direction: column;
+        margin-top: 3.4rem;
+    }
+
+    .copyright {
+        text-align: left;
+    }
+}
+
+@media (max-width: 420px) {
+    .footer {
+        padding-bottom: 1.2rem;
     }
 
     .socialLinks {
-        gap: 1.5rem;
+        gap: 0.45rem;
     }
 
-    .mainNav {
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-
-    .contactBtn {
-        width: 100%;
-        max-width: 300px;
-        text-align: center;
+    .socialIcon {
+        width: 2.2rem;
+        height: 2.2rem;
     }
 
     .legalLinks {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: center;
+        gap: 0.2rem;
+    }
+
+    .legalLink {
+        padding-inline: 0.3rem;
+        font-size: 0.67rem;
     }
 }
