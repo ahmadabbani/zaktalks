@@ -8,6 +8,9 @@ import SocialProofSection from '@/components/SocialProofSection'
 import WhatIDoSection from '@/components/WhatIDoSection'
 import PodcastFeatureSection from '@/components/PodcastFeatureSection'
 import AboutTeaserSection from '@/components/AboutTeaserSection'
+import TestimonialsSection from '@/components/TestimonialsSection'
+import CoursePreviewCtaSection from '@/components/CoursePreviewCtaSection'
+import NewsletterSection from '@/components/NewsletterSection'
 import { MdOutlineHandshake, MdOutlineRecordVoiceOver, MdOutlineWavingHand, MdOutlineLightbulb, MdOutlineSchool, MdOutlineWatchLater, MdOutlineInsights, MdOutlineExplore, MdOutlineAutoAwesome  } from 'react-icons/md'
 import { createClient } from '@/lib/supabase/server'
 
@@ -94,6 +97,8 @@ export default async function Home() {
       <WhatIDoSection />
       <PodcastFeatureSection />
       <AboutTeaserSection />
+      <TestimonialsSection />
+      <CoursePreviewCtaSection />
 
        {/* Coaching Process Section */}
       <CoachingProcess />
@@ -210,6 +215,7 @@ export default async function Home() {
         </div>
       </section>
       {/* Future sections will go here */}
+      <NewsletterSection />
     </main>
   )
 }
