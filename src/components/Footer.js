@@ -49,6 +49,24 @@ export default function Footer() {
               <p className={styles.brandText}>
                 Conversations and learning experiences for living, relating, and growing with more intention.
               </p>
+              <div className={styles.socialBlock} aria-label="Find ZakTalks">
+                <p className={styles.socialText}>Follow Zak:</p>
+                <div className={styles.socialLinks}>
+                  {socialLinks.map(({ href, label, icon: Icon }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.socialIcon}
+                      aria-label={label}
+                      title={label}
+                    >
+                      <Icon aria-hidden="true" />
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <section className={styles.footerColumn} aria-labelledby="footer-contact-title">
@@ -86,25 +104,6 @@ export default function Footer() {
               </nav>
             </section>
 
-            <section className={`${styles.footerColumn} ${styles.socialColumn}`} aria-labelledby="footer-social-title">
-              <h2 id="footer-social-title" className={styles.footerTitle}>Find ZakTalks</h2>
-              <p className={styles.socialText}>Follow, watch, and listen wherever you are.</p>
-              <div className={styles.socialLinks}>
-                {socialLinks.map(({ href, label, icon: Icon }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.socialIcon}
-                    aria-label={label}
-                    title={label}
-                  >
-                    <Icon aria-hidden="true" />
-                  </a>
-                ))}
-              </div>
-            </section>
           </div>
 
           <div className={styles.footerBottom}>

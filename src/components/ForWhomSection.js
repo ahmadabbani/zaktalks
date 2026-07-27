@@ -58,31 +58,32 @@ export default function ForWhomSection() {
   return (
     <section ref={sectionRef} className={sectionClassName} aria-labelledby="for-whom-heading">
       <div className={styles.forWhomContainer}>
-        <div ref={registerItem('header')} className={itemClassName(styles.forWhomHeader, 'header')}>
-          <p className={styles.forWhomEyebrow}>For whom</p>
-          <h2 id="for-whom-heading" className={styles.forWhomTitle}>
-            For people who know something has to change
-          </h2>
-          <p className={styles.forWhomIntro}>
-            Zak Talks is for adults who are ready to stop living on autopilot and start facing what is actually shaping their lives.
-          </p>
-        </div>
+        <div className={styles.forWhomMosaic}>
+          <div ref={registerItem('header')} className={itemClassName(styles.forWhomHeader, 'header')}>
+            <p className={styles.forWhomEyebrow}>For whom</p>
+            <h2 id="for-whom-heading" className={styles.forWhomTitle}>
+              For people who know something has to change
+            </h2>
+            <p className={styles.forWhomIntro}>
+              Zak Talks is for adults who are ready to stop living on autopilot and start facing what is actually shaping their lives.
+            </p>
+          </div>
 
-        <ul className={styles.forWhomGrid}>
           {audienceCards.map((card, index) => (
-            <li
+            <article
               key={card}
               ref={registerItem(`card-${index}`)}
-              className={itemClassName(styles.forWhomCard, `card-${index}`)}
+              className={itemClassName(`${styles.forWhomCard} ${styles[`forWhomCard${index + 1}`]}`, `card-${index}`)}
             >
               <span className={styles.forWhomNumber}>0{index + 1}</span>
               <p>{card}</p>
-            </li>
+            </article>
           ))}
-        </ul>
+        </div>
 
         <p ref={registerItem('belong')} className={itemClassName(styles.forWhomBelong, 'belong')}>
-          If you want to be seen, challenged, and supported without judgment, <strong>you belong here.</strong>
+          <span>If you want to be seen, challenged, and supported without judgment,</span>
+          <strong>you belong here.</strong>
         </p>
       </div>
     </section>

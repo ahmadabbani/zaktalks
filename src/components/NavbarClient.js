@@ -40,7 +40,6 @@ export default function NavbarClient({ user, role, signout }) {
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
     { href: '/speaking', label: 'Podcast' },
-    { href: '/courses', label: 'Courses' },
     { href: '/contact', label: 'Contact' },
   ]
 
@@ -143,7 +142,7 @@ export default function NavbarClient({ user, role, signout }) {
                 </div>
               </div>
 
-              {navLinks.slice(2, 4).map((link) => (
+              {navLinks.slice(2, 3).map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -162,7 +161,7 @@ export default function NavbarClient({ user, role, signout }) {
                 </Link>
               )}
 
-              {navLinks.slice(4).map((link) => (
+              {navLinks.slice(3).map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -183,12 +182,9 @@ export default function NavbarClient({ user, role, signout }) {
               <>
                 <Link
                   href="/login"
-                  className={`${styles.navLink} ${pathname === '/login' ? styles.active : ''}`}
+                  className={`${styles.navLink} ${styles.loginLink} ${pathname === '/login' ? styles.active : ''}`}
                 >
                   Log in
-                </Link>
-                <Link href="/courses" className={styles.btnPrimary}>
-                  Get Started
                 </Link>
               </>
             )}
@@ -236,7 +232,7 @@ export default function NavbarClient({ user, role, signout }) {
             </div>
           </div>
 
-          {navLinks.slice(2, 4).map((link) => (
+          {navLinks.slice(2, 3).map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -257,7 +253,7 @@ export default function NavbarClient({ user, role, signout }) {
             </Link>
           )}
 
-          {navLinks.slice(4).map((link) => (
+          {navLinks.slice(3).map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -278,13 +274,10 @@ export default function NavbarClient({ user, role, signout }) {
             <>
               <Link
                 href="/login"
-                className={`${styles.mobileNavLink} ${pathname === '/login' ? styles.mobileActive : ''}`}
+                className={`${styles.mobileNavLink} ${styles.mobileLoginLink} ${pathname === '/login' ? styles.mobileActive : ''}`}
                 onClick={closeMenu}
               >
                 Log in
-              </Link>
-              <Link href="/courses" className={styles.mobileBtnPrimary} onClick={closeMenu}>
-                Get Started
               </Link>
             </>
           )}

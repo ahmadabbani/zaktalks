@@ -62,10 +62,10 @@
 .title {
   max-width: 12ch;
   color: var(--color-white);
-  font-size: clamp(2.55rem, 4.2vw, 5rem);
-  font-weight: 850;
-  letter-spacing: -0.055em;
-  line-height: 1.02;
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
   text-wrap: balance;
   transition: color 0.35s ease;
 }
@@ -74,9 +74,9 @@
   max-width: 56ch;
   margin-top: clamp(0.9rem, 1.6vw, 1.35rem);
   color: rgba(255, 255, 255, 0.86);
-  font-size: clamp(0.98rem, 0.34vw + 0.88rem, 1.18rem);
-  font-weight: 520;
-  line-height: 1.72;
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-subheading-weight);
+  line-height: var(--home-subheading-line-height);
   transition: color 0.35s ease;
 }
 
@@ -115,7 +115,7 @@
 
 .field input {
   width: 100%;
-  min-height: 3.65rem;
+  min-height: var(--home-cta-min-height);
   padding: 0.95rem 1.05rem;
   color: var(--color-white);
   border: 1px solid rgba(255, 255, 255, 0.26);
@@ -155,10 +155,11 @@
   border: 2px solid var(--color-white);
   border-radius: 999px;
   background: var(--color-white);
-  font-weight: 820;
-  line-height: 1.15;
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  line-height: var(--home-cta-line-height);
   white-space: nowrap;
-  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  transition: var(--home-cta-transition);
 }
 
 .submitButton svg {
@@ -168,7 +169,7 @@
   color: var(--color-white);
   border-radius: 50%;
   background: var(--color-slate-blue);
-  transition: color 0.3s ease, background-color 0.3s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: var(--home-cta-arrow-transition);
 }
 
 .submitButton:hover,
@@ -176,7 +177,7 @@
   color: var(--color-white);
   border-color: var(--color-yellow);
   background: var(--color-yellow);
-  transform: translateY(-0.18rem);
+  transform: var(--home-cta-hover-transform);
   outline: none;
 }
 
@@ -184,7 +185,7 @@
 .submitButton:focus-visible svg {
   color: var(--color-yellow);
   background: var(--color-white);
-  transform: translate(0.12rem, -0.12rem) rotate(5deg);
+  transform: var(--home-cta-arrow-hover-transform);
 }
 
 .formNote {
@@ -287,7 +288,7 @@
   }
 
   .title {
-    font-size: clamp(2.35rem, 11vw, 3.35rem);
+    font-size: var(--home-headline-size);
   }
 
   .submitButton {

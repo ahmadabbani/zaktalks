@@ -49,26 +49,26 @@
 
 .title {
   max-width: 16ch;
-  color: var(--color-dark-blue);
-  font-size: clamp(2.45rem, 4.5vw, 5.5rem);
-  font-weight: 850;
-  letter-spacing: -0.055em;
-  line-height: 1.02;
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
   text-wrap: balance;
 }
 
 .intro {
   max-width: 68ch;
   margin-top: clamp(1.25rem, 2vw, 2rem);
-  color: var(--color-gray-dark);
-  font-size: clamp(1rem, 0.45vw + 0.86rem, 1.24rem);
-  font-weight: 500;
-  line-height: 1.72;
+  color: var(--home-subheading-color);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-subheading-weight);
+  line-height: var(--home-subheading-line-height);
 }
 
 .servicesLink {
   display: inline-flex;
-  min-height: 3.35rem;
+  min-height: var(--home-cta-min-height);
   align-items: center;
   justify-content: center;
   gap: 0.65rem;
@@ -77,26 +77,26 @@
   border: 2px solid var(--color-black);
   border-radius: 999px;
   background: var(--color-black);
-  font-size: clamp(0.86rem, 0.2vw + 0.81rem, 1rem);
-  font-weight: 750;
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
   white-space: nowrap;
-  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  transition: var(--home-cta-transition);
 }
 
 .servicesLink svg {
   font-size: 1.25em;
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: var(--home-cta-arrow-transition);
 }
 
 .servicesLink:hover {
   color: var(--color-black);
   border-color: var(--color-yellow);
   background: var(--color-yellow);
-  transform: translateY(-0.2rem);
+  transform: var(--home-cta-hover-transform);
 }
 
 .servicesLink:hover svg {
-  transform: translate(0.15rem, -0.15rem);
+  transform: var(--home-cta-arrow-hover-transform);
 }
 
 .rail {
@@ -180,7 +180,7 @@
   max-width: 15ch;
   font-size: clamp(1.15rem, 0.55vw + 1rem, 1.55rem);
   font-weight: 820;
-  letter-spacing: -0.035em;
+  letter-spacing: 0;
   line-height: 1.12;
   text-wrap: balance;
   transition: font-size 0.55s cubic-bezier(0.22, 1, 0.36, 1);
@@ -216,8 +216,8 @@
 
 .copy {
   min-width: 0;
-  font-size: clamp(0.84rem, 0.18vw + 0.8rem, 0.96rem);
-  font-weight: 520;
+  font-size: 0.94rem;
+  font-weight: var(--home-text-weight);
   line-height: 1.48;
 }
 
@@ -272,10 +272,10 @@
   color: var(--color-white);
   border-radius: 999px;
   background: var(--color-deep-slate);
-  font-size: clamp(0.73rem, 0.2vw + 0.67rem, 0.86rem);
-  font-weight: 750;
-  line-height: 1.2;
-  transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease, padding 0.5s ease;
+  font-size: 0.86rem;
+  font-weight: var(--home-cta-weight);
+  line-height: var(--home-cta-line-height);
+  transition: color 0.32s ease, background-color 0.32s ease, transform 0.32s ease, padding 0.5s ease;
 }
 
 .cardCta span {
@@ -290,7 +290,7 @@
   color: var(--color-deep-slate);
   border-radius: 50%;
   background: var(--color-white);
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: var(--home-cta-arrow-transition);
 }
 
 .cardActive .cardCta {
@@ -306,11 +306,11 @@
 .cardCta:hover {
   color: var(--color-black);
   background: var(--color-yellow);
-  transform: translateY(-0.18rem);
+  transform: var(--home-cta-hover-transform);
 }
 
 .cardCta:hover svg {
-  transform: translate(0.14rem, -0.14rem);
+  transform: var(--home-cta-arrow-hover-transform);
 }
 
 .motionReady .header,
@@ -411,7 +411,7 @@
   .cardCta,
   .cardActive .cardCta {
     padding: 0.7rem 1rem;
-    font-size: 0.83rem;
+    font-size: 0.88rem;
   }
 
   .card2.itemVisible,
@@ -427,7 +427,7 @@
   }
 
   .title {
-    font-size: clamp(2.35rem, 11vw, 3.35rem);
+    font-size: var(--home-headline-size);
   }
 
   .servicesLink {

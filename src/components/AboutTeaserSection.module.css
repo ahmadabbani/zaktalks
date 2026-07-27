@@ -39,9 +39,9 @@
   margin-inline: auto;
   color: #24495d;
   font-family: 'Knewave', 'Arial Black', sans-serif;
-  font-size: clamp(3.4rem, 5.15vw, 6.5rem);
+  font-size: calc(var(--home-headline-size) * 1.12);
   font-weight: 400;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
   line-height: 1.06;
   text-wrap: balance;
 }
@@ -147,24 +147,24 @@
 
 .title {
   margin-bottom: clamp(1.25rem, 2vw, 1.9rem);
-  color: var(--color-dark-blue);
-  font-size: clamp(2.6rem, 3.3vw, 4.8rem);
-  font-weight: 850;
-  letter-spacing: -0.055em;
-  line-height: 0.98;
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
 }
 
 .bio {
   max-width: 62ch;
-  color: var(--color-black);
-  font-size: clamp(0.98rem, 0.34vw + 0.88rem, 1.18rem);
-  font-weight: 500;
-  line-height: 1.78;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
 }
 
 .storyLink {
   display: inline-flex;
-  min-height: 3.25rem;
+  min-height: var(--home-cta-min-height);
   align-items: center;
   gap: 0.75rem;
   margin-top: clamp(1.8rem, 3vw, 2.6rem);
@@ -172,9 +172,9 @@
   color: var(--color-deep-slate);
   border: 1px solid rgba(33, 44, 45, 0.3);
   border-radius: 999px;
-  font-size: clamp(0.88rem, 0.2vw + 0.83rem, 1rem);
-  font-weight: 760;
-  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  transition: var(--home-cta-transition);
 }
 
 .storyLink svg {
@@ -184,20 +184,20 @@
   border-radius: 50%;
   color: var(--color-white);
   background: var(--color-slate-blue);
-  transition: color 0.3s ease, background-color 0.3s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: var(--home-cta-arrow-transition);
 }
 
 .storyLink:hover {
   color: var(--color-white);
   border-color: var(--color-slate-blue);
   background: var(--color-slate-blue);
-  transform: translateY(-0.2rem);
+  transform: var(--home-cta-hover-transform);
 }
 
 .storyLink:hover svg {
   color: var(--color-slate-blue);
   background: var(--color-white);
-  transform: translate(0.12rem, -0.12rem) rotate(5deg);
+  transform: var(--home-cta-arrow-hover-transform);
 }
 
 .motionReady .word {
@@ -315,7 +315,7 @@
 
   .quote {
     max-width: 18ch;
-    font-size: clamp(3rem, 12vw, 4.6rem);
+    font-size: calc(var(--home-headline-size) * 1.16);
     line-height: 1.05;
   }
 
@@ -342,7 +342,7 @@
   }
 
   .title {
-    font-size: clamp(2.5rem, 10vw, 3.4rem);
+    font-size: var(--home-headline-size);
   }
 
   .storyLink {

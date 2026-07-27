@@ -1,45 +1,18 @@
 .footer {
-    position: relative;
-    overflow: hidden;
-    padding: clamp(3.5rem, 6vw, 6.5rem) 0 1.6rem;
-    background: var(--color-black);
+    padding: clamp(3.25rem, 5vw, 5.5rem) 0 1.5rem;
     color: var(--color-white);
-    border-top: 4px solid var(--color-yellow);
-    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
-}
-
-.footer::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background-image: radial-gradient(circle at 7% 10%, rgba(255, 255, 255, 0.09) 0 1px, transparent 1.5px);
-    background-size: 20px 20px;
-    opacity: 0.35;
-    transition: opacity 0.4s ease;
-}
-
-.footer:hover,
-.footer:focus-within {
-    background: var(--color-yellow);
-    color: var(--color-black);
-    border-color: var(--color-black);
-}
-
-.footer:hover::before,
-.footer:focus-within::before {
-    opacity: 0.16;
+    background: var(--color-black);
+    border-top: 3px solid var(--color-yellow);
 }
 
 .footerContainer {
-    position: relative;
-    z-index: 1;
+    width: 100%;
 }
 
 .footerGrid {
     display: grid;
-    grid-template-columns: minmax(230px, 1.25fr) repeat(3, minmax(160px, 1fr));
-    gap: clamp(2rem, 4vw, 5rem);
+    grid-template-columns: minmax(18rem, 1.45fr) repeat(2, minmax(11rem, 0.8fr));
+    gap: clamp(2.25rem, 6vw, 7rem);
     align-items: start;
 }
 
@@ -50,20 +23,12 @@
 
 .logoFrame {
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: min(100%, 220px);
-    transition: transform var(--transition-fast);
-}
-
-.logoFrame:hover,
-.logoFrame:focus-visible {
-    transform: scale(1.035);
+    width: min(12rem, 60vw);
 }
 
 .logoFrame:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 6px;
+    outline: 2px solid var(--color-yellow);
+    outline-offset: 0.55rem;
 }
 
 .logo {
@@ -71,68 +36,89 @@
     height: auto;
 }
 
-.brandText,
-.socialText {
-    margin-top: 1.2rem;
-    color: rgba(255, 255, 255, 0.72);
-    font-size: 0.92rem;
-    line-height: 1.75;
-    transition: color 0.4s ease;
+.brandText {
+    max-width: 45rem;
+    margin-top: 1.15rem;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.96rem;
+    font-weight: 550;
+    line-height: 1.8;
 }
 
-.footerTitle {
+.footerTitle,
+.socialText {
     margin: 0;
     color: var(--color-white);
     font-size: 0.78rem;
     font-weight: 800;
-    letter-spacing: 0.12em;
-    line-height: 1.2;
+    letter-spacing: 0.08em;
+    line-height: 1.35;
     text-transform: uppercase;
-    transition: color 0.4s ease;
 }
 
-.footerTitle::after {
-    content: '';
-    display: block;
-    width: 2rem;
-    height: 2px;
-    margin-top: 0.75rem;
-    background: var(--color-yellow);
-    transition: background-color 0.4s ease;
+.socialBlock {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem clamp(1.25rem, 3vw, 2rem);
+    align-items: center;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.socialLinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(0.95rem, 2vw, 1.55rem);
+    align-items: center;
+}
+
+.socialIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-white);
+    font-size: 1.08rem;
+    line-height: 1;
+    transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.socialIcon:hover,
+.socialIcon:focus-visible {
+    color: var(--color-yellow);
+    transform: translateY(-0.12rem);
+    outline: none;
 }
 
 .contactLinks,
 .quickLinks {
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
-    margin-top: 1rem;
+    gap: 0.72rem;
+    margin-top: 1.25rem;
 }
 
 .contactLink,
-.quickLink {
-    border-radius: 9px;
-    color: rgba(255, 255, 255, 0.78);
-    font-size: 0.92rem;
-    font-weight: 550;
+.quickLink,
+.legalLink {
+    color: rgba(255, 255, 255, 0.74);
+    font-size: 0.9rem;
+    font-weight: 700;
     line-height: 1.45;
-    transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+    transition: color var(--transition-fast), transform var(--transition-fast);
 }
 
 .contactLink {
     display: flex;
+    gap: 0.65rem;
     align-items: flex-start;
-    gap: 0.7rem;
-    padding: 0.45rem 0.5rem;
-    margin-left: -0.5rem;
+    width: fit-content;
 }
 
 .contactLink svg {
-    width: 1rem;
+    width: 0.95rem;
     flex: 0 0 auto;
-    margin-top: 0.2rem;
+    margin-top: 0.18rem;
     color: var(--color-yellow);
-    transition: color 0.4s ease;
+    transition: color var(--transition-fast);
 }
 
 .contactLink span {
@@ -141,81 +127,41 @@
 }
 
 .contactLink strong {
-    font-weight: 700;
+    font-weight: 800;
 }
 
 .contactLink small {
-    margin-top: 0.08rem;
-    color: rgba(255, 255, 255, 0.56);
-    font-size: 0.8rem;
-    transition: color 0.4s ease;
+    margin-top: 0.05rem;
+    color: rgba(255, 255, 255, 0.54);
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: color var(--transition-fast);
 }
 
 .quickLink {
     display: inline-flex;
-    align-items: center;
     width: fit-content;
-    padding: 0.35rem 0.5rem;
-    margin-left: -0.5rem;
-}
-
-.quickLink::before {
-    content: '↗';
-    margin-right: 0.45rem;
-    color: var(--color-yellow);
-    font-weight: 700;
-    transition: color 0.4s ease;
 }
 
 .contactLink:hover,
 .contactLink:focus-visible,
 .quickLink:hover,
-.quickLink:focus-visible {
-    background: var(--color-yellow);
-    color: var(--color-black);
-    transform: translateX(3px);
+.quickLink:focus-visible,
+.legalLink:hover,
+.legalLink:focus-visible {
+    color: var(--color-yellow);
+    transform: translateX(0.12rem);
     outline: none;
 }
 
 .contactLink:hover svg,
-.contactLink:focus-visible svg,
-.quickLink:hover::before,
-.quickLink:focus-visible::before {
-    color: var(--color-black);
+.contactLink:focus-visible svg {
+    color: var(--color-yellow);
 }
 
 .contactLink:hover small,
 .contactLink:focus-visible small {
-    color: rgba(48, 48, 48, 0.72);
-}
-
-.socialLinks {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-    margin-top: 1.1rem;
-}
-
-.socialIcon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.35rem;
-    height: 2.35rem;
-    border: 1px solid rgba(255, 255, 255, 0.42);
-    border-radius: 50%;
-    color: var(--color-white);
-    font-size: 1rem;
-    transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
-}
-
-.socialIcon:hover,
-.socialIcon:focus-visible {
-    border-color: var(--color-yellow);
-    background: var(--color-yellow);
-    color: var(--color-black);
-    transform: translateY(-3px);
-    outline: none;
+    color: rgba(241, 196, 15, 0.7);
 }
 
 .footerBottom {
@@ -223,171 +169,66 @@
     justify-content: space-between;
     align-items: center;
     gap: 1.25rem;
-    margin-top: clamp(3rem, 6vw, 5.5rem);
-    padding-top: 1.4rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.18);
-    transition: border-color 0.4s ease;
+    margin-top: clamp(3rem, 5vw, 5rem);
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 .legalLinks {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.35rem;
+    gap: clamp(0.85rem, 2vw, 1.7rem);
 }
 
 .legalLink {
-    padding: 0.32rem 0.45rem;
-    border-radius: 7px;
-    color: rgba(255, 255, 255, 0.68);
     font-size: 0.72rem;
-    font-weight: 650;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    transition: background-color var(--transition-fast), color var(--transition-fast);
-}
-
-.legalLink:hover,
-.legalLink:focus-visible {
-    background: var(--color-yellow);
-    color: var(--color-black);
-    outline: none;
 }
 
 .copyright {
     color: rgba(255, 255, 255, 0.52);
     font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.07em;
+    font-weight: 650;
+    letter-spacing: 0.06em;
     text-align: right;
     text-transform: uppercase;
-    transition: color 0.4s ease;
 }
 
-/* The whole footer changes to yellow; individual controls invert to black so they remain distinct. */
-.footer:hover .brandText,
-.footer:hover .socialText,
-.footer:focus-within .brandText,
-.footer:focus-within .socialText {
-    color: rgba(48, 48, 48, 0.76);
-}
-
-.footer:hover .footerTitle,
-.footer:focus-within .footerTitle,
-.footer:hover .contactLink,
-.footer:hover .quickLink,
-.footer:hover .legalLink,
-.footer:focus-within .contactLink,
-.footer:focus-within .quickLink,
-.footer:focus-within .legalLink {
-    color: var(--color-black);
-}
-
-.footer:hover .footerTitle::after,
-.footer:focus-within .footerTitle::after {
-    background-color: var(--color-black);
-}
-
-.footer:hover .contactLink svg,
-.footer:focus-within .contactLink svg,
-.footer:hover .quickLink::before,
-.footer:focus-within .quickLink::before {
-    color: var(--color-black);
-}
-
-.footer:hover .contactLink small,
-.footer:focus-within .contactLink small,
-.footer:hover .copyright,
-.footer:focus-within .copyright {
-    color: rgba(48, 48, 48, 0.68);
-}
-
-.footer:hover .socialIcon,
-.footer:focus-within .socialIcon {
-    border-color: rgba(48, 48, 48, 0.55);
-    color: var(--color-black);
-}
-
-.footer:hover .footerBottom,
-.footer:focus-within .footerBottom {
-    border-color: rgba(48, 48, 48, 0.28);
-}
-
-.footer:hover .contactLink:hover,
-.footer:hover .contactLink:focus-visible,
-.footer:hover .quickLink:hover,
-.footer:hover .quickLink:focus-visible,
-.footer:hover .legalLink:hover,
-.footer:hover .legalLink:focus-visible,
-.footer:focus-within .contactLink:hover,
-.footer:focus-within .contactLink:focus-visible,
-.footer:focus-within .quickLink:hover,
-.footer:focus-within .quickLink:focus-visible,
-.footer:focus-within .legalLink:hover,
-.footer:focus-within .legalLink:focus-visible {
-    background: var(--color-black);
-    color: var(--color-white);
-}
-
-.footer:hover .contactLink:hover svg,
-.footer:hover .contactLink:focus-visible svg,
-.footer:hover .quickLink:hover::before,
-.footer:hover .quickLink:focus-visible::before,
-.footer:focus-within .contactLink:hover svg,
-.footer:focus-within .contactLink:focus-visible svg,
-.footer:focus-within .quickLink:hover::before,
-.footer:focus-within .quickLink:focus-visible::before {
-    color: var(--color-yellow);
-}
-
-.footer:hover .contactLink:hover small,
-.footer:hover .contactLink:focus-visible small,
-.footer:focus-within .contactLink:hover small,
-.footer:focus-within .contactLink:focus-visible small {
-    color: rgba(255, 255, 255, 0.72);
-}
-
-.footer:hover .socialIcon:hover,
-.footer:hover .socialIcon:focus-visible,
-.footer:focus-within .socialIcon:hover,
-.footer:focus-within .socialIcon:focus-visible {
-    border-color: var(--color-black);
-    background: var(--color-black);
-    color: var(--color-white);
-}
-
-@media (max-width: 1050px) {
+@media (max-width: 900px) {
     .footerGrid {
-        grid-template-columns: minmax(210px, 1.2fr) repeat(2, minmax(160px, 1fr));
-        row-gap: 3rem;
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5rem clamp(2rem, 6vw, 4rem);
     }
 
-    .socialColumn {
-        grid-column: 2 / -1;
+    .brandColumn {
+        grid-column: 1 / -1;
     }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 640px) {
     .footer {
-        padding-top: 3.4rem;
+        padding-top: 3rem;
     }
 
     .footerGrid {
         grid-template-columns: 1fr;
-        gap: 2.35rem;
-    }
-
-    .socialColumn {
-        grid-column: auto;
+        gap: 2.15rem;
     }
 
     .brandText {
         max-width: 34rem;
     }
 
+    .socialBlock {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
     .footerBottom {
         align-items: flex-start;
         flex-direction: column;
-        margin-top: 3.4rem;
+        margin-top: 3rem;
     }
 
     .copyright {
@@ -396,25 +237,15 @@
 }
 
 @media (max-width: 420px) {
-    .footer {
-        padding-bottom: 1.2rem;
+    .logoFrame {
+        width: min(10.5rem, 68vw);
     }
 
     .socialLinks {
-        gap: 0.45rem;
-    }
-
-    .socialIcon {
-        width: 2.2rem;
-        height: 2.2rem;
+        gap: 0.9rem;
     }
 
     .legalLinks {
-        gap: 0.2rem;
-    }
-
-    .legalLink {
-        padding-inline: 0.3rem;
-        font-size: 0.67rem;
+        gap: 0.75rem;
     }
 }

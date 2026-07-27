@@ -4,10 +4,29 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { FiArrowUpRight } from 'react-icons/fi'
+import { FaApple, FaSpotify, FaYoutube } from 'react-icons/fa'
 import { MdOutlineMic } from 'react-icons/md'
 import styles from './PodcastFeatureSection.module.css'
 
 const waveformBars = [1, 2, 3, 4, 5, 6, 7, 8]
+
+const podcastPlatforms = [
+  {
+    label: 'Watch on YouTube',
+    href: 'https://www.youtube.com/@zak_talks',
+    icon: FaYoutube,
+  },
+  {
+    label: 'Listen on Apple',
+    href: 'https://podcasts.apple.com/us/podcast/zak-talks/id1818978849?at=1000lHKX&ct=linktree_http&itsct=lt_p&itscg=30200&ls=1',
+    icon: FaApple,
+  },
+  {
+    label: 'Listen on Spotify',
+    href: 'https://open.spotify.com/show/7E5OWIxCjKRPnEsQaL5o44',
+    icon: FaSpotify,
+  },
+]
 
 export default function PodcastFeatureSection() {
   const itemRefs = useRef({})
@@ -71,36 +90,58 @@ export default function PodcastFeatureSection() {
               <span>Go to the podcast page</span>
               <FiArrowUpRight aria-hidden="true" />
             </Link>
+
+            <div
+              ref={registerItem('episode')}
+              className={itemClassName(styles.episodePrompt, 'episode')}
+            >
+              <div className={styles.audioMark} aria-hidden="true">
+                <MdOutlineMic />
+                <div className={styles.waveform}>
+                  {waveformBars.map((bar) => <span key={bar} />)}
+                </div>
+              </div>
+              <p>Start with the latest episode and keep exploring from there.</p>
+            </div>
           </div>
 
           <div
             ref={registerItem('visual')}
             className={itemClassName(styles.visual, 'visual')}
           >
-            <div className={styles.imageFrame}>
+            <div className={styles.platformLinks} aria-label="Listen to Zak Talks">
+              {podcastPlatforms.map((platform) => {
+                const Icon = platform.icon
+
+                return (
+                  <a
+                    key={platform.label}
+                    href={platform.href}
+                    className={styles.platformLink}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <span className={styles.platformIcon} aria-hidden="true">
+                      <Icon />
+                    </span>
+                    <span>{platform.label}</span>
+                    <FiArrowUpRight className={styles.platformArrow} aria-hidden="true" />
+                  </a>
+                )
+              })}
+            </div>
+
+            <div className={styles.phoneWrap}>
               <Image
-                src="/podcast.jpg"
-                alt="Zak Dakkash holding a microphone for Zak Talks podcast"
-                width={1100}
-                height={1100}
-                sizes="(max-width: 780px) 91vw, (max-width: 1200px) 48vw, 42vw"
-                className={styles.image}
+                src="/podcast/zak-talks-phone.png"
+                alt="Modern phone playing The Conversations We Avoid on Zak Talks"
+                width={946}
+                height={1662}
+                sizes="(max-width: 620px) 86vw, (max-width: 980px) 60vw, 34vw"
+                className={styles.phone}
               />
             </div>
           </div>
-        </div>
-
-        <div
-          ref={registerItem('episode')}
-          className={itemClassName(styles.episodePrompt, 'episode')}
-        >
-          <div className={styles.audioMark} aria-hidden="true">
-            <MdOutlineMic />
-            <div className={styles.waveform}>
-              {waveformBars.map((bar) => <span key={bar} />)}
-            </div>
-          </div>
-          <p>Start with the latest episode and keep exploring from there.</p>
         </div>
       </div>
     </section>

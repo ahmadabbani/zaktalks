@@ -51,20 +51,20 @@
 
 .heroTitle {
   max-width: 12ch;
-  color: var(--color-dark-blue);
-  font-size: clamp(2.75rem, 4.7vw, 5.8rem);
-  font-weight: 850;
-  line-height: 1.02;
-  letter-spacing: -0.045em;
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  line-height: var(--home-headline-line-height);
+  letter-spacing: var(--home-headline-letter-spacing);
   text-wrap: balance;
 }
 
 .heroDescription {
   max-width: 66ch;
-  color: var(--color-black);
-  font-size: clamp(1rem, 0.45vw + 0.86rem, 1.25rem);
-  font-weight: 500;
-  line-height: 1.75;
+  color: var(--home-subheading-color);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-subheading-weight);
+  line-height: var(--home-subheading-line-height);
 }
 
 .heroActions {
@@ -80,17 +80,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 52px;
+  min-height: var(--home-cta-min-height);
   padding: 0.9rem clamp(1.2rem, 2vw, 1.75rem);
   border: 2px solid var(--color-dark-blue);
   border-radius: 999px;
-  font-size: clamp(0.82rem, 0.25vw + 0.78rem, 0.96rem);
-  font-weight: 750;
-  line-height: 1.25;
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  line-height: var(--home-cta-line-height);
   text-align: center;
   white-space: normal;
   overflow-wrap: anywhere;
-  transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: var(--home-cta-transition);
 }
 
 .ctaLabel {
@@ -113,7 +113,7 @@
   content: '\2197';
   margin-left: 0.65rem;
   font-size: 0.9em;
-  transition: transform var(--transition-fast);
+  transition: var(--home-cta-arrow-transition);
 }
 
 .primaryHeroCta:hover,
@@ -122,7 +122,7 @@
   background: var(--color-black);
   color: var(--color-white);
   box-shadow: 0 12px 28px rgba(48, 48, 48, 0.2);
-  transform: translateY(-2px);
+  transform: var(--home-cta-hover-transform);
   outline: none;
 }
 
@@ -131,7 +131,7 @@
   border-color: var(--color-yellow);
   background: var(--color-yellow);
   color: var(--color-black);
-  transform: translateY(-2px);
+  transform: var(--home-cta-hover-transform);
   outline: none;
 }
 
@@ -139,7 +139,7 @@
 .primaryHeroCta:focus-visible::after,
 .secondaryHeroCta:hover::after,
 .secondaryHeroCta:focus-visible::after {
-  transform: translate(2px, -2px);
+  transform: var(--home-cta-arrow-hover-transform);
 }
 
 /* Right Side */
@@ -204,21 +204,8 @@
 .forWhomSection {
   position: relative;
   overflow: hidden;
-  padding: clamp(5rem, 9vw, 10rem) 0;
+  padding: clamp(3.75rem, 5vw, 5.75rem) 0;
   background: var(--color-white);
-}
-
-.forWhomSection::before {
-  content: '';
-  position: absolute;
-  top: clamp(3rem, 7vw, 7rem);
-  right: -9rem;
-  width: clamp(13rem, 23vw, 25rem);
-  aspect-ratio: 1;
-  border: 1px solid rgba(85, 135, 166, 0.16);
-  border-radius: 50%;
-  box-shadow: 0 0 0 clamp(1.5rem, 4vw, 4rem) rgba(85, 135, 166, 0.045);
-  pointer-events: none;
 }
 
 .forWhomContainer {
@@ -228,20 +215,33 @@
   margin-inline: var(--site-edge-gutter);
 }
 
-.forWhomHeader {
+.forWhomMosaic {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
-  column-gap: clamp(2rem, 8vw, 10rem);
-  row-gap: 1.25rem;
-  align-items: end;
-  margin-bottom: clamp(2.25rem, 5vw, 4.5rem);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto auto;
+  width: min(100%, 88rem);
+  margin-inline: auto;
+  column-gap: clamp(1.1rem, 1.7vw, 2rem);
+  row-gap: clamp(1.1rem, 1.7vw, 2rem);
+  align-items: start;
+}
+
+.forWhomHeader {
+  display: flex;
+  grid-column: 3;
+  grid-row: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-width: 0;
+  padding: clamp(0.35rem, 0.7vw, 0.65rem) 0 clamp(0.75rem, 1.2vw, 1.25rem) clamp(0.25rem, 0.7vw, 0.65rem);
 }
 
 .forWhomEyebrow {
-  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   gap: 0.65rem;
+  margin-bottom: 0.9rem;
   color: var(--color-yellow);
   font-size: clamp(0.72rem, 0.2vw + 0.66rem, 0.86rem);
   font-weight: 800;
@@ -259,113 +259,188 @@
 }
 
 .forWhomTitle {
-  max-width: 17ch;
-  color: var(--color-dark-blue);
-  font-size: clamp(2.4rem, 4.3vw, 5.15rem);
-  font-weight: 850;
-  letter-spacing: -0.05em;
-  line-height: 1.03;
+  max-width: 16ch;
+  color: var(--home-headline-color);
+  font-size: clamp(2.2rem, 3.85vw, 3.45rem);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
   text-wrap: balance;
 }
 
 .forWhomIntro {
-  max-width: 43ch;
-  padding-bottom: 0.4rem;
-  color: var(--color-gray-dark);
-  font-size: clamp(1rem, 0.45vw + 0.86rem, 1.24rem);
-  font-weight: 500;
-  line-height: 1.7;
-}
-
-.forWhomGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(0.75rem, 1.3vw, 1.35rem);
+  max-width: 34ch;
+  margin-top: clamp(0.8rem, 1vw, 1rem);
+  color: var(--home-subheading-color);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-subheading-weight);
+  line-height: var(--home-subheading-line-height);
 }
 
 .forWhomCard {
+  --card-tilt: 0deg;
   position: relative;
   display: flex;
-  min-height: clamp(14.5rem, 17vw, 19rem);
   flex-direction: column;
-  justify-content: center;
-  gap: clamp(1rem, 1.6vw, 1.5rem);
+  justify-content: space-between;
+  gap: clamp(2rem, 4vw, 4.5rem);
   overflow: hidden;
-  padding: clamp(1.25rem, 2.1vw, 2.2rem);
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  padding: clamp(1.35rem, 1.7vw, 1.9rem);
   color: var(--color-white);
-  border-radius: clamp(1.25rem, 2vw, 2rem);
-  box-shadow: 0 14px 30px rgba(48, 48, 48, 0.09);
+  border: 1px solid rgba(33, 44, 45, 0.08);
+  border-radius: clamp(1.8rem, 2.4vw, 2.75rem);
+  box-shadow: 0 1.15rem 2.75rem rgba(33, 44, 45, 0.09);
+  transform: rotate(var(--card-tilt));
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease;
 }
 
-.forWhomCard:nth-child(1) {
-  grid-column: span 2;
-  background: linear-gradient(135deg, var(--color-dark-blue) 0%, #6e9ebc 100%);
+.forWhomCard1 {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  align-self: center;
+  aspect-ratio: 1.2;
+  background: var(--color-dark-blue);
 }
 
-.forWhomCard:nth-child(2) {
-  grid-column: span 2;
-  background: linear-gradient(135deg, var(--color-slate-blue) 0%, var(--color-dark-blue) 100%);
+.forWhomCard2 {
+  grid-column: 2;
+  grid-row: 1;
+  aspect-ratio: 1.24;
+  color: var(--color-deep-slate);
+  background: #d7e7ee;
 }
 
-.forWhomCard:nth-child(3) {
-  grid-column: span 2;
-  background: linear-gradient(135deg, var(--color-deep-slate) 0%, #314a4d 100%);
-}
-
-.forWhomCard:nth-child(4) {
-  grid-column: span 2;
-  min-height: clamp(12.75rem, 14.5vw, 16rem);
-  background: linear-gradient(135deg, #c49f0c 0%, var(--color-yellow) 100%);
+.forWhomCard3 {
+  grid-column: 2;
+  grid-row: 2;
+  aspect-ratio: 1.2;
+  margin-top: clamp(-2.1rem, -1.8vw, -1.2rem);
   color: var(--color-black);
+  background: var(--color-yellow);
+  border-radius: clamp(1.55rem, 2vw, 2.2rem);
+}
+
+.forWhomCard4 {
+  grid-column: 3;
+  grid-row: 2;
+  aspect-ratio: 1.2;
+  margin-top: 0.2rem;
+  background: var(--color-deep-slate);
 }
 
 .forWhomCard:hover {
   z-index: 1;
-  transform: translateY(-0.55rem) rotate(-0.35deg);
-  box-shadow: 0 24px 42px rgba(48, 48, 48, 0.18);
+  transform: translateY(-0.42rem) rotate(var(--card-tilt)) scale(1.01);
+  box-shadow: 0 1.8rem 3.8rem rgba(33, 44, 45, 0.16);
 }
 
 .forWhomCard p {
+  position: relative;
+  z-index: 1;
   margin: 0;
-  max-width: 30ch;
-  font-size: clamp(1.05rem, 0.7vw + 0.83rem, 1.5rem);
-  font-weight: 650;
-  letter-spacing: -0.025em;
-  line-height: 1.38;
+  max-width: 29ch;
+  color: inherit;
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  letter-spacing: 0;
+  line-height: var(--home-text-line-height);
 }
 
-.forWhomCard:nth-child(4) p {
-  max-width: 45ch;
+.forWhomCard2 p,
+.forWhomCard3 p {
+  color: var(--color-deep-slate);
 }
 
-.forWhomCard:nth-child(4) .forWhomNumber {
+.forWhomCard3 .forWhomNumber {
   color: rgba(48, 48, 48, 0.62);
 }
 
 .forWhomNumber {
   color: rgba(255, 255, 255, 0.7);
-  font-size: clamp(1.1rem, 1.1vw, 1.45rem);
+  font-size: clamp(1.8rem, 2vw, 2.6rem);
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.07em;
   line-height: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .forWhomBelong {
-  max-width: 36ch;
-  margin: clamp(2.75rem, 6vw, 6rem) auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 40ch;
+  margin: clamp(2.75rem, 4vw, 4rem) auto 0;
+  padding: 0;
   color: var(--color-black);
-  font-size: clamp(1.7rem, 2.65vw, 3.3rem);
-  font-weight: 650;
-  letter-spacing: -0.045em;
+  font-size: clamp(1.55rem, 2.5vw, 2.65rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
   line-height: 1.18;
   text-align: center;
   text-wrap: balance;
 }
 
+.forWhomBelong span {
+  display: block;
+}
+
 .forWhomBelong strong {
-  color: var(--color-yellow-dark);
+  display: block;
+  margin-top: 0.18em;
+  color: var(--color-yellow);
   font-weight: 850;
+}
+
+@media (min-width: 2300px) {
+  .forWhomMosaic {
+    width: 100%;
+    column-gap: clamp(1.5rem, 1.4vw, 2rem);
+    row-gap: clamp(1.5rem, 1.4vw, 2rem);
+  }
+
+  .forWhomHeader {
+    justify-self: end;
+    width: 100%;
+    max-width: none;
+  }
+
+  .forWhomTitle {
+    font-size: clamp(3.85rem, 2.9vw, 4.8rem);
+  }
+
+  .forWhomIntro {
+    font-size: clamp(1.2rem, 0.75vw, 1.5rem);
+  }
+
+  .forWhomCard {
+    max-width: none;
+  }
+
+  .forWhomCard1 {
+    justify-self: start;
+    aspect-ratio: 1.55;
+  }
+
+  .forWhomCard2 {
+    justify-self: center;
+    aspect-ratio: 1.62;
+  }
+
+  .forWhomCard3 {
+    justify-self: center;
+    aspect-ratio: 1.55;
+    margin-top: clamp(-2.9rem, -1.25vw, -1.75rem);
+  }
+
+  .forWhomCard4 {
+    justify-self: end;
+    aspect-ratio: 1.55;
+    margin-top: 0;
+  }
 }
 
 .forWhomMotionReady .forWhomHeader,
@@ -378,19 +453,19 @@
   animation: forWhomReveal 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.forWhomCard:nth-child(1).forWhomItemVisible {
+.forWhomCard1.forWhomItemVisible {
   animation: forWhomCardRise 0.68s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.forWhomCard:nth-child(2).forWhomItemVisible {
+.forWhomCard2.forWhomItemVisible {
   animation: forWhomCardSlideRight 0.68s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.forWhomCard:nth-child(3).forWhomItemVisible {
+.forWhomCard3.forWhomItemVisible {
   animation: forWhomCardPop 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.forWhomCard:nth-child(4).forWhomItemVisible {
+.forWhomCard4.forWhomItemVisible {
   animation: forWhomCardSlideLeft 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -413,53 +488,53 @@
 @keyframes forWhomCardRise {
   from {
     opacity: 0;
-    transform: translateY(2.2rem);
+    transform: translateY(2.2rem) rotate(var(--card-tilt));
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) rotate(var(--card-tilt));
   }
 }
 
 @keyframes forWhomCardSlideRight {
   from {
     opacity: 0;
-    transform: translateX(-2.2rem);
+    transform: translateX(-2.2rem) rotate(var(--card-tilt));
   }
 
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) rotate(var(--card-tilt));
   }
 }
 
 @keyframes forWhomCardPop {
   from {
     opacity: 0;
-    transform: scale(0.92);
+    transform: scale(0.92) rotate(var(--card-tilt));
   }
 
   72% {
     opacity: 1;
-    transform: scale(1.025);
+    transform: scale(1.025) rotate(var(--card-tilt));
   }
 
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) rotate(var(--card-tilt));
   }
 }
 
 @keyframes forWhomCardSlideLeft {
   from {
     opacity: 0;
-    transform: translateX(2.2rem);
+    transform: translateX(2.2rem) rotate(var(--card-tilt));
   }
 
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) rotate(var(--card-tilt));
   }
 }
 
@@ -475,10 +550,18 @@
   }
 }
 
-@media (max-width: 850px) {
+@media (max-width: 1040px) {
+  .forWhomMosaic {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-rows: none;
+  }
+
   .forWhomHeader {
-    grid-template-columns: 1fr;
-    gap: 1.15rem;
+    grid-column: 1 / -1;
+    grid-row: auto;
+    min-height: 0;
+    padding: 0 0 clamp(1.5rem, 4vw, 2.5rem);
+    margin-bottom: 1rem;
   }
 
   .forWhomIntro {
@@ -486,50 +569,65 @@
     padding-bottom: 0;
   }
 
-  .forWhomGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .forWhomCard,
-  .forWhomCard:nth-child(n) {
-    grid-column: span 1;
-    min-height: 17rem;
+  .forWhomCard1,
+  .forWhomCard2,
+  .forWhomCard3,
+  .forWhomCard4 {
+    grid-row: auto;
+    grid-column: span 3;
+    justify-self: stretch;
+    max-width: none;
+    aspect-ratio: auto;
+    margin-top: 0;
+    min-height: clamp(15rem, 31vw, 19rem);
   }
 
+  .forWhomCard1,
+  .forWhomCard4 {
+    min-height: clamp(17rem, 35vw, 21rem);
+  }
+
+  .forWhomBelong {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
 }
 
 @media (max-width: 560px) {
   .forWhomSection {
-    padding: 4.5rem 0;
+    padding: 3.5rem 0;
   }
 
   .forWhomHeader {
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
   }
 
   .forWhomTitle {
-    max-width: 14ch;
-    font-size: clamp(2.35rem, 11vw, 3.35rem);
+    max-width: 13ch;
   }
 
-  .forWhomGrid {
+  .forWhomMosaic {
     grid-template-columns: 1fr;
+    gap: 0.85rem;
   }
 
   .forWhomCard,
-  .forWhomCard:nth-child(n) {
+  .forWhomCard1,
+  .forWhomCard2,
+  .forWhomCard3,
+  .forWhomCard4 {
     grid-column: auto;
-    min-height: 14rem;
+    min-height: 0;
+    transform: none;
   }
 
   .forWhomCard p {
-    max-width: 29ch;
-    font-size: clamp(1.1rem, 5vw, 1.35rem);
+    max-width: none;
   }
 
   .forWhomBelong {
     margin-top: 2.5rem;
-    font-size: clamp(1.6rem, 8vw, 2.4rem);
+    font-size: clamp(1.5rem, 7vw, 2rem);
   }
 
 }
@@ -598,7 +696,7 @@
   }
 
   .heroTitle {
-    font-size: clamp(2.5rem, 8vw, 4.3rem);
+    font-size: var(--home-headline-size);
   }
 }
 
@@ -693,71 +791,76 @@
 .socialProofSection {
   position: relative;
   overflow: hidden;
-  padding: clamp(5rem, 9vw, 10rem) 0;
-  background: var(--color-black);
+  padding: clamp(4.5rem, 7vw, 7rem) 0;
+  background: var(--color-white);
 }
 
 .socialProofContainer {
   display: grid;
-  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
-  gap: clamp(2.5rem, 7vw, 9rem);
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 5vw, 6rem);
   align-items: center;
   width: auto;
   margin-inline: var(--site-edge-gutter);
+  padding: clamp(2rem, 4.4vw, 4.75rem);
+  border-radius: clamp(1.5rem, 2.4vw, 2.75rem);
+  background: var(--color-black);
+  box-shadow: 0 1.8rem 4rem rgba(33, 44, 45, 0.14);
 }
 
 .socialProofHeading h2 {
   max-width: 11ch;
   color: var(--color-white);
-  font-size: clamp(2.5rem, 4.5vw, 5.5rem);
-  font-weight: 850;
-  letter-spacing: -0.055em;
-  line-height: 1.02;
+  font-size: clamp(2.35rem, 3.35vw, 4.05rem);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
   text-wrap: balance;
 }
 
 .socialProofGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(0.75rem, 1.3vw, 1.35rem);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.4vw, 3rem);
+  align-items: stretch;
 }
 
 .socialProofCard {
   display: grid;
-  min-height: clamp(13rem, 18vw, 18rem);
-  align-content: space-between;
-  gap: 1.25rem;
-  padding: clamp(1.25rem, 2.25vw, 2.25rem);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: clamp(1.25rem, 2vw, 2rem);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.025));
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s ease, background 0.4s ease;
+  align-content: start;
+  gap: clamp(0.8rem, 1.4vw, 1.2rem);
+  min-height: 0;
+  padding: 0 clamp(1rem, 2vw, 2rem);
+  border-left: 1px solid rgba(255, 255, 255, 0.18);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s ease;
+}
+
+.socialProofCard:first-child {
+  padding-left: 0;
+  border-left: 0;
 }
 
 .socialProofCard:nth-child(3) {
-  grid-column: 1 / -1;
-  grid-template-columns: auto minmax(0, 1fr);
-  column-gap: clamp(1.25rem, 2.5vw, 3rem);
-  align-items: center;
-  min-height: clamp(9rem, 11vw, 12rem);
+  grid-column: auto;
+  grid-template-columns: 1fr;
+  align-items: start;
 }
 
 .socialProofCard:hover {
-  transform: translateY(-0.45rem);
+  transform: translateY(-0.3rem);
   border-color: var(--color-yellow);
-  background: linear-gradient(145deg, rgba(241, 196, 15, 0.18), rgba(255, 255, 255, 0.055));
 }
 
 .socialProofIcon {
   color: var(--color-yellow);
-  font-size: clamp(2.15rem, 3vw, 3.6rem);
+  font-size: clamp(1.8rem, 2.5vw, 2.75rem);
 }
 
 .socialProofValue {
   color: var(--color-white);
-  font-size: clamp(3rem, 4vw, 5rem);
+  font-size: clamp(2.85rem, 4.2vw, 5rem);
   font-weight: 850;
-  letter-spacing: -0.07em;
+  letter-spacing: 0;
   line-height: 0.9;
 }
 
@@ -766,17 +869,17 @@
 }
 
 .socialProofLabel {
-  max-width: 26ch;
+  max-width: 25ch;
   color: rgba(255, 255, 255, 0.82);
-  font-size: clamp(0.95rem, 0.38vw + 0.84rem, 1.18rem);
-  font-weight: 550;
-  line-height: 1.55;
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
 }
 
 .socialProofCard:nth-child(3) .socialProofLabel {
-  max-width: 40ch;
-  font-size: clamp(1.05rem, 0.62vw + 0.85rem, 1.4rem);
-  line-height: 1.4;
+  max-width: 31ch;
+  font-size: var(--home-text-size);
+  line-height: var(--home-text-line-height);
 }
 
 .socialProofMotionReady .socialProofHeading,
@@ -852,6 +955,7 @@
   .socialProofContainer {
     grid-template-columns: 1fr;
     gap: 2.5rem;
+    padding: clamp(1.7rem, 5vw, 3rem);
   }
 
   .socialProofHeading h2 {
@@ -861,17 +965,29 @@
 
 @media (max-width: 560px) {
   .socialProofSection {
-    padding: 4.5rem 0;
+    padding: 3.5rem 0;
   }
 
   .socialProofGrid {
     grid-template-columns: 1fr;
+    gap: 1.35rem;
+  }
+
+  .socialProofCard,
+  .socialProofCard:first-child {
+    padding: 1.35rem 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    border-left: 0;
+  }
+
+  .socialProofCard:first-child {
+    padding-top: 0;
+    border-top: 0;
   }
 
   .socialProofCard:nth-child(3) {
     grid-column: auto;
     grid-template-columns: 1fr;
-    min-height: 14rem;
   }
 }
 
