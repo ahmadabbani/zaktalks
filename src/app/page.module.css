@@ -130,7 +130,7 @@
 .secondaryHeroCta:focus-visible {
   border-color: var(--color-yellow);
   background: var(--color-yellow);
-  color: var(--color-black);
+  color: var(--color-white);
   transform: var(--home-cta-hover-transform);
   outline: none;
 }
@@ -139,6 +139,7 @@
 .primaryHeroCta:focus-visible::after,
 .secondaryHeroCta:hover::after,
 .secondaryHeroCta:focus-visible::after {
+  color: var(--color-white);
   transform: var(--home-cta-arrow-hover-transform);
 }
 
@@ -219,7 +220,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   grid-template-rows: auto auto;
-  width: min(100%, 88rem);
+  width: 100%;
   margin-inline: auto;
   column-gap: clamp(1.1rem, 1.7vw, 2rem);
   row-gap: clamp(1.1rem, 1.7vw, 2rem);
@@ -317,7 +318,7 @@
   grid-column: 2;
   grid-row: 2;
   aspect-ratio: 1.2;
-  margin-top: clamp(-2.1rem, -1.8vw, -1.2rem);
+  margin-top: 0;
   color: var(--color-black);
   background: var(--color-yellow);
   border-radius: clamp(1.55rem, 2vw, 2.2rem);
@@ -433,7 +434,7 @@
   .forWhomCard3 {
     justify-self: center;
     aspect-ratio: 1.55;
-    margin-top: clamp(-2.9rem, -1.25vw, -1.75rem);
+    margin-top: 0;
   }
 
   .forWhomCard4 {
@@ -719,7 +720,7 @@
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 850px) {
   .heroGrid {
     grid-template-columns: 1fr;
     padding: 6.6rem 0 2.5rem;
@@ -811,7 +812,7 @@
 .socialProofHeading h2 {
   max-width: 11ch;
   color: var(--color-white);
-  font-size: clamp(2.35rem, 3.35vw, 4.05rem);
+  font-size: clamp(2.15rem, 2.7vw, 3.25rem);
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
@@ -951,7 +952,7 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1120px) {
   .socialProofContainer {
     grid-template-columns: 1fr;
     gap: 2.5rem;
@@ -963,7 +964,7 @@
   }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 680px) {
   .socialProofSection {
     padding: 3.5rem 0;
   }

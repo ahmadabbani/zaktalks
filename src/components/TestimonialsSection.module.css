@@ -73,7 +73,7 @@
 
 .controlButton:hover,
 .controlButton:focus-visible {
-  color: var(--color-black);
+  color: var(--color-white);
   border-color: var(--color-yellow);
   background: var(--color-yellow);
   box-shadow: 0 1rem 2rem rgba(196, 159, 12, 0.22);
@@ -260,7 +260,7 @@
   }
 }
 
-@media (max-width: 1060px) {
+@media (max-width: 1280px) {
   .track {
     --cards-per-view: 2;
   }

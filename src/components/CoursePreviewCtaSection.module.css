@@ -31,7 +31,7 @@
 .title {
   max-width: none;
   color: var(--home-headline-color);
-  font-size: 3.3rem;
+  font-size: clamp(2.2rem, 3.4vw, 3.3rem);
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
@@ -88,7 +88,7 @@
 
 .cta:hover,
 .cta:focus-visible {
-  color: var(--color-black);
+  color: var(--color-white);
   border-color: var(--color-yellow);
   background: var(--color-yellow);
   box-shadow: 0 1.1rem 2.4rem rgba(196, 159, 12, 0.24);
@@ -147,9 +147,9 @@
 .imageFrame {
   position: relative;
   overflow: hidden;
-  width: min(100%, clamp(21rem, 29vw, 33rem));
+  width: min(100%, clamp(18rem, 25vw, 29rem));
   margin-inline: auto;
-  aspect-ratio: 0.66;
+  aspect-ratio: 0.58;
   border-radius: 999rem;
   background: #edf7fb;
 }
@@ -212,13 +212,9 @@
     grid-template-columns: minmax(0, 1.18fr) minmax(28rem, 0.82fr);
     gap: 7rem;
   }
-
-  .title {
-    font-size: 3.65rem;
-  }
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1400px) {
   .section {
     --course-preview-image-overlap: 7rem;
 
@@ -237,7 +233,7 @@
 
   .title {
     max-width: 16ch;
-    font-size: 3rem;
+    font-size: clamp(2.2rem, 3.4vw, 3.3rem);
   }
 
   .visualWrap {
@@ -292,8 +288,8 @@
   }
 
   .imageFrame {
-    width: min(78vw, 25rem);
-    aspect-ratio: 0.68;
+    width: min(68vw, 22.5rem);
+    aspect-ratio: 0.58;
     border-radius: 999rem;
   }
 }

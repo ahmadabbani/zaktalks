@@ -88,14 +88,17 @@
   transition: var(--home-cta-arrow-transition);
 }
 
-.servicesLink:hover {
-  color: var(--color-black);
+.servicesLink:hover,
+.servicesLink:focus-visible {
+  color: var(--color-white);
   border-color: var(--color-yellow);
   background: var(--color-yellow);
   transform: var(--home-cta-hover-transform);
 }
 
-.servicesLink:hover svg {
+.servicesLink:hover svg,
+.servicesLink:focus-visible svg {
+  color: var(--color-white);
   transform: var(--home-cta-arrow-hover-transform);
 }
 
@@ -303,13 +306,17 @@
   background: var(--color-deep-slate);
 }
 
-.cardCta:hover {
-  color: var(--color-black);
+.cardCta:hover,
+.cardCta:focus-visible {
+  color: var(--color-white);
   background: var(--color-yellow);
   transform: var(--home-cta-hover-transform);
 }
 
-.cardCta:hover svg {
+.cardCta:hover svg,
+.cardCta:focus-visible svg {
+  color: var(--color-yellow);
+  background: var(--color-white);
   transform: var(--home-cta-arrow-hover-transform);
 }
 
@@ -374,7 +381,7 @@
 
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1400px) {
   .rail {
     display: grid;
     height: auto;

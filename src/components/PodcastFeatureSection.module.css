@@ -69,22 +69,26 @@
   transition: var(--home-cta-arrow-transition);
 }
 
-.cta:hover {
-  color: var(--color-black);
+.cta:hover,
+.cta:focus-visible {
+  color: var(--color-white);
   border-color: var(--color-yellow);
   background: var(--color-yellow);
   transform: var(--home-cta-hover-transform);
 }
 
-.cta:hover svg {
+.cta:hover svg,
+.cta:focus-visible svg {
+  color: var(--color-yellow);
+  background: var(--color-white);
   transform: var(--home-cta-arrow-hover-transform);
 }
 
 .visual {
   position: relative;
-  width: 100%;
+  width: min(100%, 55rem);
   min-height: clamp(37rem, 46vw, 50rem);
-  justify-self: stretch;
+  justify-self: end;
   isolation: isolate;
 }
 
@@ -143,7 +147,7 @@
   align-items: center;
   min-height: 4.6rem;
   padding: 0.65rem 0.85rem 0.65rem 0.7rem;
-  color: var(--color-slate-blue);
+  color: var(--color-deep-slate);
   border: 1px solid rgba(60, 90, 103, 0.1);
   border-radius: 999px;
   background: var(--color-white);
@@ -190,7 +194,7 @@
 }
 
 .platformLink:hover {
-  color: var(--color-black);
+  color: var(--color-white);
   border-color: var(--color-yellow);
   background: var(--color-yellow);
   box-shadow: 0 1.15rem 2.5rem rgba(33, 44, 45, 0.13);
@@ -204,7 +208,7 @@
 }
 
 .platformLink:hover .platformArrow {
-  color: var(--color-black);
+  color: var(--color-white);
   transform: var(--home-cta-arrow-hover-transform);
 }
 

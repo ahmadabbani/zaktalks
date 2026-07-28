@@ -5,7 +5,7 @@
 :root {
   /* Primary Colors */
   --color-white: #fffefe;
-  --color-black: #303030;
+  --color-black: #212c2d;
   --color-yellow: #F1C40F;
   --color-dark-blue: #5587a6;
   --color-slate-blue: #3c5a67;
@@ -53,10 +53,10 @@
   /* Container */
   --container-max-width: 1800px;
   --container-padding: 2rem;
-  --site-edge-gutter: clamp(2rem, 4vw, 8rem);
+  --site-edge-gutter: clamp(3.5rem, 9vw, 24rem);
 
   /* Homepage type and motion system */
-  --home-headline-size: 4.6rem;
+  --home-headline-size: clamp(2.2rem, 3.85vw, 3.45rem);
   --home-headline-weight: 840;
   --home-headline-line-height: 1.04;
   --home-headline-letter-spacing: 0;
@@ -169,28 +169,15 @@ ol {
 @media (max-width: 768px) {
   :root {
     --container-padding: 1rem;
-    --site-edge-gutter: 1.1rem;
-    --home-headline-size: 3.05rem;
+    --site-edge-gutter: clamp(1.75rem, 8vw, 3.25rem);
     --home-subheading-size: 1rem;
     --home-text-size: 0.96rem;
     --home-cta-size: 0.92rem;
   }
 }
 
-@media (min-width: 769px) and (max-width: 1180px) {
+@media (min-width: 2300px) {
   :root {
-    --home-headline-size: 3.85rem;
-  }
-}
-
-@media (min-width: 1800px) {
-  :root {
-    --home-headline-size: 5rem;
-  }
-}
-
-@media (max-width: 420px) {
-  :root {
-    --home-headline-size: 2.55rem;
+    --home-headline-size: clamp(3.85rem, 2.9vw, 4.8rem);
   }
 }

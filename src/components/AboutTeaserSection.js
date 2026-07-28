@@ -88,7 +88,7 @@ export default function AboutTeaserSection() {
                 alt="Zak Dakkash speaking with a microphone"
                 width={1920}
                 height={1280}
-                sizes="(max-width: 900px) min(78vw, 28rem), 34vw"
+                sizes="(max-width: 900px) min(68vw, 22.5rem), 27vw"
                 unoptimized
                 className={styles.portrait}
               />

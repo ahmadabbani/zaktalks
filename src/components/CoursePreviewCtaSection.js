@@ -70,7 +70,7 @@ export default function CoursePreviewCtaSection() {
                 alt="Zak Dakkash teaching beside a whiteboard for Interpersonal Communication Dynamics"
                 width={1029}
                 height={1528}
-                sizes="(max-width: 840px) min(78vw, 25rem), 31vw"
+                sizes="(max-width: 840px) min(68vw, 22.5rem), 25vw"
                 unoptimized
                 className={styles.image}
               />

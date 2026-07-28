@@ -133,10 +133,10 @@ export default function PodcastFeatureSection() {
 
             <div className={styles.phoneWrap}>
               <Image
-                src="/podcast/zak-talks-phone.png"
+                src="/podcast/zak-talks-phone-facing-copy.png"
                 alt="Modern phone playing The Conversations We Avoid on Zak Talks"
-                width={946}
-                height={1662}
+                width={948}
+                height={1659}
                 sizes="(max-width: 620px) 86vw, (max-width: 980px) 60vw, 34vw"
                 className={styles.phone}
               />

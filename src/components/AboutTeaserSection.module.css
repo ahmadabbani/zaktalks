@@ -71,8 +71,8 @@
 .portraitFrame {
   position: relative;
   overflow: hidden;
-  width: min(100%, clamp(21rem, 32vw, 33rem));
-  aspect-ratio: 0.72;
+  width: min(100%, clamp(18rem, 27vw, 28rem));
+  aspect-ratio: 0.62;
   border-radius: 999rem;
   background: #d7e7ee;
 }
@@ -153,13 +153,13 @@
 
 .storyLink:hover {
   color: var(--color-white);
-  border-color: var(--color-slate-blue);
-  background: var(--color-slate-blue);
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
   transform: var(--home-cta-hover-transform);
 }
 
 .storyLink:hover svg {
-  color: var(--color-slate-blue);
+  color: var(--color-yellow);
   background: var(--color-white);
   transform: var(--home-cta-arrow-hover-transform);
 }
@@ -261,8 +261,8 @@
   }
 
   .portraitFrame {
-    width: min(78vw, 26rem);
-    aspect-ratio: 0.72;
+    width: min(68vw, 22.5rem);
+    aspect-ratio: 0.62;
     border-radius: 999rem;
   }
 
