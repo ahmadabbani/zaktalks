@@ -6,8 +6,12 @@ import Link from 'next/link'
 import { FiArrowUpRight } from 'react-icons/fi'
 import styles from './AboutTeaserSection.module.css'
 
-const teaserLine = '“I am here to help people face the splinter beneath the symptoms and do the work that actually changes things.”'
+const teaserLine = '"I am here to help people face the splinter beneath the symptoms and do the work that actually changes things."'
 const teaserWords = teaserLine.split(' ')
+const bioParagraphs = [
+  'Zak Dakkash is a purpose-driven coach and educator whose work helps people understand themselves more clearly, communicate more honestly, and reconnect with a fuller way of living.',
+  'His approach is co-creative, direct, and deeply human, built around safety, awareness, re-decision, integration, and autonomy rather than a rigid formula.',
+]
 
 export default function AboutTeaserSection() {
   const itemRefs = useRef({})
@@ -80,15 +84,15 @@ export default function AboutTeaserSection() {
           >
             <div className={styles.portraitFrame}>
               <Image
-                src="/about-teaser-story-v2.webp"
+                src="/meetzak.jpg"
                 alt="Zak Dakkash speaking with a microphone"
-                width={1535}
-                height={1025}
-                sizes="(max-width: 900px) calc(100vw - 2.2rem), 56vw"
+                width={1920}
+                height={1280}
+                sizes="(max-width: 900px) min(78vw, 28rem), 34vw"
+                unoptimized
                 className={styles.portrait}
               />
             </div>
-            <span className={styles.portraitAccent} aria-hidden="true" />
           </div>
 
           <div className={styles.storyColumn}>
@@ -97,9 +101,11 @@ export default function AboutTeaserSection() {
               className={itemClassName(styles.story, 'story')}
             >
               <h2 id="about-teaser-heading" className={styles.title}>Meet Zak</h2>
-              <p className={styles.bio}>
-                Zak Dakkash is a purpose-driven coach and educator whose work helps people understand themselves more clearly, communicate more honestly, and reconnect with a fuller way of living. His approach is co-creative, direct, and deeply human — built around safety, awareness, re-decision, integration, and autonomy rather than a rigid formula.
-              </p>
+              <div className={styles.bio}>
+                {bioParagraphs.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
 
               <Link href="/about" className={styles.storyLink}>
                 <span>Learn my story</span>

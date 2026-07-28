@@ -218,7 +218,7 @@
   min-width: 0;
   font-size: 0.94rem;
   font-weight: var(--home-text-weight);
-  line-height: 1.48;
+  line-height: var(--home-text-line-height);
 }
 
 .imageWrap {

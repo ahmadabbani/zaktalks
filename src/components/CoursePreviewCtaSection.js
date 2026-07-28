@@ -40,9 +40,9 @@ export default function CoursePreviewCtaSection() {
       <div className={styles.container}>
         <div className={styles.layout}>
           <div className={styles.content}>
-            <p className={styles.eyebrow}>Course preview</p>
             <h2 id="course-preview-heading" className={styles.title}>
-              Ready to understand the patterns shaping your relationships?
+              <span className={styles.titleLine}>Ready to understand the patterns</span>
+              <span className={styles.titleLine}>shaping your relationships?</span>
             </h2>
             <p className={styles.copy}>
               Interpersonal Communication Dynamics gives you practical tools to understand how you communicate, why certain patterns repeat, and what can change when awareness becomes action.
@@ -66,11 +66,12 @@ export default function CoursePreviewCtaSection() {
           <div className={styles.visualWrap}>
             <div className={styles.imageFrame}>
               <Image
-                src="/course-preview/interpersonal-communication-dynamics.jpg"
-                alt="Minimal frosted speech bubble, course notebook, and overlapping relationship pattern circles"
-                width={1440}
-                height={1080}
-                sizes="(max-width: 840px) 92vw, (max-width: 1280px) 48vw, 44vw"
+                src="/coursepreview-blue-bg.png"
+                alt="Zak Dakkash teaching beside a whiteboard for Interpersonal Communication Dynamics"
+                width={1029}
+                height={1528}
+                sizes="(max-width: 840px) min(78vw, 25rem), 31vw"
+                unoptimized
                 className={styles.image}
               />
             </div>

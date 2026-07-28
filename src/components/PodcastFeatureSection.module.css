@@ -225,7 +225,7 @@
   font-size: var(--home-subheading-size);
   font-weight: 650;
   letter-spacing: 0;
-  line-height: 1.45;
+  line-height: var(--home-subheading-line-height);
 }
 
 .audioMark {

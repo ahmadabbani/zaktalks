@@ -63,11 +63,11 @@
   --home-headline-color: var(--color-dark-blue);
   --home-subheading-size: 1.14rem;
   --home-subheading-weight: 520;
-  --home-subheading-line-height: 1.72;
+  --home-subheading-line-height: 1.9;
   --home-subheading-color: var(--color-black);
   --home-text-size: 1rem;
   --home-text-weight: 520;
-  --home-text-line-height: 1.62;
+  --home-text-line-height: 1.9;
   --home-text-color: var(--color-deep-slate);
   --home-cta-size: 0.96rem;
   --home-cta-weight: 780;

@@ -9,19 +9,6 @@
   isolation: isolate;
 }
 
-.section::before {
-  content: '';
-  position: absolute;
-  top: 34%;
-  right: -18vw;
-  width: min(42vw, 48rem);
-  aspect-ratio: 1;
-  border: 1px solid rgba(85, 135, 166, 0.09);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: -1;
-}
-
 .container {
   width: auto;
   margin-inline: var(--site-edge-gutter);
@@ -66,70 +53,40 @@
 
 .storyLayout {
   display: grid;
-  grid-template-columns: minmax(0, 1.23fr) minmax(22rem, 0.77fr);
-  gap: clamp(3rem, 6.5vw, 8rem);
+  grid-template-columns: minmax(18rem, 0.9fr) minmax(24rem, 1.1fr);
+  gap: clamp(3rem, 7vw, 8.5rem);
   align-items: center;
   padding-top: clamp(3.75rem, 6vw, 6.75rem);
 }
 
 .portraitStage {
   position: relative;
+  display: flex;
+  justify-content: center;
   min-width: 0;
-  padding: 0 clamp(0.7rem, 1.2vw, 1.25rem) clamp(0.7rem, 1.2vw, 1.25rem) 0;
+  padding: 0;
   z-index: 0;
-}
-
-.portraitStage::before {
-  content: '';
-  position: absolute;
-  inset: clamp(1rem, 2vw, 2rem) 0 0 clamp(1rem, 2vw, 2rem);
-  border: 1px solid rgba(60, 90, 103, 0.25);
-  border-radius: clamp(2rem, 3vw, 3.25rem) clamp(2rem, 3vw, 3.25rem) clamp(5rem, 9vw, 9rem) clamp(2rem, 3vw, 3.25rem);
-  z-index: -1;
 }
 
 .portraitFrame {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 3 / 2;
-  border-radius: clamp(2rem, 3vw, 3.25rem) clamp(2rem, 3vw, 3.25rem) clamp(5rem, 9vw, 9rem) clamp(2rem, 3vw, 3.25rem);
-  background: var(--color-slate-blue);
-  box-shadow: 0 1.75rem 4.5rem rgba(33, 44, 45, 0.16);
-}
-
-.portraitFrame::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: clamp(0.38rem, 0.65vw, 0.7rem) solid rgba(255, 255, 255, 0.18);
-  border-radius: inherit;
-  pointer-events: none;
+  width: min(100%, clamp(21rem, 32vw, 33rem));
+  aspect-ratio: 0.72;
+  border-radius: 999rem;
+  background: #d7e7ee;
 }
 
 .portrait {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: 52% center;
   transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .portraitFrame:hover .portrait {
   transform: scale(1.025);
-}
-
-.portraitAccent {
-  position: absolute;
-  right: clamp(0.45rem, 1vw, 1rem);
-  bottom: clamp(0.45rem, 1vw, 1rem);
-  width: clamp(4rem, 7vw, 7.5rem);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--color-dark-blue);
-  box-shadow: inset 0 0 0 clamp(0.55rem, 0.85vw, 0.9rem) var(--color-white);
-  transform: scale(1);
-  transform-origin: center;
-  z-index: 2;
 }
 
 .storyColumn {
@@ -155,11 +112,18 @@
 }
 
 .bio {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
   max-width: 62ch;
   color: var(--home-text-color);
   font-size: var(--home-text-size);
   font-weight: var(--home-text-weight);
-  line-height: var(--home-text-line-height);
+  line-height: 1.9;
+}
+
+.bio p {
+  margin: 0;
 }
 
 .storyLink {
@@ -223,14 +187,6 @@
   animation: portraitReveal 1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.portraitStage.itemVisible::before {
-  animation: frameDraw 1s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.portraitStage.itemVisible .portraitAccent {
-  animation: accentPop 0.7s 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
 .story.itemVisible {
   animation: storyReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -238,38 +194,14 @@
 @keyframes portraitReveal {
   from {
     opacity: 0;
-    clip-path: inset(0 100% 0 0 round 3rem);
+    clip-path: inset(0 100% 0 0 round 999rem);
     transform: translateX(-2rem) rotate(-1.5deg);
   }
 
   to {
     opacity: 1;
-    clip-path: inset(0 0 0 0 round 3rem);
+    clip-path: inset(0 0 0 0 round 999rem);
     transform: translateX(0) rotate(0);
-  }
-}
-
-@keyframes frameDraw {
-  from {
-    opacity: 0;
-    transform: translate(-1rem, -1rem);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate(0, 0);
-  }
-}
-
-@keyframes accentPop {
-  from {
-    opacity: 0;
-    transform: scale(0.2) rotate(-25deg);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1) rotate(0);
   }
 }
 
@@ -295,7 +227,8 @@
 
   .portraitStage {
     width: 100%;
-    max-width: 70rem;
+    max-width: 34rem;
+    justify-self: center;
   }
 
   .storyColumn,
@@ -324,21 +257,13 @@
   }
 
   .portraitStage {
-    padding: 0 0.55rem 0.55rem 0;
-  }
-
-  .portraitStage::before {
-    inset: 0.75rem 0 0 0.75rem;
+    padding: 0;
   }
 
   .portraitFrame {
-    aspect-ratio: 4 / 3;
-    border-radius: 1.6rem 1.6rem 4.5rem 1.6rem;
-  }
-
-  .portraitAccent {
-    width: 4.1rem;
-    box-shadow: inset 0 0 0 0.55rem var(--color-white);
+    width: min(78vw, 26rem);
+    aspect-ratio: 0.72;
+    border-radius: 999rem;
   }
 
   .title {
@@ -361,8 +286,6 @@
 
   .quoteBlock.itemVisible .word,
   .portraitStage.itemVisible,
-  .portraitStage.itemVisible::before,
-  .portraitStage.itemVisible .portraitAccent,
   .story.itemVisible {
     animation: none;
     transition: none;
