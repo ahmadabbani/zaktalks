@@ -1,5 +1,5 @@
 .footer {
-    padding: clamp(2.5rem, 3.5vw, 3.75rem) 0 1.25rem;
+    padding: clamp(1.75rem, 2.5vw, 2.5rem) 0 1rem;
     color: var(--color-white);
     background: var(--color-deep-slate);
     border-top: 3px solid var(--color-yellow);
@@ -8,7 +8,7 @@
 .footer > :global(.container) {
     width: auto;
     max-width: none;
-    margin-inline: var(--site-edge-gutter);
+    margin-inline: var(--featured-section-gutter);
     padding-inline: 0;
 }
 
@@ -18,8 +18,9 @@
 
 .footerGrid {
     display: grid;
-    grid-template-columns: minmax(18rem, 1.45fr) repeat(2, minmax(11rem, 0.8fr));
-    gap: clamp(2.25rem, 6vw, 7rem);
+    grid-template-columns: minmax(0, 42rem) repeat(2, minmax(11rem, 14rem));
+    justify-content: space-between;
+    column-gap: clamp(2rem, 4vw, 5rem);
     align-items: start;
 }
 
@@ -28,9 +29,31 @@
     min-width: 0;
 }
 
+.brandColumn {
+    max-width: 42rem;
+}
+
+.footerColumn {
+    width: clamp(11rem, 13vw, 14rem);
+}
+
+.footerColumn:last-child {
+    justify-self: end;
+}
+
+.brandIntro {
+    display: flex;
+    align-items: flex-end;
+    gap: clamp(1.25rem, 2.5vw, 2.5rem);
+}
+
 .logoFrame {
+    position: relative;
     display: inline-flex;
-    width: min(12rem, 60vw);
+    overflow: hidden;
+    width: min(9.32rem, 21.68vw);
+    flex: 0 0 auto;
+    aspect-ratio: 442 / 299;
 }
 
 .logoFrame:focus-visible {
@@ -39,17 +62,21 @@
 }
 
 .logo {
-    width: 100%;
+    position: absolute;
+    top: 0;
+    left: -15.3846%;
+    width: 115.3846%;
+    max-width: none;
     height: auto;
 }
 
 .brandText {
-    max-width: 45rem;
-    margin-top: 0.8rem;
+    max-width: 33rem;
+    margin: 0;
     color: rgba(255, 255, 255, 0.78);
-    font-size: 0.96rem;
+    font-size: 0.88rem;
     font-weight: 550;
-    line-height: 1.8;
+    line-height: 1.6;
 }
 
 .footerTitle,
@@ -68,7 +95,7 @@
     flex-wrap: wrap;
     gap: 1rem clamp(1.25rem, 3vw, 2rem);
     align-items: center;
-    margin-top: clamp(0.9rem, 1.4vw, 1.35rem);
+    margin-top: clamp(0.8rem, 1.1vw, 1.1rem);
 }
 
 .socialLinks {
@@ -100,7 +127,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.72rem;
-    margin-top: 1.25rem;
+    margin-top: 0.9rem;
 }
 
 .contactLink,
@@ -150,6 +177,11 @@
     width: fit-content;
 }
 
+.quickLinks li {
+    display: flex;
+    line-height: 1;
+}
+
 .contactLink:hover,
 .contactLink:focus-visible,
 .quickLink:hover,
@@ -176,8 +208,8 @@
     justify-content: space-between;
     align-items: center;
     gap: 1.25rem;
-    margin-top: clamp(1.75rem, 2.5vw, 2.5rem);
-    padding-top: 1rem;
+    margin-top: clamp(1.25rem, 1.75vw, 1.75rem);
+    padding-top: 0.8rem;
     border-top: 1px solid rgba(255, 255, 255, 0.16);
 }
 
@@ -202,25 +234,83 @@
     text-transform: uppercase;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1380px) {
+    .brandIntro {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.85rem;
+    }
+
+    .contactLinks,
+    .quickLinks {
+        gap: 0.5rem;
+        margin-top: 0.7rem;
+    }
+
+    .footerColumn {
+        align-self: center;
+    }
+
+}
+
+@media (max-width: 1024px) {
+    .footer {
+        padding-top: clamp(1.65rem, 4vw, 2.25rem);
+    }
+
     .footerGrid {
+        display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 2.5rem clamp(2rem, 6vw, 4rem);
+        gap: clamp(1.75rem, 4vw, 2.5rem) clamp(1.5rem, 6vw, 4rem);
     }
 
     .brandColumn {
         grid-column: 1 / -1;
+        max-width: none;
+    }
+
+    .footerColumn {
+        width: 100%;
+        align-self: start;
+    }
+
+    .footerColumn:last-child {
+        justify-self: start;
+    }
+
+    .brandText {
+        font-size: var(--home-small-text-size);
+        line-height: 1.4;
+    }
+
+    .contactLink,
+    .quickLink {
+        font-size: var(--home-small-text-size);
+        line-height: 1.3;
+    }
+
+    .footerTitle,
+    .socialText,
+    .contactLink small,
+    .legalLink,
+    .copyright {
+        font-size: calc(var(--home-small-text-size) - 0.06rem);
+        line-height: 1.25;
+    }
+
+    .footerBottom {
+        margin-top: 1.25rem;
     }
 }
 
 @media (max-width: 640px) {
     .footer {
-        padding-top: 2.5rem;
+        padding-top: 2rem;
     }
 
     .footerGrid {
         grid-template-columns: 1fr;
-        gap: 2.15rem;
+        gap: 1.75rem;
     }
 
     .brandText {
@@ -232,10 +322,17 @@
         flex-direction: column;
     }
 
+    .brandIntro {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.85rem;
+    }
+
     .footerBottom {
         align-items: flex-start;
         flex-direction: column;
-        margin-top: 2rem;
+        gap: 0.9rem;
+        margin-top: 1.5rem;
     }
 
     .copyright {
@@ -244,15 +341,26 @@
 }
 
 @media (max-width: 420px) {
-    .logoFrame {
-        width: min(10.5rem, 68vw);
-    }
-
     .socialLinks {
         gap: 0.9rem;
     }
 
     .legalLinks {
         gap: 0.75rem;
+    }
+
+    .contactLinks,
+    .quickLinks {
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+    }
+
+}
+
+@media (max-width: 500px) {
+    .legalLink,
+    .copyright {
+        font-size: 0.64rem;
+        line-height: 1.2;
     }
 }

@@ -35,20 +35,22 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className="container">
         <div className={styles.footerContainer}>
-          <div className={styles.footerGrid}>
-            <div className={styles.brandColumn}>
-              <Link href="/" className={styles.logoFrame} aria-label="ZakTalks home">
-                <Image
-                  src="/logowhite1.png"
-                  alt="ZakTalks"
-                  width={220}
-                  height={110}
-                  className={styles.logo}
-                />
-              </Link>
-              <p className={styles.brandText}>
-                Conversations and learning experiences for living, relating, and growing with more intention.
-              </p>
+            <div className={styles.footerGrid}>
+              <div className={styles.brandColumn}>
+                <div className={styles.brandIntro}>
+                  <Link href="/" className={styles.logoFrame} aria-label="ZakTalks home">
+                    <Image
+                      src="/logowhite1.png"
+                      alt="ZakTalks"
+                      width={220}
+                      height={110}
+                      className={styles.logo}
+                    />
+                  </Link>
+                  <p className={styles.brandText}>
+                    Conversations and learning experiences for living, relating, and growing with more intention.
+                  </p>
+                </div>
               <div className={styles.socialBlock} aria-label="Find ZakTalks">
                 <p className={styles.socialText}>Follow Zak:</p>
                 <div className={styles.socialLinks}>

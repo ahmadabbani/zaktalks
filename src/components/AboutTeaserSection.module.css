@@ -1,9 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Knewave&display=swap');
 
+@font-face {
+  font-family: 'ShakiesLocal';
+  src: url('/font/shakies/Web-PS/Shakies-Web-PS.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 .section {
   position: relative;
   overflow: hidden;
   padding: clamp(5.5rem, 9vw, 11rem) 0;
+  padding-top: clamp(2.75rem, 5vw, 5.5rem);
   scroll-margin-top: 7rem;
   background: var(--color-white);
   isolation: isolate;
@@ -11,7 +20,7 @@
 
 .container {
   width: auto;
-  margin-inline: var(--site-edge-gutter);
+  margin-inline: calc(var(--featured-section-gutter) + clamp(0.75rem, 4vw, 5rem));
 }
 
 .quoteBlock {
@@ -22,11 +31,11 @@
 }
 
 .quote {
-  max-width: 23ch;
+  max-width: 31ch;
   margin-inline: auto;
   color: #24495d;
-  font-family: 'Knewave', 'Arial Black', sans-serif;
-  font-size: calc(var(--home-headline-size) * 1.12);
+  font-family: 'ShakiesLocal', 'Knewave', 'Arial Black', sans-serif;
+  font-size: calc(var(--home-headline-size) * 1.18);
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1.06;
@@ -54,7 +63,7 @@
 .storyLayout {
   display: grid;
   grid-template-columns: minmax(18rem, 0.9fr) minmax(24rem, 1.1fr);
-  gap: clamp(3rem, 7vw, 8.5rem);
+  gap: clamp(1.75rem, 3vw, 3.5rem);
   align-items: center;
   padding-top: clamp(3.75rem, 6vw, 6.75rem);
 }
@@ -71,8 +80,10 @@
 .portraitFrame {
   position: relative;
   overflow: hidden;
-  width: min(100%, clamp(18rem, 27vw, 28rem));
-  aspect-ratio: 0.62;
+  width: min(100%, clamp(17rem, 22vw, 23.5rem));
+  max-width: 100%;
+  flex: 0 0 auto;
+  aspect-ratio: 0.48;
   border-radius: 999rem;
   background: #d7e7ee;
 }
@@ -117,9 +128,9 @@
   gap: 1.15rem;
   max-width: 62ch;
   color: var(--home-text-color);
-  font-size: var(--home-text-size);
+  font-size: var(--home-subheading-size);
   font-weight: var(--home-text-weight);
-  line-height: 1.9;
+  line-height: var(--home-text-line-height);
 }
 
 .bio p {
@@ -133,9 +144,10 @@
   gap: 0.75rem;
   margin-top: clamp(1.8rem, 3vw, 2.6rem);
   padding: 0.64rem 0.7rem 0.64rem 1.35rem;
-  color: var(--color-deep-slate);
-  border: 1px solid rgba(33, 44, 45, 0.3);
+  color: var(--color-white);
+  border: 1px solid var(--color-dark-blue);
   border-radius: 999px;
+  background: var(--color-dark-blue);
   font-size: var(--home-cta-size);
   font-weight: var(--home-cta-weight);
   transition: var(--home-cta-transition);
@@ -146,8 +158,8 @@
   height: 1.8rem;
   padding: 0.35rem;
   border-radius: 50%;
-  color: var(--color-white);
-  background: var(--color-slate-blue);
+  color: var(--color-dark-blue);
+  background: var(--color-white);
   transition: var(--home-cta-arrow-transition);
 }
 
@@ -162,6 +174,16 @@
   color: var(--color-yellow);
   background: var(--color-white);
   transform: var(--home-cta-arrow-hover-transform);
+}
+
+@media (max-width: 1600px) {
+  .portraitFrame {
+    width: min(100%, clamp(15rem, 18vw, 20rem));
+  }
+
+  .storyLink {
+    padding-block: 0.52rem;
+  }
 }
 
 .motionReady .word {
@@ -194,13 +216,13 @@
 @keyframes portraitReveal {
   from {
     opacity: 0;
-    clip-path: inset(0 100% 0 0 round 999rem);
+    filter: blur(5px);
     transform: translateX(-2rem) rotate(-1.5deg);
   }
 
   to {
     opacity: 1;
-    clip-path: inset(0 0 0 0 round 999rem);
+    filter: blur(0);
     transform: translateX(0) rotate(0);
   }
 }
@@ -219,31 +241,55 @@
   }
 }
 
-@media (max-width: 1050px) {
+@media (max-width: 1024px) {
+  .section {
+    padding: clamp(4rem, 7vw, 5.5rem) 0 clamp(4.5rem, 8vw, 6rem);
+  }
+
+  .container {
+    margin-inline: var(--featured-section-gutter);
+  }
+
+  .quoteBlock {
+    padding-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
   .storyLayout {
     grid-template-columns: 1fr;
-    gap: clamp(3.5rem, 7vw, 5.5rem);
+    gap: clamp(2.25rem, 5vw, 3.25rem);
+    padding-top: clamp(2.75rem, 5vw, 3.75rem);
   }
 
   .portraitStage {
     width: 100%;
     max-width: 34rem;
+    justify-content: center;
     justify-self: center;
   }
 
   .storyColumn,
   .story {
+    width: 100%;
     max-width: 52rem;
+  }
+
+  .portraitFrame {
+    width: min(42vw, 18rem);
+    aspect-ratio: 0.55;
+  }
+
+  .bio {
+    line-height: var(--home-text-line-height);
   }
 }
 
 @media (max-width: 620px) {
   .section {
-    padding: 5rem 0 5.5rem;
+    padding: 3.5rem 0 4.25rem;
   }
 
   .quoteBlock {
-    padding-bottom: 3.5rem;
+    padding-bottom: 2.5rem;
   }
 
   .quote {
@@ -253,7 +299,8 @@
   }
 
   .storyLayout {
-    padding-top: 3.5rem;
+    gap: 2rem;
+    padding-top: 2.5rem;
   }
 
   .portraitStage {
@@ -261,18 +308,177 @@
   }
 
   .portraitFrame {
-    width: min(68vw, 22.5rem);
-    aspect-ratio: 0.62;
-    border-radius: 999rem;
+    width: min(100%, 22rem);
+    aspect-ratio: 4 / 5;
+    border-radius: clamp(1.5rem, 6vw, 2.25rem);
   }
 
-  .title {
-    font-size: var(--home-headline-size);
+  .bio {
+    gap: 0.9rem;
+    line-height: var(--home-text-line-height);
   }
 
   .storyLink {
+    display: grid;
     width: 100%;
-    justify-content: space-between;
+    grid-template-columns: 1.8rem minmax(0, 1fr) 1.8rem;
+    column-gap: 0.75rem;
+    padding-inline: 0.7rem;
+    text-align: center;
+  }
+
+  .storyLink span {
+    grid-column: 2;
+    justify-self: center;
+  }
+
+  .storyLink svg {
+    grid-column: 3;
+    justify-self: end;
+  }
+}
+
+@media (min-width: 2000px) {
+  .storyLayout {
+    grid-template-columns: minmax(25rem, 0.9fr) minmax(30rem, 1.1fr);
+    gap: clamp(2.5rem, 3vw, 4rem);
+  }
+
+  .portraitFrame {
+    width: min(100%, 26rem);
+  }
+
+  .story,
+  .storyColumn {
+    max-width: 52rem;
+  }
+}
+
+@media (min-width: 2300px) {
+  .storyLayout {
+    grid-template-columns: minmax(28rem, 0.92fr) minmax(34rem, 1.08fr);
+    gap: clamp(3rem, 3vw, 4.5rem);
+  }
+
+  .portraitFrame {
+    width: min(100%, 29rem);
+  }
+
+  .story,
+  .storyColumn {
+    max-width: 58rem;
+  }
+}
+
+/* Tablet/mobile story order with the portrait visually attached to the copy. */
+@media (max-width: 1024px) {
+  .storyLayout {
+    position: relative;
+    grid-template-columns: minmax(0, 1fr) clamp(12rem, 22vw, 15rem);
+    gap: clamp(1.25rem, 3vw, 2rem);
+    align-items: end;
+  }
+
+  .storyColumn {
+    order: 1;
+  }
+
+  .portraitStage {
+    order: 2;
+    width: 100%;
+    max-width: none;
+    align-self: end;
+    justify-self: end;
+    justify-content: flex-end;
+  }
+
+  .portraitStage::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: calc(100% - 0.1rem);
+    width: clamp(1.35rem, 3vw, 2.25rem);
+    height: 1px;
+    background: rgba(60, 90, 103, 0.28);
+  }
+
+  .portraitStage::after {
+    content: '';
+    position: absolute;
+    top: calc(50% - 0.22rem);
+    right: calc(100% + clamp(1.05rem, 2.5vw, 1.85rem));
+    width: 0.44rem;
+    height: 0.44rem;
+    border-radius: 50%;
+    background: var(--color-yellow);
+  }
+
+  .portraitFrame {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: clamp(1.25rem, 3vw, 2rem);
+    box-shadow: 0 1.1rem 2.5rem rgba(33, 44, 45, 0.1);
+  }
+
+  .storyLink {
+    min-height: var(--home-cta-min-height);
+    padding-block: var(--home-cta-compact-padding-block);
+    font-size: var(--home-cta-size);
+  }
+}
+
+@media (max-width: 700px) {
+  .section {
+    padding-bottom: 3rem;
+  }
+
+  .storyLayout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .portraitStage {
+    width: 100%;
+    justify-self: center;
+    justify-content: center;
+    padding-right: 0;
+    margin-top: 0;
+  }
+
+  .portraitStage::before,
+  .portraitStage::after {
+    content: none;
+  }
+
+  .portraitFrame {
+    width: min(52vw, 13rem);
+  }
+}
+
+@media (max-width: 620px) {
+  .storyLayout {
+    gap: 1.5rem;
+  }
+
+  .portraitFrame {
+    width: min(58vw, 12.5rem);
+    aspect-ratio: 1;
+    border-radius: clamp(1.25rem, 5vw, 1.75rem);
+  }
+}
+
+@media (max-width: 420px) {
+  .portraitFrame {
+    width: min(62vw, 11.5rem);
+  }
+}
+
+@media (max-width: 500px) {
+  .quote {
+    width: 100%;
+    max-width: none;
+    font-size: 2.05rem;
+    line-height: 1;
   }
 }
 

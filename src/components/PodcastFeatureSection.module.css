@@ -2,18 +2,19 @@
   position: relative;
   overflow: hidden;
   padding: clamp(5rem, 7vw, 8rem) 0;
+  padding-bottom: clamp(1.375rem, 2.25vw, 2.5rem);
   background: var(--color-gray-light);
 }
 
 .container {
   width: auto;
-  margin-inline: var(--site-edge-gutter);
+  margin-inline: var(--featured-section-gutter);
 }
 
 .layout {
   display: grid;
   grid-template-columns: minmax(0, 0.98fr) minmax(28rem, 1.02fr);
-  gap: clamp(3rem, 6vw, 7rem);
+  gap: clamp(2rem, 4vw, 4.5rem);
   align-items: center;
 }
 
@@ -51,9 +52,9 @@
   gap: 0.7rem;
   padding: 0.72rem 0.82rem 0.72rem 1.45rem;
   color: var(--color-white);
-  border: 2px solid var(--color-black);
+  border: 2px solid var(--color-dark-blue);
   border-radius: 999px;
-  background: var(--color-black);
+  background: var(--color-dark-blue);
   font-size: var(--home-cta-size);
   font-weight: var(--home-cta-weight);
   transition: var(--home-cta-transition);
@@ -84,6 +85,12 @@
   transform: var(--home-cta-arrow-hover-transform);
 }
 
+@media (max-width: 1600px) {
+  .cta {
+    padding-block: 0.58rem;
+  }
+}
+
 .visual {
   position: relative;
   width: min(100%, 55rem);
@@ -97,7 +104,7 @@
   z-index: 1;
   right: 0;
   bottom: -1%;
-  width: clamp(21.5rem, 26vw, 32rem);
+  width: clamp(20.5rem, 24vw, 29rem);
   transform-origin: center bottom;
 }
 
@@ -135,24 +142,24 @@
   top: clamp(4rem, 7.4vw, 7rem);
   left: 0;
   display: grid;
-  width: clamp(18.5rem, 22vw, 23rem);
-  gap: 0.85rem;
+  width: clamp(16.5rem, 19vw, 20.5rem);
+  gap: 0.72rem;
 }
 
 .platformLink {
   --badge-offset: 0rem;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 0.85rem;
+  gap: 0.68rem;
   align-items: center;
-  min-height: 4.6rem;
-  padding: 0.65rem 0.85rem 0.65rem 0.7rem;
+  min-height: 4.2rem;
+  padding: 0.58rem 0.72rem 0.58rem 0.62rem;
   color: var(--color-deep-slate);
   border: 1px solid rgba(60, 90, 103, 0.1);
   border-radius: 999px;
   background: var(--color-white);
   box-shadow: 0 0.9rem 2.2rem rgba(33, 44, 45, 0.09);
-  font-size: clamp(0.75rem, 0.66vw, 0.9rem);
+  font-size: clamp(0.7rem, 0.58vw, 0.84rem);
   font-weight: 800;
   letter-spacing: 0.09em;
   line-height: 1.2;
@@ -172,8 +179,8 @@
 
 .platformIcon {
   display: grid;
-  width: 2.55rem;
-  height: 2.55rem;
+  width: 2.3rem;
+  height: 2.3rem;
   place-items: center;
   color: var(--color-deep-slate);
   border-radius: 50%;
@@ -214,7 +221,8 @@
 
 .episodePrompt {
   display: grid;
-  width: 100%;
+  width: max-content;
+  max-width: calc(100% + clamp(8rem, 18vw, 15rem));
   grid-template-columns: auto minmax(0, 1fr);
   gap: clamp(1.1rem, 2.2vw, 2.25rem);
   align-items: center;
@@ -391,18 +399,30 @@
   }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1024px) {
+  .section {
+    padding-top: clamp(4rem, 7vw, 5.25rem);
+    padding-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
   .layout {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: clamp(2.25rem, 5vw, 3rem);
   }
 
   .content {
-    max-width: 60rem;
+    width: 100%;
+    max-width: none;
+    gap: clamp(1.1rem, 2.6vw, 1.6rem);
   }
 
   .title {
-    max-width: 14ch;
+    max-width: 26ch;
+  }
+
+  .copy,
+  .episodePrompt p {
+    line-height: var(--home-subheading-line-height);
   }
 
   .visual {
@@ -419,19 +439,35 @@
     top: 4.8rem;
     width: min(45vw, 22rem);
   }
+
+  .episodePrompt {
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 0.2rem;
+  }
 }
 
 @media (max-width: 680px) {
   .section {
-    padding: 4.5rem 0;
+    padding: 3.75rem 0 2.5rem;
   }
 
-  .title {
-    font-size: var(--home-headline-size);
+  .layout {
+    gap: 2rem;
+  }
+
+  .content {
+    gap: 1.05rem;
+  }
+
+  .copy,
+  .episodePrompt p {
+    line-height: var(--home-subheading-line-height);
   }
 
   .cta {
     width: 100%;
+    justify-content: space-between;
   }
 
   .visual {
@@ -447,7 +483,7 @@
     position: relative;
     top: auto;
     left: auto;
-    order: 1;
+    order: 2;
     width: 100%;
     max-width: 25rem;
   }
@@ -467,10 +503,265 @@
     position: relative;
     right: auto;
     bottom: auto;
-    order: 2;
+    order: 1;
     width: min(80vw, 24rem);
   }
 
+  .episodePrompt {
+    width: 100%;
+    max-width: 100%;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.9rem;
+    padding: 1rem;
+  }
+
+  .audioMark {
+    gap: 0.55rem;
+  }
+
+  .waveform {
+    height: 2rem;
+  }
+}
+
+@media (min-width: 1500px) and (max-width: 1999px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.12fr) minmax(28rem, 0.88fr);
+    gap: clamp(2rem, 3vw, 3.25rem);
+  }
+
+  .content {
+    max-width: none;
+  }
+
+  .title {
+    z-index: 2;
+    width: calc(100% + clamp(7rem, 9vw, 10rem));
+    max-width: none;
+    text-wrap: wrap;
+  }
+
+  .visual {
+    left: clamp(5.5rem, 6vw, 7rem);
+    width: 100%;
+    justify-self: end;
+  }
+
+  .platformLinks {
+    top: 12.5rem;
+    right: auto;
+    left: clamp(-7.5rem, calc(19vw - 26.5rem), -2.75rem);
+  }
+}
+
+@media (min-width: 2000px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.18fr) minmax(38rem, 0.82fr);
+    gap: clamp(2.5rem, 3vw, 3.75rem);
+  }
+
+  .content {
+    max-width: none;
+  }
+
+  .title {
+    max-width: 100%;
+    text-wrap: wrap;
+  }
+
+  .visual {
+    width: 100%;
+    min-height: 52rem;
+    justify-self: end;
+    margin-left: auto;
+    left: 5rem;
+  }
+
+  .phoneWrap {
+    right: 0;
+    width: 31rem;
+  }
+
+  .platformLinks {
+    top: 5.2rem;
+    right: auto;
+    left: -6rem;
+    width: 22rem;
+    gap: 0.85rem;
+  }
+
+  .platformLink {
+    min-height: 4.6rem;
+    padding: 0.65rem 0.82rem 0.65rem 0.7rem;
+    font-size: 0.94rem;
+  }
+
+  .platformIcon {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  .platformIcon svg {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+}
+
+@media (min-width: 2300px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.2fr) minmax(40rem, 0.8fr);
+    gap: clamp(3rem, 3vw, 4.5rem);
+  }
+
+  .content {
+    max-width: none;
+  }
+
+  .visual {
+    width: 100%;
+    min-height: 56rem;
+  }
+
+  .phoneWrap {
+    right: 0;
+    width: 33.5rem;
+  }
+
+  .platformLinks {
+    top: 5.6rem;
+    width: 23.75rem;
+    gap: 0.95rem;
+  }
+
+  .platformLink {
+    min-height: 4.9rem;
+    font-size: 1rem;
+  }
+
+  .platformIcon {
+    width: 2.8rem;
+    height: 2.8rem;
+  }
+
+  .platformIcon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+/* Compact the complete phone-and-platform composition on standard screens. */
+@media (min-width: 1025px) and (max-width: 1700px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.18fr) minmax(24rem, 0.82fr);
+    gap: clamp(1.75rem, 2.5vw, 2.75rem);
+  }
+
+  .visual {
+    width: 100%;
+    max-width: 46rem;
+    min-height: clamp(32rem, 40vw, 42rem);
+  }
+
+  .phoneWrap {
+    width: clamp(18rem, 20vw, 23rem);
+  }
+
+  .platformLinks {
+    left: clamp(-5rem, -4vw, -3rem);
+    width: clamp(14.5rem, 16vw, 17.25rem);
+    gap: 0.58rem;
+  }
+
+  .platformLink {
+    min-height: 3.65rem;
+    gap: 0.5rem;
+    padding: 0.44rem 0.56rem 0.44rem 0.5rem;
+    font-size: clamp(0.64rem, 0.52vw, 0.76rem);
+  }
+
+  .platformIcon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .platformIcon svg {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  .platformArrow {
+    width: 0.92rem;
+    height: 0.92rem;
+  }
+}
+
+/* Continue the wide-screen right-edge alignment until the layout stacks. */
+@media (min-width: 1025px) and (max-width: 1499px) {
+  .title {
+    position: relative;
+    z-index: 2;
+    width: calc(100% + clamp(7rem, 9vw, 10rem));
+    max-width: none;
+    text-wrap: wrap;
+  }
+
+  .visual {
+    left: clamp(4.5rem, 6vw, 5.5rem);
+  }
+}
+
+@media (min-width: 681px) and (max-width: 1024px) {
+  .visual {
+    width: min(100%, 44rem);
+    min-height: clamp(31rem, 58vw, 38rem);
+  }
+
+  .phoneWrap {
+    bottom: 0;
+    width: min(49%, 20rem);
+  }
+
+  .platformLinks {
+    top: clamp(3rem, 7vw, 4.75rem);
+    width: min(44%, 17rem);
+    gap: 0.58rem;
+  }
+
+  .platformLink {
+    min-height: 3.7rem;
+    gap: 0.52rem;
+    padding: 0.46rem 0.58rem 0.46rem 0.52rem;
+    font-size: clamp(0.66rem, 0.9vw, 0.76rem);
+  }
+
+  .platformIcon {
+    width: 2.05rem;
+    height: 2.05rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .platformLinks {
+    width: min(100%, 21rem);
+  }
+
+  .platformLink {
+    min-height: 3.75rem;
+    gap: 0.54rem;
+    padding: 0.48rem 0.6rem 0.48rem 0.52rem;
+  }
+
+  .platformIcon {
+    width: 2.05rem;
+    height: 2.05rem;
+  }
+
+  .phoneWrap {
+    width: min(72vw, 18rem);
+  }
+}
+
+@media (max-width: 420px) {
   .episodePrompt {
     grid-template-columns: 1fr;
   }
@@ -482,6 +773,174 @@
   .waveform {
     flex: 1;
     justify-content: flex-end;
+  }
+}
+
+/* Tablet/mobile composition: lead with the visual while retaining the badge overlap. */
+@media (max-width: 1024px) {
+  .layout {
+    gap: clamp(0.45rem, 1.4vw, 0.85rem);
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+    width: min(calc(100% - 1rem), 46rem);
+    margin-inline: auto;
+  }
+
+  .visual {
+    position: relative;
+    left: auto;
+    display: block;
+    order: -1;
+    width: min(100%, 34rem);
+    min-height: clamp(15.5rem, 30vw, 17rem);
+    margin: 0 auto;
+  }
+
+  .visual::before {
+    content: none;
+  }
+
+  .phoneWrap {
+    position: absolute;
+    top: auto;
+    right: 14%;
+    bottom: 0;
+    order: initial;
+    width: clamp(6.8rem, 31%, 8.5rem);
+  }
+
+  .phoneWrap::after {
+    display: none;
+  }
+
+  .phone {
+    transform: none;
+    transform-origin: center;
+  }
+
+  .phoneWrap:hover .phone {
+    transform: translateY(-0.25rem) scale(1.01);
+  }
+
+  .platformLinks {
+    position: absolute;
+    top: 50%;
+    right: calc(14% + clamp(6.8rem, 31%, 8.5rem) - 0.8rem);
+    left: auto;
+    order: initial;
+    width: max-content;
+    max-width: none;
+    gap: clamp(0.32rem, 0.7vw, 0.48rem);
+    transform: translateY(-50%);
+  }
+
+  .platformLink {
+    width: max-content;
+    max-width: 100%;
+    grid-template-columns: auto auto auto;
+    justify-content: start;
+    min-height: clamp(2.75rem, 5vw, 3.25rem);
+    gap: clamp(0.3rem, 0.7vw, 0.44rem);
+    padding: 0.34rem 0.46rem 0.34rem 0.38rem;
+    font-size: clamp(0.6rem, 1vw, 0.72rem);
+    letter-spacing: 0.065em;
+  }
+
+  .platformLink:nth-child(2) {
+    --badge-offset: clamp(0.42rem, 1vw, 0.68rem);
+  }
+
+  .platformLink:nth-child(3) {
+    --badge-offset: clamp(0.16rem, 0.45vw, 0.3rem);
+  }
+
+  .platformIcon {
+    width: clamp(1.55rem, 3vw, 1.85rem);
+    height: clamp(1.55rem, 3vw, 1.85rem);
+  }
+
+  .platformIcon svg {
+    width: clamp(0.82rem, 1.7vw, 0.98rem);
+    height: clamp(0.82rem, 1.7vw, 0.98rem);
+  }
+
+  .platformArrow {
+    width: clamp(0.72rem, 1.5vw, 0.9rem);
+    height: clamp(0.72rem, 1.5vw, 0.9rem);
+  }
+
+  .visual.itemVisible .platformLink {
+    animation-fill-mode: both;
+  }
+
+  .cta {
+    min-height: var(--home-cta-min-height);
+    padding-block: var(--home-cta-compact-padding-block);
+    font-size: var(--home-cta-size);
+  }
+}
+
+@media (max-width: 620px) {
+  .visual {
+    width: min(100%, 23rem);
+    min-height: clamp(13rem, 55vw, 14.5rem);
+  }
+
+  .phoneWrap {
+    top: auto;
+    right: 14%;
+    bottom: 0;
+    width: clamp(6.8rem, 31%, 8rem);
+  }
+
+  .platformLinks {
+    top: 50%;
+    right: calc(14% + clamp(6.8rem, 31%, 8rem) - 0.65rem);
+    left: auto;
+    width: max-content;
+    gap: 0.3rem;
+    transform: translateY(-50%);
+  }
+
+  .platformLink {
+    min-height: clamp(2.45rem, 11vw, 2.75rem);
+    gap: clamp(0.2rem, 1vw, 0.32rem);
+    padding: 0.26rem 0.32rem 0.26rem 0.28rem;
+    font-size: clamp(0.5rem, 2vw, 0.6rem);
+    letter-spacing: 0.045em;
+  }
+
+  .platformIcon {
+    width: clamp(1.35rem, 6vw, 1.55rem);
+    height: clamp(1.35rem, 6vw, 1.55rem);
+  }
+
+  .platformIcon svg {
+    width: clamp(0.72rem, 3vw, 0.82rem);
+    height: clamp(0.72rem, 3vw, 0.82rem);
+  }
+
+  .platformArrow {
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .visual {
+    min-height: clamp(12rem, 60vw, 13.25rem);
+  }
+
+  .phoneWrap {
+    right: 5%;
+    width: clamp(6.2rem, 31%, 7rem);
+  }
+
+  .platformLinks {
+    right: calc(5% + clamp(6.2rem, 31%, 7rem) - 0.55rem);
   }
 }
 

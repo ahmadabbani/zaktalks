@@ -109,64 +109,69 @@ export default function WhatIDoSection() {
         </header>
 
         <div className={styles.rail}>
-          {services.map((service, index) => {
-            const isActive = activeIndex === index
-            const itemId = `service-${index}`
-            const detailsId = `service-details-${index}`
+          {[0, 2].map((rowStart) => (
+            <div key={rowStart} className={styles.railRow}>
+              {services.slice(rowStart, rowStart + 2).map((service, rowIndex) => {
+                const index = rowStart + rowIndex
+                const isActive = activeIndex === index
+                const itemId = `service-${index}`
+                const detailsId = `service-details-${index}`
 
-            return (
-              <article
-                key={service.title}
-                ref={registerItem(itemId)}
-                className={[
-                  styles.card,
-                  styles[`card${index + 1}`],
-                  styles[`tone${service.tone[0].toUpperCase()}${service.tone.slice(1)}`],
-                  isActive ? styles.cardActive : '',
-                  isItemVisible(itemId) ? styles.itemVisible : '',
-                ].filter(Boolean).join(' ')}
-                onPointerEnter={(event) => {
-                  if (event.pointerType !== 'touch') setActiveIndex(index)
-                }}
-                onFocusCapture={() => setActiveIndex(index)}
-              >
-                <button
-                  type="button"
-                  className={styles.cardToggle}
-                  aria-expanded={isActive}
-                  aria-controls={detailsId}
-                  onClick={() => setActiveIndex(index)}
-                >
-                  <span className={styles.cardNumber}>0{index + 1}</span>
-                  <span className={styles.cardTitle}>{service.title}</span>
-                </button>
+                return (
+                  <article
+                    key={service.title}
+                    ref={registerItem(itemId)}
+                    className={[
+                      styles.card,
+                      styles[`card${index + 1}`],
+                      styles[`tone${service.tone[0].toUpperCase()}${service.tone.slice(1)}`],
+                      isActive ? styles.cardActive : '',
+                      isItemVisible(itemId) ? styles.itemVisible : '',
+                    ].filter(Boolean).join(' ')}
+                    onPointerEnter={(event) => {
+                      if (event.pointerType !== 'touch') setActiveIndex(index)
+                    }}
+                    onFocusCapture={() => setActiveIndex(index)}
+                  >
+                    <button
+                      type="button"
+                      className={styles.cardToggle}
+                      aria-expanded={isActive}
+                      aria-controls={detailsId}
+                      onClick={() => setActiveIndex(index)}
+                    >
+                      <span className={styles.cardNumber}>0{index + 1}</span>
+                      <span className={styles.cardTitle}>{service.title}</span>
+                    </button>
 
-                <div
-                  id={detailsId}
-                  className={styles.details}
-                  aria-hidden={!isActive}
-                >
-                  <p className={styles.copy}>{service.copy}</p>
-                </div>
+                    <div
+                      id={detailsId}
+                      className={styles.details}
+                      aria-hidden={!isActive}
+                    >
+                      <p className={styles.copy}>{service.copy}</p>
+                    </div>
 
-                <div className={styles.imageWrap} aria-hidden={!isActive}>
-                  <Image
-                    src={service.image}
-                    alt={service.imageAlt}
-                    width={720}
-                    height={720}
-                    sizes="(max-width: 720px) 82vw, (max-width: 1040px) 38vw, 18vw"
-                    className={styles.image}
-                  />
-                </div>
+                    <div className={styles.imageWrap} aria-hidden={!isActive}>
+                      <Image
+                        src={service.image}
+                        alt={service.imageAlt}
+                        width={720}
+                        height={720}
+                        sizes="(max-width: 720px) 82vw, (max-width: 1040px) 38vw, 18vw"
+                        className={styles.image}
+                      />
+                    </div>
 
-                <Link href={service.href} className={styles.cardCta}>
-                  <span>{service.cta}</span>
-                  <FiArrowUpRight aria-hidden="true" />
-                </Link>
-              </article>
-            )
-          })}
+                    <Link href={service.href} className={styles.cardCta}>
+                      <span>{service.cta}</span>
+                      <FiArrowUpRight aria-hidden="true" />
+                    </Link>
+                  </article>
+                )
+              })}
+            </div>
+          ))}
         </div>
       </div>
     </section>

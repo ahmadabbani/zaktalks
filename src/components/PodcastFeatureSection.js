@@ -137,7 +137,7 @@ export default function PodcastFeatureSection() {
                 alt="Modern phone playing The Conversations We Avoid on Zak Talks"
                 width={941}
                 height={1672}
-                sizes="(max-width: 620px) 86vw, (max-width: 980px) 60vw, 34vw"
+                sizes="(max-width: 1024px) 31vw, 34vw"
                 className={styles.phone}
               />
             </div>

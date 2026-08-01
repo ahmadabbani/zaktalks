@@ -42,7 +42,7 @@ const testimonials = [
 function getCardsPerView() {
   if (typeof window === 'undefined') return 4
   if (window.matchMedia('(max-width: 680px)').matches) return 1
-  if (window.matchMedia('(max-width: 1060px)').matches) return 2
+  if (window.matchMedia('(max-width: 1024px)').matches) return 2
   return 4
 }
 

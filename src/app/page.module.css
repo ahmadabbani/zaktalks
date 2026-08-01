@@ -13,7 +13,7 @@
 
 .heroContainer {
   width: auto;
-  margin-inline: var(--site-edge-gutter);
+  margin-inline: var(--featured-section-gutter);
 }
 
 .heroGrid {
@@ -118,8 +118,8 @@
 
 .primaryHeroCta:hover,
 .primaryHeroCta:focus-visible {
-  border-color: var(--color-black);
-  background: var(--color-black);
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
   color: var(--color-white);
   box-shadow: 0 12px 28px rgba(48, 48, 48, 0.2);
   transform: var(--home-cta-hover-transform);
@@ -213,7 +213,7 @@
   position: relative;
   z-index: 1;
   width: auto;
-  margin-inline: var(--site-edge-gutter);
+  margin-inline: var(--featured-section-gutter);
 }
 
 .forWhomMosaic {
@@ -284,7 +284,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: clamp(2rem, 4vw, 4.5rem);
+  gap: clamp(1.35rem, 2.2vw, 2.25rem);
   overflow: hidden;
   width: 100%;
   min-width: 0;
@@ -302,14 +302,15 @@
   grid-column: 1;
   grid-row: 1 / 3;
   align-self: center;
-  aspect-ratio: 1.2;
+  aspect-ratio: 1.55;
   background: var(--color-dark-blue);
 }
 
 .forWhomCard2 {
   grid-column: 2;
   grid-row: 1;
-  aspect-ratio: 1.24;
+  align-self: end;
+  aspect-ratio: 1.7;
   color: var(--color-deep-slate);
   background: #d7e7ee;
 }
@@ -317,7 +318,7 @@
 .forWhomCard3 {
   grid-column: 2;
   grid-row: 2;
-  aspect-ratio: 1.2;
+  aspect-ratio: 1.7;
   margin-top: 0;
   color: var(--color-black);
   background: var(--color-yellow);
@@ -327,7 +328,7 @@
 .forWhomCard4 {
   grid-column: 3;
   grid-row: 2;
-  aspect-ratio: 1.2;
+  aspect-ratio: 1.55;
   margin-top: 0.2rem;
   background: var(--color-deep-slate);
 }
@@ -423,23 +424,23 @@
 
   .forWhomCard1 {
     justify-self: start;
-    aspect-ratio: 1.55;
+    aspect-ratio: 1.95;
   }
 
   .forWhomCard2 {
     justify-self: center;
-    aspect-ratio: 1.62;
+    aspect-ratio: 2.1;
   }
 
   .forWhomCard3 {
     justify-self: center;
-    aspect-ratio: 1.55;
+    aspect-ratio: 2.1;
     margin-top: 0;
   }
 
   .forWhomCard4 {
     justify-self: end;
-    aspect-ratio: 1.55;
+    aspect-ratio: 1.95;
     margin-top: 0;
   }
 }
@@ -551,7 +552,7 @@
   }
 }
 
-@media (max-width: 1040px) {
+@media (max-width: 1024px) {
   .forWhomMosaic {
     grid-template-columns: repeat(6, minmax(0, 1fr));
     grid-template-rows: none;
@@ -581,16 +582,37 @@
     max-width: none;
     aspect-ratio: auto;
     margin-top: 0;
-    min-height: clamp(15rem, 31vw, 19rem);
+    min-height: clamp(11.75rem, 24vw, 14.5rem);
   }
 
   .forWhomCard1,
   .forWhomCard4 {
-    min-height: clamp(17rem, 35vw, 21rem);
+    min-height: clamp(13rem, 26vw, 16rem);
   }
 
   .forWhomBelong {
     margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1580px) {
+  .forWhomMosaic {
+    column-gap: clamp(0.75rem, 0.9vw, 0.95rem);
+    row-gap: clamp(0.75rem, 0.9vw, 0.95rem);
+  }
+
+  .forWhomHeader {
+    padding-bottom: 0.35rem;
+  }
+
+  .forWhomCard1,
+  .forWhomCard4 {
+    aspect-ratio: 1.15;
+  }
+
+  .forWhomCard2,
+  .forWhomCard3 {
+    aspect-ratio: 1.26;
   }
 }
 
@@ -620,6 +642,11 @@
     grid-column: auto;
     min-height: 0;
     transform: none;
+  }
+
+  .forWhomCard {
+    gap: 1.1rem;
+    padding: 1.2rem 1.3rem;
   }
 
   .forWhomCard p {
@@ -712,7 +739,7 @@
   }
 
   .heroDescription {
-    line-height: 1.65;
+    line-height: var(--home-subheading-line-height);
   }
 
   .heroGrid {
@@ -720,7 +747,7 @@
   }
 }
 
-@media (max-width: 850px) {
+@media (max-width: 950px) {
   .heroGrid {
     grid-template-columns: 1fr;
     padding: 6.6rem 0 2.5rem;
@@ -802,8 +829,10 @@
   gap: clamp(2rem, 5vw, 6rem);
   align-items: center;
   width: auto;
-  margin-inline: var(--site-edge-gutter);
+  margin-inline: var(--featured-section-gutter);
   padding: clamp(2rem, 4.4vw, 4.75rem);
+  padding-top: clamp(3.1rem, 5.2vw, 5.85rem);
+  padding-left: clamp(3.1rem, 5.2vw, 5.85rem);
   border-radius: clamp(1.5rem, 2.4vw, 2.75rem);
   background: var(--color-black);
   box-shadow: 0 1.8rem 4rem rgba(33, 44, 45, 0.14);
@@ -812,7 +841,7 @@
 .socialProofHeading h2 {
   max-width: 11ch;
   color: var(--color-white);
-  font-size: clamp(2.15rem, 2.7vw, 3.25rem);
+  font-size: var(--home-headline-size);
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
@@ -952,11 +981,13 @@
   }
 }
 
-@media (max-width: 1120px) {
+@media (max-width: 1300px) {
   .socialProofContainer {
     grid-template-columns: 1fr;
     gap: 2.5rem;
     padding: clamp(1.7rem, 5vw, 3rem);
+    padding-top: clamp(2.65rem, 6vw, 4rem);
+    padding-left: clamp(2.65rem, 6vw, 4rem);
   }
 
   .socialProofHeading h2 {
@@ -2128,5 +2159,736 @@
 
   .podcastContent {
     gap: var(--space-lg);
+  }
+}
+
+/* Desktop heading composition below the high-resolution tier */
+@media (min-width: 1500px) and (max-width: 1999px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 1.32fr) minmax(0, 0.68fr);
+    gap: clamp(2.25rem, 3vw, 3.25rem);
+  }
+
+  .heroLeft {
+    max-width: none;
+  }
+
+  .heroTitle {
+    position: relative;
+    z-index: 2;
+    width: calc(100% + clamp(3rem, 4vw, 5rem));
+    max-width: none;
+    text-wrap: wrap;
+  }
+
+  .heroImageWrapper {
+    width: 120%;
+  }
+
+  .socialProofContainer {
+    grid-template-columns: minmax(clamp(34rem, 35vw, 40rem), 1fr) minmax(0, 0.9fr);
+    gap: 2rem;
+    padding: 2rem;
+    padding-top: 3.25rem;
+    padding-left: 3rem;
+    padding-right: 0;
+  }
+
+  .socialProofHeading h2 {
+    max-width: 100%;
+    text-wrap: wrap;
+  }
+
+  .socialProofGrid {
+    grid-template-columns: minmax(0, 0.61fr) minmax(0, 0.67fr) minmax(0, 1.72fr);
+    gap: 0.7rem;
+    width: 100%;
+  }
+
+  .socialProofCard {
+    padding-inline: 0.8rem;
+  }
+
+  .socialProofCard:nth-child(-n + 2) {
+    padding-right: 0;
+    padding-left: 1rem;
+  }
+
+  .socialProofCard:first-child {
+    padding-left: 0;
+  }
+
+  .socialProofCard:nth-child(3) {
+    padding-inline: 1rem 0;
+  }
+
+  .socialProofCard:nth-child(3) .socialProofLabel {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (max-width: 1999px) {
+  .socialProofCard:nth-child(-n + 2) .socialProofValue {
+    font-size: clamp(2.55rem, 2.55vw, 2.95rem);
+  }
+
+  .socialProofLabel,
+  .socialProofCard:nth-child(3) .socialProofLabel {
+    line-height: 1.55;
+  }
+}
+
+/* Coordinated high-resolution scaling */
+@media (min-width: 2000px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 1.28fr) minmax(0, 0.72fr);
+    gap: 3rem;
+  }
+
+  .heroLeft {
+    max-width: 58rem;
+  }
+
+  .heroTitle {
+    max-width: 28ch;
+  }
+
+  .heroImageWrapper {
+    width: 125%;
+    max-width: 780px;
+    height: clamp(580px, 62vh, 850px);
+  }
+
+  .forWhomTitle {
+    font-size: var(--home-headline-size);
+  }
+
+  .forWhomEyebrow {
+    font-size: 0.94rem;
+  }
+
+  .forWhomNumber {
+    font-size: clamp(2.2rem, 1.8vw, 2.85rem);
+  }
+
+  .forWhomBelong {
+    font-size: clamp(2rem, 1.65vw, 2.65rem);
+  }
+
+  .socialProofContainer {
+    grid-template-columns: minmax(44rem, 1fr) minmax(0, 1fr);
+    gap: 3rem;
+    padding: 3rem;
+    padding-top: 4.25rem;
+    padding-left: 4.25rem;
+  }
+
+  .socialProofHeading h2 {
+    max-width: 100%;
+    font-size: var(--home-headline-size);
+    text-wrap: wrap;
+  }
+
+  .socialProofGrid {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 0.85fr) minmax(0, 1.3fr);
+    gap: 1.5rem;
+  }
+
+  .socialProofCard {
+    padding-inline: 1rem;
+  }
+
+  .socialProofIcon {
+    font-size: clamp(2.75rem, 2.3vw, 3.25rem);
+  }
+
+  .socialProofValue {
+    font-size: clamp(4.75rem, 3.8vw, 5.75rem);
+  }
+}
+
+@media (min-width: 2300px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: 4rem;
+  }
+
+  .heroLeft {
+    max-width: 66rem;
+  }
+
+  .heroTitle {
+    max-width: 28ch;
+  }
+
+  .heroImageWrapper {
+    width: 120%;
+    max-width: 880px;
+    height: clamp(650px, 64vh, 960px);
+  }
+
+  .forWhomEyebrow {
+    font-size: 1.02rem;
+  }
+
+  .forWhomIntro {
+    font-size: var(--home-subheading-size);
+  }
+
+  .forWhomNumber {
+    font-size: clamp(2.5rem, 1.7vw, 3.15rem);
+  }
+
+  .forWhomBelong {
+    font-size: clamp(2.25rem, 1.7vw, 2.9rem);
+  }
+
+  .socialProofContainer {
+    grid-template-columns: minmax(50rem, 1fr) minmax(0, 1fr);
+    gap: 4rem;
+    padding: 4rem;
+    padding-top: 5.25rem;
+    padding-left: 5.25rem;
+  }
+
+  .socialProofHeading h2 {
+    max-width: 100%;
+  }
+
+  .socialProofGrid {
+    gap: 2rem;
+  }
+
+  .socialProofIcon {
+    font-size: clamp(3rem, 2.1vw, 3.6rem);
+  }
+
+  .socialProofValue {
+    font-size: clamp(5.25rem, 3.7vw, 6.4rem);
+  }
+}
+
+/* Keep the final For Whom statement evenly spaced between its cards and Social Proof. */
+.forWhomSection {
+  padding-bottom: clamp(1.25rem, 2.85vw, 3.25rem);
+}
+
+.socialProofSection {
+  padding-top: clamp(1.25rem, 2.85vw, 3.25rem);
+}
+
+/* Give the hero copy more priority through the mid-desktop range. */
+@media (min-width: 951px) and (max-width: 1600px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(220px, 0.5fr);
+    gap: clamp(1rem, 1.9vw, 2rem);
+  }
+
+  .heroLeft {
+    min-width: 0;
+    max-width: none;
+  }
+
+  .heroTitle {
+    width: 100%;
+    max-width: none;
+    text-wrap: balance;
+  }
+
+  .heroActions {
+    flex-wrap: nowrap;
+    gap: 0.7rem;
+  }
+
+  .primaryHeroCta,
+  .secondaryHeroCta {
+    flex: 0 1 auto;
+    min-width: 0;
+    padding: 0.66rem clamp(0.9rem, 1.25vw, 1.2rem);
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+
+  .heroImageWrapper {
+    width: 100%;
+    max-width: 450px;
+    height: clamp(340px, 48svh, 510px);
+    margin-left: auto;
+  }
+
+  .heroRight {
+    align-self: center;
+    align-items: flex-start;
+  }
+}
+
+@media (min-width: 1601px) {
+  .heroActions {
+    flex-wrap: nowrap;
+  }
+
+  .primaryHeroCta,
+  .secondaryHeroCta {
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+}
+
+/* Prevent the portrait from jumping larger when the hero becomes one column. */
+@media (max-width: 950px) {
+  .heroTitle {
+    width: 100%;
+    max-width: none;
+  }
+
+  .heroImageWrapper {
+    width: min(100%, 380px);
+    max-width: 380px;
+    height: clamp(360px, 52svh, 440px);
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroImageWrapper {
+    width: min(100%, 340px);
+    height: clamp(330px, 48svh, 390px);
+  }
+}
+
+/* For Whom intentionally keeps a slightly smaller heading scale of its own. */
+@media (max-width: 1900px) {
+  .forWhomTitle {
+    font-size: clamp(1.9rem, 2.45vw, 2.7rem);
+  }
+}
+
+/* Preserve the compact Social Proof composition below its wide-desktop tier. */
+@media (max-width: 1500px) {
+  .socialProofHeading h2 {
+    font-size: clamp(1.85rem, 2.35vw, 2.65rem);
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1499px) {
+  .socialProofContainer {
+    grid-template-columns: minmax(clamp(19rem, 30vw, 26rem), 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(0.35rem, 0.55vw, 0.6rem);
+    padding: 1.5rem 0 1.5rem 1.5rem;
+    padding-top: 2.5rem;
+    padding-left: 2.5rem;
+  }
+
+  .socialProofHeading h2 {
+    max-width: 100%;
+    text-wrap: wrap;
+  }
+
+  .socialProofGrid {
+    width: 100%;
+    grid-template-columns: minmax(0, 0.76fr) minmax(0, 0.82fr) minmax(0, 1.42fr);
+    gap: clamp(0.45rem, 0.65vw, 0.7rem);
+  }
+
+  .socialProofCard {
+    padding-inline: 0.55rem;
+  }
+
+  .socialProofCard:nth-child(-n + 2) {
+    padding-right: 0.35rem;
+    padding-left: 0.75rem;
+  }
+
+  .socialProofCard:first-child {
+    padding-left: 0.45rem;
+  }
+
+  .socialProofCard:nth-child(3) {
+    padding-inline: 0.7rem 0;
+  }
+
+  .socialProofCard:nth-child(3) .socialProofLabel {
+    width: 100%;
+    max-width: none;
+    padding-right: 0.45rem;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1500px) {
+  .socialProofLabel,
+  .socialProofCard:nth-child(3) .socialProofLabel {
+    font-size: clamp(0.82rem, 0.95vw, 0.92rem);
+    line-height: 1.38;
+  }
+}
+
+/* Homepage tablet/mobile composition */
+@media (max-width: 1024px) {
+  .heroSection {
+    min-height: auto;
+  }
+
+  .heroGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.75rem, 4vw, 2.75rem);
+    min-height: auto;
+    padding: calc(clamp(7.25rem, 13vw, 8.5rem) + 0.75rem) 0 clamp(3.5rem, 7vw, 5rem);
+  }
+
+  .heroLeft {
+    order: 0;
+    width: 100%;
+    max-width: none;
+    gap: clamp(1rem, 2.5vw, 1.45rem);
+  }
+
+  .heroTitle {
+    width: 100%;
+    max-width: 24ch;
+  }
+
+  .heroDescription {
+    width: 100%;
+    max-width: 65ch;
+  }
+
+  .heroActions {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 0.85fr);
+    gap: 0.7rem;
+    width: min(100%, 48rem);
+    margin-top: 0.15rem;
+  }
+
+  .primaryHeroCta,
+  .secondaryHeroCta {
+    width: 100%;
+    min-width: 0;
+    padding-block: var(--home-cta-compact-padding-block);
+    padding-inline: clamp(0.85rem, 2.4vw, 1.25rem);
+    white-space: normal;
+    overflow-wrap: normal;
+  }
+
+  .heroRight {
+    order: 1;
+    align-self: auto;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .heroImageWrapper {
+    width: min(60vw, 24rem);
+    max-width: 24rem;
+    height: clamp(18rem, 42vw, 24rem);
+    margin-inline: auto;
+  }
+
+  .heroImage {
+    object-position: center bottom;
+  }
+
+  .forWhomSection {
+    padding-top: clamp(3.5rem, 7vw, 4.75rem);
+  }
+
+  .forWhomMosaic {
+    column-gap: clamp(0.85rem, 2vw, 1.25rem);
+    row-gap: clamp(0.85rem, 2vw, 1.25rem);
+  }
+
+  .forWhomHeader {
+    padding: 0 0 clamp(1rem, 2.5vw, 1.5rem);
+    margin-bottom: 0;
+  }
+
+  .forWhomIntro {
+    width: 100%;
+    max-width: 58ch;
+  }
+
+  .forWhomCard,
+  .forWhomCard1,
+  .forWhomCard2,
+  .forWhomCard3,
+  .forWhomCard4 {
+    align-self: stretch;
+    min-height: clamp(10rem, 20vw, 12.5rem);
+    margin-top: 0;
+    padding: clamp(1.15rem, 2.8vw, 1.55rem);
+    border-radius: clamp(1.4rem, 3vw, 2rem);
+  }
+
+  .forWhomCard1,
+  .forWhomCard4 {
+    min-height: clamp(11rem, 22vw, 13.5rem);
+  }
+
+  .forWhomBelong {
+    margin-top: clamp(2rem, 5vw, 3rem);
+  }
+
+  .socialProofSection {
+    padding-top: clamp(2.5rem, 6vw, 4rem);
+    padding-bottom: clamp(3.5rem, 7vw, 5rem);
+  }
+
+  .socialProofContainer {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.8rem, 4vw, 2.5rem);
+    padding: clamp(1.65rem, 5vw, 2.75rem);
+  }
+
+  .socialProofHeading h2 {
+    width: 100%;
+    max-width: none;
+    text-wrap: wrap;
+  }
+
+  .socialProofGrid {
+    grid-template-columns: minmax(0, 0.78fr) minmax(0, 0.82fr) minmax(0, 1.4fr);
+    gap: 0;
+  }
+
+  .socialProofCard,
+  .socialProofCard:first-child {
+    grid-column: auto;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 0.75rem;
+    margin-top: 0;
+    padding: 0 clamp(1rem, 3vw, 1.75rem);
+    border-top: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .socialProofCard:first-child {
+    padding-left: 0;
+    padding-right: clamp(1rem, 3vw, 1.75rem);
+    border-left: 0;
+  }
+
+  .socialProofCard:nth-child(3) {
+    grid-column: auto;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+    margin-top: 0;
+    padding: 0 0 0 clamp(1rem, 3vw, 1.75rem);
+    border-top: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .socialProofCard:nth-child(3) .socialProofLabel {
+    width: 100%;
+    max-width: 45ch;
+    padding-right: 0;
+  }
+
+  .socialProofIcon {
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+  }
+
+  .socialProofValue,
+  .socialProofCard:nth-child(-n + 2) .socialProofValue {
+    font-size: clamp(2.45rem, 6vw, 3.4rem);
+  }
+}
+
+@media (max-width: 700px) {
+  .heroGrid {
+    gap: 2rem;
+    padding-top: 7.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .heroActions {
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .primaryHeroCta,
+  .secondaryHeroCta {
+    justify-content: center;
+  }
+
+  .heroImageWrapper {
+    width: min(74vw, 20rem);
+    height: clamp(16rem, 74vw, 20rem);
+  }
+
+  .forWhomMosaic {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .forWhomTitle {
+    width: min(100%, 22ch);
+    max-width: 22ch;
+  }
+
+  .forWhomCard,
+  .forWhomCard1,
+  .forWhomCard2,
+  .forWhomCard3,
+  .forWhomCard4 {
+    grid-column: 1;
+    min-height: 0;
+    gap: 1rem;
+    padding: 1.25rem 1.3rem;
+    transform: none;
+  }
+
+  .forWhomBelong {
+    width: 100%;
+    max-width: none;
+    margin-top: 2.25rem;
+    font-size: 1.55rem;
+  }
+
+  .socialProofGrid {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 0.82fr) minmax(0, 1.38fr);
+  }
+
+  .socialProofCard,
+  .socialProofCard:first-child,
+  .socialProofCard:nth-child(3) {
+    grid-column: auto;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 0.6rem;
+    margin-top: 0;
+    padding: 0 clamp(0.55rem, 1.8vw, 0.8rem);
+    border-top: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .socialProofCard:first-child {
+    margin-top: 0;
+    padding: 0 clamp(0.55rem, 1.8vw, 0.8rem) 0 0;
+    border-top: 0;
+    border-left: 0;
+  }
+
+  .socialProofCard:nth-child(3) {
+    padding: 0 0 0 clamp(0.55rem, 1.8vw, 0.8rem);
+    border-left: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .socialProofCard:nth-child(-n + 2) .socialProofLabel,
+  .socialProofCard:nth-child(3) .socialProofLabel {
+    width: 100%;
+    max-width: none;
+    font-size: clamp(0.76rem, 1.8vw, 0.86rem);
+    line-height: 1.34;
+  }
+
+  .socialProofIcon {
+    font-size: clamp(1.45rem, 4vw, 1.9rem);
+  }
+
+  .socialProofValue,
+  .socialProofCard:nth-child(-n + 2) .socialProofValue {
+    font-size: clamp(1.8rem, 5.5vw, 2.35rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .heroGrid {
+    padding-top: 7.1rem;
+  }
+
+  .heroImageWrapper {
+    width: min(75vw, 18rem);
+    height: clamp(15rem, 75vw, 18rem);
+  }
+
+  .forWhomSection,
+  .socialProofSection {
+    padding-block: 3rem;
+  }
+
+  .forWhomEyebrow {
+    margin-bottom: 0.7rem;
+  }
+
+  .forWhomCard {
+    border-radius: 1.35rem;
+  }
+
+  .socialProofContainer {
+    padding: 1.4rem;
+    border-radius: 1.4rem;
+  }
+
+  .socialProofCard,
+  .socialProofCard:first-child,
+  .socialProofCard:nth-child(3) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .socialProofCard,
+  .socialProofCard:first-child {
+    padding-right: 0.42rem;
+  }
+
+  .socialProofCard:nth-child(2) {
+    padding-left: 0.42rem;
+  }
+
+  .socialProofCard:nth-child(3) {
+    padding-left: 0.42rem;
+    padding-right: 0;
+  }
+
+  .socialProofCard:nth-child(-n + 2) .socialProofLabel,
+  .socialProofCard:nth-child(3) .socialProofLabel {
+    font-size: 0.72rem;
+    line-height: 1.28;
+  }
+
+  .socialProofIcon {
+    font-size: 1.35rem;
+  }
+
+  .socialProofValue,
+  .socialProofCard:nth-child(-n + 2) .socialProofValue {
+    font-size: clamp(1.45rem, 6.5vw, 1.8rem);
+  }
+}
+
+@media (max-width: 500px) {
+  .main > section h1,
+  .main > section h2 {
+    font-size: clamp(1.65rem, 7vw, 1.8rem);
+  }
+
+  .socialProofGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .socialProofCard:nth-child(3) {
+    grid-column: 1 / -1;
+    margin-top: 5px;
+    padding: 1rem 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    border-left: 0;
+  }
+
+  .forWhomBelong {
+    width: 100%;
+    max-width: none;
+    font-size: clamp(1.25rem, 5vw, 1.4rem);
+  }
+
+  .forWhomSection {
+    padding-bottom: 1rem;
+  }
+
+  .socialProofSection {
+    padding-top: 1.25rem;
   }
 }

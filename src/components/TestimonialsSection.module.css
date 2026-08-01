@@ -10,7 +10,7 @@
 
 .container {
   width: auto;
-  margin-inline: var(--site-edge-gutter);
+  margin-inline: var(--featured-section-gutter);
 }
 
 .header {
@@ -26,7 +26,7 @@
 }
 
 .title {
-  max-width: 15ch;
+  max-width: 23ch;
   color: var(--home-headline-color);
   font-size: var(--home-headline-size);
   font-weight: var(--home-headline-weight);
@@ -58,9 +58,9 @@
   align-items: center;
   justify-content: center;
   color: var(--color-white);
-  border: 2px solid var(--color-black);
+  border: 2px solid var(--color-dark-blue);
   border-radius: 50%;
-  background: var(--color-black);
+  background: var(--color-dark-blue);
   cursor: pointer;
   box-shadow: 0 0.8rem 1.8rem rgba(33, 44, 45, 0.14);
   transition: color 0.28s ease, background-color 0.28s ease, border-color 0.28s ease, transform 0.28s ease, box-shadow 0.28s ease;
@@ -270,6 +270,55 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .section {
+    padding: clamp(4rem, 7vw, 5.5rem) 0;
+  }
+
+  .header {
+    gap: clamp(1.25rem, 3vw, 2rem);
+    margin-bottom: clamp(1.6rem, 4vw, 2.5rem);
+  }
+
+  .headingBlock,
+  .title,
+  .intro {
+    max-width: none;
+  }
+
+  .intro,
+  .quoteText {
+    line-height: var(--home-text-line-height);
+  }
+
+  .intro {
+    line-height: var(--home-subheading-line-height);
+  }
+
+  .card {
+    min-height: 17.25rem;
+    gap: 1rem;
+    padding: clamp(1.1rem, 2.5vw, 1.4rem);
+    padding-bottom: clamp(0.82rem, 1.8vw, 1rem);
+  }
+
+  .person {
+    gap: 0.72rem;
+    padding-top: clamp(0.5rem, 1.2vw, 0.68rem);
+  }
+
+  .name {
+    font-size: var(--home-text-size);
+    line-height: 1.15;
+  }
+
+  .role {
+    margin-top: 0.1rem;
+    font-size: var(--home-small-text-size);
+    line-height: 1.25;
+  }
+}
+
 @media (max-width: 760px) {
   .header {
     grid-template-columns: 1fr;
@@ -278,6 +327,11 @@
 
   .controls {
     justify-content: flex-start;
+  }
+
+  .controlButton {
+    width: 2.85rem;
+    height: 2.85rem;
   }
 }
 
@@ -291,11 +345,146 @@
   }
 
   .card {
-    min-height: 18.5rem;
+    min-height: clamp(17rem, 72vw, 18.5rem);
   }
 
   .title {
     font-size: var(--home-headline-size);
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 3.25rem 0;
+  }
+
+  .header {
+    gap: 1.1rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .card {
+    min-height: 17rem;
+    padding: 1.05rem;
+    padding-bottom: 0.78rem;
+    border-radius: 1.5rem;
+  }
+
+  .quoteIcon {
+    width: 1.75rem;
+  }
+
+  .person {
+    gap: 0.65rem;
+    padding-top: 0.5rem;
+  }
+
+  .avatar {
+    width: 3.65rem;
+    height: 3.65rem;
+  }
+
+  .name {
+    font-size: var(--home-text-size);
+  }
+
+  .progress {
+    margin-top: 0.75rem;
+  }
+}
+
+@media (min-width: 1500px) and (max-width: 1999px) {
+  .headingBlock {
+    max-width: 82rem;
+  }
+
+  .title {
+    max-width: 23ch;
+    text-wrap: wrap;
+  }
+}
+
+@media (min-width: 2000px) {
+  .headingBlock {
+    max-width: 92rem;
+  }
+
+  .title {
+    max-width: 22ch;
+  }
+
+  .controlButton {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .controlButton svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .card {
+    min-height: 24rem;
+    padding: 1.7rem;
+  }
+
+  .quoteIcon {
+    width: 2.9rem;
+  }
+
+  .avatar {
+    width: 5.15rem;
+    height: 5.15rem;
+  }
+
+  .name {
+    font-size: 1.1rem;
+  }
+
+  .role {
+    font-size: 0.92rem;
+  }
+}
+
+@media (min-width: 2300px) {
+  .headingBlock {
+    max-width: 108rem;
+  }
+
+  .title {
+    max-width: 23ch;
+  }
+
+  .controlButton {
+    width: 4.35rem;
+    height: 4.35rem;
+  }
+
+  .controlButton svg {
+    width: 1.55rem;
+    height: 1.55rem;
+  }
+
+  .card {
+    min-height: 25.5rem;
+    padding: 1.9rem;
+  }
+
+  .quoteIcon {
+    width: 3.15rem;
+  }
+
+  .avatar {
+    width: 5.6rem;
+    height: 5.6rem;
+  }
+
+  .name {
+    font-size: 1.18rem;
+  }
+
+  .role {
+    font-size: 1rem;
   }
 }
 
