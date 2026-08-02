@@ -7,6 +7,8 @@
 }
 
 .navbar > :global(.container) {
+    position: relative;
+    z-index: 1001;
     max-width: none;
     padding-inline: 0;
 }
@@ -250,44 +252,81 @@
 }
 
 .burgerMenu {
+    position: relative;
+    z-index: 2;
     display: none;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 5px;
     width: 44px;
     height: 44px;
     flex: 0 0 auto;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 12px;
     cursor: pointer;
-    background: transparent;
-    transition: background-color var(--transition-fast);
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: background-color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .burgerMenu:hover,
 .burgerMenu:focus-visible {
-    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(241, 196, 15, 0.72);
+    background: rgba(241, 196, 15, 0.12);
+    box-shadow: 0 0.55rem 1.25rem rgba(24, 24, 24, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transform: translateY(-1px);
     outline: none;
 }
 
-.burgerMenu span {
-    width: 22px;
+.menuIcon {
+    position: relative;
+    display: block;
+    width: 21px;
+    height: 16px;
+}
+
+.menuLine {
+    position: absolute;
+    right: 0;
     height: 2px;
-    border-radius: 3px;
+    border-radius: 999px;
     background-color: var(--color-white);
-    transition: transform var(--transition-fast), opacity var(--transition-fast), background-color var(--transition-fast);
+    transition: top 0.32s cubic-bezier(0.22, 1, 0.36, 1), width 0.32s cubic-bezier(0.22, 1, 0.36, 1), transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), background-color var(--transition-fast);
 }
 
-.burgerMenu.active span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
+.menuLineTop {
+    top: 3px;
+    width: 21px;
 }
 
-.burgerMenu.active span:nth-child(2) {
-    opacity: 0;
+.menuLineBottom {
+    top: 11px;
+    width: 14px;
 }
 
-.burgerMenu.active span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
+.burgerMenu:hover .menuLine,
+.burgerMenu:focus-visible .menuLine {
+    background-color: var(--color-yellow);
+}
+
+.burgerMenu.active {
+    border-color: var(--color-yellow);
+    background: var(--color-yellow);
+    box-shadow: 0 0.65rem 1.4rem rgba(196, 159, 12, 0.2);
+}
+
+.burgerMenu.active .menuLine {
+    top: 7px;
+    width: 21px;
+    background-color: var(--color-deep-slate);
+}
+
+.burgerMenu.active .menuLineTop {
+    transform: rotate(45deg);
+}
+
+.burgerMenu.active .menuLineBottom {
+    transform: rotate(-45deg);
 }
 
 .mobileMenuOverlay {
@@ -328,6 +367,57 @@
 
 .mobileMenuOverlay.active .mobileMenu {
     transform: translateY(0);
+}
+
+.mobileMenu > * {
+    opacity: 0;
+    transform: translateY(0.7rem) scale(0.985);
+}
+
+.mobileMenuOverlay.active .mobileMenu > * {
+    animation: mobileMenuItemIn 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.mobileMenuOverlay.active .mobileMenu > :nth-child(1) {
+    animation-delay: 0.08s;
+}
+
+.mobileMenuOverlay.active .mobileMenu > :nth-child(2) {
+    animation-delay: 0.125s;
+}
+
+.mobileMenuOverlay.active .mobileMenu > :nth-child(3) {
+    animation-delay: 0.17s;
+}
+
+.mobileMenuOverlay.active .mobileMenu > :nth-child(4) {
+    animation-delay: 0.215s;
+}
+
+.mobileMenuOverlay.active .mobileMenu > :nth-child(5) {
+    animation-delay: 0.26s;
+}
+
+.mobileMenuOverlay.active .mobileMenu > :nth-child(6) {
+    animation-delay: 0.305s;
+}
+
+.mobileMenuOverlay.active .mobileMenu > :nth-child(7) {
+    animation-delay: 0.35s;
+}
+
+@keyframes mobileMenuItemIn {
+    from {
+        opacity: 0;
+        filter: blur(4px);
+        transform: translateY(0.7rem) scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0) scale(1);
+    }
 }
 
 .mobileNavLink {
@@ -606,5 +696,22 @@
 
     .serviceSubLink {
         padding-block: 0.36rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mobileMenuOverlay,
+    .mobileMenu,
+    .mobileMenuOverlay.active .mobileMenu > *,
+    .menuLine,
+    .burgerMenu {
+        animation: none;
+        transition-duration: 0.01ms;
+    }
+
+    .mobileMenu > * {
+        opacity: 1;
+        filter: none;
+        transform: none;
     }
 }

@@ -72,6 +72,17 @@ export default function NavbarClient({ user, role, signout }) {
     }
   }, [isMobileMenuOpen])
 
+  useEffect(() => {
+    if (!isMobileMenuOpen) return undefined
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') closeMenu()
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isMobileMenuOpen])
+
   const renderServicesMenu = (classNames) => (
     <ul className={classNames}>
       {serviceLinks.map((service) => (
@@ -193,19 +204,26 @@ export default function NavbarClient({ user, role, signout }) {
           <button
             type="button"
             className={`${styles.burgerMenu} ${isMobileMenuOpen ? styles.active : ''}`}
-            aria-label="Toggle menu"
+            aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-navigation"
             onClick={toggleMenu}
           >
-            <span />
-            <span />
-            <span />
+            <span className={styles.menuIcon} aria-hidden="true">
+              <span className={`${styles.menuLine} ${styles.menuLineTop}`} />
+              <span className={`${styles.menuLine} ${styles.menuLineBottom}`} />
+            </span>
           </button>
         </div>
       </div>
 
-      <div className={`${styles.mobileMenuOverlay} ${isMobileMenuOpen ? styles.active : ''}`}>
+      <div
+        className={`${styles.mobileMenuOverlay} ${isMobileMenuOpen ? styles.active : ''}`}
+        aria-hidden={!isMobileMenuOpen}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) closeMenu()
+        }}
+      >
         <div className={styles.mobileMenu} id="mobile-navigation">
           {navLinks.slice(0, 2).map((link) => (
             <Link
