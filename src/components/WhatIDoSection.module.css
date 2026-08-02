@@ -548,22 +548,22 @@
 
 @media (min-width: 1025px) and (max-width: 1999px) {
   .rail {
-    display: grid;
-    height: auto;
-    grid-template-columns: minmax(0, 1fr);
+    --service-rail-bleed: clamp(6rem, 10vw, 11rem);
+    display: flex;
+    width: calc(100% + var(--service-rail-bleed) + var(--service-rail-bleed));
+    height: clamp(20rem, 20vw, 22rem);
+    margin-inline: calc(0px - var(--service-rail-bleed));
     gap: clamp(0.75rem, 1.1vw, 1rem);
   }
 
   .railRow {
-    display: flex;
-    min-width: 0;
-    gap: clamp(0.75rem, 1.1vw, 1rem);
+    display: contents;
   }
 
   .card,
   .cardActive {
     min-height: 0;
-    height: auto;
+    height: 100%;
     flex: 1 1 0;
     gap: 0.8rem;
     padding: clamp(1rem, 1.2vw, 1.25rem);
@@ -592,13 +592,15 @@
 }
 
 @media (min-width: 1025px) and (max-width: 1999px) {
-  .rail {
-    grid-auto-rows: minmax(14rem, auto);
-  }
-
   .card,
   .cardActive {
     --active-image-width: clamp(8.5rem, 8vw, 10rem);
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1100px) {
+  .rail {
+    height: calc(clamp(20rem, 20vw, 22rem) + 20px);
   }
 }
 

@@ -260,6 +260,14 @@
   }
 }
 
+@media (min-width: 1281px) and (max-width: 1880px) {
+  .carouselViewport {
+    --testimonial-rail-bleed: clamp(5rem, 8vw, 9rem);
+    width: calc(100% + var(--testimonial-rail-bleed) + var(--testimonial-rail-bleed));
+    margin-inline: calc(0px - var(--testimonial-rail-bleed));
+  }
+}
+
 @media (max-width: 1280px) {
   .track {
     --cards-per-view: 2;

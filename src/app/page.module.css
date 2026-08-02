@@ -607,12 +607,31 @@
 
   .forWhomCard1,
   .forWhomCard4 {
-    aspect-ratio: 1.15;
+    aspect-ratio: 1.41;
   }
 
   .forWhomCard2,
   .forWhomCard3 {
-    aspect-ratio: 1.26;
+    aspect-ratio: 1.55;
+  }
+}
+
+/* Let only the card mosaic break past the shared content inset on mid-sized
+   desktop screens. The header is compensated back to its original column so
+   its navbar-aligned position and text width remain unchanged. */
+@media (min-width: 1025px) and (max-width: 1800px) {
+  .forWhomMosaic {
+    --for-whom-card-bleed: clamp(4.25rem, 6vw, 6.75rem);
+    --for-whom-header-shift: clamp(1.4167rem, 2vw, 2.25rem);
+    --for-whom-header-trim: clamp(2.8333rem, 4vw, 4.5rem);
+    width: calc(100% + var(--for-whom-card-bleed) + var(--for-whom-card-bleed));
+    margin-left: calc(0px - var(--for-whom-card-bleed));
+    margin-right: calc(0px - var(--for-whom-card-bleed));
+  }
+
+  .forWhomHeader {
+    left: calc(0px - var(--for-whom-header-shift));
+    width: calc(100% - var(--for-whom-header-trim));
   }
 }
 

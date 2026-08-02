@@ -10,7 +10,6 @@ const supportItems = [
   'One-time payment',
   'Lifetime access',
   'Self-paced learning',
-  '30-day money-back guarantee',
 ]
 
 export default function CoursePreviewCtaSection() {
@@ -66,7 +65,7 @@ export default function CoursePreviewCtaSection() {
           <div className={styles.visualWrap}>
             <div className={styles.imageFrame}>
               <Image
-                src="/coursepreview-blue-bg.png"
+                src="/coursepreview-blue-bg-v2.png"
                 alt="Zak Dakkash teaching beside a whiteboard for Interpersonal Communication Dynamics"
                 width={1029}
                 height={1528}
