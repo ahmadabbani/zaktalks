@@ -320,6 +320,20 @@
   vector-effect: non-scaling-stroke;
 }
 
+.storyArrow .storyArrowBrushMain {
+  stroke-width: 14;
+}
+
+.storyArrow .storyArrowBrushTexture {
+  stroke-width: 3.25;
+  opacity: 0.62;
+}
+
+.storyArrow .storyArrowBrushTextureFine {
+  stroke-width: 1.65;
+  opacity: 0.42;
+}
+
 .storyArrowCurve,
 .storyArrowHead {
   stroke-dasharray: 1;
@@ -402,14 +416,26 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
   gap: 0;
+  margin-inline: 0;
   padding-bottom: 0;
+}
+
+.storyNarrativeBand {
+  width: 100%;
+  background: var(--color-gray-light);
+}
+
+.storyPhilosophyBand {
+  background: var(--color-deep-slate);
 }
 
 .storyImageWrap {
   position: relative;
   min-width: 0;
   min-height: 100%;
+  width: 100%;
   overflow: hidden;
+  margin-left: 0;
   background: #dcecf3;
   opacity: 0;
   transform: translateX(-1.75rem);
@@ -427,6 +453,7 @@
 
 .storyNarrativeBody {
   --story-body-inline-padding: clamp(2.25rem, 4.25vw, 4.75rem);
+  --story-body-screen-padding: clamp(1.25rem, 2vw, 2.5rem);
   --story-title-rule-gap: clamp(1.1rem, 1.45vw, 1.45rem);
 
   display: flex;
@@ -434,7 +461,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  padding: var(--story-body-inline-padding);
+  padding: var(--story-body-inline-padding) var(--story-body-screen-padding) var(--story-body-inline-padding) var(--story-body-inline-padding);
   background: var(--color-gray-light);
   opacity: 0;
   transform: translateX(1.75rem);
@@ -460,10 +487,10 @@
 .storyNarrativeTitle::after {
   content: '';
   display: block;
-  width: calc(50% + var(--story-body-inline-padding));
+  width: 50%;
   height: clamp(0.35rem, 0.42vw, 0.6rem);
   margin-top: var(--story-title-rule-gap);
-  margin-right: calc(-1 * var(--story-body-inline-padding));
+  margin-right: 0;
   margin-left: auto;
   border-radius: 999px;
   background: var(--color-yellow);
@@ -492,6 +519,8 @@
 }
 
 .storyPhilosophyBody {
+  padding-right: var(--story-body-inline-padding);
+  padding-left: var(--story-body-screen-padding);
   background: var(--color-deep-slate);
   transform: translateX(-1.75rem);
 }
@@ -508,10 +537,10 @@
 .storyPhilosophyTitle::before {
   content: '';
   display: block;
-  width: calc(50% + var(--story-body-inline-padding));
+  width: 50%;
   height: clamp(0.35rem, 0.42vw, 0.6rem);
   margin-bottom: var(--story-title-rule-gap);
-  margin-left: calc(-1 * var(--story-body-inline-padding));
+  margin-left: 0;
   border-radius: 999px;
   background: var(--color-yellow);
   transform: scaleX(0);
@@ -519,6 +548,8 @@
 }
 
 .storyPhilosophyImageWrap {
+  margin-right: 0;
+  margin-left: 0;
   transform: translateX(1.75rem);
 }
 
@@ -1310,6 +1341,9 @@
 
   .storyNarrativeBody {
     --story-body-inline-padding: clamp(2rem, 6vw, 3.5rem);
+
+    padding-right: var(--story-body-inline-padding);
+    padding-left: var(--story-body-inline-padding);
   }
 
   .storyNarrativeCopy {

@@ -411,16 +411,58 @@ export default function AboutPageContent() {
                   fill="none"
                   aria-hidden="true"
                 >
-                  <path
-                    className={styles.storyArrowCurve}
-                    pathLength="1"
-                    d="M4 26C112 31 204 86 236 153C254 191 253 228 239 264"
-                  />
-                  <path
-                    className={styles.storyArrowHead}
-                    pathLength="1"
-                    d="M210 242L239 273L288 242"
-                  />
+                  <defs>
+                    <filter
+                      id="about-arrow-brush"
+                      x="-12%"
+                      y="-12%"
+                      width="124%"
+                      height="124%"
+                      colorInterpolationFilters="sRGB"
+                    >
+                      <feTurbulence
+                        type="fractalNoise"
+                        baseFrequency="0.018 0.085"
+                        numOctaves="2"
+                        seed="17"
+                        result="brushNoise"
+                      />
+                      <feDisplacementMap
+                        in="SourceGraphic"
+                        in2="brushNoise"
+                        scale="3.4"
+                        xChannelSelector="R"
+                        yChannelSelector="B"
+                      />
+                    </filter>
+                  </defs>
+                  <g filter="url(#about-arrow-brush)">
+                    <path
+                      className={`${styles.storyArrowCurve} ${styles.storyArrowBrushMain}`}
+                      pathLength="1"
+                      d="M4 26C112 31 204 86 236 153C254 191 253 228 239 264"
+                    />
+                    <path
+                      className={`${styles.storyArrowCurve} ${styles.storyArrowBrushTexture}`}
+                      pathLength="1"
+                      d="M8 20C112 27 210 82 242 151C260 190 258 224 246 259"
+                    />
+                    <path
+                      className={`${styles.storyArrowCurve} ${styles.storyArrowBrushTexture} ${styles.storyArrowBrushTextureFine}`}
+                      pathLength="1"
+                      d="M3 34C109 38 196 92 228 158C246 195 246 228 233 259"
+                    />
+                    <path
+                      className={`${styles.storyArrowHead} ${styles.storyArrowBrushMain}`}
+                      pathLength="1"
+                      d="M210 242L239 273L288 242"
+                    />
+                    <path
+                      className={`${styles.storyArrowHead} ${styles.storyArrowBrushTexture}`}
+                      pathLength="1"
+                      d="M207 249L238 280L291 247"
+                    />
+                  </g>
                 </svg>
               </span>
             </h2>
@@ -430,14 +472,15 @@ export default function AboutPageContent() {
           </div>
         </div>
 
-        <div
-          ref={narrativeRef}
-          className={`${styles.contentWidth} ${styles.storyNarrative} ${narrativeVisible ? styles.storyNarrativeVisible : ''}`}
-        >
+        <div className={styles.storyNarrativeBand}>
+          <div
+            ref={narrativeRef}
+            className={`${styles.contentWidth} ${styles.storyNarrative} ${narrativeVisible ? styles.storyNarrativeVisible : ''}`}
+          >
           <div className={styles.storyImageWrap}>
             <Image
-              src="/about3.jpg"
-              alt="Zak Dakkash delivering a workshop"
+              src="/meetzak.jpg"
+              alt="Zak Dakkash"
               fill
               sizes="(max-width: 1024px) calc(100vw - (2 * var(--featured-section-gutter))), 50vw"
               unoptimized
@@ -482,11 +525,13 @@ export default function AboutPageContent() {
             </Link>
           </div>
         </div>
+        </div>
 
-        <div
-          ref={philosophyRef}
-          className={`${styles.contentWidth} ${styles.storyNarrative} ${styles.storyPhilosophy} ${philosophyVisible ? styles.storyPhilosophyVisible : ''}`}
-        >
+        <div className={`${styles.storyNarrativeBand} ${styles.storyPhilosophyBand}`}>
+          <div
+            ref={philosophyRef}
+            className={`${styles.contentWidth} ${styles.storyNarrative} ${styles.storyPhilosophy} ${philosophyVisible ? styles.storyPhilosophyVisible : ''}`}
+          >
           <div className={`${styles.storyNarrativeBody} ${styles.storyPhilosophyBody}`}>
             <h3 className={`${styles.storySpecialTitle} ${styles.storyCompactTitle} ${styles.storyPhilosophyTitle}`}>
               MISSION &amp; PHILOSOPHY.
@@ -521,6 +566,7 @@ export default function AboutPageContent() {
               className={`${styles.storyImage} ${styles.storyPhilosophyImage}`}
             />
           </div>
+        </div>
         </div>
       </section>
 
