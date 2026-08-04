@@ -413,7 +413,7 @@ export default function AboutPageContent() {
                 >
                   <defs>
                     <filter
-                      id="about-arrow-brush"
+                      id="about-arrow-rough-edge"
                       x="-12%"
                       y="-12%"
                       width="124%"
@@ -422,46 +422,81 @@ export default function AboutPageContent() {
                     >
                       <feTurbulence
                         type="fractalNoise"
-                        baseFrequency="0.018 0.085"
+                        baseFrequency="0.022 0.11"
                         numOctaves="2"
-                        seed="17"
+                        seed="23"
                         result="brushNoise"
                       />
                       <feDisplacementMap
                         in="SourceGraphic"
                         in2="brushNoise"
-                        scale="3.4"
+                        scale="1.9"
                         xChannelSelector="R"
                         yChannelSelector="B"
                       />
                     </filter>
+                    <mask
+                      id="about-arrow-reveal"
+                      className={styles.storyArrowRevealMask}
+                      maskUnits="userSpaceOnUse"
+                      x="-20"
+                      y="-20"
+                      width="340"
+                      height="340"
+                    >
+                      <path
+                        className={`${styles.storyArrowCurve} ${styles.storyArrowReveal} ${styles.storyArrowRevealCurve}`}
+                        pathLength="1"
+                        d="M4 27C111 30 205 86 237 153C255 191 253 227 240 264"
+                      />
+                      <path
+                        className={`${styles.storyArrowHead} ${styles.storyArrowReveal} ${styles.storyArrowRevealHead}`}
+                        pathLength="1"
+                        d="M202 234C217 240 231 248 240 262C254 249 273 240 294 234L240 290Z"
+                      />
+                    </mask>
+                    <mask
+                      id="about-arrow-dry-brush"
+                      maskUnits="userSpaceOnUse"
+                      x="-20"
+                      y="-20"
+                      width="340"
+                      height="340"
+                    >
+                      <rect x="-20" y="-20" width="340" height="340" fill="white" />
+                      <path
+                        className={styles.storyArrowBrushCut}
+                        d="M8 27C63 26 123 43 168 70C193 85 214 105 228 127"
+                      />
+                      <path
+                        className={`${styles.storyArrowBrushCut} ${styles.storyArrowBrushCutFine}`}
+                        d="M22 34C74 38 130 56 174 85C204 105 226 133 239 165"
+                      />
+                      <path
+                        className={`${styles.storyArrowBrushCut} ${styles.storyArrowBrushCutShort}`}
+                        d="M177 83C219 114 242 156 249 205"
+                      />
+                      <path
+                        className={`${styles.storyArrowBrushCut} ${styles.storyArrowBrushCutHead}`}
+                        d="M215 243C225 252 233 262 240 274C253 259 268 249 283 242"
+                      />
+                    </mask>
                   </defs>
-                  <g filter="url(#about-arrow-brush)">
-                    <path
-                      className={`${styles.storyArrowCurve} ${styles.storyArrowBrushMain}`}
-                      pathLength="1"
-                      d="M4 26C112 31 204 86 236 153C254 191 253 228 239 264"
-                    />
-                    <path
-                      className={`${styles.storyArrowCurve} ${styles.storyArrowBrushTexture}`}
-                      pathLength="1"
-                      d="M8 20C112 27 210 82 242 151C260 190 258 224 246 259"
-                    />
-                    <path
-                      className={`${styles.storyArrowCurve} ${styles.storyArrowBrushTexture} ${styles.storyArrowBrushTextureFine}`}
-                      pathLength="1"
-                      d="M3 34C109 38 196 92 228 158C246 195 246 228 233 259"
-                    />
-                    <path
-                      className={`${styles.storyArrowHead} ${styles.storyArrowBrushMain}`}
-                      pathLength="1"
-                      d="M210 242L239 273L288 242"
-                    />
-                    <path
-                      className={`${styles.storyArrowHead} ${styles.storyArrowBrushTexture}`}
-                      pathLength="1"
-                      d="M207 249L238 280L291 247"
-                    />
+                  <g mask="url(#about-arrow-reveal)">
+                    <g mask="url(#about-arrow-dry-brush)" filter="url(#about-arrow-rough-edge)">
+                      <path
+                        className={styles.storyArrowPaint}
+                        d="M2 17C42 16 78 22 111 35C164 55 212 93 240 144C260 181 264 217 251 251L244 268L229 261L234 246C245 217 242 190 225 160C198 111 154 76 104 56C68 42 34 35 5 37L16 32L1 29L15 25Z"
+                      />
+                      <path
+                        className={styles.storyArrowPaint}
+                        d="M198 230C216 237 230 246 240 258C255 246 275 238 299 231L287 244L299 239C283 258 261 278 240 294C222 279 208 257 198 230Z"
+                      />
+                      <path
+                        className={`${styles.storyArrowPaint} ${styles.storyArrowPaintBristle}`}
+                        d="M3 40C39 39 79 47 115 62C76 50 40 45 8 46ZM10 12C42 13 73 19 99 29C66 20 39 17 15 19ZM214 225C230 234 239 242 245 250C233 242 222 236 209 232ZM266 235C279 229 290 226 299 225L289 234Z"
+                      />
+                    </g>
                   </g>
                 </svg>
               </span>

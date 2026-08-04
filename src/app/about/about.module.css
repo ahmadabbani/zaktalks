@@ -320,18 +320,55 @@
   vector-effect: non-scaling-stroke;
 }
 
-.storyArrow .storyArrowBrushMain {
-  stroke-width: 14;
+.storyArrowRevealMask {
+  mask-type: alpha;
 }
 
-.storyArrow .storyArrowBrushTexture {
-  stroke-width: 3.25;
-  opacity: 0.62;
+.storyArrow .storyArrowReveal {
+  fill: none;
+  stroke: white;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.storyArrow .storyArrowBrushTextureFine {
-  stroke-width: 1.65;
-  opacity: 0.42;
+.storyArrow .storyArrowRevealCurve {
+  stroke-width: 42;
+}
+
+.storyArrow .storyArrowRevealHead {
+  stroke-width: 58;
+}
+
+.storyArrow .storyArrowPaint {
+  fill: currentColor;
+  stroke: none;
+}
+
+.storyArrow .storyArrowPaintBristle {
+  opacity: 0.72;
+}
+
+.storyArrow .storyArrowBrushCut {
+  fill: none;
+  stroke: black;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  opacity: 0.88;
+}
+
+.storyArrow .storyArrowBrushCutFine {
+  stroke-width: 1.1;
+  opacity: 0.76;
+}
+
+.storyArrow .storyArrowBrushCutShort {
+  stroke-width: 1.35;
+  opacity: 0.68;
+}
+
+.storyArrow .storyArrowBrushCutHead {
+  stroke-width: 2.2;
+  opacity: 0.7;
 }
 
 .storyArrowCurve,
@@ -468,7 +505,7 @@
 }
 
 .storySpecialTitle {
-  color: var(--color-slate-blue);
+  color: var(--home-headline-color);
   font-size: clamp(3.75rem, 6.5vw, 7.25rem);
   font-weight: 900;
   letter-spacing: -0.055em;
