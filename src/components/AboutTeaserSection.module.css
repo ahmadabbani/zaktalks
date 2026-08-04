@@ -33,7 +33,7 @@
 .quote {
   max-width: 31ch;
   margin-inline: auto;
-  color: #24495d;
+  color: var(--home-headline-color);
   font-family: 'ShakiesLocal', 'Knewave', 'Arial Black', sans-serif;
   font-size: calc(var(--home-headline-size) * 1.18);
   font-weight: 400;

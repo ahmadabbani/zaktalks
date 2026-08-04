@@ -304,77 +304,35 @@
   position: absolute;
   top: 30%;
   left: calc(100% + 0.75rem + 70px);
+  display: block;
   width: clamp(10rem, 14vw, 15rem);
   height: auto;
+  aspect-ratio: 1;
   overflow: visible;
   color: var(--color-deep-slate);
   opacity: 0;
   transform: translateY(-0.5rem) rotate(3deg);
 }
 
-.storyArrow path {
-  stroke: currentColor;
-  stroke-width: 12;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-.storyArrowRevealMask {
+.storyArrowGrowthMask {
   mask-type: alpha;
 }
 
-.storyArrow .storyArrowReveal {
+.storyArrowGrowthPath {
   fill: none;
   stroke: white;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.storyArrow .storyArrowRevealCurve {
-  stroke-width: 42;
+.storyArrowGrowthCurve {
+  stroke-width: 205;
 }
 
-.storyArrow .storyArrowRevealHead {
-  stroke-width: 58;
-}
-
-.storyArrow .storyArrowPaint {
-  fill: currentColor;
-  stroke: none;
-}
-
-.storyArrow .storyArrowPaintBristle {
-  opacity: 0.72;
-}
-
-.storyArrow .storyArrowBrushCut {
-  fill: none;
-  stroke: black;
-  stroke-width: 1.9;
-  stroke-linecap: round;
-  opacity: 0.88;
-}
-
-.storyArrow .storyArrowBrushCutFine {
-  stroke-width: 1.1;
-  opacity: 0.76;
-}
-
-.storyArrow .storyArrowBrushCutShort {
-  stroke-width: 1.35;
-  opacity: 0.68;
-}
-
-.storyArrow .storyArrowBrushCutHead {
-  stroke-width: 2.2;
-  opacity: 0.7;
-}
-
-.storyArrowCurve,
-.storyArrowHead {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
+.storyArrowGrowthHead {
+  stroke-width: 235;
 }
 
 .storyIntroHey,
@@ -396,15 +354,15 @@
 }
 
 .storySectionVisible .storyArrow {
-  animation: storyArrowIn 0.45s 0.3s ease-out both;
+  animation: storyArrowIn 0.35s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.storySectionVisible .storyArrowCurve {
-  animation: storyArrowDraw 0.8s 0.34s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+.storySectionVisible .storyArrowGrowthCurve {
+  animation: storyArrowGrow 1.05s 0.34s cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
 
-.storySectionVisible .storyArrowHead {
-  animation: storyArrowDraw 0.35s 1.02s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+.storySectionVisible .storyArrowGrowthHead {
+  animation: storyArrowGrow 0.34s 1.2s cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
 
 @keyframes storyHeyIn {
@@ -442,7 +400,7 @@
   }
 }
 
-@keyframes storyArrowDraw {
+@keyframes storyArrowGrow {
   to {
     stroke-dashoffset: 0;
   }
@@ -552,7 +510,7 @@
 }
 
 .storyPhilosophy {
-  padding-bottom: clamp(5rem, 8vw, 9rem);
+  padding-bottom: 0;
 }
 
 .storyPhilosophyBody {
@@ -1648,7 +1606,7 @@
   }
 
   .storyPhilosophy {
-    padding-bottom: 4rem;
+    padding-bottom: 0;
   }
 
   .storyImageWrap {
@@ -1781,20 +1739,17 @@
   .heroCta svg,
   .storyCta,
   .storyCta svg,
-  .storyImage,
-  .storyArrowCurve,
-  .storyArrowHead {
+  .storyImage {
     transition-duration: 0.01ms;
-  }
-
-  .storyArrowCurve,
-  .storyArrowHead {
-    stroke-dashoffset: 0;
   }
 
   .storyNarrativeVisible .storyNarrativeTitle::after {
     animation: none;
     transform: scaleX(1);
+  }
+
+  .storyArrowGrowthPath {
+    stroke-dashoffset: 0;
   }
 
   .storyPhilosophyVisible .storyPhilosophyTitle::before {
