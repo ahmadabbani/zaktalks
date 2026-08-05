@@ -183,21 +183,12 @@ export default function NavbarClient({ user, role, signout }) {
               ))}
             </div>
 
-            {user ? (
+            {user && (
               <form action={signout}>
                 <button type="submit" className={styles.btnPrimary}>
                   Sign Out
                 </button>
               </form>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className={`${styles.navLink} ${styles.loginLink} ${pathname === '/login' ? styles.active : ''}`}
-                >
-                  Log in
-                </Link>
-              </>
             )}
           </div>
 
@@ -282,22 +273,12 @@ export default function NavbarClient({ user, role, signout }) {
             </Link>
           ))}
 
-          {user ? (
+          {user && (
             <form action={signout}>
               <button type="submit" className={styles.mobileBtnPrimary} onClick={closeMenu}>
                 Sign Out
               </button>
             </form>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className={`${styles.mobileNavLink} ${styles.mobileLoginLink} ${pathname === '/login' ? styles.mobileActive : ''}`}
-                onClick={closeMenu}
-              >
-                Log in
-              </Link>
-            </>
           )}
         </div>
       </div>

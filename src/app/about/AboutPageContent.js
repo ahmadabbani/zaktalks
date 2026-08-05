@@ -9,15 +9,15 @@ import styles from './about.module.css'
 const stats = [
   {
     value: 19000,
-    suffix: '',
+    suffix: '+',
     label: 'logged hours of work',
-    ariaLabel: '19,000 logged hours of work',
+    ariaLabel: '19,000 plus logged hours of work',
   },
   {
     value: 4500,
-    suffix: '',
+    suffix: '+',
     label: 'hours delivering workshops & trainings in organizations',
-    ariaLabel: '4,500 hours delivering workshops and trainings in organizations',
+    ariaLabel: '4,500 plus hours delivering workshops and trainings in organizations',
   },
   {
     value: 11,
@@ -34,6 +34,12 @@ const stats = [
 ]
 
 const milestones = [
+  {
+    year: '2015',
+    title: 'Transformation Lab',
+    date: '2015',
+    tone: 'slate',
+  },
   {
     year: '2015',
     title: 'Personal Leadership',
@@ -71,6 +77,7 @@ const milestones = [
     date: 'Leadership Management International · 2018',
     badge: 'Award',
     tone: 'yellow',
+    copyPlacement: 'bottomRight',
   },
   {
     year: '2020',
@@ -83,6 +90,7 @@ const milestones = [
     title: 'Relationship Psychology',
     date: 'October 2020',
     tone: 'blue',
+    copyPlacement: 'bottomLeft',
   },
   {
     year: '2021',
@@ -116,21 +124,30 @@ const milestones = [
     badge: 'Next',
     tone: 'yellow',
   },
+  {
+    year: '2027',
+    title: 'The Room',
+    date: 'Coming soon',
+    badge: 'Next',
+    tone: 'blue',
+  },
 ]
 
 const milestoneOrbitPoints = [
   { x: 70.5, y: 14.5, side: 'right' },
-  { x: 83.6, y: 26.5, side: 'right' },
-  { x: 90.4, y: 42.9, side: 'right' },
-  { x: 89.6, y: 60.6, side: 'right' },
-  { x: 81.4, y: 76.4, side: 'right' },
-  { x: 67.3, y: 87.2, side: 'right' },
+  { x: 82.1, y: 24.4, side: 'right' },
+  { x: 89.2, y: 37.9, side: 'right' },
+  { x: 90.9, y: 53.1, side: 'right' },
+  { x: 86.9, y: 67.8, side: 'right' },
+  { x: 77.9, y: 80, side: 'right' },
+  { x: 65, y: 88.2, side: 'right' },
   { x: 50, y: 91, side: 'bottom' },
-  { x: 32.7, y: 87.2, side: 'left' },
-  { x: 18.6, y: 76.4, side: 'left' },
-  { x: 10.4, y: 60.6, side: 'left' },
-  { x: 9.6, y: 42.9, side: 'left' },
-  { x: 16.4, y: 26.5, side: 'left' },
+  { x: 35, y: 88.2, side: 'left' },
+  { x: 22.1, y: 80, side: 'left' },
+  { x: 13.1, y: 67.8, side: 'left' },
+  { x: 9.1, y: 53.1, side: 'left' },
+  { x: 10.8, y: 37.9, side: 'left' },
+  { x: 17.9, y: 24.4, side: 'left' },
   { x: 29.5, y: 14.5, side: 'left' },
 ]
 
@@ -149,8 +166,6 @@ export default function AboutPageContent() {
   const philosophyRef = useRef(null)
   const milestonesRef = useRef(null)
   const milestoneItemRefs = useRef([])
-  const credibilityImageRef = useRef(null)
-  const credibilityContentRef = useRef(null)
   const valuesHeaderRef = useRef(null)
   const valuesImageRef = useRef(null)
   const valuesPanelRef = useRef(null)
@@ -163,8 +178,6 @@ export default function AboutPageContent() {
   const [philosophyVisible, setPhilosophyVisible] = useState(false)
   const [milestonesVisible, setMilestonesVisible] = useState(false)
   const [visibleMilestones, setVisibleMilestones] = useState(() => new Set())
-  const [credibilityImageVisible, setCredibilityImageVisible] = useState(false)
-  const [credibilityContentVisible, setCredibilityContentVisible] = useState(false)
   const [valuesHeaderVisible, setValuesHeaderVisible] = useState(false)
   const [valuesImageVisible, setValuesImageVisible] = useState(false)
   const [valuesPanelVisible, setValuesPanelVisible] = useState(false)
@@ -319,8 +332,6 @@ export default function AboutPageContent() {
 
   useEffect(() => {
     const targets = [
-      [credibilityImageRef.current, setCredibilityImageVisible],
-      [credibilityContentRef.current, setCredibilityContentVisible],
       [valuesHeaderRef.current, setValuesHeaderVisible],
       [valuesImageRef.current, setValuesImageVisible],
       [valuesPanelRef.current, setValuesPanelVisible],
@@ -384,7 +395,11 @@ export default function AboutPageContent() {
                 >
                   <p className={styles.statValue} aria-hidden="true">
                     {numberFormatter.format(counts[index])}
-                    {stat.suffix && <span>{stat.suffix}</span>}
+                    {stat.suffix && (
+                      <span className={stat.suffix === '+' ? styles.statStandalonePlus : undefined}>
+                        {stat.suffix}
+                      </span>
+                    )}
                   </p>
                   <p className={styles.statLabel}>{stat.label}</p>
                 </article>
@@ -406,7 +421,7 @@ export default function AboutPageContent() {
               <span className={styles.storyIntroNameRow}>
                 <span className={styles.storyIntroName}>I’M ZAK!</span>
                 <svg
-                  className={styles.storyArrow}
+                  className={`${styles.storyArrow} ${styles.storyArrowDefault}`}
                   viewBox="0 0 1000 1000"
                   fill="none"
                   aria-hidden="true"
@@ -441,10 +456,46 @@ export default function AboutPageContent() {
                     mask="url(#about-brush-arrow-reveal)"
                   />
                 </svg>
+                <svg
+                  className={`${styles.storyArrow} ${styles.storyArrowLong}`}
+                  viewBox="0 0 1024 1536"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <defs>
+                    <mask
+                      id="about-brush-arrow-reveal-long"
+                      className={styles.storyArrowGrowthMask}
+                      maskUnits="userSpaceOnUse"
+                      x="0"
+                      y="0"
+                      width="1024"
+                      height="1536"
+                    >
+                      <path
+                        className={`${styles.storyArrowGrowthPath} ${styles.storyArrowGrowthCurve}`}
+                        pathLength="1"
+                        d="M92 164C286 326 472 270 622 198C812 108 919 346 894 694C875 929 821 1082 764 1186"
+                      />
+                      <path
+                        className={`${styles.storyArrowGrowthPath} ${styles.storyArrowGrowthHead}`}
+                        pathLength="1"
+                        d="M708 1004L755 1292L910 1060"
+                      />
+                    </mask>
+                  </defs>
+                  <image
+                    href="/about-brush-arrow-medium.png"
+                    width="1024"
+                    height="1536"
+                    preserveAspectRatio="none"
+                    mask="url(#about-brush-arrow-reveal-long)"
+                  />
+                </svg>
               </span>
             </h2>
             <p className={styles.storyIntroCopy}>
-              I don’t have all the answers. I’m far from perfect. I’m nowhere near enlightened—and I’m completely okay with that.
+              I don&apos;t see myself as the expert on your life. I bring my experience, my curiosity, and my okayness; you bring yours. Together, we make meaning.
             </p>
           </div>
         </div>
@@ -461,7 +512,15 @@ export default function AboutPageContent() {
               fill
               sizes="(max-width: 1024px) calc(100vw - (2 * var(--featured-section-gutter))), 50vw"
               unoptimized
-              className={styles.storyImage}
+              className={`${styles.storyImage} ${styles.storyDesktopImage}`}
+            />
+            <Image
+              src="/aboutmobile.png"
+              alt="Zak Dakkash facilitating a group session"
+              fill
+              sizes="(max-width: 1024px) 100vw, 1px"
+              unoptimized
+              className={`${styles.storyImage} ${styles.storyMobileImage}`}
             />
           </div>
 
@@ -472,22 +531,27 @@ export default function AboutPageContent() {
 
             <div className={styles.storyNarrativeCopy}>
               <p>
-                For more than 20 years, I worked across artistic disciplines including graphic design, interior design, 3D modeling, product design, and visual problem-solving. Long before I entered the world of coaching, I was already studying how reality is built, how people perceive it, and how small details shape the way we experience the world.
+                For more than 20 years, I worked across artistic disciplines including Graphic Design, Interior Design, Digital Art, Product Design, and Photography. Long before I entered the world of coaching, I was already studying and exploring how <strong>REALITY</strong> is built, how people perceive it, and how small details shape the way we experience the world.
               </p>
               <p>
-                In digital art, nothing appears on its own. You build everything from the ground up — form, texture, shadow, light, depth, and relationship. You learn that what looks natural is often the result of structure, awareness, and precision. That way of thinking stayed with me. It trained me to observe carefully, think systemically, and look beneath what is obvious.
+                In Digital Art, nothing appears on its own. You build everything from scratch: form, texture, shadow, light, and depth. You learn that what looks natural is often the result of structure, order, and precision. That way of thinking stayed with me. It trained me to observe carefully, think systemically, and look beneath what is obvious.
               </p>
               <p>
-                Later, that same lens began to shape how I understood people and life. I started to see that human experience also has structure. Our patterns, reactions, relationships, and inner conflicts are not random. There is usually a root beneath the surface, and when that root is ignored, the pain spreads into every area of life.
+                Later, that same lens began to shape how I understood people and life. I started to see that human experience also has structure. Our patterns, reactions, the way we relate to self and others, and inner conflicts are not random. What we struggle with on the surface often reflects patterns developed to survive. Until those patterns are recognized, they continue to organize how we live and relate.
               </p>
-              <p className={styles.storyNarrativeEmphasis}>
+              <p className={styles.storyBlueItalic}>
                 That is one of the ideas at the heart of my work.
               </p>
               <p>
-                A person may come in talking about stress, conflict, fear, disconnection, or feeling stuck. But often, those are not the beginning of the story. They are the visible symptoms. My work is to help people find the splinter beneath the pain — the deeper pattern, wound, survival response, or belief that has quietly been shaping everything else.
+                People often come with stress, conflict, fear, disconnection, or feeling stuck. While these experiences are real, they are often expressions of deeper survival patterns rather than the whole story.
               </p>
               <p>
-                My shift into personal development and mental health came from a simple but life-changing realization: if we can design almost anything externally, why do we not learn how to consciously design a life from within? That question changed my direction and became the foundation of Zak Talks.
+                Together, we <strong>explore</strong> those patterns, <strong>unlearn</strong> what no longer serves, and <strong>create</strong> greater awareness, choice, Okayness, and autonomy.
+              </p>
+              <p>
+                My shift into <strong>Personal Development</strong> and Mental Health came from a simple but life-changing realization:{' '}
+                <em className={styles.storyBlueItalic}>If we can design almost anything externally, why do we not learn how to consciously design a life from within?</em>{' '}
+                That question changed my direction and became the foundation of Okayness.
               </p>
             </div>
 
@@ -515,20 +579,20 @@ export default function AboutPageContent() {
             </h3>
 
             <div className={styles.storyNarrativeCopy}>
-              <p className={styles.storyNarrativeEmphasis}>
-                I see coaching as an art form.
+              <p>
+                I see coaching as a relational practice.
               </p>
               <p>
-                It is the art of presence, awareness, honesty, and deep observation of what is happening in the moment. It is not about fixing people, because I do not believe people are problems to be fixed. I believe people already carry intelligence, capacity, and meaning within them — but many have lost access to it under the weight of survival, conditioning, pain, or disconnection.
-              </p>
-              <p className={styles.storyNarrativeEmphasis}>
-                My role is to help bring that access back.
+                It begins with the belief that people are fundamentally <strong>Okay</strong>. We are not problems to be fixed; we are people who have adapted to survive. Many of those adaptations were once necessary. Some continue to support us; others quietly limit our awareness, relationships, and choices.
               </p>
               <p>
-                I work in a co-creative way, which means I do not force people through a rigid script. We build the process together based on what is true, needed, and ready to be seen. I draw from multiple psychological schools and methodologies. Still, the deeper principle is always the same: create safety, build awareness, support re-decision, integrate change, and help the person return to autonomy.
+                My role is not to provide answers. It is to think with people, create the conditions for honest exploration, and support the unlearning of survival patterns that no longer serve them.
               </p>
               <p>
-                I also believe personal leadership sits at the core of a meaningful life. The way we think, choose, respond, relate, and grow shapes everything around us. Life is not simply something that happens to us. It is something we can learn to meet consciously.
+                My work is grounded in <strong>Co-Creative Transactional Analysis</strong>. Every coaching journey begins with a clear contract and develops through an Adult-to-Adult relationship. Together, we cultivate awareness, challenge outdated beliefs, make new decisions, and expand autonomy.
+              </p>
+              <p>
+                I believe <strong>Personal Leadership</strong> grows from <em className={styles.storyPhilosophyAccent}>awareness</em>. The way we think, relate, communicate, and choose shapes the lives we create. When we reconnect with our <em className={styles.storyPhilosophyAccent}>Okayness</em>, we become more present-centered, creating space for greater awareness, choice, and autonomy.
               </p>
             </div>
           </div>
@@ -572,8 +636,8 @@ export default function AboutPageContent() {
             </svg>
 
             <div className={styles.orbitCore}>
-              <h2 id="milestones-heading">Built one layer at a time.</h2>
-              <small>2015 — 2026</small>
+              <h2 id="milestones-heading">Growth becomes lasting when it is integrated.</h2>
+              <small>Since 2015</small>
             </div>
 
             <div className={styles.orbitItems} role="list">
@@ -585,7 +649,7 @@ export default function AboutPageContent() {
                     key={`${milestone.title}-${milestone.date}`}
                     ref={(element) => { milestoneItemRefs.current[index] = element }}
                     data-milestone-index={index}
-                    className={`${styles.orbitItem} ${styles[`orbitItem${side[0].toUpperCase()}${side.slice(1)}`]} ${visibleMilestones.has(index) ? styles.orbitItemVisible : ''}`}
+                    className={`${styles.orbitItem} ${styles[`orbitItem${side[0].toUpperCase()}${side.slice(1)}`]} ${milestone.copyPlacement ? styles[`orbitCopy${milestone.copyPlacement[0].toUpperCase()}${milestone.copyPlacement.slice(1)}`] : ''} ${visibleMilestones.has(index) ? styles.orbitItemVisible : ''}`}
                     style={getMilestoneOrbitPosition(index)}
                     role="listitem"
                   >
@@ -612,50 +676,6 @@ export default function AboutPageContent() {
         </div>
       </section>
 
-      <section className={styles.credibilitySection} aria-labelledby="credibility-heading">
-        <div className={styles.credibilityWidth}>
-          <div ref={credibilityImageRef} className={styles.credibilityStage}>
-            <div
-              className={`${styles.credibilityImageWrap} ${credibilityImageVisible ? styles.credibilityImageVisible : ''}`}
-            >
-              <Image
-                src="/credibility.jpg"
-                alt="Zak Dakkash facilitating a learning session"
-                fill
-                sizes="(max-width: 700px) calc(100vw - (2 * var(--featured-section-gutter))), 78vw"
-                unoptimized
-                className={styles.credibilityImage}
-              />
-            </div>
-
-            <div
-              ref={credibilityContentRef}
-              className={`${styles.credibilityLower} ${credibilityContentVisible ? styles.credibilityContentVisible : ''}`}
-            >
-              <div className={styles.credibilitySeal} aria-label="More than 20 software tools taught">
-                <strong>20+</strong>
-                <span>tools taught</span>
-              </div>
-
-              <article className={styles.credibilityCard}>
-                <p className={styles.credibilityEyebrow}>Creative practice meets human work</p>
-                <h2 id="credibility-heading" className={styles.credibilityTitle}>
-                  A broader foundation.
-                </h2>
-                <div className={styles.credibilityCopy}>
-                  <p>
-                    My background is unusual by design. I come from creative disciplines, systems thinking, design, education, and hands-on technical work, and all of that informs how I coach today. I have also taught more than 20 software tools in digital art and worked across furniture fabrication, branding, interiors, programming and machine operation, photography, and visual creation.
-                  </p>
-                  <p>
-                    My educational transactional analysis extends through coaching, workshops, speaking, online courses, and podcast content created to support deeper self-awareness, better communication, and personal transformation.
-                  </p>
-                </div>
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section className={styles.valuesSection} aria-labelledby="values-heading">
         <div className={styles.contentWidth}>
           <div ref={valuesImageRef} className={styles.valuesCanvas}>
@@ -667,7 +687,7 @@ export default function AboutPageContent() {
               <h2 id="values-heading" className={styles.valuesWords}>
                 <span>Vulnerability</span>
                 <span>Curiosity</span>
-                <span>Creativity</span>
+                <span>Faith</span>
               </h2>
             </div>
 
@@ -689,11 +709,11 @@ export default function AboutPageContent() {
               className={`${styles.valuesReadingPanel} ${valuesPanelVisible ? styles.valuesPanelVisible : ''}`}
             >
               <p>
-                <strong>The values behind my work are vulnerability, curiosity, and creativity.</strong>{' '}
-                I believe every human being is unrepeatable, and I believe it is possible to go through life without ever discovering your real purpose, which is why this work matters so deeply to me.
+                Three values guide everything I do: <strong>vulnerability, curiosity, and faith.</strong>{' '}
+                Vulnerability creates authentic contact. Curiosity opens the door to awareness. Faith is the quiet trust that people are fundamentally <em className={styles.valuesBlueItalic}>Okay</em> and capable of growth, even when they cannot yet see it for themselves.
               </p>
               <p>
-                Outside the coaching space, I am still a creator at heart. I paint, draw, design, fabricate furniture, work visually, dive, and play the cello. Those parts of me are not separate from the work; they are part of how I learned to see life with depth, pattern, rhythm, and meaning.
+                Outside the coaching space, I&apos;m still a creator at heart. I paint, draw, design, build furniture, work with visual media, dive, and play the cello. These are not separate from my work; they continue to shape how I notice patterns, embrace uncertainty, and meet people with presence, curiosity, and respect.
               </p>
               <Link
                 href="https://asitis3d.xyz/"
@@ -701,7 +721,7 @@ export default function AboutPageContent() {
                 rel="noreferrer"
                 className={`${styles.storyCta} ${styles.valuesCta}`}
               >
-                <span>Explore my creative work</span>
+                <span>Check Asitis 3D</span>
                 <FiArrowUpRight aria-hidden="true" />
               </Link>
             </div>
@@ -720,7 +740,7 @@ export default function AboutPageContent() {
                 If something in this story <span>feels familiar,</span>
               </h2>
               <p className={styles.finalCtaCopy}>
-                that may be a sign you are ready for a different kind of conversation: honest work that helps you understand what is really going on, reconnect with yourself, and move forward with more clarity.
+                This may be a sign you are ready for a different kind of conversation: honest work that helps you understand what is really going on, reconnect with yourself, and move forward with more clarity.
               </p>
 
               <div className={styles.finalCtaActions}>
@@ -728,8 +748,8 @@ export default function AboutPageContent() {
                   <span>Work With Zak</span>
                   <FiArrowUpRight aria-hidden="true" />
                 </Link>
-                <Link href="/courses" className={`${styles.storyCta} ${styles.finalCtaSecondary}`}>
-                  <span>Explore Courses</span>
+                <Link href="/coaching" className={`${styles.storyCta} ${styles.finalCtaPrimary}`}>
+                  <span>Explore Becoming Again</span>
                   <FiArrowUpRight aria-hidden="true" />
                 </Link>
               </div>
