@@ -10,6 +10,7 @@ const supportItems = [
   'One-time payment',
   'Lifetime access',
   'Self-paced learning',
+  '24-hour money-back guarantee',
 ]
 
 export default function CoursePreviewCtaSection() {
@@ -40,19 +41,22 @@ export default function CoursePreviewCtaSection() {
         <div className={styles.layout}>
           <div className={styles.content}>
             <h2 id="course-preview-heading" className={styles.title}>
-              <span className={styles.titleLine}>Ready to understand the patterns</span>
-              <span className={styles.titleLine}>shaping your relationships?</span>
+              Some decisions were made before you had the words for them
             </h2>
-            <p className={styles.copy}>
-              Interpersonal Communication Dynamics gives you practical tools to understand how you communicate, why certain patterns repeat, and what can change when awareness becomes action.
-            </p>
+            <div className={styles.copy}>
+              <p>The ways you protect yourself, communicate, lead, or hold back did not appear by accident. Many began as early decisions that once helped you cope but may no longer serve the life you want now.</p>
+              <p><strong>Becoming Again</strong> is a hybrid <em>group coaching program</em> that helps you recognise these patterns, understand the roles you keep stepping into, and make more conscious choices in the here and now.</p>
+              <p>It is for people ready to <strong>move</strong> beyond insight alone and <strong>practise</strong> a different way of <em>living</em>.</p>
+            </div>
 
-            <Link href="/courses/interpersonal-communication-dynamics" className={styles.cta}>
-              <span>Buy Interpersonal Communication Dynamics</span>
+            <Link href="/coaching" className={styles.cta}>
+              <span>Discover Becoming Again</span>
               <FiArrowUpRight aria-hidden="true" />
             </Link>
 
-            <ul className={styles.supportList} aria-label="Course purchase details">
+            <p className={styles.discoveryNote}>A discovery call helps us make sure the group is the right fit for you.</p>
+
+            <ul className={styles.supportList} aria-label="Program details">
               {supportItems.map((item) => (
                 <li key={item}>
                   <FiCheckCircle aria-hidden="true" />

@@ -793,7 +793,7 @@
     position: relative;
     left: auto;
     display: block;
-    order: -1;
+    order: 2;
     width: min(100%, 34rem);
     min-height: clamp(15.5rem, 30vw, 17rem);
     margin: 0 auto;

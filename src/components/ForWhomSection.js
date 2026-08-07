@@ -4,10 +4,18 @@ import { useEffect, useRef, useState } from 'react'
 import styles from '@/app/page.module.css'
 
 const audienceCards = [
-  'For professionals who want to communicate better, lead better, and stop repeating the same patterns.',
-  'For people who feel stuck, disconnected, overlooked, or trapped between who they are and who they know they can become.',
-  'For leaders, educators, entrepreneurs, and teams who want more honest conversations and healthier dynamics.',
-  'For those who are done with surface-level advice and ready for work that is practical, personal, and real.',
+  <>
+    <strong>Professionals</strong> who want to communicate better, lead better, and stop repeating the same patterns.
+  </>,
+  <>
+    For people who feel <strong>stuck, disconnected, overlooked, or trapped</strong> between who they are and who they know they can become.
+  </>,
+  <>
+    For <strong>leaders, educators, entrepreneurs, and teams</strong> who want real conversations and healthier dynamics.
+  </>,
+  <>
+    For those who <strong>are done</strong> with surface-level advice and <strong>ready for work</strong> that is practical, personal, and real.
+  </>,
 ]
 
 export default function ForWhomSection() {
@@ -65,13 +73,13 @@ export default function ForWhomSection() {
               For people who know something has to change
             </h2>
             <p className={styles.forWhomIntro}>
-              Zak Talks is for adults who are ready to stop living on autopilot and start facing what is actually shaping their lives.
+              <strong><em>Okayness</em></strong> is for adults who are ready to stop living on autopilot and start facing what is actually shaping their lives.
             </p>
           </div>
 
           {audienceCards.map((card, index) => (
             <article
-              key={card}
+              key={`audience-card-${index}`}
               ref={registerItem(`card-${index}`)}
               className={itemClassName(`${styles.forWhomCard} ${styles[`forWhomCard${index + 1}`]}`, `card-${index}`)}
             >
@@ -82,8 +90,8 @@ export default function ForWhomSection() {
         </div>
 
         <p ref={registerItem('belong')} className={itemClassName(styles.forWhomBelong, 'belong')}>
-          <span>If you want to be seen, challenged, and supported without judgment,</span>
-          <strong>you belong here.</strong>
+          <span>A space to be seen, challenged, and supported,</span>
+          <strong>without judgment.</strong>
         </p>
       </div>
     </section>

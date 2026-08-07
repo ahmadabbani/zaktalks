@@ -177,7 +177,7 @@
   position: absolute;
   z-index: 2;
   top: 26%;
-  right: calc(100% + clamp(0.85rem, 1.6vw, 1.5rem));
+  right: calc(100% + clamp(2rem, 4.5vw, 4.5rem));
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -559,10 +559,13 @@
    teaser (PodcastFeatureSection), so the two read as one visual language.
    -------------------------------------------------------------------------- */
 
+/* Pushed to the far edge of its column so the panel's right side lands on the
+   same gutter as the navbar, mirroring the heading's left edge. */
 .visual {
   position: relative;
   width: min(100%, 34rem);
   min-height: clamp(34rem, 44vw, 46rem);
+  margin-inline-start: auto;
   isolation: isolate;
 }
 
@@ -633,7 +636,7 @@
   position: absolute;
   z-index: 2;
   top: clamp(6rem, 8.5vw, 7.5rem);
-  left: clamp(1.5rem, 3vw, 3rem);
+  left: 0; /* flush with .subscribeHeading above it */
   display: grid;
   width: clamp(14.5rem, 17vw, 18rem);
   gap: 0.55rem;
@@ -886,6 +889,9 @@
 
   .afterHero {
     margin-top: 0;
+    /* Nothing sits behind it once it stops overlapping the pinned hero, so the
+       rounded corners would just cut two wedges out of the section. */
+    border-radius: 0;
     box-shadow: none;
   }
 
@@ -1052,7 +1058,62 @@
     right: auto;
     bottom: auto;
     order: 2;
-    width: min(58vw, 17rem);
+    width: min(50vw, 14.5rem);
+  }
+
+  /* Stacked under the visual at this width, so it reads as a centred block
+     rather than a left-aligned column with nothing beside it. */
+  .elephantContent {
+    align-items: center;
+    text-align: center;
+  }
+
+  .elephantSubtitle,
+  .elephantCopy {
+    margin-inline: auto;
+  }
+}
+
+/* Phone-only step-down. Once the visual is a plain centred column the phone is
+   the only thing holding the section's height, so it keeps shrinking with the
+   viewport instead of parking at one size. */
+@media (max-width: 580px) {
+  .phoneWrap {
+    width: min(46vw, 12.5rem);
+  }
+}
+
+@media (max-width: 500px) {
+  .phoneWrap {
+    width: min(43vw, 11rem);
+  }
+}
+
+@media (max-width: 420px) {
+  .phoneWrap {
+    width: min(40vw, 9.75rem);
+  }
+}
+
+@media (max-width: 360px) {
+  .phoneWrap {
+    width: min(38vw, 8.75rem);
+  }
+}
+
+/* The heading above the badges grows again at 2000 and 2300 (the shared type
+   vars step up there), but the badges' own `top` clamp is already pinned at
+   its 7.5rem cap — so the 23px gap closes and then goes negative. Two steps,
+   matching the two plateaus the heading settles on, restore that same 23px. */
+@media (min-width: 2000px) {
+  .subscribeLinks {
+    top: 9.125rem;
+  }
+}
+
+@media (min-width: 2300px) {
+  .subscribeLinks {
+    top: 9.5rem;
   }
 }
 
@@ -1239,6 +1300,9 @@
 
   .afterHero {
     margin-top: 0;
+    /* Nothing sits behind it once it stops overlapping the pinned hero, so the
+       rounded corners would just cut two wedges out of the section. */
+    border-radius: 0;
     box-shadow: none;
   }
 

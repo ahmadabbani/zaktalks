@@ -46,7 +46,7 @@ export default function NewsletterSection() {
                 Stay close to the work
               </h2>
               <p className={styles.copy}>
-                Get honest reflections, practical insights, and updates on new episodes, workshops, and courses.
+                Get reflections, practical insights, and updates on new episodes, workshops, and courses.
               </p>
             </div>
           </div>

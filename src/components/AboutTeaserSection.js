@@ -6,11 +6,15 @@ import Link from 'next/link'
 import { FiArrowUpRight } from 'react-icons/fi'
 import styles from './AboutTeaserSection.module.css'
 
-const teaserLine = '"I am here to help people face the splinter beneath the symptoms and do the work that actually changes things."'
+const teaserLine = '"I\'m here to help people look beyond the symptoms, understand what\'s driving them, and do the work that creates lasting change."'
 const teaserWords = teaserLine.split(' ')
 const bioParagraphs = [
-  'Zak Dakkash is a purpose-driven coach and educator whose work helps people understand themselves more clearly, communicate more honestly, and reconnect with a fuller way of living.',
-  'His approach is co-creative, direct, and deeply human, built around safety, awareness, re-decision, integration, and autonomy rather than a rigid formula.',
+  <>
+    Zak is a <strong>Transactional Analysis</strong> practitioner, coach, and educator who helps people understand the patterns shaping their lives, strengthen their relationships, and reclaim greater awareness, choice, and autonomy.
+  </>,
+  <>
+    His work is grounded in <strong>Co-Creative Transactional Analysis</strong>, where change begins with a clear contract and grows through an Adult-to-Adult relationship. Together, coach and client create the conditions for authentic contact, curiosity, and exploration, making it possible to question old survival patterns, make new decisions, and integrate more life-affirming ways of being.
+  </>,
 ]
 
 export default function AboutTeaserSection() {
@@ -102,8 +106,8 @@ export default function AboutTeaserSection() {
             >
               <h2 id="about-teaser-heading" className={styles.title}>Meet Zak</h2>
               <div className={styles.bio}>
-                {bioParagraphs.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                {bioParagraphs.map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
                 ))}
               </div>
 

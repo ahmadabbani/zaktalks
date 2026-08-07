@@ -7,7 +7,7 @@ import Image from 'next/image'
 import styles from './Navbar.module.css'
 
 const serviceLinks = [
-  { href: '/coaching', label: 'Coaching 1 on 1' },
+  { href: '/one-on-one', label: 'Coaching 1 on 1' },
   { href: '/coaching', label: 'The Courage to Be' },
   {
     href: '/courses',

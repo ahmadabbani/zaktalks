@@ -35,6 +35,10 @@
   text-wrap: balance;
 }
 
+.titleLine {
+  display: block;
+}
+
 .intro {
   max-width: 73ch;
   margin-top: clamp(1rem, 1.7vw, 1.55rem);

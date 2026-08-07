@@ -33,6 +33,7 @@ const services = [
     image: '/what-i-do/online-courses.webp',
     imageAlt: 'Abstract illustration of learning panels becoming a path forward',
     tone: 'dark',
+    hidden: true,
   },
   {
     title: 'Workshops & Speaking',
@@ -81,6 +82,7 @@ export default function WhatIDoSection() {
   }
 
   const isItemVisible = (itemId) => visibleItems.includes(itemId)
+  const visibleServices = services.filter((service) => !service.hidden)
 
   return (
     <section
@@ -98,7 +100,7 @@ export default function WhatIDoSection() {
               Choose the path that meets you where you are
             </h2>
             <p className={styles.intro}>
-              There is no fixed script here. The work is built around what you need, what you are ready for, and what will actually move you forward.
+              The work is built around what you need, what you are ready for, and what will actually move you forward.
             </p>
           </div>
 
@@ -111,7 +113,7 @@ export default function WhatIDoSection() {
         <div className={styles.rail}>
           {[0, 2].map((rowStart) => (
             <div key={rowStart} className={styles.railRow}>
-              {services.slice(rowStart, rowStart + 2).map((service, rowIndex) => {
+              {visibleServices.slice(rowStart, rowStart + 2).map((service, rowIndex) => {
                 const index = rowStart + rowIndex
                 const isActive = activeIndex === index
                 const itemId = `service-${index}`

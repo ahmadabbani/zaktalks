@@ -419,6 +419,80 @@ export default function AboutPageContent() {
             <h2 id="about-intro-heading" className={styles.storyIntroTitle}>
               <span className={styles.storyIntroHey}>Hey</span>
               <span className={styles.storyIntroNameRow}>
+                {/* Mirrored twin of the arrow below: same artwork rotated 180deg,
+                    so it leaves the word on the left and leads back up. */}
+                <svg
+                  className={`${styles.storyArrow} ${styles.storyArrowBack} ${styles.storyArrowDefault}`}
+                  viewBox="0 0 1000 1000"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <defs>
+                    <mask
+                      id="about-brush-arrow-reveal-back"
+                      className={styles.storyArrowGrowthMask}
+                      maskUnits="userSpaceOnUse"
+                      x="0"
+                      y="0"
+                      width="1000"
+                      height="1000"
+                    >
+                      <path
+                        className={`${styles.storyArrowGrowthPath} ${styles.storyArrowGrowthCurve}`}
+                        pathLength="1"
+                        d="M65 92C250 245 410 250 566 145C720 48 862 158 900 374C936 578 889 733 792 850"
+                      />
+                      <path
+                        className={`${styles.storyArrowGrowthPath} ${styles.storyArrowGrowthHead}`}
+                        pathLength="1"
+                        d="M744 679L790 881L929 696"
+                      />
+                    </mask>
+                  </defs>
+                  <image
+                    href="/about-brush-arrow-v2.png"
+                    width="1000"
+                    height="1000"
+                    preserveAspectRatio="none"
+                    mask="url(#about-brush-arrow-reveal-back)"
+                  />
+                </svg>
+                <svg
+                  className={`${styles.storyArrow} ${styles.storyArrowBack} ${styles.storyArrowLong}`}
+                  viewBox="0 0 1024 1536"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <defs>
+                    <mask
+                      id="about-brush-arrow-reveal-long-back"
+                      className={styles.storyArrowGrowthMask}
+                      maskUnits="userSpaceOnUse"
+                      x="0"
+                      y="0"
+                      width="1024"
+                      height="1536"
+                    >
+                      <path
+                        className={`${styles.storyArrowGrowthPath} ${styles.storyArrowGrowthCurve}`}
+                        pathLength="1"
+                        d="M92 164C286 326 472 270 622 198C812 108 919 346 894 694C875 929 821 1082 764 1186"
+                      />
+                      <path
+                        className={`${styles.storyArrowGrowthPath} ${styles.storyArrowGrowthHead}`}
+                        pathLength="1"
+                        d="M708 1004L755 1292L910 1060"
+                      />
+                    </mask>
+                  </defs>
+                  <image
+                    href="/about-brush-arrow-medium.png"
+                    width="1024"
+                    height="1536"
+                    preserveAspectRatio="none"
+                    mask="url(#about-brush-arrow-reveal-long-back)"
+                  />
+                </svg>
                 <span className={styles.storyIntroName}>I’M ZAK!</span>
                 <svg
                   className={`${styles.storyArrow} ${styles.storyArrowDefault}`}
@@ -551,7 +625,7 @@ export default function AboutPageContent() {
               <p>
                 My shift into <strong>Personal Development</strong> and Mental Health came from a simple but life-changing realization:{' '}
                 <em className={styles.storyBlueItalic}>If we can design almost anything externally, why do we not learn how to consciously design a life from within?</em>{' '}
-                That question changed my direction and became the foundation of Okayness.
+                That question changed my direction and became the foundation of <em className={styles.storyBlueItalic}>Okayness</em>.
               </p>
             </div>
 

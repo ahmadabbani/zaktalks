@@ -83,7 +83,7 @@ export default function PodcastFeatureSection() {
             </h2>
 
             <p className={styles.copy}>
-              The elephant in the room finally speaks. On Zak Talks, Zak explores the truths people avoid, the patterns that shape us, and the conversations that create change. This is where unfiltered conversations, untold truths, and the hard questions finally get spoken out loud. The podcast creates space for honesty, reflection, and deeper awareness across the topics that shape how we live and relate.
+              <strong>The Elephant In The Room</strong> finally speaks. On <strong>Zak Talks</strong>, Zak explores the truths people avoid, the patterns that shape us, and the conversations that create change. This is where unfiltered conversations, untold truths, and the hard questions finally get spoken out loud. The podcast creates space for reflection and deeper awareness across the topics that shape how we live and relate.
             </p>
 
             <Link href="/speaking" className={styles.cta}>

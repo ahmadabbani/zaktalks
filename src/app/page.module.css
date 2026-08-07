@@ -50,13 +50,17 @@
 }
 
 .heroTitle {
-  max-width: 12ch;
+  max-width: 18ch;
   color: var(--home-headline-color);
   font-size: var(--home-headline-size);
   font-weight: var(--home-headline-weight);
   line-height: var(--home-headline-line-height);
   letter-spacing: var(--home-headline-letter-spacing);
   text-wrap: balance;
+}
+
+.heroTitle span {
+  display: block;
 }
 
 .heroDescription {
@@ -103,16 +107,18 @@
   box-shadow: 0 10px 24px rgba(85, 135, 166, 0.22);
 }
 
-.secondaryHeroCta {
-  background: transparent;
-  color: var(--color-dark-blue);
+.hiddenHeroCta {
+  display: none;
 }
 
-.primaryHeroCta::after,
-.secondaryHeroCta::after {
-  content: '\2197';
-  margin-left: 0.65rem;
-  font-size: 0.9em;
+.secondaryHeroCta {
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+  box-shadow: 0 10px 24px rgba(85, 135, 166, 0.22);
+}
+
+.secondaryHeroCta svg {
+  font-size: 1.25em;
   transition: var(--home-cta-arrow-transition);
 }
 
@@ -135,10 +141,8 @@
   outline: none;
 }
 
-.primaryHeroCta:hover::after,
-.primaryHeroCta:focus-visible::after,
-.secondaryHeroCta:hover::after,
-.secondaryHeroCta:focus-visible::after {
+.secondaryHeroCta:hover svg,
+.secondaryHeroCta:focus-visible svg {
   color: var(--color-white);
   transform: var(--home-cta-arrow-hover-transform);
 }
