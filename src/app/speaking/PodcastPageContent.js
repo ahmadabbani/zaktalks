@@ -277,7 +277,7 @@ export default function PodcastPageContent() {
                 </h2>
 
                 <p className={styles.elephantSubtitle}>
-                  Zak Talks is a podcast about the truths we all feel, rarely name, and can no
+                  ZakTalks is a podcast about the truths we all feel, rarely name, and can no
                   longer afford to avoid.
                 </p>
 
@@ -332,7 +332,7 @@ export default function PodcastPageContent() {
                 <div className={styles.phoneWrap}>
                   <Image
                     src="/podcast/zak-talks-phone-facing-copy-v2.png"
-                    alt="Phone playing a Zak Talks episode"
+                    alt="Phone playing a ZakTalks episode"
                     width={941}
                     height={1672}
                     sizes="(max-width: 1024px) 40vw, 22vw"
@@ -353,7 +353,7 @@ export default function PodcastPageContent() {
             >
               <Image
                 src="/Who this podcast is for.jpg"
-                alt="A room of people connecting after a Zak Talks live session"
+                alt="A room of people connecting after a ZakTalks live session"
                 width={1692}
                 height={1128}
                 sizes="(max-width: 900px) 100vw, 48vw"
@@ -374,7 +374,7 @@ export default function PodcastPageContent() {
                 <span className={styles.audienceNumber}>01</span>
                 <h3 className={styles.audienceCardTitle}>Who this podcast is for</h3>
                 <p>
-                  Zak Talks is for people who feel there is more to their life and
+                  ZakTalks is for people who feel there is more to their life and
                   relationships, but can&rsquo;t quite name what&rsquo;s missing. For
                   Millennials and beyond who are tired of surface-level advice and want real
                   conversations about communication, self-awareness, and personal growth.
@@ -388,7 +388,7 @@ export default function PodcastPageContent() {
                   Every episode leaves you with practical insight and language for what you
                   feel but struggle to express: clearer understanding of your patterns, tools
                   to communicate differently, and the courage to face what you&rsquo;ve been
-                  avoiding&mdash;with yourself and with others.
+                  avoiding, with yourself and with others.
                 </p>
               </article>
             </div>

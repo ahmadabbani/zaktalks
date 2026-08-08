@@ -40,7 +40,7 @@ export default function NavbarClient({ user, role, signout }) {
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
     { href: '/speaking', label: 'Podcast' },
-    { href: '/contact', label: 'Contact' },
+    { href: '/contact', label: 'Contact Us' },
   ]
 
   const toggleMenu = () => {

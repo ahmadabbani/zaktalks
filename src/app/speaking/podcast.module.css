@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Zak Talks — podcast page
+   ZakTalks — podcast page
    Palette is restricted to yellow / black / white / light-gray. No blue.
    All type roles consume the shared --home-* vars so this page inherits the
    exact same sizes as the homepage and about page at every breakpoint.

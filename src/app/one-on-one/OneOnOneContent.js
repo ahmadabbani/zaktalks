@@ -50,7 +50,7 @@ const weightPoints = [
   {
     id: 'anger',
     kind: 'mid',
-    text: 'Anger—either turned inward or spilling into their relationships.',
+    text: 'Anger, either turned inward or spilling into their relationships.',
   },
   {
     id: 'disconnected',
@@ -131,7 +131,7 @@ const journeySteps = [
       <>
         Over time, you experience more freedom: less pressure from old scripts, more grounded
         confidence, clearer communication, and a relationship with yourself that feels honest
-        and good. This is autonomy&mdash;living from your own voice, not from the expectations
+        and good. This is autonomy: living from your own voice, not from the expectations
         and fears that used to run the show.
       </>
     ),
@@ -197,7 +197,7 @@ const processSteps = [
     title: 'Ongoing sessions',
     paragraphs: [
       'Week by week, we allow the session to lead us to the real issue.',
-      'Many people come in thinking “the problem is X,” but together we often discover it’s something deeper—and more meaningful to work on.',
+      'Many people come in thinking “the problem is X,” but together we often discover it’s something deeper, and more meaningful to work on.',
       'As we progress, you’ll begin to feel more calm, more grounded, and more connected to yourself.',
     ],
   },
@@ -409,8 +409,8 @@ export default function OneOnOneContent() {
                 together.
               </p>
               <p>
-                If you feel something in your life cannot stay the same anymore&mdash;your
-                relationships, your patterns, your inner world&mdash;One-on-One Coaching gives
+                If you feel something in your life cannot stay the same anymore, whether your
+                relationships, your patterns, or your inner world, One-on-One Coaching gives
                 you a safe, grounded place to explore it, name it, and slowly change it.
               </p>
             </div>
@@ -486,9 +486,9 @@ export default function OneOnOneContent() {
             className={cx(styles.weightCopy, 'weight-copy')}
           >
             <p className={styles.weightLead}>
-              They often know where they want to go&mdash;call it destination B.
+              They often know where they want to go; call it destination B.
               <br />
-              But they don&rsquo;t truly know where they are right now&mdash;point A.
+              But they don&rsquo;t truly know where they are right now: point A.
             </p>
             <p>
               Without clearly seeing point A, it becomes almost impossible to measure the
@@ -627,7 +627,7 @@ export default function OneOnOneContent() {
 
             <p className={styles.structureNote}>
               This experience is not just &ldquo;uplifting.&rdquo; It is designed to be
-              genuinely transformative&mdash;not motivational noise that fades after a few
+              genuinely transformative, not motivational noise that fades after a few
               days.
             </p>
           </div>

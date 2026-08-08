@@ -106,7 +106,7 @@ const milestones = [
   },
   {
     year: '2025',
-    title: 'Zak Talks Podcast Launch',
+    title: 'ZakTalks Podcast Launch',
     date: 'Premiered Apr 27, 2025',
     badge: 'Launch',
     tone: 'yellow',
@@ -381,7 +381,7 @@ export default function AboutPageContent() {
         <div
           ref={countersRef}
           className={`${styles.countersSection} ${countersVisible ? styles.countersVisible : ''}`}
-          aria-label="Zak Talks experience and community"
+          aria-label="ZakTalks experience and community"
         >
           <div className={styles.contentWidth}>
             <div className={styles.counterPanel} role="list">

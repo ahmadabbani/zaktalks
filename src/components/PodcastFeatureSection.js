@@ -83,7 +83,7 @@ export default function PodcastFeatureSection() {
             </h2>
 
             <p className={styles.copy}>
-              <strong>The Elephant In The Room</strong> finally speaks. On <strong>Zak Talks</strong>, Zak explores the truths people avoid, the patterns that shape us, and the conversations that create change. This is where unfiltered conversations, untold truths, and the hard questions finally get spoken out loud. The podcast creates space for reflection and deeper awareness across the topics that shape how we live and relate.
+              <strong>The Elephant In The Room</strong> finally speaks. On <strong>ZakTalks</strong>, Zak explores the truths people avoid, the patterns that shape us, and the conversations that create change. This is where unfiltered conversations, untold truths, and the hard questions finally get spoken out loud. The podcast creates space for reflection and deeper awareness across the topics that shape how we live and relate.
             </p>
 
             <Link href="/speaking" className={styles.cta}>
@@ -109,7 +109,7 @@ export default function PodcastFeatureSection() {
             ref={registerItem('visual')}
             className={itemClassName(styles.visual, 'visual')}
           >
-            <div className={styles.platformLinks} aria-label="Listen to Zak Talks">
+            <div className={styles.platformLinks} aria-label="Listen to ZakTalks">
               {podcastPlatforms.map((platform) => {
                 const Icon = platform.icon
 
@@ -134,7 +134,7 @@ export default function PodcastFeatureSection() {
             <div className={styles.phoneWrap}>
               <Image
                 src="/podcast/zak-talks-phone-facing-copy-v2.png"
-                alt="Modern phone playing The Conversations We Avoid on Zak Talks"
+                alt="Modern phone playing The Conversations We Avoid on ZakTalks"
                 width={941}
                 height={1672}
                 sizes="(max-width: 1024px) 31vw, 34vw"
