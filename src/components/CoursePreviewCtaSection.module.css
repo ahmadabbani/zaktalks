@@ -110,8 +110,9 @@
 }
 
 .discoveryNote {
-  max-width: 46ch;
+  max-width: none;
   margin-top: 0.55rem;
+  white-space: nowrap;
   color: rgba(33, 44, 45, 0.68);
   font-size: clamp(0.64rem, 0.18vw + 0.58rem, 0.76rem);
   font-weight: 620;
@@ -580,6 +581,13 @@
     gap: 1.5rem;
   }
 
+  .discoveryNote {
+    max-width: 100%;
+    align-self: center;
+    text-align: center;
+    white-space: normal;
+  }
+
   .visualWrap {
     width: 100%;
     max-width: none;
@@ -594,7 +602,7 @@
   }
 
   .imageFrame {
-    width: min(52vw, 13rem);
+    width: min(65vw, 16.5rem);
     margin-inline: auto;
   }
 }
@@ -610,7 +618,7 @@
   }
 
   .imageFrame {
-    width: min(58vw, 12.5rem);
+    width: min(70vw, 15.5rem);
     aspect-ratio: 1;
     border-radius: clamp(1.25rem, 5vw, 1.75rem);
   }
@@ -618,7 +626,7 @@
 
 @media (max-width: 420px) {
   .imageFrame {
-    width: min(62vw, 11.5rem);
+    width: min(74vw, 14rem);
   }
 }
 

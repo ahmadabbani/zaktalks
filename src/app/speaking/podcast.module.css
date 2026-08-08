@@ -1058,7 +1058,7 @@
     right: auto;
     bottom: auto;
     order: 2;
-    width: min(50vw, 14.5rem);
+    width: min(62vw, 18rem);
   }
 
   /* Stacked under the visual at this width, so it reads as a centred block
@@ -1079,25 +1079,25 @@
    viewport instead of parking at one size. */
 @media (max-width: 580px) {
   .phoneWrap {
-    width: min(46vw, 12.5rem);
+    width: min(58vw, 16rem);
   }
 }
 
 @media (max-width: 500px) {
   .phoneWrap {
-    width: min(43vw, 11rem);
+    width: min(55vw, 14rem);
   }
 }
 
 @media (max-width: 420px) {
   .phoneWrap {
-    width: min(40vw, 9.75rem);
+    width: min(52vw, 12.5rem);
   }
 }
 
 @media (max-width: 360px) {
   .phoneWrap {
-    width: min(38vw, 8.75rem);
+    width: min(50vw, 11.25rem);
   }
 }
 

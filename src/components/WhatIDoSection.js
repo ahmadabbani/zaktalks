@@ -36,7 +36,7 @@ const services = [
     hidden: true,
   },
   {
-    title: 'Workshops & Speaking',
+    title: 'Events',
     copy: 'Live experiences for teams, organizations, and communities that want practical insight, emotional honesty, and conversations that lead to real change.',
     cta: 'Inquire about events',
     href: '/contact',

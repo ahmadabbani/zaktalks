@@ -1,13 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Knewave&display=swap');
-
-@font-face {
-  font-family: 'ShakiesLocal';
-  src: url('/font/shakies/Web-PS/Shakies-Web-PS.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
 .section {
   position: relative;
   overflow: hidden;
@@ -451,7 +441,7 @@
   }
 
   .portraitFrame {
-    width: min(52vw, 13rem);
+    width: min(65vw, 16.5rem);
   }
 }
 
@@ -461,7 +451,7 @@
   }
 
   .portraitFrame {
-    width: min(58vw, 12.5rem);
+    width: min(70vw, 15.5rem);
     aspect-ratio: 1;
     border-radius: clamp(1.25rem, 5vw, 1.75rem);
   }
@@ -469,7 +459,7 @@
 
 @media (max-width: 420px) {
   .portraitFrame {
-    width: min(62vw, 11.5rem);
+    width: min(74vw, 14rem);
   }
 }
 

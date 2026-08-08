@@ -3,15 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { FiArrowUpRight, FiCheckCircle } from 'react-icons/fi'
+import { FiArrowUpRight } from 'react-icons/fi'
 import styles from './CoursePreviewCtaSection.module.css'
-
-const supportItems = [
-  'One-time payment',
-  'Lifetime access',
-  'Self-paced learning',
-  '24-hour money-back guarantee',
-]
 
 export default function CoursePreviewCtaSection() {
   const sectionRef = useRef(null)
@@ -55,15 +48,6 @@ export default function CoursePreviewCtaSection() {
             </Link>
 
             <p className={styles.discoveryNote}>A discovery call helps us make sure the group is the right fit for you.</p>
-
-            <ul className={styles.supportList} aria-label="Program details">
-              {supportItems.map((item) => (
-                <li key={item}>
-                  <FiCheckCircle aria-hidden="true" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
           </div>
 
           <div className={styles.visualWrap}>

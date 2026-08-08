@@ -136,17 +136,17 @@
 
 .secondaryCta {
   padding: 0.78rem 1.6rem;
-  color: var(--color-deep-slate);
-  border: 2px solid rgba(85, 135, 166, 0.45);
-  background: transparent;
+  color: var(--color-white);
+  border: 2px solid var(--color-dark-blue);
+  background: var(--color-dark-blue);
 }
 
 .secondaryCta:hover,
 .secondaryCta:focus-visible {
   color: var(--color-white);
-  border-color: var(--color-dark-blue);
-  background: var(--color-dark-blue);
-  box-shadow: 0 1.1rem 2.4rem rgba(85, 135, 166, 0.24);
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  box-shadow: 0 1.1rem 2.4rem rgba(196, 159, 12, 0.22);
   transform: var(--home-cta-hover-transform);
   outline: none;
 }
@@ -180,18 +180,68 @@
   object-position: 52% center;
 }
 
+/* Progressive blur rather than a bordered glass panel: two stacked backdrop
+   layers, each blurrier than the last and masked to fade out higher up, so
+   the effect ramps from untouched photo at the top to fully blurred at the
+   bottom. Without the ramp a single blurred box leaves a hard horizontal
+   seam where the filter stops. */
 .heroFactCard {
   position: absolute;
-  right: clamp(0.85rem, 1.6vw, 1.5rem);
-  bottom: clamp(0.85rem, 1.6vw, 1.5rem);
-  left: clamp(0.85rem, 1.6vw, 1.5rem);
-  padding: clamp(1rem, 1.8vw, 1.5rem) clamp(1rem, 1.8vw, 1.6rem);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: calc(var(--oo-radius) * 0.75);
-  background: rgba(33, 44, 45, 0.5);
-  backdrop-filter: blur(14px) saturate(1.15);
-  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: clamp(3.25rem, 7vw, 5rem) clamp(1.1rem, 2vw, 1.7rem)
+    clamp(1.25rem, 2.2vw, 1.85rem);
   text-align: center;
+}
+
+.heroFactCard::before,
+.heroFactCard::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Light layer: covers the whole area, dissolving to nothing at the very top. */
+.heroFactCard::before {
+  backdrop-filter: blur(48px) saturate(1.7);
+  -webkit-backdrop-filter: blur(48px) saturate(1.7);
+  mask-image: linear-gradient(
+    to top,
+    #000 55%,
+    rgba(0, 0, 0, 0.78) 80%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to top,
+    #000 55%,
+    rgba(0, 0, 0, 0.78) 80%,
+    transparent 100%
+  );
+}
+
+/* Heavy layer + the legibility scrim: stops well short of the top so the
+   strong blur only ever sits under the text. */
+.heroFactCard::after {
+  background: linear-gradient(
+    to top,
+    rgba(33, 44, 45, 0.76),
+    rgba(33, 44, 45, 0.3) 58%,
+    rgba(33, 44, 45, 0) 100%
+  );
+  backdrop-filter: blur(150px) saturate(2.2) brightness(1.08);
+  -webkit-backdrop-filter: blur(150px) saturate(2.2) brightness(1.08);
+  mask-image: linear-gradient(to top, #000 32%, transparent 82%);
+  -webkit-mask-image: linear-gradient(to top, #000 32%, transparent 82%);
+}
+
+/* Pseudo-elements generate after real children, so the copy needs its own
+   layer to stay above the blur stack. */
+.heroFactCard > * {
+  position: relative;
+  z-index: 1;
 }
 
 .factValue {
@@ -230,7 +280,7 @@
 
 /* =============================================================== REVEALS == */
 
-.eyebrow,
+.hero .eyebrow,
 .heroTitle,
 .heroActions,
 .heroImageFrame,
@@ -284,6 +334,18 @@
   }
 }
 
+@keyframes ooSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-2.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* ============================================================ RESPONSIVE == */
 
 @media (max-width: 1300px) {
@@ -314,7 +376,9 @@
     text-align: center;
   }
 
-  .eyebrow {
+  /* Scoped to the hero: its copy centres at this breakpoint. Sections whose
+     heading stays left-aligned keep their label left-aligned too. */
+  .hero .eyebrow {
     justify-content: center;
   }
 
@@ -363,10 +427,10 @@
   }
 
   .heroFactCard {
-    right: 0.7rem;
-    bottom: 0.7rem;
-    left: 0.7rem;
-    padding: 0.85rem 0.9rem;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 2.75rem 0.9rem 1rem;
   }
 
   .factValue {
@@ -385,12 +449,17 @@
 
 .quoteSection {
   padding-block: clamp(4rem, 7vw, 7.5rem);
-  background: var(--color-gray-light);
+  background: var(--color-white);
 }
 
 .quoteBlock {
   margin: 0;
   text-align: center;
+  opacity: 0;
+}
+
+.quoteBlock.isVisible {
+  animation: ooRise 0.85s var(--oo-ease) both;
 }
 
 .quote {
@@ -422,12 +491,1274 @@
   }
 }
 
+/* =============================================================== WHO/FIT == */
+
+.fitSection {
+  padding-block: clamp(4rem, 7vw, 7.5rem);
+  background: var(--color-gray-light);
+}
+
+.fitLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2.5rem, 5vw, 5.5rem);
+  align-items: start;
+}
+
+.fitIntro {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  opacity: 0;
+}
+
+.fitIntro.isVisible {
+  animation: ooSlideRight 0.85s var(--oo-ease) both;
+}
+
+.fitTitle {
+  margin-top: -0.14em; /* optical: cancels the cap-height gap its larger line-height adds above the glyphs, so it lines up with the smaller list headings on the right */
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.fitCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: clamp(1.4rem, 2.2vw, 2rem);
+  max-width: 56ch;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.fitLists {
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+}
+
+.fitLists.isVisible {
+  animation: ooSlideLeft 0.85s 0.1s var(--oo-ease) both;
+}
+
+.fitList + .fitList {
+  margin-top: clamp(1.75rem, 2.6vw, 2.25rem);
+  padding-top: clamp(1.75rem, 2.6vw, 2.25rem);
+  border-top: 1px solid rgba(33, 44, 45, 0.14);
+}
+
+.fitListTitle {
+  color: var(--home-headline-color);
+  font-size: var(--home-subheading-size);
+  font-weight: 800;
+  line-height: var(--home-subheading-line-height);
+}
+
+.fitList ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: clamp(0.9rem, 1.4vw, 1.15rem);
+  list-style: none;
+}
+
+.fitList li {
+  position: relative;
+  padding-left: 1.3rem;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.fitList li::before {
+  content: '';
+  position: absolute;
+  top: 0.62em;
+  left: 0;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--color-dark-blue);
+}
+
+@media (max-width: 900px) {
+  .fitLayout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+/* =============================================================== WEIGHT == */
+
+.weightSection {
+  padding-block: clamp(4rem, 7vw, 7.5rem);
+  background: var(--color-white);
+}
+
+.weightInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.weightHeader {
+  display: flex;
+  max-width: 46rem;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+}
+
+.weightHeader.isVisible {
+  animation: ooRise 0.85s var(--oo-ease) both;
+}
+
+.weightHeader .eyebrow {
+  justify-content: center;
+}
+
+.weightTitle {
+  margin-top: 0.6rem;
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+  text-wrap: balance;
+}
+
+.weightSubheading {
+  margin-top: clamp(1rem, 1.8vw, 1.4rem);
+  max-width: 40ch;
+  color: var(--home-subheading-color);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-subheading-weight);
+  line-height: var(--home-subheading-line-height);
+}
+
+.weightTimeline {
+  position: relative;
+  width: 100%;
+  max-width: 68rem;
+  margin-top: clamp(3rem, 5.5vw, 4.5rem);
+  opacity: 0;
+}
+
+.weightTimeline.isVisible {
+  animation: ooRise 0.9s 0.1s var(--oo-ease) both;
+}
+
+.weightList {
+  --weight-gap: clamp(1rem, 2vw, 1.75rem);
+  --weight-track-y: 1.1rem; /* vertical center shared by every dot and connector segment */
+
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--weight-gap);
+  list-style: none;
+}
+
+.weightPoint {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2.4rem;
+  text-align: center;
+  opacity: 0;
+}
+
+.weightTimeline.isVisible .weightPoint {
+  animation: ooRise 0.6s var(--point-delay, 0ms) var(--oo-ease) both;
+}
+
+/* Connector segments run only from this point's own center to the next
+   point's center — never past the first or last dot — so the line can
+   never appear to run "behind" point A or beyond point B. */
+.weightPoint:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: var(--weight-track-y);
+  left: 50%;
+  width: calc(100% + var(--weight-gap));
+  height: 2px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--color-dark-blue) 0,
+    var(--color-dark-blue) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  transform: translateY(-1px);
+}
+
+.weightDot {
+  position: absolute;
+  z-index: 2; /* sits above the connector's ::after so the dashes never show through the hollow ring */
+  top: var(--weight-track-y);
+  left: 50%;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid var(--color-dark-blue);
+  border-radius: 50%;
+  background: var(--color-white);
+  transform: translate(-50%, -50%);
+}
+
+.weightPointEndpoint .weightDot {
+  width: 1.55rem;
+  height: 1.55rem;
+  border: 3px solid var(--color-white);
+  background: var(--color-yellow);
+  box-shadow: 0 0.4rem 1rem rgba(196, 159, 12, 0.35);
+}
+
+.weightPointLabel {
+  margin-bottom: 0.3rem;
+  color: var(--color-dark-blue);
+  font-size: var(--home-small-text-size, 0.8rem);
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.weightPointText {
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.weightPointEndpoint .weightPointText {
+  color: var(--home-headline-color);
+  font-weight: 700;
+}
+
+.weightCopy {
+  display: flex;
+  max-width: 46rem;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: clamp(2.75rem, 5vw, 4rem);
+  padding-top: clamp(2.5rem, 4.5vw, 3.5rem);
+  border-top: 1px solid rgba(33, 44, 45, 0.14);
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+  text-align: center;
+  opacity: 0;
+}
+
+.weightCopy.isVisible {
+  animation: ooRise 0.85s 0.15s var(--oo-ease) both;
+}
+
+.weightLead {
+  color: var(--home-headline-color);
+  font-size: calc(var(--home-text-size) * 1.2);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .weightList {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2.5rem;
+  }
+
+  /* Segments connect neighbors within a row only — across a row wrap they'd
+     cut across unrelated points, so drop them at this layout. Matches the
+     base rule's :not(:last-child)::after specificity so this actually wins. */
+  .weightPoint:not(:last-child)::after {
+    content: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .weightList {
+    /* Every dot centres on one shared rail so the vertical connector lines
+       up through all of them — the endpoint dots are wider, so the rail sits
+       at half the widest dot rather than at the point's left edge. */
+    --weight-rail-x: 0.775rem;
+    --weight-row-gap: 1.75rem;
+    --weight-track-y: 0.6rem;
+
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 22rem;
+    margin-inline: auto;
+    row-gap: var(--weight-row-gap);
+  }
+
+  .weightPoint {
+    padding-top: 0;
+    padding-left: 2.3rem;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .weightDot,
+  .weightPointEndpoint .weightDot {
+    top: var(--weight-track-y);
+    left: var(--weight-rail-x);
+    transform: translate(-50%, -50%);
+  }
+
+  /* Stacked, the timeline already reads as its own block, so the rule above
+     the closing copy is just noise. */
+  .weightCopy {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  /* Connectors come back, now running vertically: from this dot's centre down
+     to the next one's. Height is the rest of this point plus the row gap plus
+     the next dot's offset, which reduces to 100% + the gap. */
+  .weightPoint:not(:last-child)::after {
+    content: '';
+    top: var(--weight-track-y);
+    left: var(--weight-rail-x);
+    width: 2px;
+    height: calc(100% + var(--weight-row-gap));
+    background: repeating-linear-gradient(
+      to bottom,
+      var(--color-dark-blue) 0,
+      var(--color-dark-blue) 8px,
+      transparent 8px,
+      transparent 16px
+    );
+    transform: translateX(-1px);
+  }
+}
+
+/* ============================================================== JOURNEY == */
+
+.journeySection {
+  padding-block: clamp(4rem, 7vw, 7.5rem);
+  background: var(--color-gray-light);
+}
+
+/* Copy stacks down the left, the step chain fills the right and spans both
+   rows — so the section reads as two balanced columns instead of one tall
+   left-aligned run with dead space beside it. */
+.journeyLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  grid-template-rows: auto 1fr;
+  gap: clamp(2.25rem, 4.5vw, 4.5rem);
+  align-items: start;
+}
+
+.journeyHeader {
+  grid-row: 1;
+  grid-column: 1;
+  opacity: 0;
+}
+
+.journeyHeader.isVisible {
+  animation: ooRise 0.85s var(--oo-ease) both;
+}
+
+.journeyTitle {
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+  text-wrap: balance;
+}
+
+.journeySubheading {
+  margin-top: clamp(1rem, 1.8vw, 1.5rem);
+  max-width: 62ch;
+  color: var(--home-subheading-color);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-subheading-weight);
+  line-height: var(--home-subheading-line-height);
+}
+
+.journeySteps {
+  --journey-dot: clamp(2.75rem, 4vw, 3.35rem);
+
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  list-style: none;
+}
+
+.journeyStep {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--journey-dot) minmax(0, 1fr);
+  gap: clamp(1.1rem, 2.2vw, 1.85rem);
+  padding-bottom: clamp(2rem, 3.4vw, 3rem);
+  opacity: 0;
+}
+
+.journeyStep:last-child {
+  padding-bottom: 0;
+}
+
+/* The rail runs from under this step's marker to the next one's, so the
+   chain reads as one continuous journey and never overshoots the last step. */
+.journeyStep:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: var(--journey-dot);
+  bottom: 0;
+  left: calc(var(--journey-dot) / 2);
+  width: 2px;
+  background: rgba(85, 135, 166, 0.28);
+  transform: translateX(-50%);
+}
+
+/* Last leg fades into the yellow it arrives at. */
+.journeyStep:nth-last-child(2)::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(85, 135, 166, 0.28),
+    var(--color-yellow)
+  );
+}
+
+.journeyStep.isVisible {
+  animation: ooRise 0.7s var(--oo-ease) both;
+}
+
+.journeyNumber {
+  display: grid;
+  width: var(--journey-dot);
+  height: var(--journey-dot);
+  place-items: center;
+  border: 2px solid var(--color-dark-blue);
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-dark-blue);
+  font-size: var(--home-small-text-size, 0.8rem);
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.journeyStepFinal .journeyNumber {
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  color: var(--color-black);
+  box-shadow: 0 0.5rem 1.4rem rgba(196, 159, 12, 0.32);
+}
+
+.journeyBody {
+  min-width: 0;
+  padding-top: clamp(0.3rem, 0.7vw, 0.55rem);
+}
+
+.journeyStepTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.55rem;
+  color: var(--home-headline-color);
+  font-size: var(--home-subheading-size);
+  font-weight: 800;
+  line-height: var(--home-subheading-line-height);
+}
+
+.journeyIcon {
+  display: inline-flex;
+  align-self: center;
+  color: var(--color-dark-blue);
+  font-size: 1.2em;
+}
+
+.journeyStepFinal .journeyIcon {
+  color: var(--color-yellow-dark);
+}
+
+.journeyStepLead {
+  color: var(--home-text-color);
+  font-weight: 600;
+}
+
+.journeyStepText {
+  margin-top: 0.55rem;
+  max-width: 68ch;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.journeyOutro {
+  display: flex;
+  grid-row: 2;
+  grid-column: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1.1rem, 2vw, 1.6rem);
+  padding-top: clamp(1.75rem, 3vw, 2.5rem);
+  border-top: 1px solid rgba(33, 44, 45, 0.14);
+  opacity: 0;
+}
+
+.journeyOutro.isVisible {
+  animation: ooRise 0.85s var(--oo-ease) both;
+}
+
+.journeyOutroText {
+  max-width: 46ch;
+  color: var(--home-headline-color);
+  font-size: calc(var(--home-text-size) * 1.2);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .journeyLayout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+  }
+
+  /* Back to source order: heading, the chain, then the closing CTA. */
+  .journeyHeader,
+  .journeySteps,
+  .journeyOutro {
+    grid-row: auto;
+    grid-column: 1;
+  }
+
+  .journeySubheading {
+    max-width: 62ch;
+  }
+}
+
+@media (max-width: 620px) {
+  .journeySteps {
+    --journey-dot: 2.4rem;
+  }
+
+  .journeyStepTitle {
+    gap: 0.1rem 0.45rem;
+  }
+
+  .journeyOutro {
+    align-items: stretch;
+  }
+
+  .journeyOutro .primaryCta {
+    justify-content: center;
+  }
+}
+
+/* ============================================================ STRUCTURE == */
+
+.structureSection {
+  padding-block: clamp(4rem, 7vw, 7.5rem);
+  background: var(--color-white);
+}
+
+.structureHeader {
+  max-width: 70%;
+  opacity: 0;
+}
+
+.structureHeader.isVisible {
+  animation: ooRise 0.85s var(--oo-ease) both;
+}
+
+.structureTitle {
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+  /* No `balance` here: it evens the two lines out and leaves the row short.
+     Letting it fill naturally uses the full width before it wraps. */
+}
+
+.structureCards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 1.8vw, 1.5rem);
+  margin-top: clamp(2.5rem, 4.5vw, 3.75rem);
+}
+
+.structureCard {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: clamp(1.5rem, 2.2vw, 2rem) clamp(1.35rem, 2vw, 1.75rem);
+  border-radius: var(--oo-radius);
+  background: var(--color-gray-light);
+  opacity: 0;
+}
+
+.structureCard.isVisible {
+  animation: ooRise 0.7s var(--card-delay, 0ms) var(--oo-ease) both;
+}
+
+.structureIcon {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: clamp(0.9rem, 1.5vw, 1.2rem);
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-dark-blue);
+  font-size: 1.2rem;
+}
+
+.structureCardTitle {
+  margin-bottom: 0.4rem;
+  color: var(--home-headline-color);
+  font-size: var(--home-subheading-size);
+  font-weight: 800;
+  line-height: var(--home-subheading-line-height);
+}
+
+.structureCardText {
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.structureExpect {
+  margin-top: clamp(2.5rem, 4.5vw, 3.75rem);
+  padding-top: clamp(2.25rem, 4vw, 3.25rem);
+  border-top: 1px solid rgba(33, 44, 45, 0.14);
+  opacity: 0;
+}
+
+.structureExpect.isVisible {
+  animation: ooRise 0.85s 0.1s var(--oo-ease) both;
+}
+
+.structureExpectTitle {
+  color: var(--color-yellow-dark);
+  font-size: calc(var(--home-text-size) * 1.2);
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+/* Single column keeps the five points in their written order — a 2-up grid
+   reads down each column first, which scrambles the sequence. */
+.structureList {
+  display: flex;
+  max-width: 74ch;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: clamp(1.25rem, 2vw, 1.75rem);
+  list-style: none;
+}
+
+.structureList li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.7rem;
+  align-items: start;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.structureCheck {
+  display: grid;
+  width: 1.4rem;
+  height: 1.4rem;
+  margin-top: 0.18em;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-yellow);
+  color: var(--color-black);
+  font-size: 0.8rem;
+}
+
+.structureNote {
+  max-width: 68ch;
+  margin-top: clamp(1.5rem, 2.5vw, 2rem);
+  color: var(--color-gray-dark);
+  font-size: var(--home-text-size);
+  font-style: italic;
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+@media (max-width: 1024px) {
+  .structureCards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Too narrow here for the cap to do anything but cramp the heading. */
+  .structureHeader {
+    max-width: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .structureCards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ============================================================== PROCESS == */
+
+.processSection {
+  padding-block: clamp(4rem, 7vw, 7.5rem);
+  background: var(--color-gray-light);
+}
+
+/* Header sits hard left on the nav's own gutter, with a rule running out to
+   the far edge — the section spans the full .contentWidth (identical to the
+   navbar's inset) rather than the narrower centred column it used before. */
+.processHeader {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  opacity: 0;
+}
+
+.processHeader.isVisible {
+  animation: ooRise 0.85s var(--oo-ease) both;
+}
+
+.processTitle {
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+}
+
+.processHeaderRule {
+  height: 1px;
+  margin-bottom: 0.7em;
+  background: rgba(33, 44, 45, 0.2);
+}
+
+.processCards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+  margin-top: clamp(2.5rem, 4.5vw, 3.75rem);
+}
+
+.processCard {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: clamp(1.5rem, 2.2vw, 2rem) clamp(1.35rem, 2vw, 1.75rem);
+  border-radius: var(--oo-radius);
+  background: var(--color-white);
+  opacity: 0;
+}
+
+.processCard.isVisible {
+  animation: ooRise 0.7s var(--card-delay, 0ms) var(--oo-ease) both;
+}
+
+.processNumber {
+  color: var(--color-yellow);
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.processStepTitle {
+  margin-top: clamp(0.6rem, 1vw, 0.85rem);
+  color: var(--home-headline-color);
+  font-size: var(--home-subheading-size);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+/* Pushed to the card's floor so the copy baselines line up across the row
+   even when the titles wrap to different heights. */
+.processCardText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: clamp(1.1rem, 1.9vw, 1.65rem);
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+/* Full-width pill: copy left, CTA hard right, both edges on the nav line. */
+.processOutro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  margin-top: clamp(1rem, 1.6vw, 1.5rem);
+  padding: clamp(1rem, 1.6vw, 1.35rem) clamp(1rem, 1.6vw, 1.35rem)
+    clamp(1rem, 1.6vw, 1.35rem) clamp(1.75rem, 3vw, 2.75rem);
+  border-radius: var(--oo-radius);
+  background: var(--color-white);
+  opacity: 0;
+}
+
+.processOutro.isVisible {
+  animation: ooRise 0.85s var(--oo-ease) both;
+}
+
+.processOutroCopy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.processOutroText {
+  max-width: 78ch;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.processOutroLead {
+  color: var(--home-headline-color);
+  font-size: calc(var(--home-text-size) * 1.2);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.processCta {
+  display: inline-flex;
+  flex: 0 0 auto;
+  min-height: var(--home-cta-min-height);
+  align-items: center;
+  justify-content: center;
+  gap: 0.72rem;
+  padding: 0.78rem 0.86rem 0.78rem 1.45rem;
+  border: 2px solid var(--color-dark-blue);
+  border-radius: 999px;
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  line-height: var(--home-cta-line-height);
+  transition: var(--home-cta-transition);
+}
+
+.processCta svg {
+  width: 1.85rem;
+  height: 1.85rem;
+  padding: 0.36rem;
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-deep-slate);
+  transition: var(--home-cta-arrow-transition);
+}
+
+.processCta:hover,
+.processCta:focus-visible {
+  color: var(--color-white);
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  box-shadow: 0 1.1rem 2.4rem rgba(196, 159, 12, 0.22);
+  transform: var(--home-cta-hover-transform);
+  outline: none;
+}
+
+.processCta:hover svg,
+.processCta:focus-visible svg {
+  color: var(--color-yellow);
+  background: var(--color-white);
+  transform: var(--home-cta-arrow-hover-transform);
+}
+
+/* Two rows of two: four columns leave the cards too narrow for their copy
+   well before the tablet breakpoint. */
+@media (max-width: 1600px) {
+  .processCards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .processHeader {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .processHeaderRule {
+    display: none;
+  }
+
+  /* Can't hold a side-by-side layout once the copy wraps hard. */
+  .processOutro {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: clamp(1.5rem, 3vw, 2rem);
+  }
+}
+
+@media (max-width: 620px) {
+  .processCards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .processOutro {
+    align-items: stretch;
+  }
+
+  .processCta {
+    justify-content: center;
+  }
+}
+
+.faqSection {
+  padding: clamp(4.5rem, 7vw, 7rem) 0;
+  background: var(--color-white);
+}
+
+.faqHeader {
+  max-width: 62rem;
+  margin-inline: auto;
+  text-align: center;
+  opacity: 0;
+}
+
+.faqHeader.isVisible {
+  animation: ooRise 0.85s var(--oo-ease) both;
+}
+
+.faqTitle {
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+}
+
+.faqList {
+  max-width: 62rem;
+  margin-inline: auto;
+  margin-top: clamp(2.5rem, 4.5vw, 3.75rem);
+}
+
+.faqItem {
+  border-top: 1px solid rgba(33, 44, 45, 0.14);
+  opacity: 0;
+}
+
+.faqItem.isVisible {
+  animation: ooRise 0.65s var(--oo-ease) both;
+}
+
+.faqList .faqItem:last-child {
+  border-bottom: 1px solid rgba(33, 44, 45, 0.14);
+}
+
+.faqHeading {
+  margin: 0;
+}
+
+.faqTrigger {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.85rem, 1.6vw, 1.25rem);
+  padding: clamp(1.15rem, 2vw, 1.5rem) 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.faqQuestion {
+  color: var(--home-headline-color);
+  font-size: var(--home-subheading-size);
+  font-weight: 800;
+  line-height: 1.35;
+  transition: color 0.3s ease;
+}
+
+.faqTrigger:hover .faqQuestion,
+.faqTrigger:focus-visible .faqQuestion {
+  color: var(--color-dark-blue);
+}
+
+.faqToggle {
+  position: relative;
+  display: inline-flex;
+  width: clamp(1.9rem, 2.6vw, 2.2rem);
+  height: clamp(1.9rem, 2.6vw, 2.2rem);
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-dark-blue);
+  border-radius: 50%;
+  transition: border-color 0.35s ease, background-color 0.35s ease;
+}
+
+.faqItemOpen .faqToggle {
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+}
+
+.faqToggleLineV,
+.faqToggleLineH {
+  position: absolute;
+  background: var(--color-dark-blue);
+  transition: transform 0.35s var(--oo-ease), background-color 0.35s ease, opacity 0.35s ease;
+}
+
+.faqToggleLineV {
+  width: 2px;
+  height: 46%;
+}
+
+.faqToggleLineH {
+  width: 46%;
+  height: 2px;
+}
+
+.faqItemOpen .faqToggleLineV {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.faqItemOpen .faqToggleLineH {
+  background: var(--color-white);
+}
+
+/* Rows animate 0fr → 1fr, so the panel opens smoothly without measuring. */
+.faqPanel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s var(--oo-ease), visibility 0.4s;
+  visibility: hidden;
+}
+
+.faqItemOpen .faqPanel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.faqPanelInner {
+  min-height: 0;
+  overflow: hidden;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.faqItemOpen .faqPanelInner {
+  padding-bottom: clamp(1.15rem, 2vw, 1.5rem);
+  padding-right: clamp(1.5rem, 6vw, 3.5rem);
+}
+
+@media (max-width: 620px) {
+  .faqItemOpen .faqPanelInner {
+    padding-right: 0;
+  }
+}
+
+.closingSection {
+  padding: clamp(4.5rem, 7vw, 7rem) 0 clamp(5.5rem, 8vw, 8rem);
+  background: var(--color-gray-light);
+}
+
+.closingHeader {
+  margin-inline: auto;
+  text-align: center;
+  opacity: 0;
+}
+
+.closingHeader.isVisible {
+  animation: ooRise 0.85s var(--oo-ease) both;
+}
+
+.closingTitle {
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+}
+
+.closingSubheading {
+  margin-top: clamp(1.5rem, 2.6vw, 2rem);
+  color: var(--color-black);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-subheading-weight);
+  line-height: var(--home-subheading-line-height);
+}
+
+.closingCards {
+  display: grid;
+  max-width: 62rem;
+  margin-inline: auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 1.8vw, 1.5rem);
+  margin-top: clamp(2.5rem, 4.5vw, 3.5rem);
+}
+
+.closingCard {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(1.75rem, 2.6vw, 2.25rem) clamp(1.35rem, 2vw, 1.75rem);
+  border-radius: var(--oo-radius);
+  background: #fbfbfa;
+  text-align: center;
+  opacity: 0;
+}
+
+.closingCard.isVisible {
+  animation: ooRise 0.7s var(--card-delay, 0ms) var(--oo-ease) both;
+}
+
+.closingIcon {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: clamp(0.9rem, 1.5vw, 1.2rem);
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-yellow);
+  color: var(--color-white);
+  font-size: 1.1rem;
+}
+
+.closingCardText {
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.closingCtaBlock {
+  display: flex;
+  max-width: 46rem;
+  margin-inline: auto;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.1rem, 1.8vw, 1.5rem);
+  margin-top: clamp(2.75rem, 4.5vw, 3.75rem);
+  text-align: center;
+  opacity: 0;
+}
+
+.closingCtaBlock.isVisible {
+  animation: ooRise 0.85s var(--oo-ease) both;
+}
+
+.closingLead {
+  color: var(--home-headline-color);
+  font-size: calc(var(--home-text-size) * 1.2);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.closingCta {
+  display: inline-flex;
+  min-height: calc(var(--home-cta-min-height) * 1.18);
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  padding: 0.95rem 1.05rem 0.95rem 1.9rem;
+  border: 2px solid var(--color-dark-blue);
+  border-radius: 999px;
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+  font-size: calc(var(--home-cta-size) * 1.14);
+  font-weight: var(--home-cta-weight);
+  line-height: var(--home-cta-line-height);
+  transition: var(--home-cta-transition);
+}
+
+.closingCta svg {
+  width: 2.15rem;
+  height: 2.15rem;
+  padding: 0.4rem;
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-deep-slate);
+  transition: var(--home-cta-arrow-transition);
+}
+
+.closingCta:hover,
+.closingCta:focus-visible {
+  color: var(--color-white);
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  box-shadow: 0 1.1rem 2.4rem rgba(196, 159, 12, 0.22);
+  transform: var(--home-cta-hover-transform);
+  outline: none;
+}
+
+.closingCta:hover svg,
+.closingCta:focus-visible svg {
+  color: var(--color-yellow);
+  background: var(--color-white);
+  transform: var(--home-cta-arrow-hover-transform);
+}
+
+@media (max-width: 900px) {
+  .closingCards {
+    grid-template-columns: 1fr;
+    max-width: 30rem;
+  }
+}
+
+@media (max-width: 620px) {
+  .closingCtaBlock {
+    width: 100%;
+  }
+
+  .closingCta {
+    width: 100%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .eyebrow,
+  .hero .eyebrow,
   .heroTitle,
   .heroActions,
   .heroImageFrame,
-  .heroFactCard {
+  .heroFactCard,
+  .quoteBlock,
+  .fitIntro,
+  .fitLists,
+  .weightHeader,
+  .weightTimeline,
+  .weightPoint,
+  .weightCopy,
+  .journeyHeader,
+  .journeyStep,
+  .journeyOutro,
+  .structureHeader,
+  .structureCard,
+  .structureExpect,
+  .processHeader,
+  .processCard,
+  .processOutro,
+  .faqHeader,
+  .faqItem,
+  .closingHeader,
+  .closingCard,
+  .closingCtaBlock {
     opacity: 1;
     animation: none;
     filter: none;
@@ -436,7 +1767,14 @@
 
   .primaryCta,
   .primaryCta svg,
-  .secondaryCta {
+  .secondaryCta,
+  .processCta,
+  .processCta svg,
+  .faqPanel,
+  .faqToggleLineV,
+  .faqToggleLineH,
+  .closingCta,
+  .closingCta svg {
     transition-duration: 0.01ms;
   }
 }

@@ -1,5 +1,18 @@
 /* Import Jost font from Google Fonts - all weights */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Knewave&display=swap');
+
+/* Registered globally so any page using it (About, Home, 1-on-1 quotes) has
+   it available on a cold load — a component-scoped CSS Module only loads
+   once that component is on the page, which a direct/refreshed visit to a
+   different route never triggers. */
+@font-face {
+  font-family: 'ShakiesLocal';
+  src: url('/font/shakies/Web-PS/Shakies-Web-PS.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
 
 /* Root CSS Variables - Color Theme */
 :root {

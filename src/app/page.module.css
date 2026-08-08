@@ -1,5 +1,10 @@
 .main {
   min-height: 100vh;
+
+  /* Social proof heading only: smaller than the shared --home-headline-size,
+     tracking the same four breakpoints so it scales in step without moving
+     any other heading on the page. */
+  --social-proof-heading-size: clamp(1.9rem, 3.15vw, 2.75rem);
 }
 
 /* Hero Section */
@@ -850,7 +855,7 @@
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.3fr);
   gap: clamp(2rem, 5vw, 6rem);
-  align-items: center;
+  align-items: start;
   width: auto;
   margin-inline: var(--featured-section-gutter);
   padding: clamp(2rem, 4.4vw, 4.75rem);
@@ -864,7 +869,7 @@
 .socialProofHeading h2 {
   max-width: 11ch;
   color: var(--color-white);
-  font-size: var(--home-headline-size);
+  font-size: var(--social-proof-heading-size);
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
@@ -2264,6 +2269,10 @@
 
 /* Coordinated high-resolution scaling */
 @media (min-width: 2000px) {
+  .main {
+    --social-proof-heading-size: clamp(3.15rem, 2.3vw, 3.6rem);
+  }
+
   .heroGrid {
     grid-template-columns: minmax(0, 1.28fr) minmax(0, 0.72fr);
     gap: 3rem;
@@ -2309,7 +2318,7 @@
 
   .socialProofHeading h2 {
     max-width: 100%;
-    font-size: var(--home-headline-size);
+    font-size: var(--social-proof-heading-size);
     text-wrap: wrap;
   }
 
@@ -2332,6 +2341,10 @@
 }
 
 @media (min-width: 2300px) {
+  .main {
+    --social-proof-heading-size: clamp(3.65rem, 2.35vw, 4.3rem);
+  }
+
   .heroGrid {
     grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
     gap: 4rem;
