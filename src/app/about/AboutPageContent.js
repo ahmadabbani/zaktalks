@@ -818,11 +818,11 @@ export default function AboutPageContent() {
               </p>
 
               <div className={styles.finalCtaActions}>
-                <Link href="/coaching" className={`${styles.storyCta} ${styles.finalCtaPrimary}`}>
+                <Link href="/becoming-again" className={`${styles.storyCta} ${styles.finalCtaPrimary}`}>
                   <span>Work With Zak</span>
                   <FiArrowUpRight aria-hidden="true" />
                 </Link>
-                <Link href="/coaching" className={`${styles.storyCta} ${styles.finalCtaPrimary}`}>
+                <Link href="/becoming-again" className={`${styles.storyCta} ${styles.finalCtaPrimary}`}>
                   <span>Explore Becoming Again</span>
                   <FiArrowUpRight aria-hidden="true" />
                 </Link>

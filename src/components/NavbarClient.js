@@ -8,7 +8,7 @@ import styles from './Navbar.module.css'
 
 const serviceLinks = [
   { href: '/one-on-one', label: 'Coaching 1 on 1' },
-  { href: '/coaching', label: 'The Courage to Be' },
+  { href: '/becoming-again', label: 'The Courage to Be' },
   {
     href: '/courses',
     label: 'Courses · E-learning',
@@ -141,7 +141,7 @@ export default function NavbarClient({ user, role, signout }) {
               >
                 <button
                   type="button"
-                  className={`${styles.navLink} ${styles.servicesTrigger} ${pathname === '/coaching' ? styles.active : ''}`}
+                  className={`${styles.navLink} ${styles.servicesTrigger} ${pathname === '/becoming-again' ? styles.active : ''}`}
                   aria-expanded={isServicesOpen}
                   aria-haspopup="menu"
                   onClick={() => setIsServicesOpen((open) => !open)}
@@ -230,7 +230,7 @@ export default function NavbarClient({ user, role, signout }) {
           <div className={styles.mobileServices}>
             <button
               type="button"
-              className={`${styles.mobileNavLink} ${styles.mobileServicesTrigger} ${pathname === '/coaching' ? styles.mobileActive : ''}`}
+              className={`${styles.mobileNavLink} ${styles.mobileServicesTrigger} ${pathname === '/becoming-again' ? styles.mobileActive : ''}`}
               aria-expanded={isMobileServicesOpen}
               onClick={() => setIsMobileServicesOpen((open) => !open)}
             >

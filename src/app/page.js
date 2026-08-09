@@ -29,7 +29,7 @@ export default async function Home() {
                 <Link href="/courses/interpersonal-communication-dynamics" className={`${styles.primaryHeroCta} ${styles.hiddenHeroCta}`}>
                   <span className={styles.ctaLabel}>Enroll in Interpersonal Communication Dynamics</span>
                 </Link>
-                <Link href="/coaching" className={styles.secondaryHeroCta}>
+                <Link href="/becoming-again" className={styles.secondaryHeroCta}>
                   <span className={styles.ctaLabel}>Work with Zak</span>
                   <FiArrowUpRight aria-hidden="true" />
                 </Link>

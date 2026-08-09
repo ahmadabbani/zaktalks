@@ -20,7 +20,7 @@ const services = [
     title: 'Becoming Again',
     copy: 'A leadership coaching experience for executives, entrepreneurs, emerging leaders, and educators who want to lead consciously, live intentionally, and grow beyond old roles and reactions.',
     cta: 'Join Becoming Again',
-    href: '/coaching',
+    href: '/becoming-again',
     image: '/what-i-do/becoming-again.webp',
     imageAlt: 'Abstract illustration of a leader moving toward a new horizon',
     tone: 'blue',

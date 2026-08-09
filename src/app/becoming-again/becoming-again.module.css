@@ -1,0 +1,1689 @@
+.page {
+  --ba-radius: clamp(0.9rem, 1.5vw, 1.5rem);
+  --ba-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  position: relative;
+  overflow: hidden;
+  background: var(--color-white);
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  width: 100%;
+  max-width: none;
+}
+
+.contentWidth {
+  width: auto;
+  margin-inline: var(--featured-section-gutter);
+}
+
+/* ==================================================================== HERO = */
+
+.hero {
+  position: relative;
+  display: flex;
+  min-height: 100svh;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(7.5rem, 10vw, 10rem) 0 clamp(3.5rem, 6vw, 5rem);
+  background: var(--color-gray-light);
+}
+
+.heroInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(19rem, 0.85fr);
+  align-items: start;
+  gap: clamp(2.5rem, 5vw, 5rem);
+}
+
+.heroContent {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding-top: clamp(0.5rem, 2vh, 1.5rem);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.9rem;
+  color: var(--color-yellow-dark);
+  font-size: var(--home-small-text-size, 0.8rem);
+  font-weight: 850;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 2.6rem;
+  height: 2px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--color-yellow);
+}
+
+.heroTitle {
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+}
+
+.heroSubtitle {
+  margin-top: clamp(1.25rem, 2.2vw, 1.75rem);
+  max-width: 52ch;
+  color: var(--home-text-color);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-subheading-weight);
+  line-height: var(--home-subheading-line-height);
+}
+
+/* --------------------------------------------------------- cohort card --- */
+
+.cohortCard {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.6rem, 2.4vw, 2.1rem);
+  border: 1px solid rgba(33, 44, 45, 0.1);
+  border-radius: var(--ba-radius);
+  background: var(--color-white);
+  box-shadow: 0 1.5rem 3.5rem rgba(33, 44, 45, 0.08);
+}
+
+.cohortEyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--home-headline-color);
+  font-size: var(--home-small-text-size, 0.8rem);
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.cohortEyebrow::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--color-yellow);
+  box-shadow: 0 0 0 4px rgba(241, 196, 15, 0.22);
+}
+
+.cohortList {
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(1.25rem, 2vw, 1.6rem);
+}
+
+.cohortRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding-block: clamp(0.75rem, 1.3vw, 0.95rem);
+  border-top: 1px solid rgba(33, 44, 45, 0.1);
+}
+
+.cohortRow:first-child {
+  border-top: 0;
+}
+
+.cohortIcon {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-gray-light);
+  color: var(--color-dark-blue);
+  font-size: 1.1rem;
+}
+
+.cohortText {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-top: 0.2rem;
+}
+
+.cohortLabel {
+  color: var(--color-gray-dark);
+  font-size: var(--home-small-text-size, 0.8rem);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.cohortValue {
+  color: var(--home-headline-color);
+  font-size: var(--home-text-size);
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.cohortActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: clamp(1.4rem, 2.2vw, 1.85rem);
+  padding-top: clamp(1.25rem, 2vw, 1.6rem);
+  border-top: 1px solid rgba(33, 44, 45, 0.1);
+}
+
+.primaryCta,
+.secondaryCta {
+  display: inline-flex;
+  width: 100%;
+  min-height: var(--home-cta-min-height);
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  line-height: var(--home-cta-line-height);
+  transition: var(--home-cta-transition);
+}
+
+.primaryCta {
+  gap: 0.72rem;
+  padding: 0.78rem 0.86rem 0.78rem 1.45rem;
+  color: var(--color-white);
+  border: 2px solid var(--color-dark-blue);
+  background: var(--color-dark-blue);
+}
+
+.primaryCta svg {
+  width: 1.85rem;
+  height: 1.85rem;
+  padding: 0.36rem;
+  margin-inline-start: auto;
+  color: var(--color-deep-slate);
+  border-radius: 50%;
+  background: var(--color-white);
+  transition: var(--home-cta-arrow-transition);
+}
+
+.primaryCta:hover,
+.primaryCta:focus-visible {
+  color: var(--color-white);
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  box-shadow: 0 1.1rem 2.4rem rgba(196, 159, 12, 0.22);
+  transform: var(--home-cta-hover-transform);
+  outline: none;
+}
+
+.primaryCta:hover svg,
+.primaryCta:focus-visible svg {
+  color: var(--color-yellow);
+  background: var(--color-white);
+  transform: var(--home-cta-arrow-hover-transform);
+}
+
+.secondaryCta {
+  padding: 0.78rem 1.6rem;
+  color: var(--color-deep-slate);
+  border: 2px solid rgba(85, 135, 166, 0.45);
+  background: transparent;
+}
+
+.secondaryCta:hover,
+.secondaryCta:focus-visible {
+  color: var(--color-white);
+  border-color: var(--color-dark-blue);
+  background: var(--color-dark-blue);
+  box-shadow: 0 1.1rem 2.4rem rgba(85, 135, 166, 0.24);
+  transform: var(--home-cta-hover-transform);
+  outline: none;
+}
+
+/* =============================================================== REVEALS == */
+
+.hero .eyebrow,
+.heroTitle,
+.heroSubtitle,
+.cohortCard {
+  opacity: 0;
+}
+
+.heroReady .heroContent .eyebrow {
+  animation: baRise 0.8s var(--ba-ease) both;
+}
+
+.heroReady .heroTitle {
+  animation: baRise 0.82s 0.1s var(--ba-ease) both;
+}
+
+.heroReady .heroSubtitle {
+  animation: baRise 0.82s 0.2s var(--ba-ease) both;
+}
+
+.heroReady .cohortCard {
+  animation: baSlideLeft 0.9s 0.3s var(--ba-ease) both;
+}
+
+@keyframes baRise {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(1.4rem);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes baSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(2rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes baSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-2rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ================================================================= FOR == */
+
+.forSection {
+  padding-block: clamp(4.5rem, 7vw, 7.5rem);
+  background: var(--color-white);
+}
+
+.forHeader {
+  text-align: center;
+  opacity: 0;
+}
+
+.forHeader.isVisible {
+  animation: baRise 0.85s var(--ba-ease) both;
+}
+
+.forTitle {
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+  white-space: nowrap;
+}
+
+.forIntro {
+  max-width: 46rem;
+  margin-inline: auto;
+  margin-top: clamp(1.1rem, 1.9vw, 1.5rem);
+  color: var(--home-text-color);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-subheading-weight);
+  line-height: var(--home-subheading-line-height);
+}
+
+.forIntro em {
+  color: var(--home-headline-color);
+  font-style: italic;
+  font-weight: 700;
+}
+
+/* Left runs longer than right (four full sentences vs. a shorter, muted
+   list plus a closing line), so the grid is intentionally asymmetric — the
+   "yes" column gets more room to breathe, the "no" column reads tighter and
+   quieter, which mirrors their emotional weight on the page. */
+.forLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2.5rem, 5vw, 5rem);
+  margin-top: clamp(3rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.forColumn {
+  min-width: 0;
+  opacity: 0;
+}
+
+.forColumnYes.isVisible {
+  animation: baSlideRight 0.85s var(--ba-ease) both;
+}
+
+.forColumnNo.isVisible {
+  animation: baSlideLeft 0.85s 0.1s var(--ba-ease) both;
+}
+
+.forColumnTitle {
+  color: var(--home-headline-color);
+  font-size: var(--home-subheading-size);
+  font-weight: 800;
+  line-height: var(--home-subheading-line-height);
+}
+
+.forColumnLead {
+  margin-top: 0.5rem;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.forColumnLead strong {
+  color: var(--home-headline-color);
+  font-weight: 800;
+}
+
+.forList {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 1.6vw, 1.35rem);
+  margin-top: clamp(1.25rem, 2vw, 1.6rem);
+  list-style: none;
+}
+
+.forListItemYes,
+.forListItemNo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: flex-start;
+  font-size: var(--home-text-size);
+  line-height: var(--home-text-line-height);
+}
+
+.forListItemYes {
+  color: var(--home-text-color);
+  font-weight: var(--home-text-weight);
+}
+
+.forListItemNo {
+  color: var(--color-gray-dark);
+  font-weight: var(--home-text-weight);
+}
+
+.forMarkYes,
+.forMarkNo {
+  display: grid;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-top: 0.1rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 0.85rem;
+}
+
+.forMarkYes {
+  background: var(--color-yellow);
+  color: var(--color-black);
+}
+
+.forMarkNo {
+  border: 1.5px solid rgba(33, 44, 45, 0.25);
+  color: var(--color-gray-dark);
+}
+
+.forColumnNote {
+  margin-top: clamp(1.5rem, 2.4vw, 2rem);
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(33, 44, 45, 0.14);
+  color: var(--home-headline-color);
+  font-size: calc(var(--home-text-size) * 1.05);
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.55;
+}
+
+.forClosing {
+  max-width: 56rem;
+  margin: clamp(1.5rem, 2.6vw, 2.25rem) auto 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(33, 44, 45, 0.14);
+  color: var(--home-headline-color);
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+  font-weight: 750;
+  line-height: 1.5;
+  text-align: center;
+  text-wrap: balance;
+  opacity: 0;
+}
+
+.forClosing.isVisible {
+  animation: baRise 0.85s var(--ba-ease) both;
+}
+
+/* =========================================================== CURRICULUM == */
+
+.curriculumSection {
+  padding-block: clamp(4.5rem, 7vw, 7.5rem);
+  background: var(--color-gray-light);
+}
+
+.curriculumHeader {
+  max-width: 46rem;
+  margin-inline: auto;
+  text-align: center;
+  opacity: 0;
+}
+
+.curriculumHeader.isVisible {
+  animation: baRise 0.85s var(--ba-ease) both;
+}
+
+.curriculumTitle {
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+}
+
+.curriculumSubtitle {
+  margin-top: clamp(1.1rem, 1.9vw, 1.5rem);
+  color: var(--home-text-color);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-subheading-weight);
+  line-height: var(--home-subheading-line-height);
+}
+
+.curriculumList {
+  max-width: 54rem;
+  margin: clamp(3rem, 5vw, 4.5rem) auto 0;
+}
+
+.curriculumItem {
+  position: relative;
+  border-bottom: 1px solid rgba(33, 44, 45, 0.14);
+  opacity: 0;
+}
+
+/* The closing paragraph already carries its own top divider right after
+   this, so the last module doesn't need one of its own too. */
+.curriculumList .curriculumItem:last-child {
+  border-bottom: 0;
+}
+
+.curriculumItem.isVisible {
+  animation: baRise 0.6s var(--ba-ease) both;
+}
+
+.curriculumHeading {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+}
+
+.curriculumTrigger {
+  display: grid;
+  width: 100%;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  padding: clamp(1.1rem, 1.8vw, 1.4rem) 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.curriculumIndex {
+  display: grid;
+  width: 2.3rem;
+  height: 2.3rem;
+  place-items: center;
+  border: 2px solid rgba(33, 44, 45, 0.18);
+  border-radius: 50%;
+  background: var(--color-gray-light);
+  color: var(--color-gray-dark);
+  font-size: 0.85rem;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.35s ease, background-color 0.35s ease, border-color 0.35s ease;
+}
+
+.curriculumItemOpen .curriculumIndex {
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  color: var(--color-black);
+}
+
+.curriculumTitleGroup {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.curriculumKind {
+  color: var(--color-yellow-dark);
+  font-size: var(--home-small-text-size, 0.8rem);
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.curriculumStepTitle {
+  color: var(--home-headline-color);
+  font-size: var(--home-subheading-size);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.curriculumStepSubtitle {
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: 600;
+  font-style: italic;
+}
+
+.curriculumChevron {
+  display: inline-flex;
+  color: var(--color-dark-blue);
+  font-size: 1.15rem;
+  transition: transform 0.35s var(--ba-ease), color 0.35s ease;
+}
+
+.curriculumItemOpen .curriculumChevron {
+  color: var(--color-yellow-dark);
+  transform: rotate(180deg);
+}
+
+.curriculumTrigger:hover .curriculumStepTitle,
+.curriculumTrigger:focus-visible .curriculumStepTitle {
+  color: var(--color-dark-blue);
+}
+
+/* Rows animate 0fr → 1fr, so the panel opens smoothly without measuring. */
+.curriculumPanel {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s var(--ba-ease), visibility 0.4s;
+  visibility: hidden;
+}
+
+.curriculumItemOpen .curriculumPanel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.curriculumPanelInner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.curriculumPoints {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0 0 clamp(1.4rem, 2.2vw, 1.8rem)
+    calc(2.3rem + clamp(1rem, 2vw, 1.5rem));
+  list-style: none;
+}
+
+.curriculumPoints li {
+  position: relative;
+  padding-left: 1.3rem;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.curriculumPoints li::before {
+  content: '';
+  position: absolute;
+  top: 0.62em;
+  left: 0;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--color-dark-blue);
+}
+
+.curriculumOutro {
+  max-width: 54rem;
+  margin: clamp(2.5rem, 4vw, 3.25rem) auto 0;
+  padding-top: clamp(2rem, 3.4vw, 2.75rem);
+  border-top: 1px solid rgba(33, 44, 45, 0.14);
+  color: var(--home-headline-color);
+  font-size: calc(var(--home-text-size) * 1.2);
+  font-weight: 600;
+  line-height: 1.6;
+  text-align: center;
+  opacity: 0;
+}
+
+.curriculumOutro strong {
+  font-weight: 800;
+}
+
+.curriculumOutro.isVisible {
+  animation: baRise 0.85s var(--ba-ease) both;
+}
+
+/* =============================================================== FORMAT == */
+
+.formatSection {
+  padding-block: clamp(4.5rem, 7vw, 7.5rem);
+  background: var(--color-white);
+}
+
+.formatHeader {
+  max-width: 46rem;
+  margin-inline: auto;
+  text-align: center;
+  opacity: 0;
+}
+
+.formatHeader.isVisible {
+  animation: baRise 0.85s var(--ba-ease) both;
+}
+
+.formatTitle {
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+}
+
+.formatSubtitle {
+  margin-top: clamp(1.1rem, 1.9vw, 1.5rem);
+  color: var(--home-text-color);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-subheading-weight);
+  line-height: var(--home-subheading-line-height);
+}
+
+.formatCards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2vw, 1.75rem);
+  margin-top: clamp(2.75rem, 4.5vw, 3.75rem);
+}
+
+.formatCard {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: clamp(1.75rem, 2.4vw, 2.25rem) clamp(1.5rem, 2vw, 1.85rem);
+  border-radius: var(--ba-radius);
+  background: var(--color-gray-light);
+  opacity: 0;
+}
+
+.formatCard.isVisible {
+  animation: baRise 0.7s var(--card-delay, 0ms) var(--ba-ease) both;
+}
+
+.formatIcon {
+  display: grid;
+  width: 2.9rem;
+  height: 2.9rem;
+  margin-bottom: clamp(1rem, 1.6vw, 1.35rem);
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-dark-blue);
+  font-size: 1.25rem;
+}
+
+.formatCardTitle {
+  color: var(--home-headline-color);
+  font-size: var(--home-subheading-size);
+  font-weight: 800;
+  line-height: var(--home-subheading-line-height);
+}
+
+.formatList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: clamp(1rem, 1.6vw, 1.35rem);
+  list-style: none;
+}
+
+.formatList li {
+  position: relative;
+  padding-left: 1.3rem;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.formatList li strong {
+  color: var(--home-headline-color);
+  font-weight: 800;
+}
+
+.formatList li::before {
+  content: '';
+  position: absolute;
+  top: 0.62em;
+  left: 0;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--color-dark-blue);
+}
+
+.formatNote {
+  max-width: 60ch;
+  margin: clamp(2.5rem, 4vw, 3.25rem) auto 0;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-style: italic;
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+  text-align: center;
+  opacity: 0;
+}
+
+.formatNote.isVisible {
+  animation: baRise 0.85s var(--ba-ease) both;
+}
+
+/* =============================================================== ENROLL == */
+
+.enrollSection {
+  padding-block: clamp(4.5rem, 7vw, 7.5rem);
+  background: var(--color-gray-light);
+}
+
+/* Dark, elevated investment panel on the left reframes "price" as a
+   deliberate statement rather than a line item; the discovery-call process
+   on the right stays light so the eye lands on the darker panel first. */
+.enrollLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: stretch;
+}
+
+.enrollInvest {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: clamp(2.25rem, 3.4vw, 3rem);
+  border: 1px solid rgba(33, 44, 45, 0.1);
+  border-radius: var(--ba-radius);
+  background: var(--color-white);
+  opacity: 0;
+}
+
+.enrollInvest.isVisible {
+  animation: baSlideRight 0.85s var(--ba-ease) both;
+}
+
+.enrollTitle {
+  margin-top: 0.4rem;
+  color: var(--home-headline-color);
+  font-size: clamp(1.5rem, 2.2vw, 1.95rem);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: 1.2;
+}
+
+.enrollText {
+  margin-top: clamp(1rem, 1.8vw, 1.4rem);
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.enrollText strong {
+  color: var(--home-headline-color);
+  font-weight: 800;
+}
+
+.enrollPayment {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: auto;
+  padding-top: clamp(1.5rem, 2.6vw, 2rem);
+  border-top: 1px solid rgba(33, 44, 45, 0.14);
+}
+
+.enrollPaymentLabel {
+  color: var(--color-gray-dark);
+  font-size: var(--home-small-text-size, 0.8rem);
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.enrollPaymentValue {
+  color: var(--home-headline-color);
+  font-size: var(--home-subheading-size);
+  font-weight: 750;
+}
+
+.enrollCall {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: clamp(2.25rem, 3.4vw, 3rem);
+  border: 1px solid rgba(33, 44, 45, 0.1);
+  border-radius: var(--ba-radius);
+  background: var(--color-white);
+  opacity: 0;
+}
+
+.enrollCall.isVisible {
+  animation: baSlideLeft 0.85s 0.1s var(--ba-ease) both;
+}
+
+.enrollCallTitle {
+  color: var(--home-headline-color);
+  font-size: calc(var(--home-subheading-size) * 1.15);
+  font-weight: 800;
+  line-height: var(--home-subheading-line-height);
+}
+
+.enrollCallText {
+  margin-top: clamp(0.85rem, 1.4vw, 1.1rem);
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.enrollCallText strong {
+  color: var(--home-headline-color);
+  font-weight: 800;
+}
+
+.enrollCallLabel {
+  margin-top: clamp(1.4rem, 2.2vw, 1.85rem);
+  color: var(--home-headline-color);
+  font-size: var(--home-small-text-size, 0.8rem);
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.enrollSteps {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 1.5vw, 1.2rem);
+  margin-top: clamp(1.1rem, 1.8vw, 1.4rem);
+  list-style: none;
+}
+
+.enrollStep {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.enrollStepIcon {
+  display: grid;
+  width: 2.35rem;
+  height: 2.35rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-gray-light);
+  color: var(--color-dark-blue);
+  font-size: 1.05rem;
+}
+
+.enrollStepText {
+  padding-top: 0.4rem;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.enrollCallClosing {
+  margin-top: clamp(1.4rem, 2.2vw, 1.85rem);
+  padding-top: clamp(1.25rem, 2vw, 1.6rem);
+  border-top: 1px solid rgba(33, 44, 45, 0.14);
+  color: var(--home-headline-color);
+  font-size: var(--home-text-size);
+  font-weight: 700;
+  line-height: var(--home-text-line-height);
+}
+
+.enrollCta {
+  display: inline-flex;
+  align-self: flex-start;
+  min-height: var(--home-cta-min-height);
+  align-items: center;
+  justify-content: center;
+  gap: 0.72rem;
+  margin-top: clamp(1.1rem, 1.8vw, 1.4rem);
+  padding: 0.78rem 0.86rem 0.78rem 1.45rem;
+  border: 2px solid var(--color-dark-blue);
+  border-radius: 999px;
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  line-height: var(--home-cta-line-height);
+  transition: var(--home-cta-transition);
+}
+
+.enrollCta svg {
+  width: 1.85rem;
+  height: 1.85rem;
+  padding: 0.36rem;
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-deep-slate);
+  transition: var(--home-cta-arrow-transition);
+}
+
+.enrollCta:hover,
+.enrollCta:focus-visible {
+  color: var(--color-white);
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  box-shadow: 0 1.1rem 2.4rem rgba(196, 159, 12, 0.22);
+  transform: var(--home-cta-hover-transform);
+  outline: none;
+}
+
+.enrollCta:hover svg,
+.enrollCta:focus-visible svg {
+  color: var(--color-yellow);
+  background: var(--color-white);
+  transform: var(--home-cta-arrow-hover-transform);
+}
+
+/* ============================================================ INSTRUCTOR == */
+
+.instructorSection {
+  padding-block: clamp(4.5rem, 7vw, 7.5rem);
+  background: var(--color-white);
+}
+
+.instructorLayout {
+  display: grid;
+  grid-template-columns: minmax(18rem, 0.9fr) minmax(24rem, 1.1fr);
+  gap: clamp(1.75rem, 3vw, 3.5rem);
+  align-items: center;
+}
+
+.instructorPortraitStage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  z-index: 0;
+  opacity: 0;
+}
+
+.instructorPortraitStage.isVisible {
+  animation: baSlideRight 0.9s var(--ba-ease) both;
+}
+
+/* Same oval silhouette as the homepage's "Meet Zak" portrait, kept in an
+   independent rule set so either page's shape can change without touching
+   the other. */
+.instructorPortraitFrame {
+  position: relative;
+  overflow: hidden;
+  width: min(100%, clamp(17rem, 22vw, 23.5rem));
+  max-width: 100%;
+  flex: 0 0 auto;
+  aspect-ratio: 0.48;
+  border-radius: 999rem;
+  background: #d7e7ee;
+}
+
+.instructorPortrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 52% center;
+  transition: transform 0.9s var(--ba-ease);
+}
+
+.instructorPortraitFrame:hover .instructorPortrait {
+  transform: scale(1.025);
+}
+
+.instructorStory {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  opacity: 0;
+}
+
+.instructorStory.isVisible {
+  animation: baSlideLeft 0.85s 0.1s var(--ba-ease) both;
+}
+
+.instructorTitle {
+  margin-bottom: clamp(1.1rem, 1.9vw, 1.6rem);
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+}
+
+.instructorBio {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  max-width: 60ch;
+  color: var(--home-text-color);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.instructorBio strong {
+  color: var(--home-headline-color);
+  font-weight: 800;
+}
+
+.instructorLink {
+  display: inline-flex;
+  min-height: var(--home-cta-min-height);
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: clamp(1.6rem, 2.6vw, 2.1rem);
+  padding: 0.64rem 0.7rem 0.64rem 1.35rem;
+  color: var(--color-white);
+  border: 1px solid var(--color-dark-blue);
+  border-radius: 999px;
+  background: var(--color-dark-blue);
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  transition: var(--home-cta-transition);
+}
+
+.instructorLink svg {
+  width: 1.8rem;
+  height: 1.8rem;
+  padding: 0.35rem;
+  border-radius: 50%;
+  color: var(--color-dark-blue);
+  background: var(--color-white);
+  transition: var(--home-cta-arrow-transition);
+}
+
+.instructorLink:hover {
+  color: var(--color-white);
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  transform: var(--home-cta-hover-transform);
+}
+
+.instructorLink:hover svg {
+  color: var(--color-yellow);
+  background: var(--color-white);
+  transform: var(--home-cta-arrow-hover-transform);
+}
+
+/* =================================================================== FAQ == */
+
+.faqSection {
+  padding: clamp(4.5rem, 7vw, 7rem) 0;
+  background: var(--color-gray-light);
+}
+
+.faqHeader {
+  max-width: 62rem;
+  margin-inline: auto;
+  text-align: center;
+  opacity: 0;
+}
+
+.faqHeader.isVisible {
+  animation: baRise 0.85s var(--ba-ease) both;
+}
+
+.faqTitle {
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+}
+
+.faqList {
+  max-width: 62rem;
+  margin-inline: auto;
+  margin-top: clamp(2.5rem, 4.5vw, 3.75rem);
+}
+
+.faqItem {
+  border-top: 1px solid rgba(33, 44, 45, 0.14);
+  opacity: 0;
+}
+
+.faqItem.isVisible {
+  animation: baRise 0.65s var(--ba-ease) both;
+}
+
+.faqList .faqItem:last-child {
+  border-bottom: 1px solid rgba(33, 44, 45, 0.14);
+}
+
+.faqHeading {
+  margin: 0;
+}
+
+.faqTrigger {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.85rem, 1.6vw, 1.25rem);
+  padding: clamp(1.15rem, 2vw, 1.5rem) 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.faqQuestion {
+  color: var(--home-headline-color);
+  font-size: var(--home-subheading-size);
+  font-weight: 800;
+  line-height: 1.35;
+  transition: color 0.3s ease;
+}
+
+.faqTrigger:hover .faqQuestion,
+.faqTrigger:focus-visible .faqQuestion {
+  color: var(--color-dark-blue);
+}
+
+.faqToggle {
+  position: relative;
+  display: inline-flex;
+  width: clamp(1.9rem, 2.6vw, 2.2rem);
+  height: clamp(1.9rem, 2.6vw, 2.2rem);
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-dark-blue);
+  border-radius: 50%;
+  transition: border-color 0.35s ease, background-color 0.35s ease;
+}
+
+.faqItemOpen .faqToggle {
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+}
+
+.faqToggleLineV,
+.faqToggleLineH {
+  position: absolute;
+  background: var(--color-dark-blue);
+  transition: transform 0.35s var(--ba-ease), background-color 0.35s ease, opacity 0.35s ease;
+}
+
+.faqToggleLineV {
+  width: 2px;
+  height: 46%;
+}
+
+.faqToggleLineH {
+  width: 46%;
+  height: 2px;
+}
+
+.faqItemOpen .faqToggleLineV {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.faqItemOpen .faqToggleLineH {
+  background: var(--color-white);
+}
+
+/* Rows animate 0fr → 1fr, so the panel opens smoothly without measuring. */
+.faqPanel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s var(--ba-ease), visibility 0.4s;
+  visibility: hidden;
+}
+
+.faqItemOpen .faqPanel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.faqPanelInner {
+  min-height: 0;
+  overflow: hidden;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.faqItemOpen .faqPanelInner {
+  padding-bottom: clamp(1.15rem, 2vw, 1.5rem);
+  padding-right: clamp(1.5rem, 6vw, 3.5rem);
+}
+
+/* ================================================================= FINAL == */
+/* No dark band: the closing statement carries its own weight through scale
+   and left alignment rather than an inverted color block, keeping the
+   page's palette consistent right to the last section. Facts sit left,
+   the closing statement and CTAs sit right, split by one divider beneath
+   the eyebrow — kept side by side so the section stays short. */
+
+.finalSection {
+  padding: clamp(4.5rem, 7vw, 7.5rem) 0 clamp(5.5rem, 8vw, 8.5rem);
+  background: var(--color-white);
+}
+
+.finalEyebrowRow {
+  padding-bottom: clamp(1.75rem, 3vw, 2.25rem);
+  border-bottom: 1px solid rgba(33, 44, 45, 0.14);
+  opacity: 0;
+}
+
+.finalEyebrowRow.isVisible {
+  animation: baRise 0.7s var(--ba-ease) both;
+}
+
+.finalLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2.5rem, 5vw, 5.5rem);
+  margin-top: clamp(2.5rem, 4.5vw, 3.5rem);
+  align-items: start;
+}
+
+/* Same card as the hero's cohort card, kept as its own rule set so either
+   one can change independently. */
+.finalFactsCard {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.6rem, 2.4vw, 2.1rem);
+  border: 1px solid rgba(33, 44, 45, 0.1);
+  border-radius: var(--ba-radius);
+  background: var(--color-white);
+  box-shadow: 0 1.5rem 3.5rem rgba(33, 44, 45, 0.08);
+  opacity: 0;
+}
+
+.finalFactsCard.isVisible {
+  animation: baSlideRight 0.85s var(--ba-ease) both;
+}
+
+.finalFactsList {
+  display: flex;
+  flex-direction: column;
+}
+
+.finalFactRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding-block: clamp(0.75rem, 1.3vw, 0.95rem);
+  border-top: 1px solid rgba(33, 44, 45, 0.1);
+}
+
+.finalFactRow:first-child {
+  border-top: 0;
+}
+
+.finalFactIcon {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-gray-light);
+  color: var(--color-dark-blue);
+  font-size: 1.1rem;
+}
+
+.finalFactText {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-top: 0.2rem;
+}
+
+.finalFactLabel {
+  color: var(--color-gray-dark);
+  font-size: var(--home-small-text-size, 0.8rem);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.finalFactValue {
+  color: var(--home-headline-color);
+  font-size: var(--home-text-size);
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.finalNote {
+  margin-top: clamp(1.4rem, 2.2vw, 1.85rem);
+  padding-top: clamp(1.25rem, 2vw, 1.6rem);
+  border-top: 1px solid rgba(33, 44, 45, 0.1);
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.finalCtaBlock {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1.5rem, 2.6vw, 2rem);
+  opacity: 0;
+}
+
+.finalCtaBlock.isVisible {
+  animation: baSlideLeft 0.85s 0.1s var(--ba-ease) both;
+}
+
+.finalTitle {
+  color: var(--home-headline-color);
+  font-size: clamp(1.55rem, 2.8vw, 2.35rem);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: 1.25;
+}
+
+.finalActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(0.75rem, 1.4vw, 1.1rem);
+}
+
+.finalWaitlistLink {
+  color: var(--color-gray-dark);
+  font-size: var(--home-text-size);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  transition: color 0.3s ease;
+}
+
+.finalWaitlistLink:hover,
+.finalWaitlistLink:focus-visible {
+  color: var(--color-dark-blue);
+}
+
+/* ============================================================ RESPONSIVE == */
+
+@media (max-width: 1024px) {
+  .hero {
+    padding-top: clamp(6.75rem, 12vw, 8rem);
+  }
+
+  .heroInner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2.25rem, 5vw, 3rem);
+  }
+
+  .heroContent {
+    padding-top: 0;
+    text-align: center;
+    align-items: center;
+  }
+
+  .hero .eyebrow {
+    justify-content: center;
+  }
+
+  .heroSubtitle {
+    max-width: 56ch;
+  }
+
+  .cohortCard {
+    max-width: 28rem;
+    margin-inline: auto;
+  }
+
+  .forTitle {
+    white-space: normal;
+  }
+
+  .forLayout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2.75rem, 6vw, 3.5rem);
+  }
+
+  .formatCards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .enrollLayout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .enrollPayment {
+    margin-top: clamp(1.5rem, 2.6vw, 2rem);
+  }
+
+  .instructorPortraitFrame {
+    width: min(42vw, 18rem);
+    aspect-ratio: 0.55;
+  }
+}
+
+/* Tablet/mobile: portrait tucks beside the copy instead of stacking full
+   width, same reflow the homepage uses for its own "Meet Zak" portrait. */
+@media (max-width: 1024px) {
+  .instructorLayout {
+    position: relative;
+    grid-template-columns: minmax(0, 1fr) clamp(12rem, 22vw, 15rem);
+    gap: clamp(1.25rem, 3vw, 2rem);
+    align-items: end;
+  }
+
+  .instructorStory {
+    order: 1;
+  }
+
+  .instructorPortraitStage {
+    order: 2;
+    width: 100%;
+    align-self: end;
+    justify-self: end;
+    justify-content: flex-end;
+  }
+
+  .instructorPortraitFrame {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: clamp(1.25rem, 3vw, 2rem);
+    box-shadow: 0 1.1rem 2.5rem rgba(33, 44, 45, 0.1);
+  }
+}
+
+@media (max-width: 700px) {
+  .instructorLayout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .instructorPortraitStage {
+    width: 100%;
+    justify-self: center;
+    justify-content: center;
+    margin-top: 0;
+  }
+
+  .instructorPortraitFrame {
+    width: min(65vw, 16.5rem);
+  }
+}
+
+@media (max-width: 620px) {
+  .cohortActions {
+    gap: 0.6rem;
+  }
+
+  .primaryCta,
+  .secondaryCta {
+    min-height: var(--home-cta-min-height);
+    padding-block: var(--home-cta-compact-padding-block);
+  }
+
+  .formatCards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .enrollCta {
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  .curriculumTrigger {
+    gap: 0.75rem;
+  }
+
+  .curriculumIndex {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .curriculumPoints {
+    padding-left: 0;
+  }
+
+  .instructorPortraitFrame {
+    width: min(70vw, 15.5rem);
+    aspect-ratio: 1;
+    border-radius: clamp(1.25rem, 5vw, 1.75rem);
+  }
+
+  .instructorLink {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1.8rem minmax(0, 1fr) 1.8rem;
+    column-gap: 0.75rem;
+    padding-inline: 0.7rem;
+    text-align: center;
+  }
+
+  .instructorLink span {
+    grid-column: 2;
+    justify-self: center;
+  }
+
+  .instructorLink svg {
+    grid-column: 3;
+    justify-self: end;
+  }
+
+  .faqItemOpen .faqPanelInner {
+    padding-right: 0;
+  }
+
+  .finalActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primaryCta,
+  .secondaryCta {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 900px) {
+  .finalLayout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2.5rem, 6vw, 3rem);
+  }
+
+  .finalCtaBlock {
+    align-items: center;
+    text-align: center;
+  }
+
+  .finalActions {
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .eyebrow,
+  .heroTitle,
+  .heroSubtitle,
+  .cohortCard,
+  .forHeader,
+  .forColumn,
+  .forClosing,
+  .curriculumHeader,
+  .curriculumItem,
+  .curriculumOutro,
+  .formatHeader,
+  .formatCard,
+  .formatNote,
+  .enrollInvest,
+  .enrollCall,
+  .instructorPortraitStage,
+  .instructorStory,
+  .faqHeader,
+  .faqItem,
+  .finalEyebrowRow,
+  .finalFactsCard,
+  .finalCtaBlock {
+    opacity: 1;
+    animation: none;
+    filter: none;
+    transform: none;
+  }
+
+  .primaryCta,
+  .primaryCta svg,
+  .secondaryCta,
+  .enrollCta,
+  .enrollCta svg,
+  .curriculumPanel,
+  .curriculumChevron,
+  .curriculumIndex,
+  .instructorPortrait,
+  .instructorLink,
+  .faqPanel,
+  .faqToggleLineV,
+  .faqToggleLineH,
+  .finalWaitlistLink {
+    transition-duration: 0.01ms;
+  }
+}

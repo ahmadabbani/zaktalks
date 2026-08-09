@@ -42,7 +42,7 @@ export default function CoursePreviewCtaSection() {
               <p>It is for people ready to <strong>move</strong> beyond insight alone and <strong>practise</strong> a different way of <em>living</em>.</p>
             </div>
 
-            <Link href="/coaching" className={styles.cta}>
+            <Link href="/becoming-again" className={styles.cta}>
               <span>Discover Becoming Again</span>
               <FiArrowUpRight aria-hidden="true" />
             </Link>
