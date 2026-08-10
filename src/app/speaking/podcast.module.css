@@ -938,8 +938,10 @@
     padding-bottom: clamp(1.5rem, 3vw, 2.25rem);
   }
 
+  /* Applies across the whole stacked range (1024 down to 621), where the
+     layout goes single column. Reset to the desktop size at 620. */
   .heroWave {
-    width: clamp(8rem, 17vw, 10rem);
+    width: clamp(13rem, 30vw, 17rem);
   }
 
   .elephantLayout {
@@ -947,9 +949,8 @@
     gap: clamp(1.75rem, 4vw, 2.5rem);
   }
 
-  .visual {
-    order: -1;
-  }
+  /* Natural order once stacked: the heading and subheading read first, with
+     the badges and phone below them. */
 
   .audienceLayout {
     grid-template-columns: minmax(0, 1fr);
@@ -1003,13 +1004,15 @@
   }
 
   .phoneWrap {
-    width: clamp(13rem, 30vw, 17rem);
+    width: clamp(9.5rem, 22vw, 13rem);
   }
 }
 
+/* Roomier than before: stacked, the counter strip above and the audience
+   section below were both landing almost flush against this section. */
 @media (max-width: 768px) {
   .elephantSection {
-    padding-block: clamp(2.75rem, 7vw, 3.5rem);
+    padding-block: clamp(5.5rem, 13vw, 6.5rem);
   }
 }
 
@@ -1058,7 +1061,7 @@
     right: auto;
     bottom: auto;
     order: 2;
-    width: min(62vw, 18rem);
+    width: min(48vw, 13rem);
   }
 
   /* Stacked under the visual at this width, so it reads as a centred block
@@ -1079,25 +1082,25 @@
    viewport instead of parking at one size. */
 @media (max-width: 580px) {
   .phoneWrap {
-    width: min(58vw, 16rem);
+    width: min(45vw, 11.5rem);
   }
 }
 
 @media (max-width: 500px) {
   .phoneWrap {
-    width: min(55vw, 14rem);
+    width: min(43vw, 10rem);
   }
 }
 
 @media (max-width: 420px) {
   .phoneWrap {
-    width: min(52vw, 12.5rem);
+    width: min(41vw, 8.75rem);
   }
 }
 
 @media (max-width: 360px) {
   .phoneWrap {
-    width: min(50vw, 11.25rem);
+    width: min(39vw, 8rem);
   }
 }
 
@@ -1129,9 +1132,9 @@
     padding-bottom: 0.75rem;
   }
 
-  .heroWave {
-    width: clamp(6.5rem, 16vw, 8.5rem);
-  }
+  /* No .heroWave override here on purpose: the enlarged size from the
+     max-width:1024 block must apply across the whole stacked range. An
+     override here would silently cap it back down between 769 and 1024. */
 
   .heroBadgeStack {
     gap: 0.4rem;
@@ -1158,8 +1161,10 @@
     max-width: 28ch;
   }
 
+  /* Back to the desktop value: the enlargement belongs to the stacked band
+     above 620, not here. */
   .heroWave {
-    width: clamp(11.5rem, 68vw, 16rem);
+    width: clamp(8.5rem, 13vw, 12rem);
   }
 
   .proofLabel {
@@ -1211,8 +1216,10 @@
     padding-bottom: 0.4rem;
   }
 
+  /* Scaled down with the 620 reset above so short viewports stay smaller
+     than it rather than jumping back up. */
   .heroWave {
-    width: clamp(9.5rem, 60vw, 13rem);
+    width: clamp(7rem, 11vw, 9.5rem);
   }
 
   .heroBadgeStack {
@@ -1245,7 +1252,7 @@
   }
 
   .heroWave {
-    width: clamp(7rem, 50vw, 9.5rem);
+    width: clamp(5.5rem, 9vw, 7.5rem);
   }
 
   .heroBadgeStack {
@@ -1279,6 +1286,973 @@
 }
 
 /* ==================================================== reduced motion ====== */
+/* ================================================= SEASON ARCHIVE ======== */
+
+.archiveSection {
+  padding-block: clamp(4rem, 7vw, 7.5rem) 0;
+  background: var(--color-white);
+}
+
+/* Sits inside .contentWidth, which supplies the page gutter; this only caps
+   and centres the measure. Setting a gutter here too would compound the two
+   and crush the text on wide screens. */
+.archiveHeader {
+  max-width: 62rem;
+  margin-inline: auto;
+  text-align: center;
+  opacity: 0;
+}
+
+.archiveHeader.isVisible {
+  animation: podRise 0.85s var(--pod-ease) both;
+}
+
+/* Same tokens as this page's shared .sectionTitle primitive, so the archive
+   heading renders identically to the Elephant and Audience headings. */
+.archiveTitle {
+  color: var(--color-black);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+  text-wrap: balance;
+}
+
+/* Matches .elephantCopy's colour token; sized as a section intro. */
+.archiveCopy {
+  margin-top: clamp(1.1rem, 1.9vw, 1.5rem);
+  color: var(--color-deep-slate);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-subheading-weight);
+  line-height: var(--home-subheading-line-height);
+}
+
+/* --------------------------------------------------------- season split - */
+
+/* Inset to the navbar's own gutter: the pair starts where the nav starts and
+   ends where it ends. The covers are square, so narrowing the row is what
+   brings their height down; no cropping involved. */
+.seasonSplit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: clamp(2.5rem, 4.5vw, 4rem);
+  margin-inline: var(--featured-section-gutter);
+  opacity: 0;
+}
+
+.seasonSplit.isVisible {
+  animation: podRise 0.9s 0.1s var(--pod-ease) both;
+}
+
+.seasonTile {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: none;
+  isolation: isolate;
+}
+
+.seasonTile:not(.seasonTileLocked) {
+  cursor: pointer;
+}
+
+.seasonImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--pod-ease), filter 0.7s ease;
+}
+
+.seasonTile:not(.seasonTileLocked):hover .seasonImage,
+.seasonTile:not(.seasonTileLocked):focus-visible .seasonImage {
+  transform: scale(1.03);
+}
+
+.seasonHint {
+  position: absolute;
+  right: clamp(0.9rem, 2vw, 1.75rem);
+  bottom: clamp(0.9rem, 2vw, 1.75rem);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1.15rem;
+  border-radius: 999px;
+  background: var(--color-yellow);
+  color: var(--color-black);
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  line-height: 1;
+  box-shadow: 0 0.6rem 1.6rem rgba(33, 44, 45, 0.18);
+  transition: color 0.32s ease, background-color 0.32s ease, transform 0.32s ease;
+}
+
+.seasonHint svg {
+  transition: transform 0.35s var(--pod-ease);
+}
+
+.seasonTile:hover .seasonHint,
+.seasonTile:focus-visible .seasonHint {
+  transform: translateY(-0.18rem);
+}
+
+.seasonTileOpen .seasonHint svg {
+  transform: rotate(180deg);
+}
+
+/* Season 2: the blur is CSS, the "Season 2" wordmark is baked into the image. */
+.seasonTileLocked .seasonImage {
+  filter: blur(9px) saturate(0.85) brightness(0.94);
+  transform: scale(1.06); /* covers the soft edge blur leaves at the border */
+}
+
+.seasonComingSoon {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  background: rgba(33, 44, 45, 0.32);
+}
+
+.seasonComingSoonText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+  padding: 0.9rem 1.6rem;
+  border: 2px solid var(--color-white);
+  border-radius: clamp(1rem, 1.8vw, 1.5rem);
+  color: var(--color-white);
+  font-size: clamp(1.05rem, 2.4vw, 2rem);
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 0.4rem 1.5rem rgba(0, 0, 0, 0.35);
+}
+
+.seasonComingSoonLine {
+  display: block;
+}
+
+/* ------------------------------------------------------------- archive -- */
+
+/* Rows animate 0fr to 1fr, so the panel opens smoothly without measuring. */
+.archivePanel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.55s var(--pod-ease), visibility 0.55s;
+  visibility: hidden;
+}
+
+.archivePanelOpen {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.archivePanelInner {
+  min-height: 0;
+  /* The 0fr trick needs a clipping child; the padding keeps card hover-lift
+     and focus rings from being cut off by it. */
+  overflow: hidden;
+  padding-block: clamp(2.5rem, 4.5vw, 4rem) clamp(4rem, 7vw, 7.5rem);
+}
+
+.archiveControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  padding-bottom: clamp(1.5rem, 2.6vw, 2rem);
+  border-bottom: 1px solid rgba(33, 44, 45, 0.14);
+}
+
+.sortGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.85rem;
+}
+
+.sortLabel {
+  color: var(--color-gray-dark);
+  font-size: var(--home-small-text-size, 0.8rem);
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sortOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.sortButton {
+  padding: 0.55rem 1.05rem;
+  border: 1px solid rgba(33, 44, 45, 0.16);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--home-text-color);
+  cursor: pointer;
+  font-size: var(--home-cta-size);
+  font-weight: 700;
+  line-height: 1.15;
+  transition: color 0.28s ease, background-color 0.28s ease, border-color 0.28s ease;
+}
+
+.sortButton:hover,
+.sortButton:focus-visible {
+  border-color: var(--color-dark-blue);
+  color: var(--color-dark-blue);
+}
+
+.sortButtonActive {
+  border-color: var(--color-deep-slate);
+  background: var(--color-deep-slate);
+  color: var(--color-white);
+}
+
+.sortButtonActive:hover,
+.sortButtonActive:focus-visible {
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  color: var(--color-black);
+}
+
+.archiveEmpty {
+  margin-top: clamp(2rem, 3.5vw, 3rem);
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  line-height: var(--home-text-line-height);
+  text-align: center;
+}
+
+/* ---------------------------------------------------------- episode grid */
+
+.episodeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.2vw, 2rem);
+  margin-top: clamp(2rem, 3.5vw, 3rem);
+  /* Grid items stretch to the tallest in their row by default, so opening one
+     card's show notes would drag every sibling to the same height. Sizing each
+     card to its own content keeps the expansion local to the card clicked. */
+  align-items: start;
+}
+
+.episodeCard {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(33, 44, 45, 0.1);
+  border-radius: clamp(1rem, 1.6vw, 1.5rem);
+  background: var(--color-white);
+  box-shadow: 0 0.7rem 1.8rem rgba(33, 44, 45, 0.05);
+  transition: transform 0.4s var(--pod-ease), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+/* Staggered in when the panel opens rather than on mount: the cards live in
+   the DOM inside the collapsed panel, so a mount animation would run while
+   hidden and finish before it was ever visible.
+   `backwards` (not `both`) is deliberate: `both` retains the keyframe's
+   transform after finishing, and an animation's retained value outranks the
+   :hover rule, which would kill the card's hover lift. */
+.archivePanelOpen .archiveControls {
+  animation: podRise 0.55s 0.08s var(--pod-ease) backwards;
+}
+
+.archivePanelOpen .episodeCard {
+  animation: podRise 0.6s calc(160ms + var(--episode-delay, 0ms)) var(--pod-ease) backwards;
+}
+
+.archivePanelOpen .archiveMoreRow {
+  animation: podRise 0.55s 0.34s var(--pod-ease) backwards;
+}
+
+.episodeCard:hover {
+  border-color: rgba(85, 135, 166, 0.28);
+  box-shadow: 0 1.4rem 3rem rgba(33, 44, 45, 0.11);
+  transform: translateY(-0.4rem);
+}
+
+.episodeThumb {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: var(--color-gray-light);
+}
+
+.episodeImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--pod-ease);
+}
+
+.episodeCard:hover .episodeImage {
+  transform: scale(1.05);
+}
+
+.episodePlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: clamp(3rem, 4vw, 3.75rem);
+  height: clamp(3rem, 4vw, 3.75rem);
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(33, 44, 45, 0.72);
+  color: var(--color-white);
+  font-size: 1.15rem;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.85);
+  transition: opacity 0.35s ease, transform 0.35s var(--pod-ease), background-color 0.35s ease;
+}
+
+.episodeCard:hover .episodePlay,
+.episodeThumb:focus-visible .episodePlay {
+  background: var(--color-yellow);
+  color: var(--color-black);
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.episodeDuration {
+  position: absolute;
+  right: 0.7rem;
+  bottom: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(33, 44, 45, 0.82);
+  color: var(--color-white);
+  font-size: var(--home-small-text-size, 0.78rem);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.episodeBody {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: clamp(1.1rem, 1.8vw, 1.5rem);
+}
+
+.episodeMeta {
+  color: var(--color-yellow-dark);
+  font-size: var(--home-small-text-size, 0.78rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Clamped to a fixed number of lines so that, with align-items:start, the
+   closed cards still line up instead of sitting at ragged heights. */
+.episodeTitle {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  min-height: calc(2 * 1.3em);
+  margin-top: 0.5rem;
+  overflow: hidden;
+  color: var(--color-black);
+  font-size: var(--home-subheading-size);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.episodeTitle a {
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+.episodeTitle a:hover,
+.episodeTitle a:focus-visible {
+  color: var(--color-dark-blue);
+}
+
+.episodeHook {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  min-height: calc(3 * var(--home-text-line-height) * 1em);
+  margin-top: 0.6rem;
+  overflow: hidden;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.episodeTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  list-style: none;
+}
+
+.episodeTag {
+  padding: 0.28rem 0.62rem;
+  border-radius: 999px;
+  background: var(--color-gray-light);
+  color: var(--color-slate-blue);
+  font-size: var(--home-small-text-size, 0.75rem);
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.episodeNotes {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s var(--pod-ease), visibility 0.4s;
+  visibility: hidden;
+}
+
+.episodeNotesOpen {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.episodeNotesInner {
+  min-height: 0;
+  overflow: hidden;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.episodeNotesOpen .episodeNotesInner {
+  padding-top: 0.85rem;
+}
+
+.episodeNotesInner p {
+  white-space: pre-line; /* keeps the description's own line breaks */
+}
+
+.episodeActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: auto;
+  padding-top: clamp(1rem, 1.6vw, 1.3rem);
+}
+
+.episodeWatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border: 2px solid var(--color-deep-slate);
+  border-radius: 999px;
+  background: var(--color-deep-slate);
+  color: var(--color-white);
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  line-height: 1.1;
+  transition: var(--home-cta-transition);
+}
+
+.episodeWatch svg:last-child {
+  transition: var(--home-cta-arrow-transition);
+}
+
+.episodeWatch:hover,
+.episodeWatch:focus-visible {
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  color: var(--color-black);
+  transform: translateY(-0.15rem);
+}
+
+.episodeWatch:hover svg:last-child,
+.episodeWatch:focus-visible svg:last-child {
+  transform: var(--home-cta-arrow-hover-transform);
+}
+
+.episodeNotesToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid rgba(33, 44, 45, 0.16);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--home-text-color);
+  cursor: pointer;
+  font-size: var(--home-cta-size);
+  font-weight: 700;
+  line-height: 1.1;
+  transition: color 0.28s ease, border-color 0.28s ease;
+}
+
+.episodeNotesToggle svg {
+  transition: transform 0.35s var(--pod-ease);
+}
+
+.episodeNotesToggle:hover,
+.episodeNotesToggle:focus-visible {
+  border-color: var(--color-dark-blue);
+  color: var(--color-dark-blue);
+}
+
+.episodeNotesToggle[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+.episodeListen {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(33, 44, 45, 0.1);
+}
+
+.episodeListenLabel {
+  color: var(--color-gray-dark);
+  font-size: var(--home-small-text-size, 0.75rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.episodeListenList {
+  display: flex;
+  gap: 0.4rem;
+  list-style: none;
+}
+
+/* Informational only until per-episode links exist, so these are not buttons. */
+.episodeListenChip {
+  display: grid;
+  width: 1.85rem;
+  height: 1.85rem;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-gray-light);
+  color: var(--color-slate-blue);
+  font-size: 0.9rem;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.archiveMoreRow {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(2rem, 3.5vw, 3rem);
+}
+
+.archiveMore {
+  display: inline-flex;
+  min-height: var(--home-cta-min-height);
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.78rem 1.6rem;
+  border: 2px solid var(--color-deep-slate);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-deep-slate);
+  cursor: pointer;
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  line-height: var(--home-cta-line-height);
+  transition: var(--home-cta-transition);
+}
+
+.archiveMore svg {
+  transition: transform 0.35s var(--pod-ease);
+}
+
+.archiveMore:hover,
+.archiveMore:focus-visible {
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  color: var(--color-black);
+  transform: translateY(-0.18rem);
+}
+
+.archiveMore:hover svg,
+.archiveMore:focus-visible svg {
+  transform: translateY(0.15rem);
+}
+
+/* ------------------------------------------------------------- featured */
+/* Deliberately unlike the playlist cards: dark, full width and horizontal, so
+   the two picks read as curated rather than as more of the same grid. */
+
+.featuredBlock {
+  margin-top: clamp(3.5rem, 6vw, 5.5rem);
+  padding-top: clamp(2.5rem, 4.5vw, 3.5rem);
+  border-top: 1px solid rgba(33, 44, 45, 0.14);
+}
+
+.featuredHeader {
+  opacity: 0;
+}
+
+.featuredHeader.isVisible {
+  animation: podRise 0.7s var(--pod-ease) both;
+}
+
+.featuredTitle {
+  color: var(--color-black);
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: 1.2;
+}
+
+.featuredList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.2vw, 2rem);
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+/* Stacked internally: with two cards sharing a row an image column would be
+   too narrow for the copy, and a fixed-ratio image beside a taller text
+   column leaves the card background showing under it. */
+/* Revealed on scroll via the observer, not when the panel opens.
+   Done with a transition rather than the podRise keyframe on purpose: a
+   keyframe needs `both` to hold its end state, and a filled animation's
+   transform outranks the :hover rule, which would kill the lift below. */
+.featuredCard {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: clamp(1rem, 1.6vw, 1.5rem);
+  background: var(--color-deep-slate);
+  box-shadow: 0 1rem 2.6rem rgba(33, 44, 45, 0.16);
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateY(1.5rem);
+  transition:
+    opacity 0.65s var(--pod-ease) var(--featured-delay, 0ms),
+    filter 0.65s var(--pod-ease) var(--featured-delay, 0ms),
+    transform 0.45s var(--pod-ease) var(--featured-delay, 0ms),
+    box-shadow 0.4s ease;
+}
+
+.featuredCard.isVisible {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+/* Delay reset so the hover lift is immediate instead of waiting out the
+   stagger the reveal uses. */
+.featuredCard.isVisible:hover {
+  box-shadow: 0 1.8rem 3.6rem rgba(33, 44, 45, 0.24);
+  transform: translateY(-0.35rem);
+  transition-delay: 0s;
+}
+
+.featuredThumb {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #17201f;
+}
+
+.featuredImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--pod-ease);
+}
+
+.featuredCard:hover .featuredImage {
+  transform: scale(1.05);
+}
+
+.featuredDuration {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.32rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  color: var(--color-white);
+  font-size: var(--home-small-text-size, 0.78rem);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.featuredBody {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: clamp(1.5rem, 2.6vw, 2.4rem);
+}
+
+.featuredMeta {
+  color: var(--color-yellow);
+  font-size: var(--home-small-text-size, 0.78rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.featuredCardTitle {
+  margin-top: 0.55rem;
+  color: var(--color-white);
+  font-size: clamp(1.15rem, 1.7vw, 1.5rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.featuredCardTitle a {
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+.featuredCardTitle a:hover,
+.featuredCardTitle a:focus-visible {
+  color: var(--color-yellow);
+}
+
+.featuredHook {
+  margin-top: 0.75rem;
+  color: var(--pod-copy-dark);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+/* Bottom margin here rather than a top margin on the button, which uses
+   margin-top:auto to sit on the card floor. */
+.featuredTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  margin-bottom: clamp(1.15rem, 1.9vw, 1.6rem);
+  list-style: none;
+}
+
+.featuredTag {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: var(--home-small-text-size, 0.75rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* margin-top:auto pins the button to the card floor, so both cards' buttons
+   line up even when one hook runs a line longer. */
+.featuredWatch {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: auto;
+  padding: 0.7rem 1.15rem;
+  border: 2px solid var(--color-yellow);
+  border-radius: 999px;
+  background: var(--color-yellow);
+  color: var(--color-black);
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  line-height: 1.1;
+  transition: var(--home-cta-transition);
+}
+
+.featuredWatch svg:last-child {
+  transition: var(--home-cta-arrow-transition);
+}
+
+.featuredWatch:hover,
+.featuredWatch:focus-visible {
+  border-color: var(--color-white);
+  background: var(--color-white);
+  color: var(--color-black);
+  transform: translateY(-0.15rem);
+}
+
+.featuredWatch:hover svg:last-child,
+.featuredWatch:focus-visible svg:last-child {
+  transform: var(--home-cta-arrow-hover-transform);
+}
+
+/* ---------------------------------------------------------- course rail */
+
+/* 22px matches the navbar's own corner radius. */
+.featuredCourse {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1rem, 2vw, 1.75rem);
+  margin-top: clamp(1.5rem, 2.6vw, 2.25rem);
+  padding: clamp(1.5rem, 2.6vw, 2.25rem) clamp(1.5rem, 2.8vw, 2.5rem);
+  border-radius: 22px;
+  background: var(--color-deep-slate);
+  opacity: 0;
+}
+
+.featuredCourse.isVisible {
+  animation: podRise 0.7s var(--pod-ease) both;
+}
+
+.featuredCourseCopy {
+  min-width: 0;
+}
+
+.featuredCourseTitle {
+  color: var(--color-white);
+  font-size: calc(var(--home-subheading-size) * 1.1);
+  font-weight: 850;
+  line-height: 1.3;
+}
+
+.featuredCourseText {
+  margin-top: 0.35rem;
+  max-width: 62ch;
+  color: var(--pod-copy-dark);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.featuredCourseCta {
+  display: inline-flex;
+  flex: 0 0 auto;
+  min-height: var(--home-cta-min-height);
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1.35rem;
+  border: 2px solid var(--color-yellow);
+  border-radius: 999px;
+  background: var(--color-yellow);
+  color: var(--color-black);
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  line-height: var(--home-cta-line-height);
+  transition: var(--home-cta-transition);
+}
+
+.featuredCourseCta svg {
+  transition: var(--home-cta-arrow-transition);
+}
+
+.featuredCourseCta:hover,
+.featuredCourseCta:focus-visible {
+  border-color: var(--color-white);
+  background: var(--color-white);
+  color: var(--color-black);
+  transform: translateY(-0.15rem);
+}
+
+.featuredCourseCta:hover svg,
+.featuredCourseCta:focus-visible svg {
+  transform: var(--home-cta-arrow-hover-transform);
+}
+
+/* ------------------------------------------------ archive responsive ---- */
+
+@media (min-width: 2000px) {
+  .episodeGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1200px) {
+  .episodeGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .archiveControls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Two cards side by side leave each too narrow for the hook. */
+  .featuredList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .featuredCourse {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 700px) {
+  .episodeGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Enough to clear the section edge, but well short of the desktop value:
+     the newsletter below adds its own top padding on top of this. */
+  .archivePanelInner {
+    padding-bottom: clamp(2rem, 5vw, 2.75rem);
+  }
+
+  .featuredBlock {
+    margin-top: clamp(2.5rem, 7vw, 3.25rem);
+    padding-top: clamp(2rem, 6vw, 2.75rem);
+  }
+}
+
+@media (max-width: 620px) {
+  /* Two squares side by side get too small to read on a phone. */
+  .seasonSplit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .seasonHint {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    padding: 0.6rem 0.95rem;
+  }
+
+  .episodeActions {
+    gap: 0.45rem;
+  }
+
+  .episodeWatch,
+  .episodeNotesToggle {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   /* Drop the pin itself, not just the drift: a frozen hero with a full
      viewport panel sliding across it is large-area vestibular motion. */
@@ -1319,7 +2293,13 @@
   .subscribeItem,
   .audiencePhotoFrame,
   .audienceCards,
-  .audienceCard {
+  .audienceCard,
+  .archiveHeader,
+  .seasonSplit,
+  .episodeCard,
+  .featuredCard,
+  .featuredHeader,
+  .featuredCourse {
     clip-path: none;
     opacity: 1;
     animation: none;
@@ -1328,10 +2308,29 @@
     will-change: auto;
   }
 
+  /* The season 2 blur is meaning, not motion, so it is preserved above. */
+  .seasonTileLocked .seasonImage {
+    filter: blur(9px) saturate(0.85) brightness(0.94);
+    transform: scale(1.06);
+  }
+
   .heroBadge,
   .heroBadgeIcon,
   .subscribeLink,
-  .phone {
+  .phone,
+  .seasonImage,
+  .seasonHint,
+  .archivePanel,
+  .episodeNotes,
+  .episodeImage,
+  .episodePlay,
+  .episodeWatch,
+  .episodeNotesToggle,
+  .sortButton,
+  .archiveMore,
+  .featuredImage,
+  .featuredWatch,
+  .featuredCourseCta {
     transition-duration: 0.01ms;
   }
 }

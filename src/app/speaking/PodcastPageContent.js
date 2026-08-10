@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { FaApple, FaHeadphones, FaInstagram, FaSpotify, FaYoutube } from 'react-icons/fa'
 import useHeroPin from './useHeroPin'
+import PodcastArchiveSection from './PodcastArchiveSection'
+import PodcastNewsletterSection from './PodcastNewsletterSection'
 import styles from './podcast.module.css'
 
 const CHANNEL_URL = 'https://www.youtube.com/@zak_talks'
@@ -155,7 +157,7 @@ function CountUp({ value, suffix, active }) {
   )
 }
 
-export default function PodcastPageContent() {
+export default function PodcastPageContent({ episodes = [] }) {
   const stageRef = useRef(null)
   const pinRef = useRef(null)
   const [heroReady, setHeroReady] = useState(false)
@@ -394,6 +396,12 @@ export default function PodcastPageContent() {
             </div>
           </div>
         </section>
+
+        {/* -------------------------------------------------- SEASON ARCHIVE */}
+        <PodcastArchiveSection episodes={episodes} />
+
+        {/* ------------------------------------------------------- NEWSLETTER */}
+        <PodcastNewsletterSection />
       </div>
     </main>
   )

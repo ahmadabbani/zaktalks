@@ -1,0 +1,526 @@
+'use client'
+
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { FaApple, FaHeadphones, FaSpotify, FaYoutube } from 'react-icons/fa'
+import { FiArrowUpRight, FiChevronDown, FiClock, FiPlay } from 'react-icons/fi'
+import styles from './podcast.module.css'
+
+const INITIAL_VISIBLE = 6
+
+const sortOptions = [
+  { id: 'latest', label: 'Latest' },
+  { id: 'popular', label: 'Most popular' },
+  { id: 'short', label: 'Short listens' },
+  { id: 'deep', label: 'Deep dives' },
+]
+
+/* No per-episode links yet, so these read as informational chips rather than
+   buttons that look clickable but do nothing. */
+const listenPlatforms = [
+  { id: 'apple', label: 'Apple Podcasts', Icon: FaApple },
+  { id: 'spotify', label: 'Spotify', Icon: FaSpotify },
+  { id: 'anghami', label: 'Anghami', Icon: FaHeadphones },
+]
+
+/**
+ * Hand-picked highlights. Matched to the playlist by video id rather than by
+ * title so renaming an episode on YouTube can never silently break the link
+ * to its thumbnail and runtime. Copy and tags are authored here, which is why
+ * these show tags while the fetched cards do not have any yet.
+ */
+const featuredEpisodes = [
+  {
+    videoId: 'ZOPlNV-tkR0',
+    title: 'Have you truly met your Inner Child?',
+    hook:
+      'There’s a part of you that keeps showing up in your reactions, fears, and ' +
+      'relationships, even if you’ve never named it. In this episode, we explore your ' +
+      'inner child not as a concept, but as a living influence you can finally listen ' +
+      'to, understand, and heal.',
+    tags: ['Self-awareness', 'Healing', 'Childhood patterns'],
+    watchUrl: 'https://youtu.be/ZOPlNV-tkR0',
+  },
+  {
+    videoId: 'CYq9yT0uBHs',
+    title: 'Your strengths aren’t missing; they’re being ignored.',
+    hook:
+      'You’re not empty; you’re unseen, even by yourself. This episode challenges the ' +
+      'story that you’re “not good enough” and shows you how your strengths are already ' +
+      'present, but trapped in old dynamics, environments, and beliefs.',
+    tags: ['Work & career', 'Self-worth', 'Personal growth'],
+    watchUrl: 'https://youtu.be/CYq9yT0uBHs',
+  },
+]
+
+const seasons = [
+  {
+    id: 'season-1',
+    label: 'Season 1',
+    image: '/season1.jpg',
+    alt: 'ZakTalks Season 1 cover with Zak Dakkach holding a microphone',
+    available: true,
+  },
+  {
+    id: 'season-2',
+    label: 'Season 2',
+    image: '/season2.jpg',
+    alt: 'ZakTalks Season 2 cover, coming soon',
+    available: false,
+  },
+]
+
+function sortEpisodes(episodes, sortId) {
+  const list = [...episodes]
+
+  switch (sortId) {
+    case 'popular':
+      return list.sort((a, b) => b.viewCount - a.viewCount)
+    case 'short':
+      return list.sort((a, b) => a.durationSeconds - b.durationSeconds)
+    case 'deep':
+      return list.sort((a, b) => b.durationSeconds - a.durationSeconds)
+    default:
+      return list.sort((a, b) => new Date(b.releasedAt || 0) - new Date(a.releasedAt || 0))
+  }
+}
+
+function EpisodeCard({ episode, index }) {
+  const [showNotes, setShowNotes] = useState(false)
+
+  return (
+    <article className={styles.episodeCard} style={{ '--episode-delay': `${index * 70}ms` }}>
+      <a
+        href={episode.watchUrl}
+        target="_blank"
+        rel="noreferrer"
+        className={styles.episodeThumb}
+        aria-label={`Watch ${episode.title} on YouTube`}
+      >
+        {episode.thumbnail && (
+          <Image
+            src={episode.thumbnail}
+            alt=""
+            width={1280}
+            height={720}
+            sizes="(max-width: 700px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            unoptimized
+            className={styles.episodeImage}
+          />
+        )}
+
+        <span className={styles.episodePlay} aria-hidden="true">
+          <FiPlay />
+        </span>
+
+        {episode.durationLabel && (
+          <span className={styles.episodeDuration}>
+            <FiClock aria-hidden="true" />
+            <span>{episode.durationLabel}</span>
+          </span>
+        )}
+      </a>
+
+      <div className={styles.episodeBody}>
+        {episode.releasedLabel && (
+          <p className={styles.episodeMeta}>
+            {episode.isPremiere ? 'Premiered' : 'Published'} {episode.releasedLabel}
+          </p>
+        )}
+
+        <h3 className={styles.episodeTitle}>
+          <a href={episode.watchUrl} target="_blank" rel="noreferrer">
+            {episode.title}
+          </a>
+        </h3>
+
+        {episode.hook && <p className={styles.episodeHook}>{episode.hook}</p>}
+
+        {episode.tags.length > 0 && (
+          <ul className={styles.episodeTags}>
+            {episode.tags.slice(0, 3).map((tag) => (
+              <li key={tag} className={styles.episodeTag}>
+                {tag}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* 0fr → 1fr animates the panel open without measuring heights. */}
+        <div
+          id={`episode-notes-${episode.id}`}
+          role="region"
+          className={`${styles.episodeNotes} ${showNotes ? styles.episodeNotesOpen : ''}`}
+        >
+          <div className={styles.episodeNotesInner}>
+            <p>{episode.description || 'Show notes for this episode are coming soon.'}</p>
+          </div>
+        </div>
+
+        <div className={styles.episodeActions}>
+          <a
+            href={episode.watchUrl}
+            target="_blank"
+            rel="noreferrer"
+            className={styles.episodeWatch}
+          >
+            <FaYoutube aria-hidden="true" />
+            <span>Watch</span>
+            <FiArrowUpRight aria-hidden="true" />
+          </a>
+
+          <button
+            type="button"
+            className={styles.episodeNotesToggle}
+            aria-expanded={showNotes}
+            aria-controls={`episode-notes-${episode.id}`}
+            onClick={() => setShowNotes((open) => !open)}
+          >
+            <span>{showNotes ? 'Hide show notes' : 'Show notes'}</span>
+            <FiChevronDown aria-hidden="true" />
+          </button>
+        </div>
+
+        <div className={styles.episodeListen}>
+          <span className={styles.episodeListenLabel}>Listen on</span>
+          <ul className={styles.episodeListenList}>
+            {listenPlatforms.map((platform) => (
+              <li key={platform.id} className={styles.episodeListenChip} title={platform.label}>
+                <platform.Icon aria-hidden="true" />
+                <span className={styles.srOnly}>{platform.label}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </article>
+  )
+}
+
+function FeaturedEpisodeCard({ item, details, index, register, cx }) {
+  // Falls back to YouTube's own thumbnail host so the card still renders if the
+  // playlist request failed or the video was removed from the playlist.
+  const thumbnail = details?.thumbnail || `https://i.ytimg.com/vi/${item.videoId}/maxresdefault.jpg`
+  const revealId = `featured-${item.videoId}`
+
+  return (
+    <article
+      ref={register(revealId)}
+      className={cx(styles.featuredCard, revealId)}
+      style={{ '--featured-delay': `${index * 120}ms` }}
+    >
+      <a
+        href={item.watchUrl}
+        target="_blank"
+        rel="noreferrer"
+        className={styles.featuredThumb}
+        aria-label={`Watch ${item.title} on YouTube`}
+      >
+        <Image
+          src={thumbnail}
+          alt=""
+          width={1280}
+          height={720}
+          sizes="(max-width: 900px) 100vw, 45vw"
+          unoptimized
+          className={styles.featuredImage}
+        />
+
+        {details?.durationLabel && (
+          <span className={styles.featuredDuration}>
+            <FiClock aria-hidden="true" />
+            <span>{details.durationLabel}</span>
+          </span>
+        )}
+      </a>
+
+      <div className={styles.featuredBody}>
+        {details?.releasedLabel && (
+          <p className={styles.featuredMeta}>
+            {details.isPremiere ? 'Premiered' : 'Published'} {details.releasedLabel}
+          </p>
+        )}
+
+        <h4 className={styles.featuredCardTitle}>
+          <a href={item.watchUrl} target="_blank" rel="noreferrer">
+            {item.title}
+          </a>
+        </h4>
+
+        <p className={styles.featuredHook}>{item.hook}</p>
+
+        <ul className={styles.featuredTags}>
+          {item.tags.map((tag) => (
+            <li key={tag} className={styles.featuredTag}>
+              {tag}
+            </li>
+          ))}
+        </ul>
+
+        <a
+          href={item.watchUrl}
+          target="_blank"
+          rel="noreferrer"
+          className={styles.featuredWatch}
+        >
+          <FaYoutube aria-hidden="true" />
+          <span>Watch on YouTube</span>
+          <FiArrowUpRight aria-hidden="true" />
+        </a>
+      </div>
+    </article>
+  )
+}
+
+export default function PodcastArchiveSection({ episodes = [] }) {
+  const [openSeason, setOpenSeason] = useState(null)
+  const [sortId, setSortId] = useState('latest')
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE)
+  const [revealed, setRevealed] = useState(() => new Set())
+
+  const nodes = useRef(new Map())
+  const archiveRef = useRef(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const seen = []
+
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          seen.push(entry.target.dataset.revealId)
+          observer.unobserve(entry.target)
+        })
+
+        if (!seen.length) return
+
+        setRevealed((current) => {
+          const next = new Set(current)
+          seen.forEach((id) => next.add(id))
+          return next
+        })
+      },
+      { threshold: 0.18, rootMargin: '0px 0px -7% 0px' }
+    )
+
+    nodes.current.forEach((node) => observer.observe(node))
+    return () => observer.disconnect()
+  }, [])
+
+  const register = useCallback((id) => (node) => {
+    if (!node) {
+      nodes.current.delete(id)
+      return
+    }
+
+    node.dataset.revealId = id
+    nodes.current.set(id, node)
+  }, [])
+
+  const cx = useCallback(
+    (base, id) => [base, revealed.has(id) ? styles.isVisible : ''].filter(Boolean).join(' '),
+    [revealed]
+  )
+
+  const sortedEpisodes = useMemo(() => sortEpisodes(episodes, sortId), [episodes, sortId])
+  const visibleEpisodes = sortedEpisodes.slice(0, visibleCount)
+  const remaining = sortedEpisodes.length - visibleEpisodes.length
+  const isArchiveOpen = openSeason === 'season-1'
+
+  const toggleSeason = (season) => {
+    if (!season.available) return
+
+    setOpenSeason((current) => (current === season.id ? null : season.id))
+    setVisibleCount(INITIAL_VISIBLE)
+  }
+
+  const changeSort = (nextSortId) => {
+    setSortId(nextSortId)
+    setVisibleCount(INITIAL_VISIBLE)
+  }
+
+  return (
+    <section className={styles.archiveSection} aria-labelledby="archive-heading">
+      <div className={styles.contentWidth}>
+        <div
+          ref={register('archive-header')}
+          className={cx(styles.archiveHeader, 'archive-header')}
+        >
+          <h2 id="archive-heading" className={styles.archiveTitle}>
+            Explore every conversation.
+          </h2>
+
+          <p className={styles.archiveCopy}>
+            Season 1 is already live with {episodes.length || 13} episodes, each one
+            digging into a different &ldquo;elephant in the room&rdquo; in your inner
+            world, relationships, and daily life. Season 2 launches at the end of August,
+            adding deeper, bolder conversations to the archive.
+          </p>
+        </div>
+      </div>
+
+      {/* Full-bleed: the two covers meet in the middle and run to both edges. */}
+      <div
+        ref={register('archive-seasons')}
+        className={cx(styles.seasonSplit, 'archive-seasons')}
+      >
+        {seasons.map((season) => {
+          const isOpen = openSeason === season.id
+
+          return season.available ? (
+            <button
+              key={season.id}
+              type="button"
+              className={`${styles.seasonTile} ${isOpen ? styles.seasonTileOpen : ''}`}
+              aria-expanded={isOpen}
+              aria-controls="season-archive"
+              onClick={() => toggleSeason(season)}
+            >
+              <Image
+                src={season.image}
+                alt={season.alt}
+                width={1100}
+                height={1100}
+                sizes="50vw"
+                className={styles.seasonImage}
+              />
+
+              <span className={styles.seasonHint}>
+                <span>{isOpen ? 'Hide episodes' : 'View episodes'}</span>
+                <FiChevronDown aria-hidden="true" />
+              </span>
+            </button>
+          ) : (
+            <div key={season.id} className={`${styles.seasonTile} ${styles.seasonTileLocked}`}>
+              <Image
+                src={season.image}
+                alt={season.alt}
+                width={1100}
+                height={1100}
+                sizes="50vw"
+                className={styles.seasonImage}
+              />
+
+              <span className={styles.seasonComingSoon}>
+                <span className={styles.seasonComingSoonText}>
+                  <span className={styles.seasonComingSoonLine}>Season 2</span>
+                  <span className={styles.seasonComingSoonLine}>Coming Soon</span>
+                </span>
+              </span>
+            </div>
+          )
+        })}
+      </div>
+
+      <div
+        id="season-archive"
+        ref={archiveRef}
+        className={`${styles.archivePanel} ${isArchiveOpen ? styles.archivePanelOpen : ''}`}
+        aria-hidden={!isArchiveOpen}
+      >
+        <div className={styles.archivePanelInner}>
+          <div className={styles.contentWidth}>
+            <div className={styles.archiveControls}>
+              <div className={styles.sortGroup} role="group" aria-label="Sort episodes">
+                <span className={styles.sortLabel}>Sort by</span>
+
+                <div className={styles.sortOptions}>
+                  {sortOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      className={`${styles.sortButton} ${
+                        sortId === option.id ? styles.sortButtonActive : ''
+                      }`}
+                      aria-pressed={sortId === option.id}
+                      onClick={() => changeSort(option.id)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {sortedEpisodes.length === 0 ? (
+              <p className={styles.archiveEmpty}>
+                Episodes are loading from YouTube. Please check back shortly.
+              </p>
+            ) : (
+              <>
+                <div className={styles.episodeGrid}>
+                  {visibleEpisodes.map((episode, index) => (
+                    <EpisodeCard
+                      key={episode.id}
+                      episode={episode}
+                      index={index % INITIAL_VISIBLE}
+                    />
+                  ))}
+                </div>
+
+                {remaining > 0 && (
+                  <div className={styles.archiveMoreRow}>
+                    <button
+                      type="button"
+                      className={styles.archiveMore}
+                      onClick={() => setVisibleCount(sortedEpisodes.length)}
+                    >
+                      <span>
+                        Show {remaining} more {remaining === 1 ? 'episode' : 'episodes'}
+                      </span>
+                      <FiChevronDown aria-hidden="true" />
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+
+            <div className={styles.featuredBlock}>
+              <div
+                ref={register('featured-header')}
+                className={cx(styles.featuredHeader, 'featured-header')}
+              >
+                <p className={styles.eyebrow}>Featured</p>
+                <h3 className={styles.featuredTitle}>Most popular episodes</h3>
+              </div>
+
+              <div className={styles.featuredList}>
+                {featuredEpisodes.map((item, index) => (
+                  <FeaturedEpisodeCard
+                    key={item.videoId}
+                    item={item}
+                    details={episodes.find((episode) => episode.id === item.videoId)}
+                    index={index}
+                    register={register}
+                    cx={cx}
+                  />
+                ))}
+              </div>
+
+              <div
+                ref={register('featured-course')}
+                className={cx(styles.featuredCourse, 'featured-course')}
+              >
+                <div className={styles.featuredCourseCopy}>
+                  <p className={styles.featuredCourseTitle}>
+                    Unlock Your Financial Frequency
+                  </p>
+                  <p className={styles.featuredCourseText}>
+                    For those ready to change their relationship with money and
+                    possibility.
+                  </p>
+                </div>
+
+                <Link href="/courses" className={styles.featuredCourseCta}>
+                  <span>Explore the course</span>
+                  <FiArrowUpRight aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

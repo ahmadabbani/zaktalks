@@ -1,0 +1,470 @@
+.section {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(4.5rem, 7vw, 8rem) 0;
+  background: var(--color-gray-light);
+}
+
+.container {
+  width: auto;
+  margin-inline: var(--featured-section-gutter);
+}
+
+/* Weighted toward the copy (1.28fr vs the homepage's 0.92fr) so this longer
+   headline and paragraph stop stacking into a tall narrow column. The right
+   column keeps a 24rem floor because the submit label is `nowrap` and needs
+   roughly 358px; below that floor the button would overflow. */
+.panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.28fr) minmax(24rem, 0.72fr);
+  gap: clamp(2rem, 5vw, 6rem);
+  align-items: start;
+  overflow: hidden;
+  padding: clamp(1.65rem, 3.5vw, 4rem);
+  color: var(--color-white);
+  border-radius: clamp(1.75rem, 3vw, 3.4rem);
+  background: var(--color-dark-blue);
+  box-shadow: 0 1.8rem 4rem rgba(33, 44, 45, 0.16);
+  isolation: isolate;
+}
+
+.panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(1rem, 2vw, 1.6rem);
+  align-items: start;
+}
+
+.iconMark {
+  display: inline-flex;
+  width: clamp(3.25rem, 4.6vw, 5rem);
+  aspect-ratio: 1;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-white);
+  border-radius: 50%;
+  background: var(--color-yellow);
+  box-shadow: 0 1rem 2.2rem rgba(33, 44, 45, 0.2);
+  transition: color 0.35s ease, background-color 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.iconMark svg {
+  width: 44%;
+  height: 44%;
+}
+
+/* 20ch, not the homepage's 12ch: this headline is roughly twice as long, and
+   at 12ch it would break into a very narrow five-line column. */
+.title {
+  max-width: 20ch;
+  color: var(--color-white);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+  text-wrap: balance;
+  transition: color 0.35s ease;
+}
+
+.copy {
+  max-width: 56ch;
+  margin-top: clamp(0.9rem, 1.6vw, 1.35rem);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-subheading-weight);
+  line-height: var(--home-subheading-line-height);
+  transition: color 0.35s ease;
+}
+
+.panel:hover .title {
+  color: var(--color-yellow);
+}
+
+.panel:hover .iconMark {
+  color: var(--color-yellow);
+  background: var(--color-white);
+  transform: rotate(-5deg) scale(1.04);
+}
+
+/* Single column at every desktop width: three-across never had room for this
+   CTA label once the copy column was widened. */
+.form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: end;
+}
+
+.field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.field span {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.74rem;
+  font-weight: 780;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.field input {
+  width: 100%;
+  min-height: var(--home-cta-min-height);
+  padding: 0.95rem 1.05rem;
+  color: var(--color-white);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 1.05rem;
+  background: rgba(255, 255, 255, 0.11);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  outline: none;
+  transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.field input::placeholder {
+  color: rgba(255, 255, 255, 0.52);
+}
+
+.field input:hover {
+  border-color: rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.field input:focus {
+  border-color: var(--color-yellow);
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 0 0 4px rgba(241, 196, 15, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transform: translateY(-0.12rem);
+}
+
+.submitButton {
+  display: inline-flex;
+  grid-column: 1;
+  justify-self: start;
+  min-height: 3.65rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.85rem 0.82rem 0.85rem 1.25rem;
+  color: var(--color-deep-slate);
+  border: 2px solid var(--color-white);
+  border-radius: 999px;
+  background: var(--color-white);
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  line-height: var(--home-cta-line-height);
+  white-space: nowrap;
+  transition: var(--home-cta-transition);
+}
+
+.submitButton svg {
+  width: 1.8rem;
+  height: 1.8rem;
+  padding: 0.35rem;
+  color: var(--color-white);
+  border-radius: 50%;
+  background: var(--color-slate-blue);
+  transition: var(--home-cta-arrow-transition);
+}
+
+.submitButton:hover,
+.submitButton:focus-visible {
+  color: var(--color-white);
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  transform: var(--home-cta-hover-transform);
+  outline: none;
+}
+
+.submitButton:hover svg,
+.submitButton:focus-visible svg {
+  color: var(--color-yellow);
+  background: var(--color-white);
+  transform: var(--home-cta-arrow-hover-transform);
+}
+
+@media (max-width: 1600px) {
+  .submitButton {
+    min-height: var(--home-cta-min-height);
+    padding-block: 0.68rem;
+  }
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  min-height: 1.35rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.88rem;
+  font-weight: 560;
+  line-height: 1.5;
+}
+
+.section .panel {
+  opacity: 0;
+  transform: translateY(2rem) scale(0.975);
+}
+
+.sectionVisible .panel {
+  animation: panelIn 0.88s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.sectionVisible .content {
+  animation: contentIn 0.74s 0.18s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.sectionVisible .form {
+  animation: formIn 0.78s 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(2rem) scale(0.975);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes contentIn {
+  from {
+    opacity: 0;
+    transform: translateX(-1.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes formIn {
+  from {
+    opacity: 0;
+    transform: translateX(1.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Raised from the homepage's 1024px: between 1024 and 1440 the two-column
+   split leaves the copy about 44 characters wide, which reads worse than
+   simply stacking and letting it use the full panel width. */
+@media (max-width: 1439px) {
+  .panel {
+    grid-template-columns: 1fr;
+    gap: clamp(1.75rem, 4vw, 2.75rem);
+    align-items: start;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .submitButton {
+    grid-column: 1 / -1;
+    justify-self: start;
+    min-height: var(--home-cta-min-height);
+    padding-block: var(--home-cta-compact-padding-block);
+  }
+
+  .copy {
+    line-height: var(--home-subheading-line-height);
+  }
+
+  .field input {
+    min-width: 0;
+    min-height: var(--home-cta-min-height);
+    padding-block: var(--home-cta-compact-padding-block);
+    font-size: var(--home-text-size);
+    line-height: var(--home-text-line-height);
+  }
+
+  .formNote {
+    font-size: var(--home-small-text-size);
+    line-height: 1.3;
+  }
+
+  .field span {
+    font-size: calc(var(--home-small-text-size) - 0.06rem);
+  }
+}
+
+@media (min-width: 1440px) {
+  .panel {
+    padding-block: clamp(1.4rem, 2.25vw, 2.5rem);
+  }
+}
+
+@media (max-width: 680px) {
+  .section {
+    padding: 4rem 0;
+  }
+
+  .panel {
+    padding: 1.25rem;
+    border-radius: 1.55rem;
+    gap: 1.75rem;
+  }
+
+  .content {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: end;
+  }
+
+  .iconMark {
+    width: 3.35rem;
+  }
+
+  .title {
+    font-size: var(--home-headline-size);
+  }
+
+  .submitButton {
+    grid-column: 1 / -1;
+    width: 100%;
+    justify-content: space-between;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 3.25rem 0;
+  }
+
+  .panel {
+    padding: 1.1rem;
+    border-radius: 1.35rem;
+  }
+
+  .form {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .field,
+  .submitButton,
+  .formNote {
+    grid-column: 1;
+  }
+
+  .field input {
+    min-height: var(--home-cta-min-height);
+    padding: var(--home-cta-compact-padding-block) 0.9rem;
+    border-radius: 0.9rem;
+  }
+
+  .submitButton {
+    min-height: var(--home-cta-min-height);
+    padding-block: var(--home-cta-compact-padding-block);
+  }
+
+  .formNote {
+    min-height: 0;
+  }
+}
+
+@media (min-width: 2000px) {
+  .panel {
+    grid-template-columns: minmax(0, 1.28fr) minmax(26rem, 0.72fr);
+  }
+
+  .iconMark {
+    width: 5.6rem;
+  }
+
+  .field span {
+    font-size: 0.82rem;
+  }
+
+  .field input {
+    font-size: var(--home-text-size);
+  }
+
+  .submitButton {
+    min-height: var(--home-cta-min-height);
+  }
+
+  .submitButton svg {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .formNote {
+    font-size: 0.98rem;
+  }
+}
+
+@media (min-width: 2300px) {
+  .panel {
+    grid-template-columns: minmax(0, 1.28fr) minmax(30rem, 0.72fr);
+  }
+
+  .iconMark {
+    width: 6.2rem;
+  }
+
+  .field span {
+    font-size: 0.9rem;
+  }
+
+  .submitButton svg {
+    width: 2.15rem;
+    height: 2.15rem;
+  }
+
+  .formNote {
+    font-size: 1.05rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section .panel,
+  .sectionVisible .panel,
+  .sectionVisible .content,
+  .sectionVisible .form {
+    opacity: 1;
+    animation: none;
+    filter: none;
+    transform: none;
+  }
+
+  .panel,
+  .iconMark,
+  .title,
+  .copy,
+  .field input,
+  .submitButton,
+  .submitButton svg {
+    transition-duration: 0.01ms;
+  }
+}
