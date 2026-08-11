@@ -1970,43 +1970,88 @@
   top: 50%;
   left: 50%;
   display: flex;
-  width: clamp(14rem, 21vw, 21rem);
+  width: clamp(16rem, 24vw, 24rem);
   aspect-ratio: 1;
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(1.75rem, 3vw, 3rem);
-  color: var(--color-white);
-  border-radius: 50%;
-  background: var(--color-deep-slate);
-  box-shadow: 0 0 0 clamp(0.65rem, 1vw, 1rem) #f2f1ec;
+  padding: 0;
+  color: var(--color-deep-slate);
+  background: transparent;
   opacity: 0;
   text-align: center;
   transform: translate(-50%, -50%) scale(0.76);
 }
 
-.orbitCore::before,
-.orbitCore::after {
-  content: '';
+.orbitCoreRings {
   position: absolute;
-  border-radius: inherit;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 124%;
+  height: 124%;
+  overflow: visible;
   pointer-events: none;
+  transform: translate(-50%, -50%);
 }
 
-.orbitCore::before {
-  inset: 0.72rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+.orbitCoreRing {
+  fill: none;
+  stroke: var(--color-dark-blue);
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.58;
+  vector-effect: non-scaling-stroke;
 }
 
-.orbitCore::after {
-  inset: -1.05rem;
-  border: 2px dashed rgba(60, 90, 103, 0.4);
-  animation: orbitRingTurn 30s linear infinite;
+.orbitCoreRing:nth-child(3n + 1) {
+  stroke: var(--color-deep-slate);
+  opacity: 0.62;
+}
+
+.orbitCoreRing:nth-child(3n + 2) {
+  stroke: var(--color-dark-blue);
+  opacity: 0.62;
+}
+
+.orbitCoreRing:nth-child(3n) {
+  stroke: var(--color-slate-blue);
+  opacity: 0.64;
+}
+
+.orbitCoreRing:last-child {
+  stroke: var(--color-yellow);
+  opacity: 0.9;
 }
 
 .orbitCore > * {
   position: relative;
   z-index: 1;
+}
+
+.orbitCore > .orbitCoreRings {
+  position: absolute;
+  z-index: 0;
+}
+
+.orbitCoreContent {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  width: 74%;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.orbitCore > .orbitCoreContent {
+  position: absolute;
 }
 
 .orbitCore > span {
@@ -2020,7 +2065,7 @@
 
 .orbitCore h2 {
   margin-top: 0;
-  color: var(--color-white);
+  color: var(--color-deep-slate);
   font-size: clamp(1.4rem, 1.8vw, 2rem);
   font-weight: 900;
   letter-spacing: -0.045em;
@@ -2031,7 +2076,7 @@
 
 .orbitCore small {
   margin-top: clamp(0.9rem, 1.4vw, 1.25rem);
-  color: rgba(255, 255, 255, 0.68);
+  color: rgba(33, 44, 45, 0.68);
   font-size: var(--home-small-text-size, 0.72rem);
   font-weight: 760;
   letter-spacing: 0.16em;
@@ -2267,19 +2312,13 @@
   }
 }
 
-@keyframes orbitRingTurn {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @media (min-width: 2000px) {
   .milestoneOrbit {
     width: min(calc(100% - 4rem), 64rem, calc(100svh - 12rem));
   }
 
   .orbitCore {
-    width: clamp(22rem, 18vw, 28rem);
+    width: clamp(25rem, 20.5vw, 32rem);
   }
 
   .orbitCore h2 {
@@ -2313,8 +2352,8 @@
   }
 
   .orbitCore {
-    width: clamp(11rem, 17vw, 15.5rem);
-    padding: clamp(1.25rem, 2vw, 2rem);
+    width: clamp(13rem, 19.5vw, 18rem);
+    padding: 0;
   }
 
   .orbitCore h2 {
@@ -2380,8 +2419,8 @@
     position: relative;
     top: auto;
     left: 50%;
-    width: clamp(12rem, 34vw, 15rem);
-    padding: 1.5rem;
+    width: clamp(13.75rem, 36vw, 17.25rem);
+    padding: 0;
     transform: translateX(-50%) scale(0.8);
   }
 
@@ -2502,7 +2541,7 @@
 
 @media (max-width: 560px) {
   .orbitCore {
-    width: 11.5rem;
+    width: 13.25rem;
   }
 
   .orbitCore h2 {
@@ -2564,9 +2603,13 @@
     stroke-dashoffset: 0;
   }
 
-  .orbitCore::after,
   .orbitSectionLabel {
     animation: none;
+  }
+
+  .orbitCoreRings animate,
+  .orbitCoreRings animateTransform {
+    display: none;
   }
 }
 

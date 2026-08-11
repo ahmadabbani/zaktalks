@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   FiArrowUpRight,
   FiCalendar,
@@ -37,9 +38,14 @@ const notFitPoints = [
 
 const weightPoints = [
   {
-    id: 'overthinking',
+    id: 'point-a',
     kind: 'endpoint',
     label: 'Point A',
+    text: 'They don’t truly know where they are right now',
+  },
+  {
+    id: 'overthinking',
+    kind: 'mid',
     text: 'Fear, anxiety, and constant overthinking.',
   },
   {
@@ -50,7 +56,7 @@ const weightPoints = [
   {
     id: 'anger',
     kind: 'mid',
-    text: 'Anger, either turned inward or spilling into their relationships.',
+    text: 'Anger—either turned inward or spilling into their relationships.',
   },
   {
     id: 'disconnected',
@@ -59,9 +65,14 @@ const weightPoints = [
   },
   {
     id: 'present',
+    kind: 'mid',
+    text: 'A sense that they are not fully present in their own life.',
+  },
+  {
+    id: 'point-b',
     kind: 'endpoint',
     label: 'Point B',
-    text: 'A sense that they are not fully present in their own life.',
+    text: 'They know where they want to go',
   },
 ]
 
@@ -143,25 +154,25 @@ const structureCards = [
     id: 'format',
     Icon: FiMonitor,
     title: 'Format',
-    text: 'Sessions are available both in person and online, so you can choose what feels safest and most convenient.',
+    text: 'In person or online',
   },
   {
     id: 'length',
     Icon: FiClock,
     title: 'Session length',
-    text: 'Each session is 50 minutes. Long enough to go deep, focused enough to stay grounded.',
+    text: '50 minutes',
   },
   {
     id: 'frequency',
     Icon: FiCalendar,
     title: 'Frequency',
-    text: 'Typically once a week. Biweekly is possible if there is consistency and sustainability in the process.',
+    text: 'Weekly, biweekly possible',
   },
   {
     id: 'commitment',
     Icon: FiFlag,
     title: 'Minimum commitment',
-    text: 'To allow real work to happen, a minimum of 6–7 sessions is recommended.',
+    text: '6–7 sessions',
   },
 ]
 
@@ -310,6 +321,8 @@ function useReveal() {
 
 export default function OneOnOneContent() {
   const [heroReady, setHeroReady] = useState(false)
+  const [openJourney, setOpenJourney] = useState(0)
+  const [openProcess, setOpenProcess] = useState(0)
   const [openFaq, setOpenFaq] = useState(-1)
   const { register, cx } = useReveal()
 
@@ -361,7 +374,7 @@ export default function OneOnOneContent() {
               />
 
               <div className={styles.heroFactCard}>
-                <p className={styles.factValue}>20+</p>
+                <p className={styles.factValue}>10+</p>
                 <p className={styles.factLabel}>Years of experience</p>
 
                 <p className={styles.factTitle}>Co-Creative Transactional Analysis</p>
@@ -396,6 +409,20 @@ export default function OneOnOneContent() {
             className={cx(styles.fitIntro, 'fit-intro')}
           >
             <h2 id="who-is-it-for-heading" className={styles.fitTitle}>Who Is It For</h2>
+
+            <div className={styles.fitImageWrap}>
+              <picture className={styles.fitPicture}>
+                <source
+                  media="(max-width: 900px)"
+                  srcSet="/one-on-one-who-is-it-for-mobile.webp"
+                />
+                <img
+                  src="/one-on-one-who-is-it-for.webp"
+                  alt="Abstract forms moving from complexity toward clarity through a shared thread"
+                  className={styles.fitImage}
+                />
+              </picture>
+            </div>
 
             <div className={styles.fitCopy}>
               <p>
@@ -485,11 +512,6 @@ export default function OneOnOneContent() {
             ref={register('weight-copy')}
             className={cx(styles.weightCopy, 'weight-copy')}
           >
-            <p className={styles.weightLead}>
-              They often know where they want to go; call it destination B.
-              <br />
-              But they don&rsquo;t truly know where they are right now: point A.
-            </p>
             <p>
               Without clearly seeing point A, it becomes almost impossible to measure the
               distance between A and B, and even harder to know how to reach it. Anything that
@@ -523,34 +545,59 @@ export default function OneOnOneContent() {
           </div>
 
           <ol className={styles.journeySteps}>
-            {journeySteps.map((step, index) => (
-              <li
-                key={step.id}
-                ref={register(`journey-${step.id}`)}
-                className={cx(
-                  [styles.journeyStep, step.isFinal ? styles.journeyStepFinal : '']
-                    .filter(Boolean)
-                    .join(' '),
-                  `journey-${step.id}`
-                )}
-              >
-                <span className={styles.journeyNumber} aria-hidden="true">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
+            {journeySteps.map((step, index) => {
+              const isOpen = openJourney === index
 
-                <div className={styles.journeyBody}>
-                  <h3 className={styles.journeyStepTitle}>
-                    <span className={styles.journeyIcon} aria-hidden="true">
-                      <step.Icon />
-                    </span>
-                    <span className={styles.journeyStepName}>{step.name}</span>
-                    <span className={styles.journeyStepLead}>&ndash; {step.lead}</span>
-                  </h3>
+              return (
+                <li
+                  key={step.id}
+                  ref={register(`journey-${step.id}`)}
+                  className={cx(
+                    [
+                      styles.journeyStep,
+                      step.isFinal ? styles.journeyStepFinal : '',
+                      isOpen ? styles.journeyStepOpen : '',
+                    ].filter(Boolean).join(' '),
+                    `journey-${step.id}`
+                  )}
+                >
+                  <span className={styles.journeyNumber} aria-hidden="true">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
 
-                  <p className={styles.journeyStepText}>{step.text}</p>
-                </div>
-              </li>
-            ))}
+                  <div className={styles.journeyBody}>
+                    <h3 className={styles.journeyStepTitle}>
+                      <button
+                        type="button"
+                        className={styles.journeyTrigger}
+                        aria-expanded={isOpen}
+                        aria-controls={`journey-panel-${step.id}`}
+                        onClick={() => setOpenJourney(isOpen ? -1 : index)}
+                      >
+                        <span className={styles.journeyTitleContent}>
+                          <span className={styles.journeyIcon} aria-hidden="true">
+                            <step.Icon />
+                          </span>
+                          <span className={styles.journeyStepName}>{step.name}</span>
+                          <span className={styles.journeyStepLead}>&ndash; {step.lead}</span>
+                        </span>
+                        <span className={styles.journeyToggle} aria-hidden="true" />
+                      </button>
+                    </h3>
+
+                    <div
+                      id={`journey-panel-${step.id}`}
+                      className={styles.journeyPanel}
+                      aria-hidden={!isOpen}
+                    >
+                      <div className={styles.journeyPanelInner}>
+                        <p className={styles.journeyStepText}>{step.text}</p>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              )
+            })}
           </ol>
 
           <div
@@ -647,33 +694,77 @@ export default function OneOnOneContent() {
                 How it works
               </h2>
             </div>
+          </div>
+        </div>
 
-            <span className={styles.processHeaderRule} aria-hidden="true" />
+        <div className={styles.processSplit}>
+          <div className={styles.processAccordionColumn}>
+            <div className={styles.processAccordion}>
+              {processSteps.map((step, index) => {
+                const isOpen = openProcess === index
+
+                return (
+                  <div
+                    key={step.id}
+                    ref={register(`process-${step.id}`)}
+                    className={cx(
+                      [styles.processItem, isOpen ? styles.processItemOpen : '']
+                        .filter(Boolean)
+                        .join(' '),
+                      `process-${step.id}`
+                    )}
+                    style={{ '--card-delay': `${index * 90}ms` }}
+                  >
+                    <h3 className={styles.processStepTitle}>
+                      <button
+                        type="button"
+                        className={styles.processTrigger}
+                        aria-expanded={isOpen}
+                        aria-controls={`process-panel-${step.id}`}
+                        onClick={() => setOpenProcess(isOpen ? -1 : index)}
+                      >
+                        <span className={styles.processNumber} aria-hidden="true">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <span className={styles.processStepName}>{step.title}</span>
+                        <span className={styles.processToggle} aria-hidden="true" />
+                      </button>
+                    </h3>
+
+                    <div
+                      id={`process-panel-${step.id}`}
+                      className={styles.processPanel}
+                      aria-hidden={!isOpen}
+                    >
+                      <div className={styles.processPanelInner}>
+                        <div className={styles.processCardText}>
+                          {step.paragraphs.map((paragraph) => (
+                            <p key={paragraph}>{paragraph}</p>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </div>
 
-          <div className={styles.processCards}>
-            {processSteps.map((step, index) => (
-              <article
-                key={step.id}
-                ref={register(`process-${step.id}`)}
-                className={cx(styles.processCard, `process-${step.id}`)}
-                style={{ '--card-delay': `${index * 90}ms` }}
-              >
-                <span className={styles.processNumber} aria-hidden="true">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-
-                <h3 className={styles.processStepTitle}>{step.title}</h3>
-
-                <div className={styles.processCardText}>
-                  {step.paragraphs.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
-                </div>
-              </article>
-            ))}
+          <div
+            ref={register('process-visual')}
+            className={cx(styles.processVisual, 'process-visual')}
+          >
+            <Image
+              src="/one-on-one-process-journey.webp"
+              alt="An abstract coaching journey moving from complexity toward clarity"
+              fill
+              sizes="(max-width: 900px) 100vw, 42vw"
+              className={styles.processImage}
+            />
           </div>
+        </div>
 
+        <div className={styles.contentWidth}>
           <div
             ref={register('process-outro')}
             className={cx(styles.processOutro, 'process-outro')}
@@ -768,8 +859,9 @@ export default function OneOnOneContent() {
             className={cx(styles.closingHeader, 'closing-header')}
           >
             <h2 id="closing-heading" className={styles.closingTitle}>
-              If something inside you knows you can&rsquo;t keep living the same way, that
-              voice deserves a safe space.
+              <span>If something inside you knows</span>
+              <span>you can&rsquo;t keep living the same way,</span>
+              <span>that voice deserves a safe space.</span>
             </h2>
             <p className={styles.closingSubheading}>
               One-on-One Coaching is where you can:

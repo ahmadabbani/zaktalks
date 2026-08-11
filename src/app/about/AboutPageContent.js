@@ -151,6 +151,75 @@ const milestoneOrbitPoints = [
   { x: 29.5, y: 14.5, side: 'left' },
 ]
 
+const formatPathNumber = (value) => Number(value.toFixed(2))
+
+const createClosedSplinePath = (points) => {
+  const pointCount = points.length
+  let path = `M ${formatPathNumber(points[0].x)} ${formatPathNumber(points[0].y)}`
+
+  for (let index = 0; index < pointCount; index += 1) {
+    const previous = points[(index - 1 + pointCount) % pointCount]
+    const current = points[index]
+    const next = points[(index + 1) % pointCount]
+    const afterNext = points[(index + 2) % pointCount]
+    const firstControl = {
+      x: current.x + (next.x - previous.x) / 6,
+      y: current.y + (next.y - previous.y) / 6,
+    }
+    const secondControl = {
+      x: next.x - (afterNext.x - current.x) / 6,
+      y: next.y - (afterNext.y - current.y) / 6,
+    }
+
+    path += ` C ${formatPathNumber(firstControl.x)} ${formatPathNumber(firstControl.y)} ${formatPathNumber(secondControl.x)} ${formatPathNumber(secondControl.y)} ${formatPathNumber(next.x)} ${formatPathNumber(next.y)}`
+  }
+
+  return `${path} Z`
+}
+
+const createVibratingRingPath = (spec, vibrationPhase = 0) => {
+  const pointCount = 12
+  const points = Array.from({ length: pointCount }, (_, index) => {
+    const angle = -Math.PI / 2 + (index / pointCount) * Math.PI * 2
+    const radialOffset =
+      Math.sin(angle * 3 + spec.phase + vibrationPhase) * spec.wobble
+      + Math.cos(angle * 5 - spec.phase * 0.65 + vibrationPhase * 1.3) * spec.wobble * 0.38
+    const radius = spec.radius + radialOffset
+
+    return {
+      x: 160 + spec.offsetX + Math.cos(angle) * radius * spec.stretchX,
+      y: 160 + spec.offsetY + Math.sin(angle) * radius * spec.stretchY,
+    }
+  })
+
+  return createClosedSplinePath(points)
+}
+
+const coreRingSpecs = [
+  { radius: 116, wobble: 7.4, phase: 0.15, offsetX: -2, offsetY: 2, stretchX: 1.04, stretchY: 0.97, duration: 9.8, rotation: 5 },
+  { radius: 119, wobble: 6.6, phase: 0.88, offsetX: 2, offsetY: -1, stretchX: 0.98, stretchY: 1.04, duration: 11.4, rotation: -4 },
+  { radius: 122, wobble: 8.2, phase: 1.56, offsetX: -1, offsetY: -2, stretchX: 1.02, stretchY: 0.99, duration: 10.6, rotation: 6 },
+  { radius: 125, wobble: 6.9, phase: 2.24, offsetX: 3, offsetY: 1, stretchX: 0.97, stretchY: 1.03, duration: 12.8, rotation: -5 },
+  { radius: 128, wobble: 8.8, phase: 2.92, offsetX: -3, offsetY: 0, stretchX: 1.03, stretchY: 0.98, duration: 9.2, rotation: 4 },
+  { radius: 131, wobble: 7.1, phase: 3.61, offsetX: 1, offsetY: 3, stretchX: 0.99, stretchY: 1.02, duration: 13.6, rotation: -6 },
+  { radius: 134, wobble: 9.2, phase: 4.3, offsetX: 2, offsetY: -3, stretchX: 1.02, stretchY: 0.98, duration: 10.9, rotation: 5 },
+  { radius: 137, wobble: 7.7, phase: 5.02, offsetX: -2, offsetY: 1, stretchX: 0.98, stretchY: 1.03, duration: 12.1, rotation: -4 },
+  { radius: 140, wobble: 8.4, phase: 5.71, offsetX: 0, offsetY: -1, stretchX: 1.01, stretchY: 0.99, duration: 14.2, rotation: 6 },
+]
+
+const coreRings = coreRingSpecs.map((spec, index) => {
+  const direction = index % 2 === 0 ? 1 : -1
+  const phases = [0, 0.82 * direction, 1.64 * direction, 2.46 * direction, 0]
+
+  return {
+    path: createVibratingRingPath(spec),
+    pathValues: phases.map((phase) => createVibratingRingPath(spec, phase)).join(';'),
+    duration: `${spec.duration}s`,
+    begin: `${-index * 0.73}s`,
+    rotationValues: `${-spec.rotation} 160 160;${spec.rotation} 160 160;${-spec.rotation * 0.55} 160 160;${spec.rotation * 0.7} 160 160;${-spec.rotation} 160 160`,
+  }
+})
+
 const getMilestoneOrbitPosition = (index) => ({
   '--orbit-x': `${milestoneOrbitPoints[index].x}%`,
   '--orbit-y': `${milestoneOrbitPoints[index].y}%`,
@@ -710,8 +779,45 @@ export default function AboutPageContent() {
             </svg>
 
             <div className={styles.orbitCore}>
-              <h2 id="milestones-heading">Growth becomes lasting when it is integrated.</h2>
-              <small>Since 2015</small>
+              <svg
+                className={styles.orbitCoreRings}
+                viewBox="0 0 320 320"
+                aria-hidden="true"
+              >
+                {coreRings.map((ring, index) => (
+                  <path
+                    key={`core-ring-${index + 1}`}
+                    className={styles.orbitCoreRing}
+                    d={ring.path}
+                  >
+                    <animate
+                      attributeName="d"
+                      values={ring.pathValues}
+                      dur={ring.duration}
+                      begin={ring.begin}
+                      repeatCount="indefinite"
+                      calcMode="spline"
+                      keyTimes="0;0.25;0.5;0.75;1"
+                      keySplines="0.37 0 0.63 1;0.37 0 0.63 1;0.37 0 0.63 1;0.37 0 0.63 1"
+                    />
+                    <animateTransform
+                      attributeName="transform"
+                      type="rotate"
+                      values={ring.rotationValues}
+                      dur={`${Number.parseFloat(ring.duration) * 1.8}s`}
+                      begin={ring.begin}
+                      repeatCount="indefinite"
+                      calcMode="spline"
+                      keyTimes="0;0.25;0.5;0.75;1"
+                      keySplines="0.37 0 0.63 1;0.37 0 0.63 1;0.37 0 0.63 1;0.37 0 0.63 1"
+                    />
+                  </path>
+                ))}
+              </svg>
+              <div className={styles.orbitCoreContent}>
+                <h2 id="milestones-heading">Growth becomes lasting when it is integrated.</h2>
+                <small>Since 2015</small>
+              </div>
             </div>
 
             <div className={styles.orbitItems} role="list">

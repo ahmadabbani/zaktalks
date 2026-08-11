@@ -527,6 +527,30 @@
   text-wrap: balance;
 }
 
+.fitImageWrap {
+  position: relative;
+  width: 100%;
+  margin-top: clamp(1.35rem, 2vw, 1.8rem);
+  aspect-ratio: 2.3 / 1;
+  overflow: hidden;
+  border-radius: var(--oo-radius);
+  background: transparent;
+}
+
+.fitPicture {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.fitImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
 .fitCopy {
   display: flex;
   flex-direction: column;
@@ -594,6 +618,11 @@
   .fitLayout {
     grid-template-columns: minmax(0, 1fr);
     gap: 2.5rem;
+  }
+
+  .fitImageWrap {
+    width: min(100%, 32rem);
+    aspect-ratio: 1;
   }
 }
 
@@ -664,7 +693,7 @@
 
   position: relative;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: var(--weight-gap);
   list-style: none;
 }
@@ -786,7 +815,7 @@
   }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 1024px) {
   .weightList {
     /* Every dot centres on one shared rail so the vertical connector lines
        up through all of them — the endpoint dots are wider, so the rail sits
@@ -957,20 +986,107 @@
   box-shadow: 0 0.5rem 1.4rem rgba(196, 159, 12, 0.32);
 }
 
+.journeyStepOpen .journeyNumber {
+  border-color: var(--color-dark-blue);
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+  box-shadow: 0 0.55rem 1.35rem rgba(60, 90, 103, 0.2);
+}
+
+.journeyStepFinal.journeyStepOpen .journeyNumber {
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  color: var(--color-black);
+  box-shadow: 0 0.5rem 1.4rem rgba(196, 159, 12, 0.32);
+}
+
 .journeyBody {
   min-width: 0;
   padding-top: clamp(0.3rem, 0.7vw, 0.55rem);
 }
 
 .journeyStepTitle {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.15rem 0.55rem;
+  margin: 0;
   color: var(--home-headline-color);
   font-size: var(--home-subheading-size);
   font-weight: 800;
   line-height: var(--home-subheading-line-height);
+}
+
+.journeyTrigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.journeyTitleContent {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.55rem;
+}
+
+.journeyToggle {
+  position: relative;
+  width: 1.9rem;
+  height: 1.9rem;
+  flex: 0 0 auto;
+  border: 1px solid rgba(60, 90, 103, 0.3);
+  border-radius: 50%;
+  transition: border-color 0.28s ease, background-color 0.28s ease, transform 0.36s var(--oo-ease);
+}
+
+.journeyToggle::before,
+.journeyToggle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.72rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--color-dark-blue);
+  transform: translate(-50%, -50%);
+  transition: transform 0.32s var(--oo-ease), background-color 0.28s ease;
+}
+
+.journeyToggle::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.journeyStepOpen .journeyToggle {
+  border-color: var(--color-dark-blue);
+  background: var(--color-dark-blue);
+  transform: rotate(180deg);
+}
+
+.journeyStepOpen .journeyToggle::before,
+.journeyStepOpen .journeyToggle::after {
+  background: var(--color-white);
+}
+
+.journeyStepOpen .journeyToggle::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.journeyStepFinal.journeyStepOpen .journeyToggle {
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+}
+
+.journeyStepFinal.journeyStepOpen .journeyToggle::before,
+.journeyStepFinal.journeyStepOpen .journeyToggle::after {
+  background: var(--color-black);
 }
 
 .journeyIcon {
@@ -989,8 +1105,26 @@
   font-weight: 600;
 }
 
+.journeyPanel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.46s var(--oo-ease), opacity 0.3s ease;
+}
+
+.journeyPanelInner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.journeyStepOpen .journeyPanel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
 .journeyStepText {
   margin-top: 0.55rem;
+  padding-bottom: 0.1rem;
   max-width: 68ch;
   color: var(--home-text-color);
   font-size: var(--home-text-size);
@@ -1223,10 +1357,7 @@
    the far edge — the section spans the full .contentWidth (identical to the
    navbar's inset) rather than the narrower centred column it used before. */
 .processHeader {
-  display: grid;
-  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
-  align-items: end;
-  gap: clamp(1.5rem, 4vw, 3.5rem);
+  display: block;
   opacity: 0;
 }
 
@@ -1242,61 +1373,179 @@
   line-height: var(--home-headline-line-height);
 }
 
-.processHeaderRule {
-  height: 1px;
-  margin-bottom: 0.7em;
-  background: rgba(33, 44, 45, 0.2);
-}
-
-.processCards {
+.processSplit {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(1rem, 1.6vw, 1.5rem);
+  grid-template-columns: minmax(0, 1fr) minmax(24rem, 42vw);
+  align-items: stretch;
+  gap: clamp(2.5rem, 5vw, 6rem);
   margin-top: clamp(2.5rem, 4.5vw, 3.75rem);
 }
 
-.processCard {
+.processAccordionColumn {
   display: flex;
   min-width: 0;
-  flex-direction: column;
-  padding: clamp(1.5rem, 2.2vw, 2rem) clamp(1.35rem, 2vw, 1.75rem);
-  border-radius: var(--oo-radius);
-  background: var(--color-white);
+  align-items: center;
+  padding: clamp(1.5rem, 3vw, 2.75rem) 0 clamp(1.5rem, 3vw, 2.75rem)
+    var(--featured-section-gutter);
+}
+
+.processAccordion {
+  width: 100%;
+  max-width: 58rem;
+}
+
+.processItem {
+  border-top: 1px solid rgba(33, 44, 45, 0.16);
   opacity: 0;
 }
 
-.processCard.isVisible {
+.processItem:last-child {
+  border-bottom: 1px solid rgba(33, 44, 45, 0.16);
+}
+
+.processItem.isVisible {
   animation: ooRise 0.7s var(--card-delay, 0ms) var(--oo-ease) both;
 }
 
-.processNumber {
-  color: var(--color-yellow);
-  font-size: clamp(1.9rem, 3vw, 2.6rem);
-  font-weight: 850;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-
 .processStepTitle {
-  margin-top: clamp(0.6rem, 1vw, 0.85rem);
+  margin: 0;
   color: var(--home-headline-color);
   font-size: var(--home-subheading-size);
   font-weight: 800;
   line-height: 1.35;
 }
 
-/* Pushed to the card's floor so the copy baselines line up across the row
-   even when the titles wrap to different heights. */
+.processTrigger {
+  display: grid;
+  width: 100%;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: clamp(0.85rem, 1.5vw, 1.25rem);
+  align-items: center;
+  padding: clamp(1rem, 1.7vw, 1.4rem) 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.processNumber {
+  display: grid;
+  width: 2.65rem;
+  height: 2.65rem;
+  place-items: center;
+  border: 2px solid rgba(60, 90, 103, 0.3);
+  border-radius: 50%;
+  color: var(--color-dark-blue);
+  font-size: var(--home-small-text-size, 0.8rem);
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  transition: color 0.28s ease, border-color 0.28s ease, background-color 0.28s ease;
+}
+
+.processItemOpen .processNumber {
+  border-color: var(--color-dark-blue);
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+}
+
+.processStepName {
+  min-width: 0;
+}
+
+.processToggle {
+  position: relative;
+  width: 1.9rem;
+  height: 1.9rem;
+  border: 1px solid rgba(60, 90, 103, 0.3);
+  border-radius: 50%;
+  transition: border-color 0.28s ease, background-color 0.28s ease, transform 0.36s var(--oo-ease);
+}
+
+.processToggle::before,
+.processToggle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.7rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--color-dark-blue);
+  transform: translate(-50%, -50%);
+  transition: transform 0.32s var(--oo-ease), background-color 0.28s ease;
+}
+
+.processToggle::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.processItemOpen .processToggle {
+  border-color: var(--color-dark-blue);
+  background: var(--color-dark-blue);
+  transform: rotate(180deg);
+}
+
+.processItemOpen .processToggle::before,
+.processItemOpen .processToggle::after {
+  background: var(--color-white);
+}
+
+.processItemOpen .processToggle::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.processPanel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.46s var(--oo-ease), opacity 0.3s ease;
+}
+
+.processPanelInner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.processItemOpen .processPanel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
 .processCardText {
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
-  margin-top: clamp(1.1rem, 1.9vw, 1.65rem);
+  padding: 0 3.3rem clamp(1.25rem, 2vw, 1.75rem) clamp(3.5rem, 5vw, 4rem);
   color: var(--home-text-color);
   font-size: var(--home-text-size);
   font-weight: var(--home-text-weight);
   line-height: var(--home-text-line-height);
+}
+
+.processVisual {
+  position: relative;
+  min-height: clamp(34rem, 42vw, 46rem);
+  overflow: hidden;
+  border-radius: 0;
+  background: var(--color-dark-blue);
+  opacity: 0;
+}
+
+.processVisual.isVisible {
+  animation: ooSlideLeft 0.9s 0.1s var(--oo-ease) both;
+}
+
+.processImage {
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.85s var(--oo-ease);
+}
+
+.processVisual:hover .processImage {
+  transform: scale(1.025);
 }
 
 /* Full-width pill: copy left, CTA hard right, both edges on the nav line. */
@@ -1387,18 +1636,33 @@
 /* Two rows of two: four columns leave the cards too narrow for their copy
    well before the tablet breakpoint. */
 @media (max-width: 1600px) {
-  .processCards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .processSplit {
+    grid-template-columns: minmax(0, 1fr) minmax(21rem, 40vw);
+    gap: clamp(1.75rem, 3.5vw, 3.5rem);
   }
 }
 
 @media (max-width: 900px) {
-  .processHeader {
+  .processSplit {
     grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.75rem, 4vw, 2.5rem);
   }
 
-  .processHeaderRule {
-    display: none;
+  .processVisual {
+    order: -1;
+    width: calc(100% - var(--featured-section-gutter) - var(--featured-section-gutter));
+    min-height: clamp(17rem, 48vw, 24rem);
+    justify-self: center;
+    margin-inline: auto;
+    border-radius: 0;
+  }
+
+  .processAccordionColumn {
+    padding: 0 var(--featured-section-gutter);
+  }
+
+  .processAccordion {
+    max-width: none;
   }
 
   /* Can't hold a side-by-side layout once the copy wraps hard. */
@@ -1410,8 +1674,18 @@
 }
 
 @media (max-width: 620px) {
-  .processCards {
-    grid-template-columns: minmax(0, 1fr);
+  .processVisual {
+    min-height: clamp(14rem, 58vw, 18rem);
+  }
+
+  .processNumber {
+    width: 2.35rem;
+    height: 2.35rem;
+  }
+
+  .processCardText {
+    padding-right: 0.6rem;
+    padding-left: 3.2rem;
   }
 
   .processOutro {
@@ -1596,6 +1870,10 @@
   line-height: var(--home-headline-line-height);
 }
 
+.closingTitle span {
+  display: block;
+}
+
 .closingSubheading {
   margin-top: clamp(1.5rem, 2.6vw, 2rem);
   color: var(--color-black);
@@ -1752,7 +2030,8 @@
   .structureCard,
   .structureExpect,
   .processHeader,
-  .processCard,
+  .processItem,
+  .processVisual,
   .processOutro,
   .faqHeader,
   .faqItem,
@@ -1768,8 +2047,12 @@
   .primaryCta,
   .primaryCta svg,
   .secondaryCta,
+  .journeyPanel,
+  .journeyToggle,
   .processCta,
   .processCta svg,
+  .processPanel,
+  .processToggle,
   .faqPanel,
   .faqToggleLineV,
   .faqToggleLineH,
