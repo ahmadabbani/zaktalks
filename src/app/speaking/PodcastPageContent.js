@@ -34,40 +34,34 @@ const proofPoints = [
 
 const subscribePlatforms = [
   {
-    id: 'apple',
-    name: 'Apple Podcasts',
-    action: 'Subscribe',
-    href: 'https://podcasts.apple.com/us/podcast/zak-talks/id1818978849',
-    Icon: FaApple,
-  },
-  {
-    id: 'spotify',
-    name: 'Spotify',
-    action: 'Follow',
-    href: 'https://open.spotify.com/show/7E5OWIxCjKRPnEsQaL5o44',
-    Icon: FaSpotify,
-  },
-  {
-    id: 'anghami',
-    name: 'Anghami',
-    action: 'Listen',
-    href: 'https://play.anghami.com/podcast/1067932393',
-    Icon: FaHeadphones,
-  },
-  {
     id: 'youtube',
-    name: 'YouTube',
-    action: 'Subscribe',
+    label: 'SUBSCRIBE ON YOUTUBE',
     href: CHANNEL_URL,
     Icon: FaYoutube,
   },
   {
     id: 'instagram',
-    name: 'Instagram',
-    handle: '@zak_talks',
-    action: 'Follow for clips, reflections, and behind-the-scenes',
+    label: 'FOLLOW ON INSTAGRAM',
     href: 'https://www.instagram.com/zak_talks/',
     Icon: FaInstagram,
+  },
+  {
+    id: 'anghami',
+    label: 'LISTEN ON ANGHAMI',
+    href: 'https://play.anghami.com/podcast/1067932393',
+    Icon: FaHeadphones,
+  },
+  {
+    id: 'apple',
+    label: 'LISTEN ON APPLE',
+    href: 'https://podcasts.apple.com/us/podcast/zak-talks/id1818978849',
+    Icon: FaApple,
+  },
+  {
+    id: 'spotify',
+    label: 'LISTEN ON SPOTIFY',
+    href: 'https://open.spotify.com/show/7E5OWIxCjKRPnEsQaL5o44',
+    Icon: FaSpotify,
   },
 ]
 
@@ -189,7 +183,7 @@ export default function PodcastPageContent({ episodes = [] }) {
               <div className={styles.heroHeading}>
                 <div className={styles.heroHeadingReveal}>
                   <h1 id="podcast-hero-heading" className={styles.heroTitle}>
-                    Season 2 launch
+                    Season 2 is coming soon
                   </h1>
 
                   <p className={styles.heroSubheading}>
@@ -323,8 +317,7 @@ export default function PodcastPageContent({ episodes = [] }) {
                           <platform.Icon />
                         </span>
                         <span className={styles.subscribeNames}>
-                          <span className={styles.subscribeName}>{platform.name}</span>
-                          <span className={styles.subscribeAction}>{platform.action}</span>
+                          <span className={styles.subscribeName}>{platform.label}</span>
                         </span>
                       </a>
                     </li>
@@ -333,11 +326,11 @@ export default function PodcastPageContent({ episodes = [] }) {
 
                 <div className={styles.phoneWrap}>
                   <Image
-                    src="/podcast/zak-talks-phone-facing-copy-v2.png"
+                    src="/podcast/zak-talks-phone-facing-copy-v2-trimmed.png"
                     alt="Phone playing a ZakTalks episode"
-                    width={941}
-                    height={1672}
-                    sizes="(max-width: 1024px) 40vw, 22vw"
+                    width={564}
+                    height={1466}
+                    sizes="(max-width: 680px) 29vw, (max-width: 1024px) 14vw, 13vw"
                     className={styles.phone}
                   />
                 </div>

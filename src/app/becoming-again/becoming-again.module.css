@@ -229,6 +229,19 @@
   transform: var(--home-cta-arrow-hover-transform);
 }
 
+.cohortActions .primaryCta,
+.finalActions .primaryCta {
+  position: relative;
+  padding-inline: 3.2rem;
+}
+
+.cohortActions .primaryCta svg,
+.finalActions .primaryCta svg {
+  position: absolute;
+  right: 0.86rem;
+  margin-inline-start: 0;
+}
+
 .secondaryCta {
   padding: 0.78rem 1.6rem;
   color: var(--color-deep-slate);
@@ -513,6 +526,10 @@
   margin: clamp(3rem, 5vw, 4.5rem) auto 0;
 }
 
+.curriculumDesktopColumns {
+  display: none;
+}
+
 .curriculumItem {
   position: relative;
   border-bottom: 1px solid rgba(33, 44, 45, 0.14);
@@ -683,6 +700,26 @@
 
 .curriculumOutro.isVisible {
   animation: baRise 0.85s var(--ba-ease) both;
+}
+
+@media (min-width: 1025px) {
+  .curriculumDesktopColumns {
+    display: grid;
+    max-width: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(1.75rem, 3.5vw, 3.75rem);
+  }
+
+  .curriculumColumn {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: clamp(0.65rem, 1.2vw, 1rem);
+  }
+
+  .curriculumMobileList {
+    display: none;
+  }
 }
 
 /* =============================================================== FORMAT == */
@@ -1023,8 +1060,8 @@
 /* ============================================================ INSTRUCTOR == */
 
 .instructorSection {
-  padding-block: clamp(4.5rem, 7vw, 7.5rem);
-  background: var(--color-white);
+  padding: clamp(4.5rem, 7vw, 7.5rem) 0 clamp(2.75rem, 4.5vw, 4.5rem);
+  background: #dcecf3;
 }
 
 .instructorLayout {
@@ -1069,6 +1106,10 @@
   transition: transform 0.9s var(--ba-ease);
 }
 
+.instructorPortraitMobile {
+  display: none;
+}
+
 .instructorPortraitFrame:hover .instructorPortrait {
   transform: scale(1.025);
 }
@@ -1086,6 +1127,8 @@
 }
 
 .instructorTitle {
+  width: 100%;
+  max-width: none;
   margin-bottom: clamp(1.1rem, 1.9vw, 1.6rem);
   color: var(--home-headline-color);
   font-size: var(--home-headline-size);
@@ -1147,6 +1190,36 @@
   color: var(--color-yellow);
   background: var(--color-white);
   transform: var(--home-cta-arrow-hover-transform);
+}
+
+@media (min-width: 1025px) {
+  .instructorSection {
+    --instructor-image-overlap: clamp(10rem, 12vw, 14rem);
+
+    margin-top: calc(clamp(3rem, 5vw, 5rem) + var(--instructor-image-overlap));
+  }
+
+  .instructorLayout {
+    grid-template-columns: clamp(15rem, 18vw, 19rem) minmax(0, 1fr);
+    align-items: start;
+    justify-content: space-between;
+    column-gap: clamp(3.5rem, 7vw, 9rem);
+  }
+
+  .instructorPortraitStage {
+    align-self: start;
+    justify-content: flex-start;
+    margin-top: calc(var(--instructor-image-overlap) * -1);
+  }
+
+  .instructorPortraitFrame {
+    width: clamp(15rem, 18vw, 19rem);
+    aspect-ratio: 0.45;
+  }
+
+  .instructorStory {
+    width: 100%;
+  }
 }
 
 /* =================================================================== FAQ == */
@@ -1449,6 +1522,14 @@
 /* ============================================================ RESPONSIVE == */
 
 @media (max-width: 1024px) {
+  .instructorPortraitDesktop {
+    display: none;
+  }
+
+  .instructorPortraitMobile {
+    display: block;
+  }
+
   .hero {
     padding-top: clamp(6.75rem, 12vw, 8rem);
   }

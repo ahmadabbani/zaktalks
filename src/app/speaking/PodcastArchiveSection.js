@@ -16,6 +16,45 @@ const sortOptions = [
   { id: 'deep', label: 'Deep dives' },
 ]
 
+/* Season 1 themes are keyed to stable YouTube video IDs, not array positions.
+   That keeps every episode's themes correct after sorting or filtering. */
+const episodeThemeMap = {
+  // Episode 1
+  kdf1icMj74E: ['Politics', 'Leadership', 'Generations'],
+  // Episode 2
+  CwTOpZdPp1w: ['Business', 'Corporation', 'Gen Z'],
+  // Episode 3
+  CYq9yT0uBHs: ['Strength', 'Youth', 'Emotional intelligence'],
+  // Episode 4
+  o41S1iTwQqA: ['Team building', 'Leadership', 'F&B'],
+  // Episode 5
+  '5DMTfeDWC7Q': ['Passion', 'Music', 'Self-knowledge'],
+  // Episode 6
+  roPhrZsq8N4: ['Entrepreneurship', 'Drive', 'Failure'],
+  // Episode 7
+  hJ3XoT5br70: ['Money', 'Energy', 'Financial literacy'],
+  // Episode 8
+  zRkLnUertSc: ['Trauma', 'Inner talk', 'Healing'],
+  // Episode 9
+  'CK5Nwp-9q38': ['Gold', 'Trading', 'Investment', 'Crypto'],
+  // Episode 10
+  dHkIyZSL_ME: ['School', 'Vacation', 'Trauma'],
+  // Episode 11
+  'ZOPlNV-tkR0': ['Inner child', 'Childhood', 'Emotions'],
+  // Episode 12
+  AzpVo4bkKDI: ['Acting', 'Self-love', 'Self-knowledge'],
+  // Episode 13
+  Eh8YHTW2gSg: ['AI', 'Education', 'Values'],
+}
+
+const themeOptions = Array.from(new Set(Object.values(episodeThemeMap).flat())).sort((a, b) =>
+  a.localeCompare(b)
+)
+
+function getEpisodeThemes(episodeId) {
+  return episodeThemeMap[episodeId] || []
+}
+
 /* No per-episode links yet, so these read as informational chips rather than
    buttons that look clickable but do nothing. */
 const listenPlatforms = [
@@ -86,7 +125,7 @@ function sortEpisodes(episodes, sortId) {
   }
 }
 
-function EpisodeCard({ episode, index }) {
+function EpisodeCard({ episode, index, themes }) {
   const [showNotes, setShowNotes] = useState(false)
 
   return (
@@ -182,6 +221,16 @@ function EpisodeCard({ episode, index }) {
           </button>
         </div>
 
+        {themes.length > 0 && (
+          <ul className={styles.episodeThemes} aria-label="Episode themes">
+            {themes.map((theme) => (
+              <li key={theme} className={styles.episodeTheme}>
+                {theme}
+              </li>
+            ))}
+          </ul>
+        )}
+
         <div className={styles.episodeListen}>
           <span className={styles.episodeListenLabel}>Listen on</span>
           <ul className={styles.episodeListenList}>
@@ -276,11 +325,14 @@ function FeaturedEpisodeCard({ item, details, index, register, cx }) {
 export default function PodcastArchiveSection({ episodes = [] }) {
   const [openSeason, setOpenSeason] = useState(null)
   const [sortId, setSortId] = useState('latest')
+  const [selectedTheme, setSelectedTheme] = useState('all')
+  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false)
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE)
   const [revealed, setRevealed] = useState(() => new Set())
 
   const nodes = useRef(new Map())
   const archiveRef = useRef(null)
+  const themeMenuRef = useRef(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -308,6 +360,25 @@ export default function PodcastArchiveSection({ episodes = [] }) {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    if (!isThemeMenuOpen) return undefined
+
+    const handlePointerDown = (event) => {
+      if (!themeMenuRef.current?.contains(event.target)) setIsThemeMenuOpen(false)
+    }
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') setIsThemeMenuOpen(false)
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isThemeMenuOpen])
+
   const register = useCallback((id) => (node) => {
     if (!node) {
       nodes.current.delete(id)
@@ -323,7 +394,17 @@ export default function PodcastArchiveSection({ episodes = [] }) {
     [revealed]
   )
 
-  const sortedEpisodes = useMemo(() => sortEpisodes(episodes, sortId), [episodes, sortId])
+  const filteredEpisodes = useMemo(
+    () =>
+      selectedTheme === 'all'
+        ? episodes
+        : episodes.filter((episode) => getEpisodeThemes(episode.id).includes(selectedTheme)),
+    [episodes, selectedTheme]
+  )
+  const sortedEpisodes = useMemo(
+    () => sortEpisodes(filteredEpisodes, sortId),
+    [filteredEpisodes, sortId]
+  )
   const visibleEpisodes = sortedEpisodes.slice(0, visibleCount)
   const remaining = sortedEpisodes.length - visibleEpisodes.length
   const isArchiveOpen = openSeason === 'season-1'
@@ -337,6 +418,12 @@ export default function PodcastArchiveSection({ episodes = [] }) {
 
   const changeSort = (nextSortId) => {
     setSortId(nextSortId)
+    setVisibleCount(INITIAL_VISIBLE)
+  }
+
+  const changeTheme = (theme) => {
+    setSelectedTheme(theme)
+    setIsThemeMenuOpen(false)
     setVisibleCount(INITIAL_VISIBLE)
   }
 
@@ -441,11 +528,68 @@ export default function PodcastArchiveSection({ episodes = [] }) {
                   ))}
                 </div>
               </div>
+
+              <div className={styles.themeFilter} ref={themeMenuRef}>
+                <span id="episode-theme-filter-label" className={styles.sortLabel}>
+                  Theme
+                </span>
+                <div className={styles.themeDropdown}>
+                  <button
+                    type="button"
+                    className={styles.themeTrigger}
+                    aria-haspopup="listbox"
+                    aria-expanded={isThemeMenuOpen}
+                    aria-labelledby="episode-theme-filter-label episode-theme-filter-value"
+                    onClick={() => setIsThemeMenuOpen((open) => !open)}
+                  >
+                    <span id="episode-theme-filter-value">
+                      {selectedTheme === 'all' ? 'All themes' : selectedTheme}
+                    </span>
+                    <FiChevronDown aria-hidden="true" />
+                  </button>
+
+                  <div
+                    className={`${styles.themeMenu} ${
+                      isThemeMenuOpen ? styles.themeMenuOpen : ''
+                    }`}
+                    role="listbox"
+                    aria-label="Filter episodes by theme"
+                  >
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected={selectedTheme === 'all'}
+                      className={`${styles.themeOption} ${
+                        selectedTheme === 'all' ? styles.themeOptionActive : ''
+                      }`}
+                      onClick={() => changeTheme('all')}
+                    >
+                      All themes
+                    </button>
+                    {themeOptions.map((theme) => (
+                      <button
+                        key={theme}
+                        type="button"
+                        role="option"
+                        aria-selected={selectedTheme === theme}
+                        className={`${styles.themeOption} ${
+                          selectedTheme === theme ? styles.themeOptionActive : ''
+                        }`}
+                        onClick={() => changeTheme(theme)}
+                      >
+                        {theme}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
 
             {sortedEpisodes.length === 0 ? (
               <p className={styles.archiveEmpty}>
-                Episodes are loading from YouTube. Please check back shortly.
+                {selectedTheme === 'all'
+                  ? 'Episodes are loading from YouTube. Please check back shortly.'
+                  : 'No Season 1 episodes match this theme.'}
               </p>
             ) : (
               <>
@@ -455,6 +599,7 @@ export default function PodcastArchiveSection({ episodes = [] }) {
                       key={episode.id}
                       episode={episode}
                       index={index % INITIAL_VISIBLE}
+                      themes={getEpisodeThemes(episode.id)}
                     />
                   ))}
                 </div>
@@ -476,48 +621,51 @@ export default function PodcastArchiveSection({ episodes = [] }) {
               </>
             )}
 
-            <div className={styles.featuredBlock}>
-              <div
-                ref={register('featured-header')}
-                className={cx(styles.featuredHeader, 'featured-header')}
-              >
-                <p className={styles.eyebrow}>Featured</p>
-                <h3 className={styles.featuredTitle}>Most popular episodes</h3>
-              </div>
+          </div>
+        </div>
+      </div>
 
-              <div className={styles.featuredList}>
-                {featuredEpisodes.map((item, index) => (
-                  <FeaturedEpisodeCard
-                    key={item.videoId}
-                    item={item}
-                    details={episodes.find((episode) => episode.id === item.videoId)}
-                    index={index}
-                    register={register}
-                    cx={cx}
-                  />
-                ))}
-              </div>
+      <div className={styles.contentWidth}>
+        <div className={styles.featuredBlock}>
+          <div
+            ref={register('featured-header')}
+            className={cx(styles.featuredHeader, 'featured-header')}
+          >
+            <p className={styles.eyebrow}>Featured</p>
+            <h3 className={styles.featuredTitle}>Most popular episodes</h3>
+          </div>
 
-              <div
-                ref={register('featured-course')}
-                className={cx(styles.featuredCourse, 'featured-course')}
-              >
-                <div className={styles.featuredCourseCopy}>
-                  <p className={styles.featuredCourseTitle}>
-                    Unlock Your Financial Frequency
-                  </p>
-                  <p className={styles.featuredCourseText}>
-                    For those ready to change their relationship with money and
-                    possibility.
-                  </p>
-                </div>
+          <div className={styles.featuredList}>
+            {featuredEpisodes.map((item, index) => (
+              <FeaturedEpisodeCard
+                key={item.videoId}
+                item={item}
+                details={episodes.find((episode) => episode.id === item.videoId)}
+                index={index}
+                register={register}
+                cx={cx}
+              />
+            ))}
+          </div>
 
-                <Link href="/courses" className={styles.featuredCourseCta}>
-                  <span>Explore the course</span>
-                  <FiArrowUpRight aria-hidden="true" />
-                </Link>
-              </div>
+          <div
+            ref={register('featured-course')}
+            className={cx(styles.featuredCourse, 'featured-course')}
+          >
+            <div className={styles.featuredCourseCopy}>
+              <p className={styles.featuredCourseTitle}>
+                Unlock Your Financial Frequency
+              </p>
+              <p className={styles.featuredCourseText}>
+                For those ready to change their relationship with money and
+                possibility.
+              </p>
             </div>
+
+            <Link href="/courses" className={styles.featuredCourseCta}>
+              <span>Explore the course</span>
+              <FiArrowUpRight aria-hidden="true" />
+            </Link>
           </div>
         </div>
       </div>

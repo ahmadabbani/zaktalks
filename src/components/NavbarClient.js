@@ -8,7 +8,7 @@ import styles from './Navbar.module.css'
 
 const serviceLinks = [
   { href: '/one-on-one', label: 'Coaching 1 on 1' },
-  { href: '/becoming-again', label: 'The Courage to Be' },
+  { href: '/becoming-again', label: 'Becoming Again' },
   {
     href: '/courses',
     label: 'Courses · E-learning',
@@ -29,6 +29,7 @@ const serviceLinks = [
 
 export default function NavbarClient({ user, role, signout }) {
   const pathname = usePathname()
+  const isPodcastPage = pathname === '/speaking'
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isServicesOpen, setIsServicesOpen] = useState(false)
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false)
@@ -107,7 +108,10 @@ export default function NavbarClient({ user, role, signout }) {
   )
 
   return (
-    <nav className={styles.navbar} aria-label="Main navigation">
+    <nav
+      className={`${styles.navbar} ${isPodcastPage ? styles.podcastTheme : ''}`}
+      aria-label="Main navigation"
+    >
       <div className="container">
         <div className={styles.navContent}>
           <Link href="/" className={styles.logo} aria-label="ZakTalks home" onClick={closeMenu}>

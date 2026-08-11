@@ -196,15 +196,15 @@ const createVibratingRingPath = (spec, vibrationPhase = 0) => {
 }
 
 const coreRingSpecs = [
-  { radius: 116, wobble: 7.4, phase: 0.15, offsetX: -2, offsetY: 2, stretchX: 1.04, stretchY: 0.97, duration: 9.8, rotation: 5 },
-  { radius: 119, wobble: 6.6, phase: 0.88, offsetX: 2, offsetY: -1, stretchX: 0.98, stretchY: 1.04, duration: 11.4, rotation: -4 },
-  { radius: 122, wobble: 8.2, phase: 1.56, offsetX: -1, offsetY: -2, stretchX: 1.02, stretchY: 0.99, duration: 10.6, rotation: 6 },
-  { radius: 125, wobble: 6.9, phase: 2.24, offsetX: 3, offsetY: 1, stretchX: 0.97, stretchY: 1.03, duration: 12.8, rotation: -5 },
-  { radius: 128, wobble: 8.8, phase: 2.92, offsetX: -3, offsetY: 0, stretchX: 1.03, stretchY: 0.98, duration: 9.2, rotation: 4 },
-  { radius: 131, wobble: 7.1, phase: 3.61, offsetX: 1, offsetY: 3, stretchX: 0.99, stretchY: 1.02, duration: 13.6, rotation: -6 },
-  { radius: 134, wobble: 9.2, phase: 4.3, offsetX: 2, offsetY: -3, stretchX: 1.02, stretchY: 0.98, duration: 10.9, rotation: 5 },
-  { radius: 137, wobble: 7.7, phase: 5.02, offsetX: -2, offsetY: 1, stretchX: 0.98, stretchY: 1.03, duration: 12.1, rotation: -4 },
-  { radius: 140, wobble: 8.4, phase: 5.71, offsetX: 0, offsetY: -1, stretchX: 1.01, stretchY: 0.99, duration: 14.2, rotation: 6 },
+  { radius: 134, wobble: 7.4, phase: 0.15, offsetX: -2, offsetY: 2, stretchX: 1.04, stretchY: 0.97, duration: 9.8, rotation: 5 },
+  { radius: 135.4, wobble: 6.6, phase: 0.88, offsetX: 2, offsetY: -1, stretchX: 0.98, stretchY: 1.04, duration: 11.4, rotation: -4 },
+  { radius: 136.8, wobble: 8.2, phase: 1.56, offsetX: -1, offsetY: -2, stretchX: 1.02, stretchY: 0.99, duration: 10.6, rotation: 6 },
+  { radius: 138.2, wobble: 6.9, phase: 2.24, offsetX: 3, offsetY: 1, stretchX: 0.97, stretchY: 1.03, duration: 12.8, rotation: -5 },
+  { radius: 139.6, wobble: 8.8, phase: 2.92, offsetX: -3, offsetY: 0, stretchX: 1.03, stretchY: 0.98, duration: 9.2, rotation: 4 },
+  { radius: 141, wobble: 7.1, phase: 3.61, offsetX: 1, offsetY: 3, stretchX: 0.99, stretchY: 1.02, duration: 13.6, rotation: -6 },
+  { radius: 142.4, wobble: 9.2, phase: 4.3, offsetX: 2, offsetY: -3, stretchX: 1.02, stretchY: 0.98, duration: 10.9, rotation: 5 },
+  { radius: 143.8, wobble: 7.7, phase: 5.02, offsetX: -2, offsetY: 1, stretchX: 0.98, stretchY: 1.03, duration: 12.1, rotation: -4 },
+  { radius: 145.2, wobble: 8.4, phase: 5.71, offsetX: 0, offsetY: -1, stretchX: 1.01, stretchY: 0.99, duration: 14.2, rotation: 6 },
 ]
 
 const coreRings = coreRingSpecs.map((spec, index) => {
@@ -815,7 +815,11 @@ export default function AboutPageContent() {
                 ))}
               </svg>
               <div className={styles.orbitCoreContent}>
-                <h2 id="milestones-heading">Growth becomes lasting when it is integrated.</h2>
+                <h2 id="milestones-heading">
+                  <span>Growth becomes</span>
+                  <span>lasting when</span>
+                  <span>it is integrated.</span>
+                </h2>
                 <small>Since 2015</small>
               </div>
             </div>

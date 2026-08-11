@@ -342,7 +342,9 @@ export default function OneOnOneContent() {
             <p className={styles.eyebrow}>Private 1:1 Coaching</p>
 
             <h1 id="one-on-one-hero-heading" className={styles.heroTitle}>
-              When the conversation gets hard, it means we&rsquo;re getting somewhere.
+              <span>When the conversation</span>
+              <span>gets hard, it means we&rsquo;re</span>
+              <span>getting somewhere.</span>
             </h1>
 
             <div className={styles.heroActions}>
@@ -792,6 +794,7 @@ export default function OneOnOneContent() {
             </Link>
           </div>
         </div>
+
       </section>
 
       <OneOnOneTestimonials />

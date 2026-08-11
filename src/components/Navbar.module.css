@@ -520,6 +520,85 @@
     outline: none;
 }
 
+/* Podcast route only: yellow navigation surface with black default content
+   and white interactive states across desktop, dropdown, and mobile menus. */
+.podcastTheme .navContent,
+.podcastTheme .servicesMenu,
+.podcastTheme .mobileMenu {
+    border-color: rgba(33, 44, 45, 0.18);
+    background: var(--color-yellow);
+}
+
+.podcastTheme .logo img {
+    filter: brightness(0) saturate(100%);
+}
+
+.podcastTheme .navLink,
+.podcastTheme .navLink.active,
+.podcastTheme .mobileNavLink,
+.podcastTheme .mobileNavLink.mobileActive,
+.podcastTheme .serviceLink,
+.podcastTheme .serviceSubLink {
+    color: var(--color-black);
+}
+
+.podcastTheme .navLink:hover,
+.podcastTheme .navLink:focus-visible,
+.podcastTheme .mobileNavLink:hover,
+.podcastTheme .mobileNavLink:focus-visible,
+.podcastTheme .serviceLink:hover,
+.podcastTheme .serviceLink:focus-visible,
+.podcastTheme .serviceSubLink:hover,
+.podcastTheme .serviceSubLink:focus-visible {
+    color: var(--color-white);
+}
+
+.podcastTheme .serviceSubmenu,
+.podcastTheme .mobileServiceMenuList {
+    border-left-color: rgba(33, 44, 45, 0.42);
+}
+
+.podcastTheme .burgerMenu {
+    border: 0;
+    border-radius: 50%;
+    background: var(--color-black);
+    box-shadow: none;
+}
+
+.podcastTheme .menuLine,
+.podcastTheme .burgerMenu.active .menuLine {
+    background-color: var(--color-white);
+}
+
+.podcastTheme .burgerMenu:hover,
+.podcastTheme .burgerMenu:focus-visible,
+.podcastTheme .burgerMenu.active {
+    border: 0;
+    background: var(--color-black);
+    box-shadow: none;
+}
+
+.podcastTheme .burgerMenu:hover .menuLine,
+.podcastTheme .burgerMenu:focus-visible .menuLine {
+    background-color: var(--color-white);
+}
+
+.podcastTheme .btnPrimary,
+.podcastTheme .mobileBtnPrimary {
+    border-color: var(--color-black);
+    background: transparent;
+    color: var(--color-black);
+}
+
+.podcastTheme .btnPrimary:hover,
+.podcastTheme .btnPrimary:focus-visible,
+.podcastTheme .mobileBtnPrimary:hover,
+.podcastTheme .mobileBtnPrimary:focus-visible {
+    border-color: var(--color-white);
+    background: transparent;
+    color: var(--color-white);
+}
+
 @media (max-width: 1350px) {
     .navContent {
         gap: 0.75rem;

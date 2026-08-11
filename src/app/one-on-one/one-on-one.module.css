@@ -34,9 +34,9 @@
 .heroInner {
   display: grid;
   flex: 1 1 auto;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1.55fr) minmax(18rem, 0.65fr);
   align-items: center;
-  gap: clamp(2rem, 4.5vw, 5rem);
+  gap: clamp(1.5rem, 3vw, 3.5rem);
 }
 
 .heroContent {
@@ -76,6 +76,11 @@
   line-height: var(--home-headline-line-height);
   text-transform: uppercase;
   text-wrap: balance;
+}
+
+.heroTitle span {
+  display: block;
+  white-space: nowrap;
 }
 
 .heroActions {
@@ -411,6 +416,10 @@
 }
 
 @media (max-width: 620px) {
+  .heroTitle span {
+    white-space: normal;
+  }
+
   .heroTitle {
     max-width: 100%;
   }
@@ -531,7 +540,7 @@
   position: relative;
   width: 100%;
   margin-top: clamp(1.35rem, 2vw, 1.8rem);
-  aspect-ratio: 2.3 / 1;
+  aspect-ratio: 2.6 / 1;
   overflow: hidden;
   border-radius: var(--oo-radius);
   background: transparent;
@@ -612,6 +621,17 @@
   height: 0.4rem;
   border-radius: 50%;
   background: var(--color-dark-blue);
+}
+
+@media (min-width: 901px) {
+  .fitSection {
+    padding-block: calc(clamp(4rem, 6.25vw, 6.75rem) + 0.75rem);
+  }
+
+  .fitImageWrap {
+    height: clamp(8.5rem, 11vw, 11rem);
+    aspect-ratio: auto;
+  }
 }
 
 @media (max-width: 900px) {
@@ -1375,7 +1395,7 @@
 
 .processSplit {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(24rem, 42vw);
+  grid-template-columns: minmax(0, 1fr) clamp(25.6rem, 31.2vw, 33.6rem);
   align-items: stretch;
   gap: clamp(2.5rem, 5vw, 6rem);
   margin-top: clamp(2.5rem, 4.5vw, 3.75rem);
@@ -1384,9 +1404,8 @@
 .processAccordionColumn {
   display: flex;
   min-width: 0;
-  align-items: center;
-  padding: clamp(1.5rem, 3vw, 2.75rem) 0 clamp(1.5rem, 3vw, 2.75rem)
-    var(--featured-section-gutter);
+  align-items: flex-start;
+  padding: 0 0 clamp(1.5rem, 3vw, 2.75rem) var(--featured-section-gutter);
 }
 
 .processAccordion {
@@ -1421,7 +1440,7 @@
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: clamp(0.85rem, 1.5vw, 1.25rem);
   align-items: center;
-  padding: clamp(1rem, 1.7vw, 1.4rem) 0;
+  padding: clamp(1.2rem, 2vw, 1.65rem) 0;
   border: 0;
   background: transparent;
   color: inherit;
@@ -1527,7 +1546,9 @@
 
 .processVisual {
   position: relative;
-  min-height: clamp(34rem, 42vw, 46rem);
+  height: clamp(32rem, 39vw, 42rem);
+  min-height: 0;
+  align-self: center;
   overflow: hidden;
   border-radius: 0;
   background: var(--color-dark-blue);
@@ -1548,13 +1569,28 @@
   transform: scale(1.025);
 }
 
-/* Full-width pill: copy left, CTA hard right, both edges on the nav line. */
+@media (min-width: 901px) {
+  .processVisual {
+    background: transparent;
+  }
+
+  .processImage {
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .processVisual:hover .processImage {
+    transform: none;
+  }
+}
+
+/* Full-width pill beneath the split: copy left, CTA right. */
 .processOutro {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: clamp(1.25rem, 3vw, 2.5rem);
-  margin-top: clamp(1rem, 1.6vw, 1.5rem);
+  margin-top: clamp(1.4rem, 2vw, 1.9rem);
   padding: clamp(1rem, 1.6vw, 1.35rem) clamp(1rem, 1.6vw, 1.35rem)
     clamp(1rem, 1.6vw, 1.35rem) clamp(1.75rem, 3vw, 2.75rem);
   border-radius: var(--oo-radius);
@@ -1637,7 +1673,7 @@
    well before the tablet breakpoint. */
 @media (max-width: 1600px) {
   .processSplit {
-    grid-template-columns: minmax(0, 1fr) minmax(21rem, 40vw);
+    grid-template-columns: minmax(0, 1fr) clamp(25.6rem, 31.2vw, 33.6rem);
     gap: clamp(1.75rem, 3.5vw, 3.5rem);
   }
 }
@@ -1651,6 +1687,7 @@
   .processVisual {
     order: -1;
     width: calc(100% - var(--featured-section-gutter) - var(--featured-section-gutter));
+    height: auto;
     min-height: clamp(17rem, 48vw, 24rem);
     justify-self: center;
     margin-inline: auto;

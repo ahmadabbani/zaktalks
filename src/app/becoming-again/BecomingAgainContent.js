@@ -334,6 +334,79 @@ function useReveal() {
   return { register, cx }
 }
 
+function CurriculumAccordionItem({
+  item,
+  index,
+  layout,
+  isOpen,
+  onToggle,
+  register,
+  cx,
+}) {
+  const revealId = `curriculum-${layout}-${item.id}`
+  const triggerId = `curriculum-${layout}-trigger-${item.id}`
+  const panelId = `curriculum-${layout}-panel-${item.id}`
+
+  return (
+    <div
+      ref={register(revealId)}
+      className={cx(
+        [styles.curriculumItem, isOpen ? styles.curriculumItemOpen : '']
+          .filter(Boolean)
+          .join(' '),
+        revealId
+      )}
+    >
+      <h3 className={styles.curriculumHeading}>
+        <button
+          type="button"
+          className={styles.curriculumTrigger}
+          aria-expanded={isOpen}
+          aria-controls={panelId}
+          id={triggerId}
+          onClick={() => onToggle(isOpen ? -1 : index)}
+        >
+          <span className={styles.curriculumIndex} aria-hidden="true">
+            {String(index).padStart(2, '0')}
+          </span>
+
+          <span className={styles.curriculumTitleGroup}>
+            <span className={styles.curriculumKind}>{item.kind}</span>
+            <span className={styles.curriculumStepTitle}>
+              {item.title}
+              {item.subtitle && (
+                <span className={styles.curriculumStepSubtitle}>
+                  {' '}
+                  ({item.subtitle})
+                </span>
+              )}
+            </span>
+          </span>
+
+          <span className={styles.curriculumChevron} aria-hidden="true">
+            <FiChevronDown />
+          </span>
+        </button>
+      </h3>
+
+      <div
+        id={panelId}
+        role="region"
+        aria-labelledby={triggerId}
+        className={styles.curriculumPanel}
+      >
+        <div className={styles.curriculumPanelInner}>
+          <ul className={styles.curriculumPoints}>
+            {item.points.map((point) => (
+              <li key={point}>{point}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function BecomingAgainContent() {
   const [heroReady, setHeroReady] = useState(false)
   const [openModule, setOpenModule] = useState(0)
@@ -350,7 +423,7 @@ export default function BecomingAgainContent() {
       <section className={styles.hero} aria-labelledby="ba-hero-heading">
         <div className={`${styles.contentWidth} ${styles.heroInner}`}>
           <div className={styles.heroContent}>
-            <p className={styles.eyebrow}>The Courage to Be</p>
+            <p className={styles.eyebrow}>Becoming Again</p>
 
             <h1 id="ba-hero-heading" className={styles.heroTitle}>
               Becoming Again: Group Coaching for People Who Are Done Letting Life
@@ -497,7 +570,28 @@ export default function BecomingAgainContent() {
             </p>
           </div>
 
-          <div className={styles.curriculumList}>
+          <div className={`${styles.curriculumList} ${styles.curriculumDesktopColumns}`}>
+            {[0, 1].map((columnIndex) => (
+              <div className={styles.curriculumColumn} key={`curriculum-column-${columnIndex}`}>
+                {curriculum.map((item, index) => (
+                  index % 2 === columnIndex ? (
+                    <CurriculumAccordionItem
+                      key={`desktop-${item.id}`}
+                      item={item}
+                      index={index}
+                      layout="desktop"
+                      isOpen={openModule === index}
+                      onToggle={setOpenModule}
+                      register={register}
+                      cx={cx}
+                    />
+                  ) : null
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <div className={`${styles.curriculumList} ${styles.curriculumMobileList}`}>
             {curriculum.map((item, index) => {
               const isOpen = openModule === index
 
@@ -713,7 +807,16 @@ export default function BecomingAgainContent() {
                   height={1280}
                   sizes="(max-width: 900px) min(68vw, 22.5rem), 27vw"
                   unoptimized
-                  className={styles.instructorPortrait}
+                  className={`${styles.instructorPortrait} ${styles.instructorPortraitDesktop}`}
+                />
+                <Image
+                  src="/meetzak.jpg"
+                  alt="Zak Dakkash, founder of ZakTalks"
+                  width={1920}
+                  height={1280}
+                  sizes="(max-width: 1024px) min(70vw, 18rem), 1px"
+                  unoptimized
+                  className={`${styles.instructorPortrait} ${styles.instructorPortraitMobile}`}
                 />
               </div>
             </div>
