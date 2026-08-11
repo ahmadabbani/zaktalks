@@ -39,7 +39,7 @@ export default function CoursePreviewCtaSection() {
             <div className={styles.copy}>
               <p>The ways you protect yourself, communicate, lead, or hold back did not appear by accident. Many began as early decisions that once helped you cope but may no longer serve the life you want now.</p>
               <p><strong>Becoming Again</strong> is a hybrid <em>group coaching program</em> that helps you recognise these patterns, understand the roles you keep stepping into, and make more conscious choices in the here and now.</p>
-              <p>It is for people ready to <strong>move</strong> beyond insight alone and <strong>practise</strong> a different way of <em>living</em>.</p>
+              <p>It is for people ready to <strong>move</strong> beyond insight alone and <strong>practise</strong> a different way of living.</p>
             </div>
 
             <Link href="/becoming-again" className={styles.cta}>

@@ -119,8 +119,8 @@ const milestones = [
   },
   {
     year: '2026',
-    title: 'E-learning Platform Launching',
-    date: 'August 2026',
+    title: 'Okayness',
+    date: 'Coming soon',
     badge: 'Next',
     tone: 'yellow',
   },
@@ -731,7 +731,6 @@ export default function AboutPageContent() {
                       className={`${styles.orbitNode} ${styles[`orbitNode${milestone.tone[0].toUpperCase()}${milestone.tone.slice(1)}`]}`}
                       aria-hidden="true"
                     >
-                      <span>{String(index + 1).padStart(2, '0')}</span>
                       <strong>{milestone.year}</strong>
                     </span>
 
@@ -759,9 +758,9 @@ export default function AboutPageContent() {
             >
               <p className={styles.valuesScript}>What stays true</p>
               <h2 id="values-heading" className={styles.valuesWords}>
-                <span>Vulnerability</span>
-                <span>Curiosity</span>
-                <span>Faith</span>
+                <span>Vulnerability,</span>
+                <span>Curiosity and</span>
+                <span>Faith.</span>
               </h2>
             </div>
 

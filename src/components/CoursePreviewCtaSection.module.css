@@ -15,7 +15,7 @@
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 64rem) minmax(14rem, 18.5rem);
+  grid-template-columns: minmax(0, 1fr) minmax(11rem, 14rem);
   column-gap: clamp(2rem, 4vw, 6rem);
   justify-content: space-between;
   align-items: start;
@@ -23,21 +23,22 @@
 
 .content {
   display: flex;
-  max-width: 64rem;
+  width: 100%;
+  max-width: none;
   flex-direction: column;
   align-items: flex-start;
   padding-top: clamp(0.5rem, 1.1vw, 1.35rem);
 }
 
 .title {
+  width: 100%;
   max-width: none;
-  padding-right: clamp(2rem, 3.5vw, 5rem);
+  padding-right: 0;
   color: var(--home-headline-color);
   font-size: clamp(2.2rem, 3.4vw, 3.3rem);
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
-  text-wrap: balance;
 }
 
 .titleLine {
@@ -51,7 +52,8 @@
 }
 
 .copy {
-  max-width: 63ch;
+  width: 100%;
+  max-width: none;
   margin-top: 1.5rem;
   color: var(--home-subheading-color);
   font-size: var(--home-subheading-size);
@@ -229,20 +231,16 @@
 
 @media (min-width: 1800px) {
   .layout {
-    grid-template-columns: minmax(0, 64rem) minmax(16rem, 18.5rem);
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 15rem);
     gap: 7rem;
   }
 }
 
 @media (min-width: 2000px) {
   .layout {
-    grid-template-columns: minmax(0, 68rem) minmax(18rem, 21.5rem);
+    grid-template-columns: minmax(0, 1fr) minmax(13rem, 16.5rem);
     gap: clamp(2.5rem, 3vw, 4rem);
     justify-content: space-between;
-  }
-
-  .content {
-    max-width: 68rem;
   }
 
   .title {
@@ -256,24 +254,20 @@
   }
 
   .visualWrap {
-    width: min(100%, 21.5rem);
+    width: min(100%, 16.5rem);
   }
 
   .imageFrame {
-    width: min(100%, 21.5rem);
+    width: min(100%, 16.5rem);
     aspect-ratio: 0.44;
   }
 }
 
 @media (min-width: 2300px) {
   .layout {
-    grid-template-columns: minmax(0, 76rem) minmax(21rem, 24rem);
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 18.5rem);
     gap: 4rem;
     justify-content: space-between;
-  }
-
-  .content {
-    max-width: 76rem;
   }
 
   .title {
@@ -291,11 +285,11 @@
   }
 
   .visualWrap {
-    width: min(100%, 24rem);
+    width: min(100%, 18.5rem);
   }
 
   .imageFrame {
-    width: min(100%, 24rem);
+    width: min(100%, 18.5rem);
     aspect-ratio: 0.46;
   }
 }

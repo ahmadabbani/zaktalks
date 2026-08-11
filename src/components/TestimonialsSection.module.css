@@ -14,25 +14,26 @@
 }
 
 .header {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: clamp(1.5rem, 4vw, 4rem);
-  align-items: end;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
   margin-bottom: clamp(2rem, 4.5vw, 4rem);
 }
 
 .headingBlock {
-  max-width: 69rem;
+  width: 100%;
+  max-width: none;
 }
 
 .title {
-  max-width: 23ch;
+  width: 100%;
+  max-width: none;
   color: var(--home-headline-color);
   font-size: var(--home-headline-size);
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
-  text-wrap: balance;
+  text-wrap: nowrap;
 }
 
 .titleLine {
@@ -298,6 +299,10 @@
     max-width: none;
   }
 
+  .title {
+    text-wrap: wrap;
+  }
+
   .intro,
   .quoteText {
     line-height: var(--home-text-line-height);
@@ -332,11 +337,6 @@
 }
 
 @media (max-width: 760px) {
-  .header {
-    grid-template-columns: 1fr;
-    align-items: start;
-  }
-
   .controls {
     justify-content: flex-start;
   }
@@ -405,26 +405,7 @@
   }
 }
 
-@media (min-width: 1500px) and (max-width: 1999px) {
-  .headingBlock {
-    max-width: 82rem;
-  }
-
-  .title {
-    max-width: 23ch;
-    text-wrap: wrap;
-  }
-}
-
 @media (min-width: 2000px) {
-  .headingBlock {
-    max-width: 92rem;
-  }
-
-  .title {
-    max-width: 22ch;
-  }
-
   .controlButton {
     width: 4rem;
     height: 4rem;
@@ -459,14 +440,6 @@
 }
 
 @media (min-width: 2300px) {
-  .headingBlock {
-    max-width: 108rem;
-  }
-
-  .title {
-    max-width: 23ch;
-  }
-
   .controlButton {
     width: 4.35rem;
     height: 4.35rem;

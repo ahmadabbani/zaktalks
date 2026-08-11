@@ -19,11 +19,10 @@ export default async function Home() {
           <div className={styles.heroGrid}>
             <div className={styles.heroLeft}>
               <h1 className={styles.heroTitle}>
-                <span>What if you’ve been</span>
-                <span><strong><em>Okay</em></strong> all along?</span>
+                <span>What if you’ve been <strong><em>Okay</em></strong> all along?</span>
               </h1>
               <p className={styles.heroDescription}>
-                <strong><em>Okayness</em></strong> begins from the position that I’m OK, You’re OK. Our behaviors and patterns may need to change, but our human worth is not in question. From this position, we can meet ourselves and others with <strong>curiosity</strong>, <strong>respect</strong>, and <strong>openness</strong> to change.
+                <strong><em>Okayness</em></strong> begins from the position that <em>I’m OK, You’re OK</em>. Our behaviors and patterns may need to change, but our human worth is not in question. From this <strong>position</strong>, we can meet ourselves and others with <strong>Curiosity</strong>, <strong>Respect</strong> and <strong>Openness</strong> to change.
               </p>
               <div className={styles.heroActions}>
                 <Link href="/courses/interpersonal-communication-dynamics" className={`${styles.primaryHeroCta} ${styles.hiddenHeroCta}`}>
@@ -39,13 +38,13 @@ export default async function Home() {
             <div className={styles.heroRight}>
               <div className={styles.heroImageWrapper}>
                 <Image
-                  src="/hero.png"
-                  alt="Zak"
-                  width={800}
-                  height={800}
+                  src="/heromain.png"
+                  alt="Zak speaking beside a flipchart during a live session"
+                  width={1029}
+                  height={1528}
                   priority
                   className={styles.heroImage}
-                  sizes="(max-width: 700px) 94vw, (max-width: 1200px) 48vw, 42vw"
+                  sizes="(max-width: 480px) 74vw, (max-width: 700px) 70vw, (max-width: 1024px) 62vw, 460px"
                 />
               </div>
             </div>

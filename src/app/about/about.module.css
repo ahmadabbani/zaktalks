@@ -524,18 +524,23 @@
   line-height: 1.08;
 }
 
-.storyNarrativeTitle::after {
+/* ABOUT uses the same display type but a normal tracking and a top rule. */
+.storyNarrativeTitle {
+  letter-spacing: 0.025em;
+}
+
+.storyNarrativeTitle::before {
   content: '';
   display: block;
   width: 50%;
   height: clamp(0.35rem, 0.42vw, 0.6rem);
-  margin-top: var(--story-title-rule-gap);
+  margin-bottom: var(--story-title-rule-gap);
   margin-right: 0;
-  margin-left: auto;
+  margin-left: 0;
   border-radius: 999px;
   background: var(--color-yellow);
   transform: scaleX(0);
-  transform-origin: right center;
+  transform-origin: left center;
 }
 
 .storyNarrativeCopy {
@@ -662,7 +667,7 @@
   animation: storyBodyIn 0.85s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.storyNarrativeVisible .storyNarrativeTitle::after {
+.storyNarrativeVisible .storyNarrativeTitle::before {
   animation: storyTitleLineIn 0.7s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -1839,7 +1844,7 @@
     transition-duration: 0.01ms;
   }
 
-  .storyNarrativeVisible .storyNarrativeTitle::after {
+  .storyNarrativeVisible .storyNarrativeTitle::before {
     animation: none;
     transform: scaleX(1);
   }
@@ -2075,16 +2080,7 @@
   transition: color 0.3s ease, background-color 0.3s ease, transform 0.36s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.orbitNode > span {
-  font-size: clamp(0.56rem, 0.6vw, 0.68rem);
-  font-weight: 850;
-  letter-spacing: 0.1em;
-  line-height: 1;
-  opacity: 0.72;
-}
-
 .orbitNode strong {
-  margin-top: 0.22rem;
   font-size: clamp(0.76rem, 0.84vw, 0.94rem);
   font-weight: 900;
   letter-spacing: -0.02em;
@@ -2222,15 +2218,18 @@
   transform: translate(-50%, 0.25rem);
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 1024px) {
+  /* Sales Olympics and Relationship Psychology sit close to the item above
+     them on the orbit; push their copy further down than the default
+     vertical-center placement so it stops crowding that neighbor. */
   .orbitCopyBottomRight .orbitCopy,
   .orbitCopyBottomLeft .orbitCopy {
-    top: calc(50% + 1.15rem);
+    top: calc(50% + clamp(1.9rem, 2.4vw, 2.6rem));
   }
 
   .orbitCopyBottomRight .orbitCopy::after,
   .orbitCopyBottomLeft .orbitCopy::after {
-    top: calc(50% - 1.15rem);
+    top: calc(50% - clamp(1.9rem, 2.4vw, 2.6rem));
   }
 }
 
@@ -2301,6 +2300,60 @@
 
   .orbitMeta {
     font-size: clamp(0.72rem, 0.52vw, 0.86rem);
+  }
+}
+
+/* Smaller orbit for the tighter tablet/small-laptop band: the section needs
+   to fit inside one viewport here, so the whole circle, the center core, the
+   year nodes, and the copy cards all step down together. Left untouched
+   above 1600px, where there is enough room for the full-size version. */
+@media (min-width: 1024px) and (max-width: 1600px) {
+  .milestoneOrbit {
+    width: min(calc(100% - clamp(1rem, 2vw, 2rem)), 40rem, calc(100svh - 11rem));
+  }
+
+  .orbitCore {
+    width: clamp(11rem, 17vw, 15.5rem);
+    padding: clamp(1.25rem, 2vw, 2rem);
+  }
+
+  .orbitCore h2 {
+    font-size: clamp(1.1rem, 1.5vw, 1.5rem);
+  }
+
+  .orbitCore small {
+    margin-top: clamp(0.6rem, 1vw, 0.9rem);
+  }
+
+  .orbitItem {
+    width: clamp(3.3rem, 3.6vw, 4rem);
+  }
+
+  .orbitNode strong {
+    font-size: clamp(0.66rem, 0.72vw, 0.8rem);
+  }
+
+  .orbitCopy {
+    width: clamp(6.25rem, 8.5vw, 9.5rem);
+    padding: 0.45rem 0.52rem;
+  }
+
+  .orbitName {
+    font-size: clamp(0.7rem, 0.8vw, 0.86rem);
+  }
+
+  .orbitMeta {
+    font-size: clamp(0.58rem, 0.58vw, 0.66rem);
+  }
+
+  .orbitCopyBottomRight .orbitCopy,
+  .orbitCopyBottomLeft .orbitCopy {
+    top: calc(50% + clamp(2.5rem, 3.2vw, 3.4rem));
+  }
+
+  .orbitCopyBottomRight .orbitCopy::after,
+  .orbitCopyBottomLeft .orbitCopy::after {
+    top: calc(50% - clamp(2.5rem, 3.2vw, 3.4rem));
   }
 }
 
@@ -2475,10 +2528,6 @@
     border-width: 0.22rem;
   }
 
-  .orbitNode > span {
-    font-size: 0.43rem;
-  }
-
   .orbitNode strong {
     font-size: 0.62rem;
   }
@@ -2547,7 +2596,7 @@
 
 .valuesHeader {
   position: absolute;
-  z-index: 3;
+  z-index: 5;
   top: clamp(2.25rem, 4vw, 4.25rem);
   left: clamp(2.25rem, 4.5vw, 5rem);
   width: 58%;
@@ -2564,29 +2613,34 @@
   transform: rotate(-3deg) translateY(0.8rem);
 }
 
-.valuesWords {
+/* A touch smaller than its original size, still its own scale (not the
+   shared heading variable) since it stacks as three display-sized lines. */
+/* width: fit-content shrinks the heading to its widest line, so the block
+   still starts flush left under "What stays true" (not centered in the 58%
+   header column); text-align then centers the shorter lines under that
+   widest one, rather than left-aligning every line to the same start. */
+.page .valuesWords {
+  /* Size from the widest actual line, rather than the full header column.
+     This keeps “Vulnerability,” flush with the label while the shorter
+     lines can still center underneath it. */
+  width: max-content;
+  max-width: max-content;
+  margin-left: 0;
   margin-top: clamp(1rem, 1.7vw, 1.5rem);
   color: var(--color-white);
-  font-size: clamp(2.15rem, 4vw, 4.5rem);
-  font-weight: 900;
-  letter-spacing: -0.055em;
-  line-height: 0.88;
-  text-transform: uppercase;
+  font-size: clamp(1.85rem, 3.4vw, 3.85rem);
+  font-weight: 800;
+  letter-spacing: normal;
+  line-height: 1.07;
+  text-align: center;
 }
 
 .valuesWords span {
   display: block;
-  width: fit-content;
+  width: auto;
+  white-space: nowrap;
   opacity: 0;
-  transform: translateX(-1.5rem);
-}
-
-.valuesWords span:nth-child(2) {
-  margin-left: clamp(1.5rem, 3vw, 3.5rem);
-}
-
-.valuesWords span:nth-child(3) {
-  margin-left: clamp(3rem, 6vw, 7rem);
+  transform: translateY(0.7rem);
 }
 
 .valuesImageWrap {
@@ -2623,7 +2677,7 @@
   left: clamp(1.5rem, 3vw, 3.25rem);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
-  align-items: end;
+  align-items: start;
   gap: clamp(1.4rem, 2.6vw, 3rem);
   padding: clamp(1.6rem, 2.6vw, 2.75rem);
   color: var(--home-text-color);
@@ -2687,7 +2741,7 @@
 @keyframes valuesWordIn {
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 
@@ -2716,7 +2770,7 @@
   }
 
   .valuesWords {
-    font-size: clamp(5rem, 3.8vw, 7rem);
+    font-size: clamp(4.25rem, 3.2vw, 6rem);
   }
 
   .valuesImageWrap {
@@ -2724,14 +2778,24 @@
   }
 }
 
-@media (max-width: 1580px) and (min-width: 1025px) {
+/* At this width the CTA drops to its own row under the 2-column text, which
+   is taller than the 3-column desktop layout. Grow the canvas and shrink the
+   portrait so the panel fits back inside the box instead of spilling out. */
+@media (max-width: 1600px) and (min-width: 1025px) {
   .valuesCanvas {
-    overflow: visible;
+    height: clamp(40rem, 46vw, 47rem);
+  }
+
+  .valuesImageWrap {
+    width: clamp(17rem, 22vw, 22rem);
   }
 
   .valuesReadingPanel {
-    bottom: clamp(-3.25rem, -2.6vw, -2.5rem);
+    top: auto;
+    bottom: clamp(1rem, 1.5vw, 1.4rem);
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 1.65vw, 1.45rem);
+    padding: clamp(1.35rem, 1.8vw, 1.7rem);
   }
 
   .valuesCta {
@@ -2767,10 +2831,6 @@
     width: 100%;
     align-self: center;
     padding: clamp(0.75rem, 1.5vw, 1.25rem) 0;
-  }
-
-  .valuesWords {
-    font-size: clamp(2.5rem, 8vw, 4.4rem);
   }
 
   .valuesImageWrap {
@@ -2836,7 +2896,7 @@
   }
 
   .valuesCanvas {
-    grid-template-columns: minmax(0, 1fr) clamp(5.75rem, 23vw, 7rem);
+    grid-template-columns: minmax(0, 1fr) clamp(6.75rem, 25vw, 9rem);
     gap: 0.55rem;
     padding: 0.8rem;
     border-radius: 1.75rem;
@@ -2850,20 +2910,8 @@
     font-size: 2rem;
   }
 
-  .valuesWords {
-    font-size: clamp(2.15rem, 11vw, 3.2rem);
-  }
-
-  .valuesWords span:nth-child(2) {
-    margin-left: 0.8rem;
-  }
-
-  .valuesWords span:nth-child(3) {
-    margin-left: 1.6rem;
-  }
-
   .valuesImageWrap {
-    width: min(100%, 6.5rem);
+    width: min(100%, 8rem);
     margin: 0;
     border-width: 0.32rem;
   }
@@ -2899,6 +2947,13 @@
 
   .valuesReadingPanel {
     margin-top: 2rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .valuesImageWrap {
+    top: 5rem;
+    z-index: 6;
   }
 }
 
@@ -3161,6 +3216,11 @@
     transform: translateY(2rem);
   }
 
+  .finalCtaTitle::before {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
   .finalCtaCopy {
     margin-inline: auto;
   }
@@ -3233,7 +3293,7 @@
   }
 
   .valuesWords {
-    font-size: clamp(2rem, 5.4vw, 3.45rem);
+    font-size: clamp(1.7rem, 4.6vw, 2.95rem);
   }
 }
 
@@ -3247,7 +3307,7 @@
   }
 
   .valuesWords {
-    font-size: clamp(1.75rem, 6vw, 2rem);
+    font-size: clamp(1.5rem, 5.1vw, 1.7rem);
   }
 }
 

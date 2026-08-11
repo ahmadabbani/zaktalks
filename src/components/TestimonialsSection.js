@@ -116,11 +116,10 @@ export default function TestimonialsSection() {
         >
           <div className={styles.headingBlock}>
             <h2 id="testimonials-heading" className={styles.title}>
-              <span className={styles.titleLine}>What changes when</span>
-              <span className={styles.titleLine}>the work becomes real</span>
+              <span className={styles.titleLine}>What changes when the work becomes real</span>
             </h2>
             <p className={styles.intro}>
-              Transformation is not about fixing yourself. It is about starting from okayness, unlearning what once helped you survive, and choosing more authentic ways of living and relating.
+              Transformation is not about fixing yourself. It is about starting from <strong>Okayness</strong>, unlearning what once helped you survive, and choosing more authentic ways of living and relating.
             </p>
           </div>
 

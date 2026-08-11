@@ -110,7 +110,7 @@ export default function SocialProofSection() {
       <div className={styles.socialProofContainer}>
         <div ref={registerItem('heading')} className={itemClassName(styles.socialProofHeading, 'heading')}>
           <h2 id="social-proof-heading">
-            Conversations centered on the <strong>Elephants In The Room</strong> and the <strong>Okayness</strong> we often forget.
+            Conversations centered on the <strong className={styles.socialProofHighlightYellow}>Elephant In The Room</strong> and the <strong className={styles.socialProofHighlightWhite}>Okayness</strong> we often forget.
           </h2>
         </div>
 

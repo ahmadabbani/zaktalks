@@ -4,7 +4,7 @@
   /* Social proof heading only: smaller than the shared --home-headline-size,
      tracking the same four breakpoints so it scales in step without moving
      any other heading on the page. */
-  --social-proof-heading-size: clamp(1.9rem, 3.15vw, 2.75rem);
+  --social-proof-heading-size: clamp(1.7rem, 2.85vw, 2.5rem);
 }
 
 /* Hero Section */
@@ -14,6 +14,9 @@
   min-height: 100svh;
   overflow: hidden;
   background: var(--color-gray-light);
+
+  /* Overridden per breakpoint; see the hero image ladder below. */
+  --hero-image-height: 38rem;
 }
 
 .heroContainer {
@@ -21,10 +24,13 @@
   margin-inline: var(--featured-section-gutter);
 }
 
+/* `auto` on the image track means the column is sized by the frame's own
+   max-width rather than a fr-share, so the heading can never squeeze it and
+   the gap between heading and photo is always honoured. */
 .heroGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
-  gap: clamp(2.5rem, 6vw, 8rem);
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(1.5rem, 2.6vw, 3rem);
   align-items: center;
   min-height: 100svh;
   padding: clamp(8.5rem, 10vw, 12rem) 0 clamp(3rem, 6vw, 6rem);
@@ -54,8 +60,12 @@
   }
 }
 
+/* No `nowrap` here on purpose: nowrap does not shrink text, it overflows the
+   column and runs into the portrait. The heading takes the full width it is
+   given and sits on one line wherever the row is wide enough for it. */
 .heroTitle {
-  max-width: 18ch;
+  width: 100%;
+  max-width: none;
   color: var(--home-headline-color);
   font-size: var(--home-headline-size);
   font-weight: var(--home-headline-weight);
@@ -156,8 +166,8 @@
 .heroRight {
   display: flex;
   justify-content: flex-end;
-  align-items: flex-end;
-  align-self: stretch;
+  align-items: center;
+  align-self: center;
   animation: heroSlideRight 1s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
 }
 
@@ -175,28 +185,26 @@
   }
 }
 
+/* Oval hero portrait, matching the Meet Zak and Course Preview frames.
+   On desktop the frame is driven by HEIGHT (capped against the viewport so a
+   short screen can never overflow) and the width follows the 0.48 ratio, so
+   one token per breakpoint controls the whole thing. Mobile switches to a
+   width-driven rounded rectangle further down. */
 .heroImageWrapper {
   position: relative;
   isolation: isolate;
-  width: 100%;
-  max-width: 720px;
-  height: clamp(520px, 61vh, 790px);
+  height: min(var(--hero-image-height), 74svh);
+  width: auto;
+  max-width: 100%;
+  aspect-ratio: 0.48;
+  margin-left: auto;
+  overflow: hidden;
+  border-radius: 999rem;
+  background: #d7e7ee;
 }
 
 .heroImageWrapper::after {
-  content: '';
-  position: absolute;
-  right: 2%;
-  bottom: 8px;
-  z-index: 2;
-  width: 58%;
-  height: 1px;
-  border-radius: 999px;
-  background: transparent;
-  box-shadow:
-    0 10px 24px rgba(48, 48, 48, 0.24),
-    0 -4px 18px rgba(48, 48, 48, 0.12);
-  pointer-events: none;
+  content: none;
 }
 
 .heroImage {
@@ -204,10 +212,14 @@
   z-index: 1;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: right bottom;
+  object-fit: cover;
+  object-position: 45% center;
   display: block;
-  filter: drop-shadow(0 8px 12px rgba(48, 48, 48, 0.1));
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.heroImageWrapper:hover .heroImage {
+  transform: scale(1.025);
 }
 
 /* For Whom Section */
@@ -722,17 +734,8 @@
 
 /* Responsive Design */
 @media (max-width: 1200px) {
-  .heroGrid {
-    grid-template-columns: minmax(0, 1fr) minmax(330px, 0.82fr);
-    gap: clamp(1.5rem, 4vw, 3.5rem);
-  }
-
   .heroBottomGrid {
     gap: var(--space-2xl);
-  }
-
-  .heroImageWrapper {
-    height: clamp(480px, 58vh, 650px);
   }
 }
 
@@ -764,6 +767,7 @@
   .heroTitle {
     max-width: 14ch;
     line-height: 1.04;
+    text-wrap: wrap;
   }
 
   .heroDescription {
@@ -789,20 +793,7 @@
   }
 
   .heroImageWrapper {
-    max-width: 430px;
-    height: 470px;
-  }
-
-  .heroImage {
-    object-position: center bottom;
-  }
-
-  .heroImageWrapper::after {
-    right: auto;
-    left: 50%;
-    bottom: 8px;
-    width: 66%;
-    transform: translateX(-50%);
+    margin-inline: auto;
   }
 
   .heroBottomGrid {
@@ -814,10 +805,6 @@
 @media (max-width: 480px) {
   .heroGrid {
     padding-top: 6.25rem;
-  }
-
-  .heroImageWrapper {
-    height: 420px;
   }
 
   .heroActions,
@@ -870,10 +857,20 @@
   max-width: 11ch;
   color: var(--color-white);
   font-size: var(--social-proof-heading-size);
-  font-weight: var(--home-headline-weight);
+  font-weight: 620;
   letter-spacing: var(--home-headline-letter-spacing);
-  line-height: var(--home-headline-line-height);
+  line-height: 1.18;
   text-wrap: balance;
+}
+
+.socialProofHighlightYellow {
+  color: var(--color-yellow);
+  font-weight: var(--home-headline-weight);
+}
+
+.socialProofHighlightWhite {
+  color: var(--color-white);
+  font-weight: var(--home-headline-weight);
 }
 
 .socialProofGrid {
@@ -2192,9 +2189,8 @@
 
 /* Desktop heading composition below the high-resolution tier */
 @media (min-width: 1500px) and (max-width: 1999px) {
-  .heroGrid {
-    grid-template-columns: minmax(0, 1.32fr) minmax(0, 0.68fr);
-    gap: clamp(2.25rem, 3vw, 3.25rem);
+  .heroSection {
+    --hero-image-height: 38rem;
   }
 
   .heroLeft {
@@ -2204,13 +2200,8 @@
   .heroTitle {
     position: relative;
     z-index: 2;
-    width: calc(100% + clamp(3rem, 4vw, 5rem));
+    width: 100%;
     max-width: none;
-    text-wrap: wrap;
-  }
-
-  .heroImageWrapper {
-    width: 120%;
   }
 
   .socialProofContainer {
@@ -2270,26 +2261,22 @@
 /* Coordinated high-resolution scaling */
 @media (min-width: 2000px) {
   .main {
-    --social-proof-heading-size: clamp(3.15rem, 2.3vw, 3.6rem);
+    --social-proof-heading-size: clamp(2.85rem, 2.05vw, 3.25rem);
   }
 
-  .heroGrid {
-    grid-template-columns: minmax(0, 1.28fr) minmax(0, 0.72fr);
-    gap: 3rem;
+  .heroSection {
+    --hero-image-height: 42rem;
   }
 
+  /* No cap here: the column is 1000px+ wide at this tier and capping it was
+     wrapping the heading even though the row had room for one line. The
+     paragraph keeps its own 66ch limit, so only the heading spreads out. */
   .heroLeft {
-    max-width: 58rem;
+    max-width: none;
   }
 
   .heroTitle {
-    max-width: 28ch;
-  }
-
-  .heroImageWrapper {
-    width: 125%;
-    max-width: 780px;
-    height: clamp(580px, 62vh, 850px);
+    max-width: none;
   }
 
   .forWhomTitle {
@@ -2342,26 +2329,19 @@
 
 @media (min-width: 2300px) {
   .main {
-    --social-proof-heading-size: clamp(3.65rem, 2.35vw, 4.3rem);
+    --social-proof-heading-size: clamp(3.3rem, 2.1vw, 3.85rem);
   }
 
-  .heroGrid {
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
-    gap: 4rem;
+  .heroSection {
+    --hero-image-height: 46rem;
   }
 
   .heroLeft {
-    max-width: 66rem;
+    max-width: none;
   }
 
   .heroTitle {
-    max-width: 28ch;
-  }
-
-  .heroImageWrapper {
-    width: 120%;
-    max-width: 880px;
-    height: clamp(650px, 64vh, 960px);
+    max-width: none;
   }
 
   .forWhomEyebrow {
@@ -2405,6 +2385,14 @@
   }
 }
 
+/* Ultra-wide / 4K: the headline font is capped here but the row keeps growing,
+   so the frame can finally scale up without crowding the one-line heading. */
+@media (min-width: 2800px) {
+  .heroSection {
+    --hero-image-height: 56rem;
+  }
+}
+
 /* Keep the final For Whom statement evenly spaced between its cards and Social Proof. */
 .forWhomSection {
   padding-bottom: clamp(1.25rem, 2.85vw, 3.25rem);
@@ -2415,10 +2403,13 @@
 }
 
 /* Give the hero copy more priority through the mid-desktop range. */
-@media (min-width: 951px) and (max-width: 1600px) {
+@media (min-width: 951px) and (max-width: 1499px) {
+  .heroSection {
+    --hero-image-height: 34rem;
+  }
+
   .heroGrid {
-    grid-template-columns: minmax(0, 1.5fr) minmax(220px, 0.5fr);
-    gap: clamp(1rem, 1.9vw, 2rem);
+    gap: clamp(1.5rem, 2.4vw, 2.5rem);
   }
 
   .heroLeft {
@@ -2429,7 +2420,6 @@
   .heroTitle {
     width: 100%;
     max-width: none;
-    text-wrap: balance;
   }
 
   .heroActions {
@@ -2446,16 +2436,9 @@
     overflow-wrap: normal;
   }
 
-  .heroImageWrapper {
-    width: 100%;
-    max-width: 450px;
-    height: clamp(340px, 48svh, 510px);
-    margin-left: auto;
-  }
-
   .heroRight {
     align-self: center;
-    align-items: flex-start;
+    align-items: center;
   }
 }
 
@@ -2477,20 +2460,6 @@
     width: 100%;
     max-width: none;
   }
-
-  .heroImageWrapper {
-    width: min(100%, 380px);
-    max-width: 380px;
-    height: clamp(360px, 52svh, 440px);
-    margin-inline: auto;
-  }
-}
-
-@media (max-width: 480px) {
-  .heroImageWrapper {
-    width: min(100%, 340px);
-    height: clamp(330px, 48svh, 390px);
-  }
 }
 
 /* For Whom intentionally keeps a slightly smaller heading scale of its own. */
@@ -2503,7 +2472,7 @@
 /* Preserve the compact Social Proof composition below its wide-desktop tier. */
 @media (max-width: 1500px) {
   .socialProofHeading h2 {
-    font-size: clamp(1.85rem, 2.35vw, 2.65rem);
+    font-size: clamp(1.65rem, 2.1vw, 2.4rem);
   }
 }
 
@@ -2565,6 +2534,17 @@
     min-height: auto;
   }
 
+  /* Stacked layout drops the oval for a normal rounded frame, same as the
+     Meet Zak portrait does at this breakpoint. */
+  .heroImageWrapper {
+    width: min(62vw, 22rem);
+    height: auto;
+    max-width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: clamp(1.5rem, 3vw, 2.25rem);
+    box-shadow: 0 1.1rem 2.5rem rgba(33, 44, 45, 0.12);
+  }
+
   .heroGrid {
     grid-template-columns: minmax(0, 1fr);
     gap: clamp(1.75rem, 4vw, 2.75rem);
@@ -2616,14 +2596,7 @@
   }
 
   .heroImageWrapper {
-    width: min(60vw, 24rem);
-    max-width: 24rem;
-    height: clamp(18rem, 42vw, 24rem);
     margin-inline: auto;
-  }
-
-  .heroImage {
-    object-position: center bottom;
   }
 
   .forWhomSection {
@@ -2751,8 +2724,8 @@
   }
 
   .heroImageWrapper {
-    width: min(74vw, 20rem);
-    height: clamp(16rem, 74vw, 20rem);
+    width: min(70vw, 19rem);
+    aspect-ratio: 1;
   }
 
   .forWhomMosaic {
@@ -2837,8 +2810,9 @@
   }
 
   .heroImageWrapper {
-    width: min(75vw, 18rem);
-    height: clamp(15rem, 75vw, 18rem);
+    width: min(74vw, 17rem);
+    aspect-ratio: 1;
+    border-radius: clamp(1.25rem, 5vw, 1.75rem);
   }
 
   .forWhomSection,
