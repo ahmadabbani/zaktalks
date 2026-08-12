@@ -2,18 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import {
   FiArrowUpRight,
-  FiCalendar,
   FiCheck,
-  FiClock,
   FiCompass,
   FiEye,
-  FiFlag,
   FiGitBranch,
   FiLayers,
-  FiMonitor,
   FiShield,
 } from 'react-icons/fi'
 import OneOnOneTestimonials from './OneOnOneTestimonials'
@@ -23,17 +18,31 @@ const BOOKING_URL =
   'https://calendly.com/zaktalks/1-1-session-with-zak?back=1&month=2026-01'
 
 const fitPoints = [
-  'You feel stuck in a loop and can’t fully explain why.',
-  'You know something is wrong or missing, but you can’t put it into words.',
-  'You are ready to stop running from yourself and start understanding yourself.',
-  'You want support that is emotionally honest, not superficial advice.',
+  "You're ready to examine the patterns shaping your decisions, relationships, and leadership.",
+  'You value honest inquiry over quick answers.',
+  "You're willing to question long-held assumptions and make new choices.",
+  'You believe meaningful change begins with awareness, responsibility, and authentic contact.',
+  "You're looking for a Thinking Partner, not someone to tell you what to do.",
 ]
 
 const notFitPoints = [
-  'You are not ready to change or take responsibility.',
-  'You prefer to stay in psychological games instead of doing real work.',
-  'You expect someone else to “fix” you without your participation.',
-  'You want a quick magic solution without deeper reflection.',
+  "You're looking for advice, motivation, or a quick solution.",
+  'You want change without self-reflection or personal responsibility.',
+  "You're seeking someone to fix your problems rather than work with you to understand them.",
+  "You're not yet ready to question the patterns that have shaped your life.",
+]
+
+const currentRealityPoints = [
+  'Repeating the same relationship dynamics with different people.',
+  'Feeling successful on the outside but disconnected on the inside.',
+  'Reacting automatically instead of responding intentionally.',
+  'Living from survival patterns that once protected you but now limit you.',
+  'Struggling to communicate what you really think, feel, or need.',
+  'Feeling responsible for everyone else while neglecting yourself.',
+  "Caught between who you've been and who you're becoming.",
+  'Overthinking decisions while repeating familiar outcomes.',
+  'Knowing what you want but not understanding what keeps getting in the way.',
+  'Sensing that something needs to change without being able to name it.',
 ]
 
 const weightPoints = [
@@ -41,32 +50,22 @@ const weightPoints = [
     id: 'point-a',
     kind: 'endpoint',
     label: 'Point A',
-    text: 'They don’t truly know where they are right now',
+    text: "They don't truly know where they are right now",
   },
   {
-    id: 'overthinking',
+    id: 'patterns',
     kind: 'mid',
-    text: 'Fear, anxiety, and constant overthinking.',
+    text: 'Patterns keep shaping the same outcomes.',
   },
   {
-    id: 'unprocessed',
+    id: 'reality',
     kind: 'mid',
-    text: 'Pain, sadness, or grief they haven’t fully processed.',
+    text: 'Current reality becomes easier to name.',
   },
   {
-    id: 'anger',
+    id: 'awareness',
     kind: 'mid',
-    text: 'Anger—either turned inward or spilling into their relationships.',
-  },
-  {
-    id: 'disconnected',
-    kind: 'mid',
-    text: 'Feeling lost, confused, or disconnected from themselves.',
-  },
-  {
-    id: 'present',
-    kind: 'mid',
-    text: 'A sense that they are not fully present in their own life.',
+    text: 'Awareness creates room for choice.',
   },
   {
     id: 'point-b',
@@ -76,19 +75,16 @@ const weightPoints = [
   },
 ]
 
-// Each step's name and its descriptor are split only for typographic weight —
-// the wording is unchanged.
 const journeySteps = [
   {
-    id: 'safety',
+    id: 'contract',
     Icon: FiShield,
-    name: 'Safety',
-    lead: 'a place where you can finally exhale',
+    name: 'Contract',
     text: (
       <>
-        We start by creating a genuinely safe space: no blame, no shaming, no performance.
-        Just a grounded presence where your nervous system can calm down and your story can
-        be told honestly.
+        Every coaching engagement begins by establishing a shared understanding of what
+        matters, what you&rsquo;re working toward, and how we&rsquo;ll work together. The
+        contract becomes the foundation for everything that follows.
       </>
     ),
   },
@@ -96,39 +92,35 @@ const journeySteps = [
     id: 'awareness',
     Icon: FiEye,
     name: 'Awareness',
-    lead: 'seeing the real story underneath',
     text: (
       <>
-        From there, we slow down enough to notice your patterns: how you relate, what you
-        repeat, and the beliefs you carry about yourself and others. This is where you begin
-        to understand <em>why</em> you feel and react the way you do.
+        Together, we examine the patterns shaping your thinking, relationships,
+        communication, and decisions. As your current reality becomes clearer, new
+        possibilities begin to emerge.
       </>
     ),
   },
   {
-    id: 'redecision',
+    id: 'inquiry',
     Icon: FiGitBranch,
-    name: 'Redecision',
-    lead: 'choosing something different at the root',
+    name: 'Inquiry',
     text: (
       <>
-        With awareness and safety in place, we go to the deeper layer: the old decisions you
-        made about yourself and life, often very young and very alone. Together, we challenge
-        those decisions and make new ones that honor who you are today, not who you had to be
-        back then.
+        We explore the assumptions, adaptations, and script decisions that continue to
+        organize your experience. The goal isn&rsquo;t to revisit the past for its own sake,
+        but to understand what still influences the present.
       </>
     ),
   },
   {
-    id: 'integration',
+    id: 'choices',
     Icon: FiLayers,
-    name: 'Integration',
-    lead: 'turning insight into daily life',
+    name: 'New Choices',
     text: (
       <>
-        Insight without practice doesn&rsquo;t change much. We translate your new decisions
-        into real choices: boundaries, behaviors, conversations, and habits that support the
-        life you actually want to live.
+        As awareness expands, so does your capacity to respond differently. New decisions
+        become practical choices expressed through your conversations, relationships,
+        leadership, and everyday actions.
       </>
     ),
   },
@@ -136,141 +128,22 @@ const journeySteps = [
     id: 'autonomy',
     Icon: FiCompass,
     name: 'Autonomy',
-    lead: 'living from your own voice',
-    isFinal: true,
     text: (
       <>
-        Over time, you experience more freedom: less pressure from old scripts, more grounded
-        confidence, clearer communication, and a relationship with yourself that feels honest
-        and good. This is autonomy: living from your own voice, not from the expectations
-        and fears that used to run the show.
+        The aim is not dependence on coaching, but greater autonomy, the capacity to think
+        clearly, relate authentically, and lead your life from awareness rather than from
+        unconscious survival patterns.
       </>
     ),
   },
 ]
 
-const structureCards = [
-  {
-    id: 'format',
-    Icon: FiMonitor,
-    title: 'Format',
-    text: 'In person or online',
-  },
-  {
-    id: 'length',
-    Icon: FiClock,
-    title: 'Session length',
-    text: '50 minutes',
-  },
-  {
-    id: 'frequency',
-    Icon: FiCalendar,
-    title: 'Frequency',
-    text: 'Weekly, biweekly possible',
-  },
-  {
-    id: 'commitment',
-    Icon: FiFlag,
-    title: 'Minimum commitment',
-    text: '6–7 sessions',
-  },
-]
-
-const expectPoints = [
-  'A safe, non-judgmental space where you can say things you’ve never said out loud.',
-  'Co-creative coaching: we step into the space together, not coach above client.',
-  'Sessions that are led by honesty and curiosity, allowing the real issue to emerge.',
-  'Emotional clarity: understanding what you feel and why.',
-  'Practical insight: small, realistic steps that move you from awareness into action.',
-]
-
-const processSteps = [
-  {
-    id: 'contracting',
-    // Titled from the step's own opening line — the pasted source had no title here.
-    title: 'Contracting and shared responsibility',
-    paragraphs: [
-      'We begin by contracting around positive regard and shared responsibility.',
-      'I commit to not blaming or shaming you and to creating a safe, grounded environment.',
-      'You commit to showing up honestly, participating in the process, and taking responsibility for your part.',
-    ],
-  },
-  {
-    id: 'focus',
-    title: 'Clarifying the focus and boundaries',
-    paragraphs: [
-      'Together, we agree on what we’re working on and what the boundaries of the coaching space are.',
-      'This brings clarity: what belongs to the sessions, what doesn’t, and what we’re aiming for.',
-    ],
-  },
-  {
-    id: 'sessions',
-    title: 'Ongoing sessions',
-    paragraphs: [
-      'Week by week, we allow the session to lead us to the real issue.',
-      'Many people come in thinking “the problem is X,” but together we often discover it’s something deeper, and more meaningful to work on.',
-      'As we progress, you’ll begin to feel more calm, more grounded, and more connected to yourself.',
-    ],
-  },
-  {
-    id: 'review',
-    title: 'Review and next steps',
-    paragraphs: [
-      'After a cycle of sessions (usually 6–7), we review what has shifted, what you’ve learned, and what you need next: continued coaching, integration time, or a different type of support.',
-    ],
-  },
-]
-
-const faqs = [
-  {
-    id: 'commitment',
-    question: 'How long do I need to commit?',
-    answer:
-      'A minimum of 6–7 sessions is recommended. Real emotional work needs time, safety, and repetition. This gives us enough space to understand your reality, explore patterns, and start creating tangible change.',
-  },
-  {
-    id: 'results',
-    question: 'When will I start seeing results?',
-    answer:
-      'Results don’t always look like big dramatic breakthroughs. Often, they begin as small shifts: more calm, more clarity, more honesty with yourself, more presence in your relationships. Many clients begin to feel a difference within the first few sessions, and the depth grows over time.',
-  },
-  {
-    id: 'expected',
-    question: 'What is expected from me as a client?',
-    answer:
-      'You are expected to show up, be honest, and take part in the process. Coaching is co-created. Trust, openness, and a willingness to face yourself are essential for this work to be meaningful.',
-  },
-  {
-    id: 'refunds',
-    question: 'Do you offer refunds?',
-    answer:
-      'Because this is a time-based, professional service and the work begins from the very first session, refunds are generally not available once sessions have started. However, if something significant changes in your circumstances, we can discuss options together and try to find a fair and respectful arrangement.',
-  },
-  {
-    id: 'therapy',
-    question: 'Is this therapy?',
-    answer:
-      'This is coaching rooted in emotional awareness and human development, not medical or psychiatric treatment. If during our work it becomes clear that you need a different type of support, we can discuss that openly and adjust accordingly.',
-  },
-  {
-    id: 'combine-therapist',
-    question: 'Can I do this if I’m already seeing a therapist?',
-    answer:
-      'Yes, many people benefit from combining therapy with coaching, as long as it feels safe and aligned with your therapist’s guidance. The focus here is on awareness, responsibility, and change in your daily life.',
-  },
-]
-
 const closingPoints = [
   'Tell the truth about how you really feel.',
-  'Understand what’s happening beneath the surface.',
+  'Understand what is happening beneath the surface.',
   'Slowly move from stuckness to movement, from confusion to clarity.',
 ]
 
-/**
- * One observer, many targets, each unobserved as it reveals — so content
- * lower on the page animates in as it is scrolled to, rather than every
- * tracked element firing at once when the page first mounts.
- */
 function useReveal() {
   const nodes = useRef(new Map())
   const [visible, setVisible] = useState(() => new Set())
@@ -322,8 +195,6 @@ function useReveal() {
 export default function OneOnOneContent() {
   const [heroReady, setHeroReady] = useState(false)
   const [openJourney, setOpenJourney] = useState(0)
-  const [openProcess, setOpenProcess] = useState(0)
-  const [openFaq, setOpenFaq] = useState(-1)
   const { register, cx } = useReveal()
 
   useEffect(() => {
@@ -364,9 +235,6 @@ export default function OneOnOneContent() {
             </div>
           </div>
 
-          {/* Stretches the full hero height so the frame, pinned with
-              margin-top:auto, seats its bottom edge on the hero's own bottom
-              edge — the seam is a layout relationship, not a magic offset. */}
           <div className={styles.heroVisual}>
             <div className={styles.heroImageFrame}>
               <img
@@ -377,10 +245,11 @@ export default function OneOnOneContent() {
 
               <div className={styles.heroFactCard}>
                 <p className={styles.factValue}>10+</p>
-                <p className={styles.factLabel}>Years of experience</p>
+                <p className={styles.factLabel}>Experience</p>
 
-                <p className={styles.factTitle}>Co-Creative Transactional Analysis</p>
-                <p className={styles.factNote}>Practitioner, coach and educator</p>
+                <p className={styles.factTitle}>
+                  Educator, Co-Creative Transactional Analyst and Coach
+                </p>
               </div>
             </div>
           </div>
@@ -389,13 +258,8 @@ export default function OneOnOneContent() {
 
       <section className={styles.quoteSection} aria-label="Quote">
         <div className={styles.contentWidth}>
-          <blockquote
-            ref={register('quote')}
-            className={cx(styles.quoteBlock, 'quote')}
-          >
-            <p className={styles.quote}>
-              &ldquo;A Safe Space To Finally Tell Yourself The Truth&rdquo;
-            </p>
+          <blockquote ref={register('quote')} className={cx(styles.quoteBlock, 'quote')}>
+            <p className={styles.quote}>&ldquo;A safe space to be your true self&rdquo;</p>
           </blockquote>
         </div>
       </section>
@@ -405,21 +269,22 @@ export default function OneOnOneContent() {
         className={styles.fitSection}
         aria-labelledby="who-is-it-for-heading"
       >
-        <div className={`${styles.contentWidth} ${styles.fitLayout}`}>
-          <div
-            ref={register('fit-intro')}
-            className={cx(styles.fitIntro, 'fit-intro')}
-          >
-            <h2 id="who-is-it-for-heading" className={styles.fitTitle}>Who Is It For</h2>
+        <div className={styles.contentWidth}>
+          <div ref={register('fit-header')} className={cx(styles.fitHeader, 'fit-header')}>
+            <p className={styles.eyebrow}>Who this is for</p>
+            <h2 id="who-is-it-for-heading" className={styles.fitTitle}>
+              Who Is It For
+            </h2>
+          </div>
+
+          <div className={styles.fitLayout}>
+            <div ref={register('fit-intro')} className={cx(styles.fitIntro, 'fit-intro')}>
 
             <div className={styles.fitImageWrap}>
               <picture className={styles.fitPicture}>
-                <source
-                  media="(max-width: 900px)"
-                  srcSet="/one-on-one-who-is-it-for-mobile.webp"
-                />
+                <source media="(max-width: 900px)" srcSet="/one-on-one-who-is-it-for-mobile.webp" />
                 <img
-                  src="/one-on-one-who-is-it-for.webp"
+                  src="/one-on-one-who-is-it-for-cropped.webp"
                   alt="Abstract forms moving from complexity toward clarity through a shared thread"
                   className={styles.fitImage}
                 />
@@ -428,43 +293,48 @@ export default function OneOnOneContent() {
 
             <div className={styles.fitCopy}>
               <p>
-                For people who feel &ldquo;I need to change&rdquo; but don&rsquo;t know where
-                to start, this is a private, honest space where you can be fully yourself,
-                understand what&rsquo;s really happening inside, and start moving toward the
-                life you know you&rsquo;re meant to live.
+                For people who feel the <strong>Need</strong> to change but don&rsquo;t know
+                where to start, this is a confidential, <strong>safe space</strong> where you
+                can be fully yourself, <strong>understand what&rsquo;s really happening inside</strong>,
+                and start moving toward the life you know you&rsquo;re meant to live.
               </p>
               <p>
-                This is not motivational hype or quick tips; It&rsquo;s real work, done
-                together.
+                When you&rsquo;re no longer willing to be led by the same patterns, One-to-One
+                Coaching offers a contracted, co-creative partnership to examine what is
+                shaping your life and relationships.
               </p>
               <p>
-                If you feel something in your life cannot stay the same anymore, whether your
-                relationships, your patterns, or your inner world, One-on-One Coaching gives
-                you a safe, grounded place to explore it, name it, and slowly change it.
+                Together, we explore the assumptions, adaptations, and decisions beneath
+                recurring challenges, not to fix who you are, but to expand your awareness,
+                strengthen your capacity for choice, and develop greater autonomy in how you
+                think, relate, lead, and live.
+              </p>
+              <p>
+                This is not advice, accountability, or performance coaching. It is a
+                disciplined process of inquiry, grounded in a Co-Creative way, where lasting
+                change emerges through authentic contact, honest reflection, and new decisions.
               </p>
             </div>
-          </div>
-
-          <div
-            ref={register('fit-lists')}
-            className={cx(styles.fitLists, 'fit-lists')}
-          >
-            <div className={styles.fitList}>
-              <h3 className={styles.fitListTitle}>This is for you if:</h3>
-              <ul>
-                {fitPoints.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
             </div>
 
-            <div className={styles.fitList}>
-              <h3 className={styles.fitListTitle}>This is not for you if:</h3>
-              <ul>
-                {notFitPoints.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
+            <div ref={register('fit-lists')} className={cx(styles.fitLists, 'fit-lists')}>
+              <div className={styles.fitList}>
+                <h3 className={styles.fitListTitle}>This practice is for you if:</h3>
+                <ul>
+                  {fitPoints.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className={styles.fitList}>
+                <h3 className={styles.fitListTitle}>This practice may not be the right fit if:</h3>
+                <ul>
+                  {notFitPoints.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -472,26 +342,30 @@ export default function OneOnOneContent() {
 
       <section className={styles.weightSection} aria-labelledby="weight-heading">
         <div className={`${styles.contentWidth} ${styles.weightInner}`}>
-          <div
-            ref={register('weight-heading')}
-            className={cx(styles.weightHeader, 'weight-heading')}
-          >
+          <div ref={register('weight-heading')} className={cx(styles.weightHeader, 'weight-heading')}>
             <p className={styles.eyebrow}>Before We Begin</p>
 
             <h2 id="weight-heading" className={styles.weightTitle}>
-              The silent weight you&rsquo;ve been carrying
+              The adaptations that no longer serve you
             </h2>
-
-            <p className={styles.weightSubheading}>
-              Before people come to One-on-One Coaching, they&rsquo;re usually living with a
-              mix of:
-            </p>
           </div>
 
           <div
             ref={register('weight-timeline')}
             className={cx(styles.weightTimeline, 'weight-timeline')}
           >
+            <svg
+              className={styles.weightRoad}
+              viewBox="0 0 1000 120"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M0 10 C45 90 150 90 250 90 C340 90 415 24 500 38 C585 24 660 90 750 90 C850 90 955 90 1000 10"
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
+
             <ol className={styles.weightList}>
               {weightPoints.map((point, index) => (
                 <li
@@ -499,32 +373,59 @@ export default function OneOnOneContent() {
                   className={[
                     styles.weightPoint,
                     point.kind === 'endpoint' ? styles.weightPointEndpoint : '',
-                  ].filter(Boolean).join(' ')}
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
                   style={{ '--point-delay': `${index * 90}ms` }}
                 >
-                  <span className={styles.weightDot} aria-hidden="true" />
                   {point.label && <span className={styles.weightPointLabel}>{point.label}</span>}
+                  <span className={styles.weightDot} aria-hidden="true" />
                   <span className={styles.weightPointText}>{point.text}</span>
                 </li>
               ))}
             </ol>
           </div>
 
-          <div
-            ref={register('weight-copy')}
-            className={cx(styles.weightCopy, 'weight-copy')}
-          >
-            <p>
-              Without clearly seeing point A, it becomes almost impossible to measure the
-              distance between A and B, and even harder to know how to reach it. Anything that
-              cannot be measured is difficult to reach.
-            </p>
-            <p>
-              In our work together, we start by understanding A: your current reality, your
-              patterns, your emotions, your story. Once A becomes clearer, B is no longer a
-              vague dream. It becomes a destination you can actually move toward, step by
-              step.
-            </p>
+          <div ref={register('weight-copy')} className={cx(styles.weightInsight, 'weight-copy')}>
+            <div className={styles.weightIntro}>
+              <p className={styles.weightLead}>
+                You know where you want to go. The question is: where are you now?
+              </p>
+              <p>
+                Many people have a clear vision of the life, relationships, or leadership
+                they want. What they often lack is an accurate understanding of the patterns
+                shaping their current reality.
+              </p>
+              <p>This work helps you identify where you are today:</p>
+            </div>
+
+            <div className={styles.weightCards}>
+              <article className={styles.weightCard}>
+                <h3>Point A They don&rsquo;t truly know where they are right now</h3>
+                <ul>
+                  {currentRealityPoints.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </article>
+
+              <article className={styles.weightCard}>
+                <h3>Point B They know where they want to go</h3>
+                <p>
+                  Without a clear understanding of <strong>Point A,</strong> where you are
+                  today, it is difficult to understand the distance between where you are and
+                  where you want to be. When your current reality remains unclear, meaningful
+                  progress often feels uncertain or inconsistent.
+                </p>
+                <p>
+                  Our work begins by bringing <strong>Point A</strong> into focus: your
+                  patterns, your emotions, your relationships, your assumptions, and the story
+                  you&rsquo;ve been living. As your awareness expands, <strong>Point B</strong>{' '}
+                  becomes more than a vision. It becomes a direction you can move toward
+                  intentionally, with greater clarity, choice, and autonomy.
+                </p>
+              </article>
+            </div>
           </div>
         </div>
       </section>
@@ -535,14 +436,15 @@ export default function OneOnOneContent() {
             ref={register('journey-header')}
             className={cx(styles.journeyHeader, 'journey-header')}
           >
+            <p className={styles.eyebrow}>The coaching process</p>
             <h2 id="journey-heading" className={styles.journeyTitle}>
-              The journey we walk together
+              How We Work Together
             </h2>
 
             <p className={styles.journeySubheading}>
-              Real change doesn&rsquo;t happen by accident. In one-on-one coaching, we follow a
-              clear, human process that helps you move from surviving on old patterns to
-              living with real choice.
+              Our work is guided by a clear contract and unfolds through a co-creative
+              process. Rather than following a rigid method, we work with what emerges in the
+              relationship, always in service of greater awareness, choice, and autonomy.
             </p>
           </div>
 
@@ -555,11 +457,9 @@ export default function OneOnOneContent() {
                   key={step.id}
                   ref={register(`journey-${step.id}`)}
                   className={cx(
-                    [
-                      styles.journeyStep,
-                      step.isFinal ? styles.journeyStepFinal : '',
-                      isOpen ? styles.journeyStepOpen : '',
-                    ].filter(Boolean).join(' '),
+                    [styles.journeyStep, isOpen ? styles.journeyStepOpen : '']
+                      .filter(Boolean)
+                      .join(' '),
                     `journey-${step.id}`
                   )}
                 >
@@ -581,7 +481,6 @@ export default function OneOnOneContent() {
                             <step.Icon />
                           </span>
                           <span className={styles.journeyStepName}>{step.name}</span>
-                          <span className={styles.journeyStepLead}>&ndash; {step.lead}</span>
                         </span>
                         <span className={styles.journeyToggle} aria-hidden="true" />
                       </button>
@@ -602,13 +501,11 @@ export default function OneOnOneContent() {
             })}
           </ol>
 
-          <div
-            ref={register('journey-outro')}
-            className={cx(styles.journeyOutro, 'journey-outro')}
-          >
+          <div ref={register('journey-outro')} className={cx(styles.journeyOutro, 'journey-outro')}>
             <p className={styles.journeyOutroText}>
-              Ready to move from &lsquo;I need to change&rsquo; to actually changing? Start by
-              booking your first session.
+              This is a practice of inquiry, not advice. A place where authentic contact,
+              honest reflection, and disciplined thinking create the conditions for lasting
+              change.
             </p>
 
             <Link
@@ -624,236 +521,7 @@ export default function OneOnOneContent() {
         </div>
       </section>
 
-      <section className={styles.structureSection} aria-labelledby="structure-heading">
-        <div className={styles.contentWidth}>
-          <div
-            ref={register('structure-header')}
-            className={cx(styles.structureHeader, 'structure-header')}
-          >
-            <p className={styles.eyebrow}>The Structure</p>
-
-            <h2 id="structure-heading" className={styles.structureTitle}>
-              What One-on-One Coaching practically looks like
-            </h2>
-          </div>
-
-          <div className={styles.structureCards}>
-            {structureCards.map((card, index) => (
-              <article
-                key={card.id}
-                ref={register(`structure-${card.id}`)}
-                className={cx(styles.structureCard, `structure-${card.id}`)}
-                style={{ '--card-delay': `${index * 90}ms` }}
-              >
-                <span className={styles.structureIcon} aria-hidden="true">
-                  <card.Icon />
-                </span>
-
-                <h3 className={styles.structureCardTitle}>{card.title}</h3>
-                <p className={styles.structureCardText}>{card.text}</p>
-              </article>
-            ))}
-          </div>
-
-          <div
-            ref={register('structure-expect')}
-            className={cx(styles.structureExpect, 'structure-expect')}
-          >
-            <p className={styles.structureExpectTitle}>
-              Inside the sessions, you can expect:
-            </p>
-
-            <ul className={styles.structureList}>
-              {expectPoints.map((point) => (
-                <li key={point}>
-                  <span className={styles.structureCheck} aria-hidden="true">
-                    <FiCheck />
-                  </span>
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
-
-            <p className={styles.structureNote}>
-              This experience is not just &ldquo;uplifting.&rdquo; It is designed to be
-              genuinely transformative, not motivational noise that fades after a few
-              days.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.processSection} aria-labelledby="process-heading">
-        <div className={styles.contentWidth}>
-          <div
-            ref={register('process-header')}
-            className={cx(styles.processHeader, 'process-header')}
-          >
-            <div className={styles.processHeaderText}>
-              <p className={styles.eyebrow}>The Process</p>
-
-              <h2 id="process-heading" className={styles.processTitle}>
-                How it works
-              </h2>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.processSplit}>
-          <div className={styles.processAccordionColumn}>
-            <div className={styles.processAccordion}>
-              {processSteps.map((step, index) => {
-                const isOpen = openProcess === index
-
-                return (
-                  <div
-                    key={step.id}
-                    ref={register(`process-${step.id}`)}
-                    className={cx(
-                      [styles.processItem, isOpen ? styles.processItemOpen : '']
-                        .filter(Boolean)
-                        .join(' '),
-                      `process-${step.id}`
-                    )}
-                    style={{ '--card-delay': `${index * 90}ms` }}
-                  >
-                    <h3 className={styles.processStepTitle}>
-                      <button
-                        type="button"
-                        className={styles.processTrigger}
-                        aria-expanded={isOpen}
-                        aria-controls={`process-panel-${step.id}`}
-                        onClick={() => setOpenProcess(isOpen ? -1 : index)}
-                      >
-                        <span className={styles.processNumber} aria-hidden="true">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-                        <span className={styles.processStepName}>{step.title}</span>
-                        <span className={styles.processToggle} aria-hidden="true" />
-                      </button>
-                    </h3>
-
-                    <div
-                      id={`process-panel-${step.id}`}
-                      className={styles.processPanel}
-                      aria-hidden={!isOpen}
-                    >
-                      <div className={styles.processPanelInner}>
-                        <div className={styles.processCardText}>
-                          {step.paragraphs.map((paragraph) => (
-                            <p key={paragraph}>{paragraph}</p>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-
-          <div
-            ref={register('process-visual')}
-            className={cx(styles.processVisual, 'process-visual')}
-          >
-            <Image
-              src="/one-on-one-process-journey.webp"
-              alt="An abstract coaching journey moving from complexity toward clarity"
-              fill
-              sizes="(max-width: 900px) 100vw, 42vw"
-              className={styles.processImage}
-            />
-          </div>
-        </div>
-
-        <div className={styles.contentWidth}>
-          <div
-            ref={register('process-outro')}
-            className={cx(styles.processOutro, 'process-outro')}
-          >
-            <div className={styles.processOutroCopy}>
-              <p className={styles.processOutroText}>
-                One-on-One Coaching is an investment in the part of your life you
-                can&rsquo;t outsource: your inner world, your relationships, your
-                emotional health.
-              </p>
-
-              <p className={styles.processOutroLead}>
-                Ready to explore if this is for you?
-              </p>
-            </div>
-
-            <Link
-              href={BOOKING_URL}
-              target="_blank"
-              rel="noreferrer"
-              className={styles.processCta}
-            >
-              <span>Book Your Session</span>
-              <FiArrowUpRight aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
-
-      </section>
-
       <OneOnOneTestimonials />
-
-      <section className={styles.faqSection} aria-labelledby="faq-heading">
-        <div className={styles.contentWidth}>
-          <div ref={register('faq-header')} className={cx(styles.faqHeader, 'faq-header')}>
-            <h2 id="faq-heading" className={styles.faqTitle}>
-              Frequently Asked Questions
-            </h2>
-          </div>
-
-          <div className={styles.faqList}>
-            {faqs.map((faq, index) => {
-              const isOpen = openFaq === index
-
-              return (
-                <div
-                  key={faq.id}
-                  ref={register(`faq-${faq.id}`)}
-                  className={cx(
-                    [styles.faqItem, isOpen ? styles.faqItemOpen : ''].filter(Boolean).join(' '),
-                    `faq-${faq.id}`
-                  )}
-                >
-                  <h3 className={styles.faqHeading}>
-                    <button
-                      type="button"
-                      className={styles.faqTrigger}
-                      aria-expanded={isOpen}
-                      aria-controls={`faq-panel-${faq.id}`}
-                      id={`faq-trigger-${faq.id}`}
-                      onClick={() => setOpenFaq(isOpen ? -1 : index)}
-                    >
-                      <span className={styles.faqQuestion}>{faq.question}</span>
-
-                      <span className={styles.faqToggle} aria-hidden="true">
-                        <span className={styles.faqToggleLineV} />
-                        <span className={styles.faqToggleLineH} />
-                      </span>
-                    </button>
-                  </h3>
-
-                  <div
-                    id={`faq-panel-${faq.id}`}
-                    role="region"
-                    aria-labelledby={`faq-trigger-${faq.id}`}
-                    className={styles.faqPanel}
-                  >
-                    <div className={styles.faqPanelInner}>
-                      <p>{faq.answer}</p>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </section>
 
       <section className={styles.closingSection} aria-labelledby="closing-heading">
         <div className={styles.contentWidth}>
@@ -887,10 +555,7 @@ export default function OneOnOneContent() {
             ))}
           </div>
 
-          <div
-            ref={register('closing-cta')}
-            className={cx(styles.closingCtaBlock, 'closing-cta')}
-          >
+          <div ref={register('closing-cta')} className={cx(styles.closingCtaBlock, 'closing-cta')}>
             <p className={styles.closingLead}>You don&rsquo;t have to do this alone.</p>
 
             <Link

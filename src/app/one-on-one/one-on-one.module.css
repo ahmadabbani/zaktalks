@@ -271,7 +271,7 @@
   padding-top: clamp(0.8rem, 1.4vw, 1.15rem);
   border-top: 1px solid rgba(255, 255, 255, 0.16);
   color: var(--color-white);
-  font-size: var(--home-subheading-size);
+  font-size: calc(var(--home-text-size) * 1.05);
   font-weight: 800;
   line-height: var(--home-subheading-line-height);
 }
@@ -457,7 +457,7 @@
 /* ================================================================ QUOTE == */
 
 .quoteSection {
-  padding-block: clamp(4rem, 7vw, 7.5rem);
+  padding-block: clamp(2.6rem, 4.6vw, 4.75rem);
   background: var(--color-white);
 }
 
@@ -472,22 +472,28 @@
 }
 
 .quote {
-  max-width: 31ch;
+  max-width: none;
   margin-inline: auto;
   color: var(--home-headline-color);
   font-family: 'ShakiesLocal', 'Knewave', 'Arial Black', sans-serif;
-  font-size: calc(var(--home-headline-size) * 1.18);
+  font-size: clamp(2.5rem, 4.6vw, 6.1rem);
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1.06;
   text-wrap: balance;
+  white-space: nowrap;
 }
 
 @media (max-width: 620px) {
+  .quoteSection {
+    padding-block: clamp(2.1rem, 9vw, 3rem);
+  }
+
   .quote {
     max-width: 18ch;
     font-size: calc(var(--home-headline-size) * 1.16);
     line-height: 1.05;
+    white-space: normal;
   }
 }
 
@@ -507,10 +513,27 @@
   background: var(--color-gray-light);
 }
 
+.fitHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: clamp(2.4rem, 4.2vw, 4.25rem);
+  text-align: center;
+  opacity: 0;
+}
+
+.fitHeader.isVisible {
+  animation: ooRise 0.85s var(--oo-ease) both;
+}
+
+.fitHeader .eyebrow {
+  justify-content: center;
+}
+
 .fitLayout {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: clamp(2.5rem, 5vw, 5.5rem);
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: clamp(2.5rem, 4.6vw, 5rem);
   align-items: start;
 }
 
@@ -526,7 +549,7 @@
 }
 
 .fitTitle {
-  margin-top: -0.14em; /* optical: cancels the cap-height gap its larger line-height adds above the glyphs, so it lines up with the smaller list headings on the right */
+  margin-top: 0.5rem;
   color: var(--home-headline-color);
   font-size: var(--home-headline-size);
   font-weight: var(--home-headline-weight);
@@ -539,7 +562,7 @@
 .fitImageWrap {
   position: relative;
   width: 100%;
-  margin-top: clamp(1.35rem, 2vw, 1.8rem);
+  margin-top: 0;
   aspect-ratio: 2.6 / 1;
   overflow: hidden;
   border-radius: var(--oo-radius);
@@ -565,15 +588,21 @@
   flex-direction: column;
   gap: 1rem;
   margin-top: clamp(1.4rem, 2.2vw, 2rem);
-  max-width: 56ch;
+  max-width: 58ch;
   color: var(--home-text-color);
   font-size: var(--home-text-size);
   font-weight: var(--home-text-weight);
   line-height: var(--home-text-line-height);
 }
 
+.fitCopy strong {
+  color: var(--color-deep-slate);
+  font-weight: 850;
+}
+
 .fitLists {
   display: flex;
+  width: 100%;
   flex-direction: column;
   opacity: 0;
 }
@@ -632,9 +661,18 @@
     height: clamp(8.5rem, 11vw, 11rem);
     aspect-ratio: auto;
   }
+
+  .fitImage {
+    object-fit: contain;
+    object-position: left top;
+  }
 }
 
 @media (max-width: 900px) {
+  .fitHeader {
+    margin-bottom: 2.1rem;
+  }
+
   .fitLayout {
     grid-template-columns: minmax(0, 1fr);
     gap: 2.5rem;
@@ -661,7 +699,7 @@
 
 .weightHeader {
   display: flex;
-  max-width: 46rem;
+  max-width: 60rem;
   flex-direction: column;
   align-items: center;
   text-align: center;
@@ -683,6 +721,7 @@
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
@@ -696,10 +735,13 @@
 }
 
 .weightTimeline {
+  --weight-road-top: 2.35rem;
+  --weight-road-height: 6.5rem;
+
   position: relative;
   width: 100%;
-  max-width: 68rem;
-  margin-top: clamp(3rem, 5.5vw, 4.5rem);
+  max-width: none;
+  margin-top: clamp(2.6rem, 4.4vw, 3.9rem);
   opacity: 0;
 }
 
@@ -708,24 +750,54 @@
 }
 
 .weightList {
-  --weight-gap: clamp(1rem, 2vw, 1.75rem);
-  --weight-track-y: 1.1rem; /* vertical center shared by every dot and connector segment */
-
   position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: var(--weight-gap);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
   list-style: none;
 }
 
+.weightRoad {
+  position: absolute;
+  top: var(--weight-road-top);
+  z-index: 0;
+  right: 10%;
+  left: 10%;
+  width: 80%;
+  height: var(--weight-road-height);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.weightRoad path {
+  fill: none;
+  stroke: var(--color-dark-blue);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.34;
+}
+
 .weightPoint {
+  --point-y: 4.41rem;
+
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 2.4rem;
+  display: block;
+  min-height: 12.25rem;
+  padding-inline: clamp(0.45rem, 1vw, 0.85rem);
   text-align: center;
   opacity: 0;
+}
+
+.weightPoint:nth-child(1),
+.weightPoint:nth-child(5) {
+  --point-y: 2.89rem;
+}
+
+.weightPoint:nth-child(2),
+.weightPoint:nth-child(4) {
+  --point-y: 7.23rem;
 }
 
 .weightTimeline.isVisible .weightPoint {
@@ -736,26 +808,13 @@
    point's center — never past the first or last dot — so the line can
    never appear to run "behind" point A or beyond point B. */
 .weightPoint:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  top: var(--weight-track-y);
-  left: 50%;
-  width: calc(100% + var(--weight-gap));
-  height: 2px;
-  background: repeating-linear-gradient(
-    to right,
-    var(--color-dark-blue) 0,
-    var(--color-dark-blue) 8px,
-    transparent 8px,
-    transparent 16px
-  );
-  transform: translateY(-1px);
+  content: none;
 }
 
 .weightDot {
   position: absolute;
-  z-index: 2; /* sits above the connector's ::after so the dashes never show through the hollow ring */
-  top: var(--weight-track-y);
+  z-index: 2;
+  top: var(--point-y);
   left: 50%;
   width: 0.9rem;
   height: 0.9rem;
@@ -766,23 +825,34 @@
 }
 
 .weightPointEndpoint .weightDot {
-  width: 1.55rem;
-  height: 1.55rem;
-  border: 3px solid var(--color-white);
+  width: 1.9rem;
+  height: 1.9rem;
+  border: 3px solid var(--color-yellow);
   background: var(--color-yellow);
   box-shadow: 0 0.4rem 1rem rgba(196, 159, 12, 0.35);
 }
 
 .weightPointLabel {
-  margin-bottom: 0.3rem;
-  color: var(--color-dark-blue);
-  font-size: var(--home-small-text-size, 0.8rem);
+  position: absolute;
+  top: calc(var(--point-y) - 2.75rem);
+  right: 0;
+  left: 0;
+  margin: 0;
+  color: var(--color-yellow-dark);
+  font-size: calc(var(--home-subheading-size) * 0.94);
   font-weight: 850;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
+.weightPoint:not(.weightPointEndpoint) .weightPointLabel {
+  visibility: hidden;
+}
+
 .weightPointText {
+  display: block;
+  margin-top: 0;
+  padding-top: calc(var(--weight-road-top) + var(--weight-road-height) + 0.85rem);
   color: var(--home-text-color);
   font-size: var(--home-text-size);
   font-weight: var(--home-text-weight);
@@ -794,24 +864,33 @@
   font-weight: 700;
 }
 
-.weightCopy {
+.weightInsight {
   display: flex;
-  max-width: 46rem;
+  width: 100%;
   flex-direction: column;
-  gap: 1rem;
-  margin-top: clamp(2.75rem, 5vw, 4rem);
-  padding-top: clamp(2.5rem, 4.5vw, 3.5rem);
+  gap: clamp(1.7rem, 2.8vw, 2.4rem);
+  margin-top: clamp(2.35rem, 4vw, 3.25rem);
+  padding-top: clamp(2rem, 3.2vw, 2.75rem);
   border-top: 1px solid rgba(33, 44, 45, 0.14);
   color: var(--home-text-color);
   font-size: var(--home-text-size);
   font-weight: var(--home-text-weight);
   line-height: var(--home-text-line-height);
-  text-align: center;
   opacity: 0;
 }
 
-.weightCopy.isVisible {
+.weightInsight.isVisible {
   animation: ooRise 0.85s 0.15s var(--oo-ease) both;
+}
+
+.weightIntro {
+  max-width: 76rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.weightIntro p + p {
+  margin-top: 0.8rem;
 }
 
 .weightLead {
@@ -821,10 +900,75 @@
   line-height: 1.5;
 }
 
+.weightCards {
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
+  gap: clamp(1rem, 1.8vw, 1.5rem);
+}
+
+.weightCard {
+  min-width: 0;
+  padding: clamp(1.45rem, 2.2vw, 2rem);
+  border-radius: var(--oo-radius);
+  background: var(--color-gray-light);
+}
+
+.weightCard h3 {
+  color: var(--home-headline-color);
+  font-size: var(--home-subheading-size);
+  font-weight: 850;
+  line-height: var(--home-subheading-line-height);
+}
+
+.weightCard ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem clamp(0.9rem, 1.4vw, 1.2rem);
+  margin-top: clamp(1rem, 1.6vw, 1.25rem);
+  list-style: none;
+}
+
+.weightCard li,
+.weightCard p {
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.weightCard li {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.weightCard li::before {
+  content: '';
+  position: absolute;
+  top: 0.65em;
+  left: 0;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--color-yellow);
+}
+
+.weightCard p {
+  margin-top: clamp(1rem, 1.6vw, 1.25rem);
+}
+
 @media (max-width: 900px) {
   .weightList {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    row-gap: 2.5rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .weightRoad {
+    display: none;
+  }
+
+  .weightCards,
+  .weightCard ul {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   /* Segments connect neighbors within a row only — across a row wrap they'd
@@ -836,37 +980,63 @@
 }
 
 @media (max-width: 1024px) {
+  .weightRoad {
+    display: none;
+  }
+
   .weightList {
     /* Every dot centres on one shared rail so the vertical connector lines
        up through all of them — the endpoint dots are wider, so the rail sits
        at half the widest dot rather than at the point's left edge. */
-    --weight-rail-x: 0.775rem;
-    --weight-row-gap: 1.75rem;
-    --weight-track-y: 0.6rem;
+    --weight-rail-x: 0.95rem;
+    --weight-row-gap: clamp(0.7rem, 1.5vw, 1rem);
 
     grid-template-columns: minmax(0, 1fr);
-    max-width: 22rem;
+    max-width: 38rem;
     margin-inline: auto;
     row-gap: var(--weight-row-gap);
   }
 
   .weightPoint {
-    padding-top: 0;
-    padding-left: 2.3rem;
-    align-items: flex-start;
+    display: block;
+    height: clamp(4.25rem, 8vw, 4.75rem);
+    min-height: 0;
+    padding: 0 0 0 3.15rem;
     text-align: left;
   }
 
   .weightDot,
   .weightPointEndpoint .weightDot {
-    top: var(--weight-track-y);
+    position: absolute;
+    top: var(--weight-rail-x);
     left: var(--weight-rail-x);
     transform: translate(-50%, -50%);
   }
 
+  .weightPointLabel {
+    position: static;
+    display: block;
+    min-height: 0;
+    margin: 0;
+    font-size: calc(var(--home-subheading-size) * 0.74);
+  }
+
+  .weightPointText {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .weightPoint:not(.weightPointEndpoint) .weightPointLabel {
+    display: none;
+  }
+
+  .weightPointEndpoint .weightPointText {
+    margin-top: 0.35rem;
+  }
+
   /* Stacked, the timeline already reads as its own block, so the rule above
      the closing copy is just noise. */
-  .weightCopy {
+  .weightInsight {
     padding-top: 0;
     border-top: 0;
   }
@@ -876,18 +1046,16 @@
      the next dot's offset, which reduces to 100% + the gap. */
   .weightPoint:not(:last-child)::after {
     content: '';
-    top: var(--weight-track-y);
+    position: absolute;
+    z-index: 0;
+    top: var(--weight-rail-x);
     left: var(--weight-rail-x);
-    width: 2px;
+    width: 3px;
     height: calc(100% + var(--weight-row-gap));
-    background: repeating-linear-gradient(
-      to bottom,
-      var(--color-dark-blue) 0,
-      var(--color-dark-blue) 8px,
-      transparent 8px,
-      transparent 16px
-    );
-    transform: translateX(-1px);
+    border-radius: 999px;
+    background: var(--color-dark-blue);
+    opacity: 0.48;
+    transform: translateX(-50%);
   }
 }
 
@@ -925,6 +1093,7 @@
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
@@ -973,11 +1142,7 @@
 
 /* Last leg fades into the yellow it arrives at. */
 .journeyStep:nth-last-child(2)::before {
-  background: linear-gradient(
-    to bottom,
-    rgba(85, 135, 166, 0.28),
-    var(--color-yellow)
-  );
+  background: rgba(85, 135, 166, 0.28);
 }
 
 .journeyStep.isVisible {
@@ -999,24 +1164,10 @@
   font-variant-numeric: tabular-nums;
 }
 
-.journeyStepFinal .journeyNumber {
-  border-color: var(--color-yellow);
-  background: var(--color-yellow);
-  color: var(--color-black);
-  box-shadow: 0 0.5rem 1.4rem rgba(196, 159, 12, 0.32);
-}
-
 .journeyStepOpen .journeyNumber {
-  border-color: var(--color-dark-blue);
-  background: var(--color-dark-blue);
-  color: var(--color-white);
-  box-shadow: 0 0.55rem 1.35rem rgba(60, 90, 103, 0.2);
-}
-
-.journeyStepFinal.journeyStepOpen .journeyNumber {
   border-color: var(--color-yellow);
   background: var(--color-yellow);
-  color: var(--color-black);
+  color: var(--color-white);
   box-shadow: 0 0.5rem 1.4rem rgba(196, 159, 12, 0.32);
 }
 
@@ -1085,8 +1236,8 @@
 }
 
 .journeyStepOpen .journeyToggle {
-  border-color: var(--color-dark-blue);
-  background: var(--color-dark-blue);
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
   transform: rotate(180deg);
 }
 
@@ -1099,25 +1250,11 @@
   transform: translate(-50%, -50%) rotate(0deg);
 }
 
-.journeyStepFinal.journeyStepOpen .journeyToggle {
-  border-color: var(--color-yellow);
-  background: var(--color-yellow);
-}
-
-.journeyStepFinal.journeyStepOpen .journeyToggle::before,
-.journeyStepFinal.journeyStepOpen .journeyToggle::after {
-  background: var(--color-black);
-}
-
 .journeyIcon {
   display: inline-flex;
   align-self: center;
   color: var(--color-dark-blue);
   font-size: 1.2em;
-}
-
-.journeyStepFinal .journeyIcon {
-  color: var(--color-yellow-dark);
 }
 
 .journeyStepLead {
@@ -1905,6 +2042,7 @@
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
+  text-transform: uppercase;
 }
 
 .closingTitle span {
@@ -1935,7 +2073,7 @@
   align-items: center;
   padding: clamp(1.75rem, 2.6vw, 2.25rem) clamp(1.35rem, 2vw, 1.75rem);
   border-radius: var(--oo-radius);
-  background: #fbfbfa;
+  background: var(--color-dark-blue);
   text-align: center;
   opacity: 0;
 }
@@ -1951,13 +2089,13 @@
   margin-bottom: clamp(0.9rem, 1.5vw, 1.2rem);
   place-items: center;
   border-radius: 50%;
-  background: var(--color-yellow);
-  color: var(--color-white);
+  background: var(--color-white);
+  color: var(--color-dark-blue);
   font-size: 1.1rem;
 }
 
 .closingCardText {
-  color: var(--home-text-color);
+  color: var(--color-white);
   font-size: var(--home-text-size);
   font-weight: var(--home-text-weight);
   line-height: var(--home-text-line-height);
@@ -2059,7 +2197,7 @@
   .weightHeader,
   .weightTimeline,
   .weightPoint,
-  .weightCopy,
+  .weightInsight,
   .journeyHeader,
   .journeyStep,
   .journeyOutro,

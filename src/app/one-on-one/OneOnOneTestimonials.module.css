@@ -32,6 +32,7 @@
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
+  text-transform: uppercase;
   text-wrap: balance;
 }
 

@@ -17,7 +17,7 @@ const quickLinks = [
   { href: '/one-on-one', label: 'Coaching 1 on 1' },
   { href: '/becoming-again', label: 'Becoming Again' },
   { href: '/courses', label: 'Online Courses' },
-  { href: '/speaking', label: 'Events' },
+  { href: '/events', label: 'Events' },
 ]
 
 const socialLinks = [

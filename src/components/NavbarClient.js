@@ -18,11 +18,11 @@ const serviceLinks = [
     ],
   },
   {
-    href: '/speaking',
+    href: '/events',
     label: 'Events',
     children: [
-      { href: '/speaking', label: 'Speaker' },
-      { href: '/speaking', label: 'Workshops' },
+      { href: '/events', label: 'Speaker' },
+      { href: '/events', label: 'Workshops' },
     ],
   },
 ]
@@ -30,6 +30,9 @@ const serviceLinks = [
 export default function NavbarClient({ user, role, signout }) {
   const pathname = usePathname()
   const isPodcastPage = pathname === '/speaking'
+  const isServicesActive = ['/one-on-one', '/becoming-again', '/courses', '/events'].some((path) => (
+    pathname === path || pathname.startsWith(`${path}/`)
+  ))
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isServicesOpen, setIsServicesOpen] = useState(false)
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false)
@@ -145,7 +148,7 @@ export default function NavbarClient({ user, role, signout }) {
               >
                 <button
                   type="button"
-                  className={`${styles.navLink} ${styles.servicesTrigger} ${pathname === '/becoming-again' ? styles.active : ''}`}
+                  className={`${styles.navLink} ${styles.servicesTrigger} ${isServicesActive ? styles.active : ''}`}
                   aria-expanded={isServicesOpen}
                   aria-haspopup="menu"
                   onClick={() => setIsServicesOpen((open) => !open)}
@@ -234,7 +237,7 @@ export default function NavbarClient({ user, role, signout }) {
           <div className={styles.mobileServices}>
             <button
               type="button"
-              className={`${styles.mobileNavLink} ${styles.mobileServicesTrigger} ${pathname === '/becoming-again' ? styles.mobileActive : ''}`}
+              className={`${styles.mobileNavLink} ${styles.mobileServicesTrigger} ${isServicesActive ? styles.mobileActive : ''}`}
               aria-expanded={isMobileServicesOpen}
               onClick={() => setIsMobileServicesOpen((open) => !open)}
             >

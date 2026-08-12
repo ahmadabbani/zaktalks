@@ -1,0 +1,12 @@
+2026-08-12 15:44:07.532: [INFO] CurrentProfilePath: C:\Users\User\Desktop\zaktalks\.tmp-edge-profile\Default
+2026-08-12 15:44:07.532: [INFO] Profiles total count: 1
+2026-08-12 15:44:07.532: [INFO] Profile: name=Profile 1 path=C:\Users\User\Desktop\zaktalks\.tmp-edge-profile\Default lastActive=2026-08-12T15:44:07.507Z
+2026-08-12 15:44:07.532: [INFO] LastUsedProfileDir: C:\Users\User\Desktop\zaktalks\.tmp-edge-profile\Default
+2026-08-12 15:44:07.532: [INFO] MostRecentlyActiveProfile: name=Profile 1 path=C:\Users\User\Desktop\zaktalks\.tmp-edge-profile\Default lastActive=2026-08-12T15:44:07.507Z
+2026-08-12 15:44:07.532: [INFO] OnDoneLoading sync enabled: 0
+2026-08-12 15:44:07.532: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-08-12 15:44:07.532: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-08-12 15:44:07.532: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-08-12 15:44:07.611: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-08-12 15:44:07.783: [INFO] VisibilityChanged: 0
+2026-08-12 15:44:14.869: [INFO] BookmarksSnapshot Shutdown total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1

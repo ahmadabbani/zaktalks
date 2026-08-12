@@ -1,0 +1,5 @@
+2026/08/12-18:44:10.146 7eec Creating DB C:\Users\User\Desktop\zaktalks\.tmp-edge-profile\Default\EdgeCoupons/coupons_data.db since it was missing.
+2026/08/12-18:44:10.157 7eec Reusing MANIFEST C:\Users\User\Desktop\zaktalks\.tmp-edge-profile\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
+2026/08/12-18:44:13.758 40f4 Level-0 table #5: started
+2026/08/12-18:44:13.766 40f4 Level-0 table #5: 683273 bytes OK
+2026/08/12-18:44:13.768 40f4 Delete type=0 #3
