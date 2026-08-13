@@ -229,6 +229,26 @@
   border-bottom: 1px solid rgba(33, 44, 45, 0.13);
 }
 
+.dialogHeaderSuccess {
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.srOnly {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .dialogEyebrow {
   margin-bottom: 0.75rem;
   font-size: 0.72rem;

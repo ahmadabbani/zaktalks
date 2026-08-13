@@ -5,7 +5,17 @@ import { FiArrowUpRight, FiMail } from 'react-icons/fi'
 import styles from '@/app/speaking/PodcastNewsletterSection.module.css'
 import eventStyles from './EventsNewsletterSection.module.css'
 
-export default function EventsNewsletterSection() {
+export default function EventsNewsletterSection({
+  headingId = 'events-newsletter-heading',
+  title = 'Experience the work in person',
+  paragraphs = [
+    'Public talks, workshops, and learning experiences will be announced here.',
+    'If you would like to receive updates on upcoming ZakTalks events, join the list.',
+  ],
+  cta = 'Get Event Updates',
+  idleNote = 'No noise. Just upcoming event updates worth opening.',
+  successNote = 'Thank you. You are on the event list.',
+}) {
   const sectionRef = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -36,7 +46,7 @@ export default function EventsNewsletterSection() {
       className={`${styles.section} ${eventStyles.whiteSection} ${
         isVisible ? styles.sectionVisible : ''
       }`}
-      aria-labelledby="events-newsletter-heading"
+      aria-labelledby={headingId}
     >
       <div className={styles.container}>
         <div className={styles.panel}>
@@ -45,14 +55,9 @@ export default function EventsNewsletterSection() {
               <FiMail />
             </div>
             <div>
-              <h2 id="events-newsletter-heading" className={styles.title}>
-                Experience the work in person
-              </h2>
+              <h2 id={headingId} className={styles.title}>{title}</h2>
               <div className={`${styles.copy} ${eventStyles.copyGroup}`}>
-                <p>Public talks, workshops, and learning experiences will be announced here.</p>
-                <p>
-                  If you would like to receive updates on upcoming ZakTalks events, join the list.
-                </p>
+                {paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
               </div>
             </div>
           </div>
@@ -69,14 +74,14 @@ export default function EventsNewsletterSection() {
             </label>
 
             <button type="submit" className={styles.submitButton}>
-              <span>Get Event Updates</span>
+              <span>{cta}</span>
               <FiArrowUpRight aria-hidden="true" />
             </button>
 
             <p className={styles.formNote} aria-live="polite">
               {isSubmitted
-                ? 'Thank you. You are on the event list.'
-                : 'No noise. Just upcoming event updates worth opening.'}
+                ? successNote
+                : idleNote}
             </p>
           </form>
         </div>

@@ -331,14 +331,19 @@ export default function EventsBookingSection() {
         aria-describedby={descriptionId}
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <div className={styles.dialogHeader}>
-          <div>
-            <p className={styles.dialogEyebrow}>Event booking request</p>
-            <h2 id={titleId} className={styles.dialogTitle}>Tell us what you are planning</h2>
-            <p id={descriptionId} className={styles.dialogIntro}>
-              Share the essential details so we can understand the room, the purpose, and the right format.
-            </p>
-          </div>
+        <div className={`${styles.dialogHeader} ${status === 'success' ? styles.dialogHeaderSuccess : ''}`}>
+          {status !== 'success' && (
+            <div>
+              <p className={styles.dialogEyebrow}>Event booking request</p>
+              <h2 id={titleId} className={styles.dialogTitle}>Tell us what you are planning</h2>
+              <p id={descriptionId} className={styles.dialogIntro}>
+                Share the essential details so we can understand the room, the purpose, and the right format.
+              </p>
+            </div>
+          )}
+          {status === 'success' && (
+            <h2 id={titleId} className={styles.srOnly}>Event booking request received</h2>
+          )}
           <button
             type="button"
             className={styles.closeButton}
