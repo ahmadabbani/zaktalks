@@ -1,0 +1,18 @@
+.whiteSection {
+  background: var(--color-white);
+}
+
+.copyGroup {
+  display: grid;
+  gap: clamp(0.55rem, 0.9vw, 0.8rem);
+}
+
+@media (min-width: 681px) {
+  .desktopStackedForm {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .desktopStackedForm > * {
+    grid-column: 1;
+  }
+}

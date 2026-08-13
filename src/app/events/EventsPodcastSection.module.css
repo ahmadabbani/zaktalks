@@ -1,0 +1,480 @@
+.section {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(5rem, 8vw, 8rem) 0 clamp(2.5rem, 4vw, 4rem);
+  background: var(--color-gray-light);
+}
+
+.container {
+  width: auto;
+  margin-inline: var(--featured-section-gutter);
+}
+
+.layout {
+  display: grid;
+  min-height: clamp(33rem, 37vw, 39.5rem);
+  grid-template-columns: minmax(0, 1.42fr) minmax(23rem, 0.58fr);
+  gap: clamp(1.5rem, 3vw, 3.25rem);
+  align-items: stretch;
+}
+
+.content {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.header,
+.copy,
+.clip,
+.visual {
+  opacity: 0;
+}
+
+.header,
+.copy {
+  transform: translateX(-1.8rem);
+}
+
+.header.revealed,
+.copy.revealed {
+  animation: contentIn 0.78s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.copy.revealed {
+  animation-delay: 90ms;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: clamp(0.9rem, 1.5vw, 1.2rem);
+  color: var(--color-yellow-dark);
+  font-size: clamp(0.72rem, 0.2vw + 0.66rem, 0.86rem);
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  width: 2.6rem;
+  height: 2px;
+  content: '';
+  border-radius: 999px;
+  background: var(--color-yellow);
+}
+
+.title {
+  width: 100%;
+  max-width: none;
+  color: var(--home-headline-color);
+  font-size: var(--home-headline-size);
+  font-weight: var(--home-headline-weight);
+  letter-spacing: var(--home-headline-letter-spacing);
+  line-height: var(--home-headline-line-height);
+  text-wrap: balance;
+}
+
+.subheading {
+  margin-top: clamp(1rem, 1.8vw, 1.55rem);
+  color: var(--home-subheading-color);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-subheading-weight);
+  line-height: var(--home-subheading-line-height);
+}
+
+.subheading strong {
+  color: var(--color-deep-slate);
+  font-weight: 850;
+}
+
+.copy {
+  display: grid;
+  max-width: 78ch;
+  gap: clamp(0.85rem, 1.25vw, 1.15rem);
+  margin-top: clamp(1.2rem, 2vw, 1.8rem);
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+}
+
+.clips {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.65rem, 1vw, 1rem);
+  margin-top: auto;
+  padding-top: clamp(1.8rem, 3vw, 3rem);
+}
+
+.clip {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(33, 44, 45, 0.1);
+  border-radius: clamp(1rem, 1.5vw, 1.5rem);
+  background: var(--color-deep-slate);
+  box-shadow: 0 0.8rem 1.8rem rgba(33, 44, 45, 0.08);
+  transform: translateY(1.25rem) scale(0.975);
+}
+
+.clip.revealed {
+  animation: clipIn 0.74s var(--clip-delay) cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.clipImage {
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), filter 0.5s ease;
+}
+
+.clipShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(33, 44, 45, 0.12), transparent 46%, rgba(33, 44, 45, 0.68));
+}
+
+.clip:hover .clipImage {
+  filter: saturate(1.08) contrast(1.03);
+  transform: scale(1.045);
+}
+
+.clipNumber,
+.clipDuration {
+  position: absolute;
+  z-index: 2;
+  bottom: clamp(0.65rem, 1vw, 0.9rem);
+  color: var(--color-white);
+  font-size: clamp(0.58rem, 0.14vw + 0.56rem, 0.68rem);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.clipNumber {
+  left: clamp(0.7rem, 1vw, 1rem);
+}
+
+.clipDuration {
+  right: clamp(0.7rem, 1vw, 1rem);
+  opacity: 0.72;
+}
+
+.playButton {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: clamp(2.4rem, 3.2vw, 3.25rem);
+  height: clamp(2.4rem, 3.2vw, 3.25rem);
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-deep-slate);
+  box-shadow: 0 0.7rem 1.6rem rgba(33, 44, 45, 0.22);
+  transform: translate(-50%, -50%);
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.35s ease;
+}
+
+.playButton svg {
+  width: 42%;
+  height: 42%;
+  margin-left: 0.12rem;
+}
+
+.clip:hover .playButton {
+  background: var(--color-yellow);
+  color: var(--color-white);
+  transform: translate(-50%, -50%) scale(1.07);
+}
+
+.visual {
+  position: relative;
+  min-width: 0;
+  min-height: 100%;
+  transform: translateX(2rem);
+  isolation: isolate;
+}
+
+.visual.revealed {
+  animation: visualIn 0.92s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.phoneWrap {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  width: clamp(12rem, 13.5vw, 15.5rem);
+}
+
+.phoneWrap::after {
+  position: absolute;
+  z-index: -1;
+  right: 7%;
+  bottom: 0.5%;
+  width: 78%;
+  height: 1.5rem;
+  content: '';
+  border-radius: 50%;
+  background: rgba(33, 44, 45, 0.18);
+  filter: blur(0.9rem);
+  transform: scaleY(0.42);
+}
+
+.phone {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 1.5rem 2.2rem rgba(33, 44, 45, 0.15));
+}
+
+.visual.revealed .phoneWrap {
+  animation: phoneIn 1s 0.08s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.platformLinks {
+  position: absolute;
+  z-index: 3;
+  top: clamp(1.5rem, 3vw, 3rem);
+  right: calc(clamp(12rem, 13.5vw, 15.5rem) - clamp(1rem, 1.5vw, 1.5rem));
+  display: grid;
+  width: clamp(14rem, 16vw, 17rem);
+  gap: 0.65rem;
+}
+
+.platformLink {
+  display: grid;
+  min-height: 3.75rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.55rem;
+  align-items: center;
+  padding: 0.48rem 0.58rem 0.48rem 0.5rem;
+  color: var(--color-deep-slate);
+  border: 1px solid rgba(60, 90, 103, 0.1);
+  border-radius: 999px;
+  background: var(--color-white);
+  box-shadow: 0 0.9rem 2rem rgba(33, 44, 45, 0.09);
+  font-size: clamp(0.62rem, 0.48vw, 0.76rem);
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  line-height: 1.15;
+  text-transform: uppercase;
+  transition: var(--home-cta-transition);
+}
+
+.visual.revealed .platformLink {
+  animation: platformIn 0.62s var(--platform-delay) cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.platformIcon {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-yellow);
+  color: var(--color-deep-slate);
+  transition: var(--home-cta-arrow-transition);
+}
+
+.platformIcon svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.platformArrow {
+  width: 0.9rem;
+  height: 0.9rem;
+  color: var(--color-dark-blue);
+  transition: var(--home-cta-arrow-transition);
+}
+
+.platformLink:hover,
+.platformLink:focus-visible {
+  color: var(--color-white);
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  transform: translateY(-0.2rem);
+  outline: none;
+}
+
+.platformLink:hover .platformIcon,
+.platformLink:focus-visible .platformIcon {
+  color: var(--color-yellow);
+  background: var(--color-white);
+  transform: rotate(-5deg) scale(1.04);
+}
+
+.platformLink:hover .platformArrow,
+.platformLink:focus-visible .platformArrow {
+  color: var(--color-white);
+  transform: var(--home-cta-arrow-hover-transform);
+}
+
+@keyframes contentIn {
+  from { opacity: 0; filter: blur(5px); transform: translateX(-1.8rem); }
+  to { opacity: 1; filter: blur(0); transform: translateX(0); }
+}
+
+@keyframes clipIn {
+  from { opacity: 0; filter: blur(5px); transform: translateY(1.25rem) scale(0.975); }
+  to { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
+}
+
+@keyframes visualIn {
+  from { opacity: 0; transform: translateX(2rem); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes phoneIn {
+  from { opacity: 0; filter: blur(5px); transform: translate(1.5rem, 2rem) scale(0.96); }
+  to { opacity: 1; filter: blur(0); transform: translate(0, 0) scale(1); }
+}
+
+@keyframes platformIn {
+  from { opacity: 0; transform: translateX(1.4rem) scale(0.96); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@media (min-width: 2000px) {
+  .layout {
+    min-height: 42rem;
+    grid-template-columns: minmax(0, 1.48fr) minmax(28rem, 0.52fr);
+  }
+
+  .phoneWrap {
+    width: 16rem;
+  }
+
+  .platformLinks {
+    right: 14.5rem;
+    width: 18rem;
+  }
+}
+
+@media (max-width: 1280px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.3fr) minmax(20rem, 0.7fr);
+    gap: 1rem;
+  }
+
+  .platformLinks {
+    right: calc(clamp(12rem, 16vw, 14rem) - 1rem);
+    width: clamp(12.5rem, 15vw, 14rem);
+  }
+
+  .phoneWrap {
+    width: clamp(12rem, 16vw, 14rem);
+  }
+
+  .platformLink {
+    min-height: 3.35rem;
+    font-size: 0.61rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section {
+    padding: clamp(4rem, 7vw, 5.5rem) 0 2.5rem;
+  }
+
+  .layout {
+    min-height: 0;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 5vw, 3rem);
+  }
+
+  .copy {
+    max-width: none;
+  }
+
+  .clips {
+    margin-top: clamp(1.8rem, 4vw, 2.5rem);
+    padding-top: 0;
+  }
+
+  .visual {
+    width: min(100%, 39rem);
+    min-height: clamp(27rem, 52vw, 33rem);
+    justify-self: center;
+  }
+
+  .phoneWrap {
+    width: clamp(10.5rem, 27vw, 13.5rem);
+  }
+
+  .platformLinks {
+    top: 3rem;
+    right: calc(clamp(10.5rem, 27vw, 13.5rem) - 0.85rem);
+    width: clamp(13rem, 33vw, 16rem);
+  }
+}
+
+@media (max-width: 680px) {
+  .section {
+    padding: 3.5rem 0 2rem;
+  }
+
+  .clips {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .clip {
+    width: 100%;
+  }
+
+  .visual {
+    width: min(100%, 24rem);
+    min-height: clamp(21rem, 90vw, 25rem);
+  }
+
+  .phoneWrap {
+    right: 3%;
+    width: clamp(9rem, 39vw, 11rem);
+  }
+
+  .platformLinks {
+    top: 3rem;
+    right: calc(3% + clamp(9rem, 39vw, 11rem) - 0.65rem);
+    width: clamp(11.5rem, 48vw, 13.5rem);
+    gap: 0.42rem;
+  }
+
+  .platformLink {
+    min-height: 2.9rem;
+    gap: 0.35rem;
+    padding: 0.32rem 0.4rem 0.32rem 0.34rem;
+    font-size: clamp(0.5rem, 2vw, 0.58rem);
+    letter-spacing: 0.045em;
+  }
+
+  .platformIcon {
+    width: 1.65rem;
+    height: 1.65rem;
+  }
+
+  .platformIcon svg {
+    width: 0.88rem;
+    height: 0.88rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .copy,
+  .clip,
+  .visual,
+  .visual .phoneWrap,
+  .visual .platformLink {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    animation: none !important;
+    transition: none;
+  }
+}

@@ -5,6 +5,11 @@ import Image from 'next/image'
 import EventsGallerySection from './EventsGallerySection'
 import SignatureSessionsSection from './SignatureSessionsSection'
 import EventsTestimonialsSection from './EventsTestimonialsSection'
+import EventFormatsSection from './EventFormatsSection'
+import EventsPodcastSection from './EventsPodcastSection'
+import EventsNewsletterSection from './EventsNewsletterSection'
+import EventPlannerQASection from './EventPlannerQASection'
+import EventsBookingSection from './EventsBookingSection'
 import styles from './events.module.css'
 
 const clamp01 = (value) => {
@@ -234,6 +239,11 @@ export default function EventsPageContent({ galleryImages = [] }) {
         <EventsGallerySection images={galleryImages} />
         <SignatureSessionsSection />
         <EventsTestimonialsSection />
+        <EventFormatsSection />
+        <EventsPodcastSection />
+        <EventsNewsletterSection />
+        <EventPlannerQASection />
+        <EventsBookingSection />
       </div>
     </main>
   )
