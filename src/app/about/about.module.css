@@ -352,7 +352,7 @@
   fill: none;
   stroke: white;
   stroke-dasharray: 1;
-  stroke-dashoffset: 1;
+  stroke-dashoffset: 1.015;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -1954,7 +1954,7 @@
 .orbitRouteBase {
   stroke: rgba(33, 44, 45, 0.22);
   stroke-width: 3;
-  stroke-dasharray: 1;
+  stroke-dasharray: 1 1;
   stroke-dashoffset: 1;
   transform: rotate(128deg);
   transform-origin: center;
@@ -2286,7 +2286,19 @@
 }
 
 @keyframes orbitRouteDraw {
-  to {
+  0% {
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+  }
+
+  99.9% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    /* Once the reveal completes, remove the dash entirely. This eliminates
+       the SVG path's closing seam between the 2020 and 2021 milestones. */
+    stroke-dasharray: none;
     stroke-dashoffset: 0;
   }
 }
@@ -2618,6 +2630,7 @@
 
   .milestonesSectionVisible .orbitRouteBase {
     animation: none;
+    stroke-dasharray: none;
     stroke-dashoffset: 0;
   }
 

@@ -51,29 +51,54 @@ const weightPoints = [
     kind: 'endpoint',
     label: 'Point A',
     text: "They don't truly know where they are right now",
+    roadY: 10,
   },
-  {
-    id: 'patterns',
+  ...currentRealityPoints.map((text, index) => ({
+    id: `current-reality-${index + 1}`,
     kind: 'mid',
-    text: 'Patterns keep shaping the same outcomes.',
-  },
-  {
-    id: 'reality',
-    kind: 'mid',
-    text: 'Current reality becomes easier to name.',
-  },
-  {
-    id: 'awareness',
-    kind: 'mid',
-    text: 'Awareness creates room for choice.',
-  },
+    text,
+    roadY: [78, 98, 66, 91, 57, 86, 70, 99, 63, 82][index],
+  })),
   {
     id: 'point-b',
     kind: 'endpoint',
     label: 'Point B',
     text: 'They know where they want to go',
+    roadY: 10,
   },
 ]
+
+const weightRoadPoints = weightPoints.map((point, index) => ({
+  x: ((index + 0.5) / weightPoints.length) * 1000,
+  y: point.roadY,
+}))
+
+function buildWeightRoadPath(points) {
+  if (!points.length) return ''
+
+  let path = `M ${points[0].x.toFixed(2)} ${points[0].y}`
+
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const before = points[index - 1] || points[index]
+    const current = points[index]
+    const next = points[index + 1]
+    const after = points[index + 2] || next
+    const controlA = {
+      x: current.x + (next.x - before.x) / 6,
+      y: current.y + (next.y - before.y) / 6,
+    }
+    const controlB = {
+      x: next.x - (after.x - current.x) / 6,
+      y: next.y - (after.y - current.y) / 6,
+    }
+
+    path += ` C ${controlA.x.toFixed(2)} ${controlA.y.toFixed(2)} ${controlB.x.toFixed(2)} ${controlB.y.toFixed(2)} ${next.x.toFixed(2)} ${next.y}`
+  }
+
+  return path
+}
+
+const weightRoadPath = buildWeightRoadPath(weightRoadPoints)
 
 const journeySteps = [
   {
@@ -348,6 +373,14 @@ export default function OneOnOneContent() {
             <h2 id="weight-heading" className={styles.weightTitle}>
               The adaptations that no longer serve you
             </h2>
+            <div className={styles.weightSubheading}>
+              <p><strong>You know where you want to go. The question is: where are you now?</strong></p>
+              <p>
+                Many people have a clear vision of the life, relationships, or leadership
+                they want. What they often lack is an accurate understanding of the patterns
+                shaping their current reality.
+              </p>
+            </div>
           </div>
 
           <div
@@ -360,10 +393,7 @@ export default function OneOnOneContent() {
               preserveAspectRatio="none"
               aria-hidden="true"
             >
-              <path
-                d="M0 10 C45 90 150 90 250 90 C340 90 415 24 500 38 C585 24 660 90 750 90 C850 90 955 90 1000 10"
-                vectorEffect="non-scaling-stroke"
-              />
+              <path d={weightRoadPath} vectorEffect="non-scaling-stroke" />
             </svg>
 
             <ol className={styles.weightList}>
@@ -376,7 +406,10 @@ export default function OneOnOneContent() {
                   ]
                     .filter(Boolean)
                     .join(' ')}
-                  style={{ '--point-delay': `${index * 90}ms` }}
+                  style={{
+                    '--point-delay': `${index * 70}ms`,
+                    '--point-y': `${3 + point.roadY * (8 / 120)}rem`,
+                  }}
                 >
                   {point.label && <span className={styles.weightPointLabel}>{point.label}</span>}
                   <span className={styles.weightDot} aria-hidden="true" />
@@ -387,36 +420,17 @@ export default function OneOnOneContent() {
           </div>
 
           <div ref={register('weight-copy')} className={cx(styles.weightInsight, 'weight-copy')}>
-            <div className={styles.weightIntro}>
-              <p className={styles.weightLead}>
-                You know where you want to go. The question is: where are you now?
-              </p>
-              <p>
-                Many people have a clear vision of the life, relationships, or leadership
-                they want. What they often lack is an accurate understanding of the patterns
-                shaping their current reality.
-              </p>
-              <p>This work helps you identify where you are today:</p>
-            </div>
-
             <div className={styles.weightCards}>
               <article className={styles.weightCard}>
-                <h3>Point A They don&rsquo;t truly know where they are right now</h3>
-                <ul>
-                  {currentRealityPoints.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
-              </article>
-
-              <article className={styles.weightCard}>
-                <h3>Point B They know where they want to go</h3>
                 <p>
                   Without a clear understanding of <strong>Point A,</strong> where you are
                   today, it is difficult to understand the distance between where you are and
                   where you want to be. When your current reality remains unclear, meaningful
                   progress often feels uncertain or inconsistent.
                 </p>
+              </article>
+
+              <article className={styles.weightCard}>
                 <p>
                   Our work begins by bringing <strong>Point A</strong> into focus: your
                   patterns, your emotions, your relationships, your assumptions, and the story

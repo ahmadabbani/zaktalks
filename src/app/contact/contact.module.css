@@ -68,7 +68,7 @@
 
 .formPanel {
   position: relative;
-  width: min(100%, 72rem);
+  width: min(100%, 56rem);
   min-height: 33rem;
   margin: clamp(2.5rem, 4.5vw, 4rem) auto 0;
   padding: clamp(1.4rem, 2.8vw, 2.8rem);
@@ -79,6 +79,34 @@
   opacity: 0;
   transform: translateY(1.6rem);
   backdrop-filter: blur(10px);
+}
+
+/* Keep the contact form comfortably readable instead of letting its fields
+   stretch across the full content width. The measured steps give larger
+   displays a little more room without returning to the previous oversized
+   desktop panel. */
+@media (min-width: 1200px) {
+  .formPanel {
+    width: min(100%, 58rem);
+  }
+}
+
+@media (min-width: 1600px) {
+  .formPanel {
+    width: min(100%, 62rem);
+  }
+}
+
+@media (min-width: 2000px) {
+  .formPanel {
+    width: min(100%, 66rem);
+  }
+}
+
+@media (min-width: 2600px) {
+  .formPanel {
+    width: min(100%, 70rem);
+  }
 }
 
 .revealed .intro {

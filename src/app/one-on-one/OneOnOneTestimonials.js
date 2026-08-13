@@ -125,14 +125,6 @@ export default function OneOnOneTestimonials() {
             </p>
           </div>
 
-          <div className={styles.controls} aria-label="Testimonials carousel controls">
-            <button type="button" className={styles.controlButton} onClick={movePrev} aria-label="Previous testimonials">
-              <FiArrowLeft aria-hidden="true" />
-            </button>
-            <button type="button" className={styles.controlButton} onClick={moveNext} aria-label="Next testimonials">
-              <FiArrowRight aria-hidden="true" />
-            </button>
-          </div>
         </header>
 
         <div className={styles.carouselViewport}>
@@ -168,6 +160,15 @@ export default function OneOnOneTestimonials() {
               )
             })}
           </div>
+        </div>
+
+        <div className={styles.controls} aria-label="Testimonials carousel controls">
+          <button type="button" className={styles.controlButton} onClick={movePrev} aria-label="Previous testimonials">
+            <FiArrowLeft aria-hidden="true" />
+          </button>
+          <button type="button" className={styles.controlButton} onClick={moveNext} aria-label="Next testimonials">
+            <FiArrowRight aria-hidden="true" />
+          </button>
         </div>
 
         <div className={styles.progress} aria-hidden="true">

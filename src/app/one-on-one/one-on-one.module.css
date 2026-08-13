@@ -165,6 +165,25 @@
   align-self: stretch;
 }
 
+@media (min-width: 1025px) {
+  .hero .heroVisual {
+    width: calc(100% + var(--featured-section-gutter));
+    max-width: none;
+    margin-right: calc(var(--featured-section-gutter) * -1);
+  }
+
+  .heroVisual .heroImageFrame {
+    width: 100%;
+    height: min(72svh, 46rem, calc(100svh - clamp(7.25rem, 9vw, 9.5rem)));
+    border-radius: var(--oo-radius) 0 0 0;
+  }
+
+  .heroVisual .heroImage {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+}
+
 .heroImageFrame {
   position: relative;
   width: 30rem;
@@ -658,7 +677,7 @@
   }
 
   .fitImageWrap {
-    height: clamp(8.5rem, 11vw, 11rem);
+    height: clamp(6.5rem, 8vw, 8.5rem);
     aspect-ratio: auto;
   }
 
@@ -727,20 +746,32 @@
 
 .weightSubheading {
   margin-top: clamp(1rem, 1.8vw, 1.4rem);
-  max-width: 40ch;
+  max-width: 72ch;
   color: var(--home-subheading-color);
   font-size: var(--home-subheading-size);
   font-weight: var(--home-subheading-weight);
   line-height: var(--home-subheading-line-height);
 }
 
+.weightSubheading p + p {
+  margin-top: 0.7rem;
+}
+
+.weightSubheading strong {
+  color: var(--home-headline-color);
+  font-weight: 820;
+}
+
 .weightTimeline {
   --weight-road-top: 2.35rem;
   --weight-road-height: 6.5rem;
+  --weight-viewport-gutter: clamp(0.8rem, 1.75vw, 2rem);
 
   position: relative;
-  width: 100%;
+  width: calc(100vw - var(--weight-viewport-gutter) - var(--weight-viewport-gutter));
   max-width: none;
+  align-self: center;
+  flex: 0 0 auto;
   margin-top: clamp(2.6rem, 4.4vw, 3.9rem);
   opacity: 0;
 }
@@ -753,7 +784,7 @@
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 0;
   list-style: none;
 }
@@ -762,9 +793,9 @@
   position: absolute;
   top: var(--weight-road-top);
   z-index: 0;
-  right: 10%;
-  left: 10%;
-  width: 80%;
+  right: 0;
+  left: 0;
+  width: 100%;
   height: var(--weight-road-height);
   overflow: visible;
   pointer-events: none;
@@ -784,20 +815,10 @@
 
   position: relative;
   display: block;
-  min-height: 12.25rem;
-  padding-inline: clamp(0.45rem, 1vw, 0.85rem);
+  min-height: clamp(17rem, 18vw, 20rem);
+  padding-inline: clamp(0.22rem, 0.42vw, 0.48rem);
   text-align: center;
   opacity: 0;
-}
-
-.weightPoint:nth-child(1),
-.weightPoint:nth-child(5) {
-  --point-y: 2.89rem;
-}
-
-.weightPoint:nth-child(2),
-.weightPoint:nth-child(4) {
-  --point-y: 7.23rem;
 }
 
 .weightTimeline.isVisible .weightPoint {
@@ -854,13 +875,14 @@
   margin-top: 0;
   padding-top: calc(var(--weight-road-top) + var(--weight-road-height) + 0.85rem);
   color: var(--home-text-color);
-  font-size: var(--home-text-size);
+  font-size: clamp(0.66rem, 0.68vw, 0.82rem);
   font-weight: var(--home-text-weight);
   line-height: var(--home-text-line-height);
 }
 
 .weightPointEndpoint .weightPointText {
   color: var(--home-headline-color);
+  font-size: clamp(0.72rem, 0.76vw, 0.9rem);
   font-weight: 700;
 }
 
@@ -869,7 +891,7 @@
   width: 100%;
   flex-direction: column;
   gap: clamp(1.7rem, 2.8vw, 2.4rem);
-  margin-top: clamp(2.35rem, 4vw, 3.25rem);
+  margin-top: clamp(1.5rem, 2.6vw, 2.25rem);
   padding-top: clamp(2rem, 3.2vw, 2.75rem);
   border-top: 1px solid rgba(33, 44, 45, 0.14);
   color: var(--home-text-color);
@@ -902,7 +924,7 @@
 
 .weightCards {
   display: grid;
-  grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(1rem, 1.8vw, 1.5rem);
 }
 
@@ -954,6 +976,10 @@
 
 .weightCard p {
   margin-top: clamp(1rem, 1.6vw, 1.25rem);
+}
+
+.weightCard > p:first-child {
+  margin-top: 0;
 }
 
 @media (max-width: 900px) {
@@ -2073,7 +2099,7 @@
   align-items: center;
   padding: clamp(1.75rem, 2.6vw, 2.25rem) clamp(1.35rem, 2vw, 1.75rem);
   border-radius: var(--oo-radius);
-  background: var(--color-dark-blue);
+  background: #dcecf3;
   text-align: center;
   opacity: 0;
 }
@@ -2090,12 +2116,12 @@
   place-items: center;
   border-radius: 50%;
   background: var(--color-white);
-  color: var(--color-dark-blue);
+  color: var(--home-headline-color);
   font-size: 1.1rem;
 }
 
 .closingCardText {
-  color: var(--color-white);
+  color: var(--color-deep-slate);
   font-size: var(--home-text-size);
   font-weight: var(--home-text-weight);
   line-height: var(--home-text-line-height);

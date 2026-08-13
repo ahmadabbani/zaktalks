@@ -126,24 +126,6 @@ export default function EventsTestimonialsSection() {
             </p>
           </div>
 
-          <div className={styles.controls} aria-label="Workshop testimonial carousel controls">
-            <button
-              type="button"
-              className={styles.controlButton}
-              onClick={movePrevious}
-              aria-label="Previous testimonials"
-            >
-              <FiArrowLeft aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className={styles.controlButton}
-              onClick={moveNext}
-              aria-label="Next testimonials"
-            >
-              <FiArrowRight aria-hidden="true" />
-            </button>
-          </div>
         </header>
 
         <div className={styles.carouselViewport}>
@@ -179,6 +161,25 @@ export default function EventsTestimonialsSection() {
               )
             })}
           </div>
+        </div>
+
+        <div className={styles.controls} aria-label="Workshop testimonial carousel controls">
+          <button
+            type="button"
+            className={styles.controlButton}
+            onClick={movePrevious}
+            aria-label="Previous testimonials"
+          >
+            <FiArrowLeft aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            className={styles.controlButton}
+            onClick={moveNext}
+            aria-label="Next testimonials"
+          >
+            <FiArrowRight aria-hidden="true" />
+          </button>
         </div>
 
         <div className={styles.progress} aria-hidden="true">
