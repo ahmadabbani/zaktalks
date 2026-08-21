@@ -4,7 +4,7 @@
     background-color: var(--color-gray-light);
     min-height: 100vh;
     padding: var(--space-2xl) var(--container-padding);
-    margin-top: 80px;
+    margin-top: clamp(104px, 7vw, 120px);
 }
 
 .header {
@@ -267,6 +267,7 @@
 @media (max-width: 768px) {
     .page {
         padding: var(--space-xl) var(--container-padding);
+        margin-top: 84px;
     }
 
     .header {
@@ -297,6 +298,14 @@
 @media (min-width: 2560px) {
     .page {
         max-width: 1600px;
-        margin: 80px auto 0 auto;
+        margin: 120px auto 0 auto;
     }
+}
+
+.externalAssessmentTools {
+    margin-top: clamp(2rem, 5vw, 4rem);
+}
+
+.externalAssessmentTools > section {
+    margin-bottom: 0;
 }

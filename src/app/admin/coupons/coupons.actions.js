@@ -2,13 +2,13 @@
 
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
-import { requireAdmin } from '@/lib/auth-utils'
+import { requirePermission } from '@/lib/auth-utils'
 
 /**
  * Fetch all coupons with their associated courses
  */
 export async function getCoupons() {
-  await requireAdmin()
+  await requirePermission('coupons.manage')
   const supabase = await createAdminClient()
   
   const { data: coupons, error } = await supabase
@@ -43,7 +43,7 @@ export async function getCoupons() {
  * Fetch all courses for the multi-select dropdown
  */
 export async function getAllCourses() {
-  await requireAdmin()
+  await requirePermission('coupons.manage')
   const supabase = await createAdminClient()
   
   const { data, error } = await supabase
@@ -64,7 +64,7 @@ export async function getAllCourses() {
  * Create a new coupon
  */
 export async function createCoupon(formData) {
-  await requireAdmin()
+  await requirePermission('coupons.manage')
   const supabase = await createAdminClient()
   
   const code = formData.get('code')?.toUpperCase().trim()
@@ -159,7 +159,7 @@ export async function createCoupon(formData) {
  * Update an existing coupon
  */
 export async function updateCoupon(couponId, formData) {
-  await requireAdmin()
+  await requirePermission('coupons.manage')
   const supabase = await createAdminClient()
   
   const code = formData.get('code')?.toUpperCase().trim()
@@ -240,7 +240,7 @@ export async function updateCoupon(couponId, formData) {
  * Delete a coupon
  */
 export async function deleteCoupon(couponId) {
-  await requireAdmin()
+  await requirePermission('coupons.manage')
   const supabase = await createAdminClient()
   
   const { error } = await supabase
@@ -261,7 +261,7 @@ export async function deleteCoupon(couponId) {
  * Toggle coupon active status
  */
 export async function toggleCouponActive(couponId, isActive) {
-  await requireAdmin()
+  await requirePermission('coupons.manage')
   const supabase = await createAdminClient()
   
   const { error } = await supabase

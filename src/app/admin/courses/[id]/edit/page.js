@@ -6,8 +6,10 @@ import Link from 'next/link'
 import DeleteCourseBtn from '@/components/admin/DeleteCourseBtn'
 import { FaArrowLeft } from 'react-icons/fa'
 import styles from '@/components/admin/CourseForm.module.css'
+import { requireAdminPagePermission } from '@/lib/auth/admin-page-access'
 
 export default async function EditCoursePage({ params }) {
+  await requireAdminPagePermission('courses.edit')
   const { id } = await params
   const supabase = await createAdminClient()
 

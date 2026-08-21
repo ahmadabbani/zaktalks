@@ -8,18 +8,20 @@ import CathexisEngine from '@/assessments/CathexisEngine';
 import FillableWorksheetEngine from '@/assessments/FillableWorksheetEngine';
 import StrokeProfileEngine from '@/assessments/StrokeProfileEngine';
 import { updateLessonProgress } from '@/app/courses/actions';
+import { useCourseProgress } from '@/app/courses/[slug]/player/CourseProgressContext';
 
 import styles from '@/assessments/assessment.module.css';
 
 export default function AssessmentRenderer({
   assessmentKey,
   lessonId,
-  userId,
   isCompleted,
   showIntro = false,
   lessonDescription = ''
 }) {
   const [hasStarted, setHasStarted] = useState(!showIntro);
+  const [attemptId] = useState(() => crypto.randomUUID());
+  const { markLessonCompleted } = useCourseProgress();
   const definition = getAssessmentById(assessmentKey);
 
   useEffect(() => {
@@ -34,23 +36,33 @@ export default function AssessmentRenderer({
     return (
       <div className={styles.errorContainer}>
         <h3>Error: Assessment not found</h3>
-        <p>The assessment with key "{assessmentKey}" does not exist in the registry.</p>
+        <p>The assessment with key &quot;{assessmentKey}&quot; does not exist in the registry.</p>
       </div>
     );
   }
 
   const handleComplete = async (result) => {
     try {
-      await updateLessonProgress({
+      const saved = await updateLessonProgress({
         lessonId,
-        userId,
-        watchTime: 0,
         isCompleted: true,
-        score: result.score
+        attemptId,
+        answers: result.answers
       });
+      markLessonCompleted(lessonId);
+      return saved;
     } catch (error) {
       console.error('Failed to save assessment progress:', error);
+      throw error;
     }
+  };
+
+  const scoredEngineProps = {
+    definition,
+    onComplete: handleComplete,
+    enableResultScreenshot: true,
+    resultCaptureId: `lesson-assessment-result-${lessonId}`,
+    resultDownloadFormat: 'pdf'
   };
 
   if (!hasStarted) {
@@ -75,18 +87,24 @@ export default function AssessmentRenderer({
 
   // Branch based on assessment type
   if (definition.type === 'correct-incorrect') {
-    return <CorrectIncorrectEngine definition={definition} onComplete={handleComplete} />;
+    return <CorrectIncorrectEngine {...scoredEngineProps} />;
   }
   if (definition.type === 'cathexis') {
-    return <CathexisEngine definition={definition} onComplete={handleComplete} />;
+    return <CathexisEngine {...scoredEngineProps} />;
   }
   if (definition.type === 'fillable-worksheet') {
-    return <FillableWorksheetEngine definition={definition} lessonId={lessonId} />;
+    return (
+      <FillableWorksheetEngine
+        definition={definition}
+        lessonId={lessonId}
+        onComplete={() => markLessonCompleted(lessonId)}
+      />
+    );
   }
   if (definition.type === 'stroke-profile') {
-    return <StrokeProfileEngine definition={definition} onComplete={handleComplete} />;
+    return <StrokeProfileEngine {...scoredEngineProps} />;
   }
 
   // Default: Likert scale engine
-  return <LikertEngine definition={definition} onComplete={handleComplete} />;
+  return <LikertEngine {...scoredEngineProps} />;
 }

@@ -3,12 +3,14 @@ import SettingsForm from './SettingsForm'
 import Link from 'next/link'
 import { FaCog, FaArrowLeft } from 'react-icons/fa'
 import styles from './admin-settings.module.css'
+import { requireAdminPagePermission } from '@/lib/auth/admin-page-access'
 
 export const metadata = {
   title: 'Discount Settings | Admin',
 }
 
 export default async function AdminSettingsPage() {
+  await requireAdminPagePermission('settings.manage')
   const settings = await getAdminSettings()
   
   return (

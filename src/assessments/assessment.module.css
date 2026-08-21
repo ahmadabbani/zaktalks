@@ -332,6 +332,20 @@
     cursor: not-allowed;
 }
 
+.resultDownloadBtn {
+    display: flex;
+    width: fit-content;
+    border-color: var(--color-dark-blue);
+    background: var(--color-dark-blue);
+    color: var(--color-white);
+}
+
+.resultDownloadBtn:hover:not(:disabled) {
+    border-color: var(--color-yellow);
+    background: var(--color-yellow);
+    color: var(--color-white);
+}
+
 .externalAssessmentPage {
     min-height: 100vh;
     padding: calc(var(--space-3xl) + 28px) var(--container-padding) var(--space-3xl);
@@ -2211,6 +2225,10 @@
         font-size: 0.9375rem;
         width: 100%;
         justify-content: center;
+    }
+
+    .resultDownloadBtn {
+        width: 100%;
     }
 
     .ciReviewItem {

@@ -3,11 +3,13 @@ import CourseForm from '@/components/admin/CourseForm'
 import Link from 'next/link'
 import { FaArrowLeft } from 'react-icons/fa'
 import styles from '@/components/admin/CourseForm.module.css'
+import { requireAdminPagePermission } from '@/lib/auth/admin-page-access'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 
-export default function NewCoursePage() {
+export default async function NewCoursePage() {
+  await requireAdminPagePermission('courses.create')
   return (
     <div className={styles.formContainer}>
       <div className={styles.formWrapper}>

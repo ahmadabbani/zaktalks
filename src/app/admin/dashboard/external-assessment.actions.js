@@ -2,9 +2,8 @@
 
 import crypto from 'crypto'
 import { revalidatePath } from 'next/cache'
-import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
-import { requireAdmin } from '@/lib/auth-utils'
+import { requirePermission } from '@/lib/auth-utils'
 import { getAssessmentById } from '@/assessments/registry'
 
 function createToken() {
@@ -12,7 +11,7 @@ function createToken() {
 }
 
 export async function generateExternalAssessmentLink(formData) {
-  await requireAdmin()
+  const access = await requirePermission('external_assessments.manage')
 
   const assessmentKey = formData.get('assessment_key')?.trim()
   const definition = getAssessmentById(assessmentKey)
@@ -21,13 +20,7 @@ export async function generateExternalAssessmentLink(formData) {
     return { success: false, error: 'Please select a valid assessment.' }
   }
 
-  const supabase = await createClient()
   const adminSupabase = await createAdminClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
-    return { success: false, error: 'Unauthorized' }
-  }
 
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
   const token = createToken()
@@ -37,7 +30,7 @@ export async function generateExternalAssessmentLink(formData) {
     .insert({
       assessment_key: assessmentKey,
       token,
-      created_by: user.id,
+      created_by: access.user.id,
       expires_at: expiresAt
     })
     .select('id, assessment_key, token, created_at, expires_at, revoked_at')
@@ -48,7 +41,7 @@ export async function generateExternalAssessmentLink(formData) {
     return { success: false, error: 'Could not generate link. Make sure the Supabase SQL was run.' }
   }
 
-  revalidatePath('/admin/dashboard')
+  revalidatePath('/admin/courses')
 
   return {
     success: true,
@@ -60,7 +53,7 @@ export async function generateExternalAssessmentLink(formData) {
 }
 
 export async function revokeExternalAssessmentLink(linkId) {
-  await requireAdmin()
+  await requirePermission('external_assessments.manage')
 
   const adminSupabase = await createAdminClient()
 
@@ -74,6 +67,6 @@ export async function revokeExternalAssessmentLink(linkId) {
     return { success: false, error: 'Could not delete link.' }
   }
 
-  revalidatePath('/admin/dashboard')
+  revalidatePath('/admin/courses')
   return { success: true }
 }

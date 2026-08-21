@@ -1,0 +1,33 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dormant {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.interactive {
+  min-height: 65px;
+}
+
+.widget {
+  width: 100%;
+  max-width: 340px;
+}
+
+.unavailable {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #fca5a5;
+  border-radius: 12px;
+  background: #fee2e2;
+  color: #991b1b;
+  font-size: 0.9rem;
+  text-align: center;
+}

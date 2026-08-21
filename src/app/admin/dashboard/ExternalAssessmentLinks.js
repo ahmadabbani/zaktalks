@@ -116,7 +116,6 @@ export default function ExternalAssessmentLinks({ assessments, initialLinks }) {
           links.map((link) => {
             const status = getStatus(link)
             const path = link.path || `/assessments/external/${link.token}`
-            const isActive = status.label === 'Active'
 
             return (
               <div key={link.id} className={styles.externalLinkCard}>
@@ -136,16 +135,15 @@ export default function ExternalAssessmentLinks({ assessments, initialLinks }) {
                   <button type="button" onClick={() => copyLink(path)}>
                     <FaCopy /> Copy
                   </button>
-                  {isActive && (
-                    <button
-                      type="button"
-                      className={styles.externalLinkRevokeBtn}
-                      onClick={() => handleRevoke(link.id)}
-                      disabled={isPending}
-                    >
-                      <FaTrash /> Delete
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    className={styles.externalLinkRevokeBtn}
+                    onClick={() => handleRevoke(link.id)}
+                    disabled={isPending}
+                    aria-label={`Delete ${assessmentMap[link.assessment_key]?.title || link.assessment_key} link`}
+                  >
+                    <FaTrash /> Delete
+                  </button>
                 </div>
               </div>
             )

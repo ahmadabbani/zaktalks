@@ -1,9 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import YouTubePlayer from '@/components/YouTubePlayer'
 import AssessmentRenderer from '@/components/AssessmentRenderer'
-import { FaCheckCircle, FaChevronRight, FaChevronLeft, FaAward, FaInfoCircle } from 'react-icons/fa'
-import Link from 'next/link'
+import { FaBookOpen, FaLayerGroup } from 'react-icons/fa'
+import { buildLessonAccessMap, getFirstAvailableLesson } from '@/lib/course-progression'
+import { CourseCompletionNotice, LessonCompletionBadge, LessonNavigation } from './LessonStatus'
 import styles from './lesson-player.module.css'
 
 export default async function LessonPage({ params }) {
@@ -18,7 +19,7 @@ export default async function LessonPage({ params }) {
     .eq('id', lessonId)
     .single()
 
-  if (error || !lesson) notFound()
+  if (error || !lesson || lesson.course?.slug !== slug) notFound()
 
   // 2. Fetch Progress for this lesson
   const { data: progress } = await supabase
@@ -26,16 +27,30 @@ export default async function LessonPage({ params }) {
     .select('*')
     .eq('user_id', user.id)
     .eq('lesson_id', lesson.id)
-    .single()
+    .maybeSingle()
 
   // 3. Find Next/Prev Lessons
-  const { data: allLessons } = await supabase
-    .from('lessons')
-    .select('id, display_order')
-    .eq('course_id', lesson.course_id)
-    .order('display_order', { ascending: true })
+  const [{ data: lessonRows }, { data: moduleRows }] = await Promise.all([
+    supabase
+      .from('lessons')
+      .select('id, module_id, display_order')
+      .eq('course_id', lesson.course_id),
+    supabase
+      .from('course_modules')
+      .select('id, title, description, display_order')
+      .eq('course_id', lesson.course_id)
+  ])
+
+  const orderedModules = [...(moduleRows || [])].sort((a, b) => a.display_order - b.display_order)
+  const moduleOrder = new Map(orderedModules.map((module) => [module.id, module.display_order]))
+  const allLessons = [...(lessonRows || [])].sort((a, b) => {
+    const moduleDifference = (moduleOrder.get(a.module_id) || 0) - (moduleOrder.get(b.module_id) || 0)
+    return moduleDifference || a.display_order - b.display_order
+  })
 
   const currentIndex = allLessons.findIndex(l => l.id === lesson.id)
+  const currentModuleIndex = orderedModules.findIndex((module) => module.id === lesson.module_id)
+  const currentModule = orderedModules[currentModuleIndex]
   const prevLesson = allLessons[currentIndex - 1]
   const nextLesson = allLessons[currentIndex + 1]
 
@@ -46,31 +61,54 @@ export default async function LessonPage({ params }) {
     .eq('user_id', user.id)
     .in('lesson_id', allLessons.map(l => l.id))
 
-  const completedCount = allProgress?.filter(p => p.is_completed).length || 0
-  const isCourseComplete = completedCount === allLessons.length
+  const completedMap = Object.fromEntries(
+    (allProgress || []).map((row) => [row.lesson_id, row.is_completed])
+  )
+  const courseModules = orderedModules
+    .map((module) => ({
+      ...module,
+      lessons: allLessons.filter((item) => item.module_id === module.id)
+    }))
+  const accessMap = buildLessonAccessMap(courseModules, completedMap)
+
+  if (!accessMap[lesson.id]) {
+    const availableLesson = getFirstAvailableLesson(courseModules, completedMap)
+    redirect(availableLesson
+      ? `/courses/${slug}/player/${availableLesson.id}`
+      : `/courses/${slug}`)
+  }
 
   return (
     <div className={styles.lessonPage}>
-      {/* Lesson Description at Top (if exists) */}
-      {lesson.type === 'video' && lesson.description && (
-        <div className={styles.lessonDescription}>
-          <h2 className={styles.descriptionTitle}>
-            <FaInfoCircle />
-            About this lesson
-          </h2>
-          <p className={styles.descriptionText}>{lesson.description}</p>
-        </div>
+      <div className={styles.lessonStage}>
+      {/* Current module and lesson context */}
+      {currentModule && (
+        <section className={styles.learningContext} aria-label="Current module and lesson">
+          <article className={styles.contextItem}>
+            <div className={styles.contextEyebrow}>
+              <span className={styles.contextIcon}><FaLayerGroup /></span>
+              <span>Module {String(currentModuleIndex + 1).padStart(2, '0')}</span>
+            </div>
+            <h2>{currentModule.title}</h2>
+            {currentModule.description && <p>{currentModule.description}</p>}
+          </article>
+
+          <article className={`${styles.contextItem} ${styles.contextLesson}`}>
+            <div className={styles.contextEyebrow}>
+              <span className={styles.contextIcon}><FaBookOpen /></span>
+              <span>Current lesson / {String(currentIndex + 1).padStart(2, '0')}</span>
+            </div>
+            <h2>{lesson.title}</h2>
+            {lesson.description && <p>{lesson.description}</p>}
+          </article>
+        </section>
       )}
 
       {/* Lesson Header */}
       <div className={styles.lessonHeader}>
         <h1 className={styles.lessonTitle}>{lesson.title}</h1>
         <div className={styles.lessonMeta}>
-          {progress?.is_completed && (
-            <div className={styles.completedBadge}>
-              <FaCheckCircle /> Completed
-            </div>
-          )}
+          <LessonCompletionBadge lessonId={lesson.id} />
           <div className={styles.lessonProgress}>
             Lesson {currentIndex + 1} of {allLessons.length}
           </div>
@@ -83,8 +121,8 @@ export default async function LessonPage({ params }) {
           <YouTubePlayer 
             videoId={lesson.youtube_url} 
             lessonId={lesson.id} 
-            userId={user.id}
-            isCompleted={progress?.is_completed}
+            durationSeconds={lesson.duration_seconds}
+            initialProgress={progress}
           />
         </div>
       ) : (
@@ -93,7 +131,6 @@ export default async function LessonPage({ params }) {
             <AssessmentRenderer 
               assessmentKey={lesson.assessment_key} 
               lessonId={lesson.id}
-              userId={user.id}
               isCompleted={progress?.is_completed}
               showIntro={true}
               lessonDescription={lesson.description}
@@ -101,53 +138,18 @@ export default async function LessonPage({ params }) {
           </div>
         </div>
       )}
+      </div>
 
       {/* Course Completion Notice */}
-      {isCourseComplete && (
-        <div className={styles.congratsCard}>
-          <div className={styles.congratsContent}>
-            <h3 className={styles.congratsTitle}>
-              <FaAward className={styles.congratsIcon} />
-              Congratulations!
-            </h3>
-            <p className={styles.congratsMessage}>
-              You have completed all lessons in this course. Your certificate is ready!
-            </p>
-          </div>
-          <Link href="/dashboard" className={styles.certificateButton}>
-            <FaAward />
-            Get Certificate
-          </Link>
-        </div>
-      )}
+      <CourseCompletionNotice lessonIds={allLessons.map((item) => item.id)} />
 
       {/* Navigation */}
-      <div className={styles.navigation}>
-        {prevLesson ? (
-          <Link 
-            href={`/courses/${slug}/player/${prevLesson.id}`} 
-            className={`${styles.navButton} ${styles.prevButton}`}
-          >
-            <FaChevronLeft /> Previous Lesson
-          </Link>
-        ) : <div></div>}
-
-        {nextLesson ? (
-          <Link 
-            href={`/courses/${slug}/player/${nextLesson.id}`} 
-            className={`${styles.navButton} ${styles.nextButton}`}
-          >
-            Next Lesson <FaChevronRight />
-          </Link>
-        ) : (
-          <Link 
-            href="/dashboard" 
-            className={`${styles.navButton} ${styles.dashboardButton}`}
-          >
-            Return to Dashboard <FaCheckCircle />
-          </Link>
-        )}
-      </div>
+      <LessonNavigation
+        slug={slug}
+        currentLessonId={lesson.id}
+        previousLesson={prevLesson}
+        nextLesson={nextLesson}
+      />
     </div>
   )
 }

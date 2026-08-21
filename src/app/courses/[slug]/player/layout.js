@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { FaChevronLeft } from 'react-icons/fa'
 import LessonList from './LessonList'
 import SidebarWrapper from './SidebarWrapper'
+import { CourseProgressProvider } from './CourseProgressContext'
 import styles from './player-layout.module.css'
 
 export default async function PlayerLayout({ children, params }) {
@@ -34,25 +35,61 @@ export default async function PlayerLayout({ children, params }) {
 
   if (!enrollment) redirect(`/courses/${slug}`)
 
-  // 3. Fetch Lessons and Progress
-  const { data: lessons } = await supabase
-    .from('lessons')
-    .select('id, title, type, display_order')
-    .eq('course_id', course.id)
-    .order('display_order', { ascending: true })
+  // 3. Fetch the module structure, lessons, and progress.
+  const [{ data: modules }, { data: lessons }, { data: progress }] = await Promise.all([
+    supabase
+      .from('course_modules')
+      .select('id, title, description, display_order')
+      .eq('course_id', course.id)
+      .order('display_order', { ascending: true }),
+    supabase
+      .from('lessons')
+      .select('id, module_id, title, type, duration_seconds, display_order')
+      .eq('course_id', course.id)
+      .order('display_order', { ascending: true }),
+    supabase
+      .from('lesson_progress')
+      .select('lesson_id, is_completed, watch_time_seconds, max_position_reached_seconds')
+      .eq('user_id', user.id)
+  ])
 
-  const { data: progress } = await supabase
-    .from('lesson_progress')
-    .select('lesson_id, is_completed')
-    .eq('user_id', user.id)
+  const courseModules = (modules || []).map((module) => ({
+    ...module,
+    lessons: (lessons || []).filter((lesson) => lesson.module_id === module.id)
+  }))
 
   const completedMap = progress?.reduce((acc, curr) => {
     acc[curr.lesson_id] = curr.is_completed
     return acc
   }, {}) || {}
 
+  const lessonDurationMap = Object.fromEntries(
+    (lessons || []).map((lesson) => [lesson.id, Number(lesson.duration_seconds) || 0])
+  )
+  const watchedMap = progress?.reduce((acc, row) => {
+    if (row.is_completed) {
+      acc[row.lesson_id] = 100
+      return acc
+    }
+
+    const duration = lessonDurationMap[row.lesson_id]
+    const verifiedPosition = Math.max(
+      Number(row.max_position_reached_seconds) || 0,
+      Number(row.watch_time_seconds) || 0
+    )
+    acc[row.lesson_id] = duration > 0
+      ? Math.min(95, Math.floor(((verifiedPosition / duration) * 100) / 5) * 5)
+      : 0
+    return acc
+  }, {}) || {}
+
   return (
-    <div className={styles.playerContainer}>
+    <CourseProgressProvider
+      modules={courseModules}
+      initialCompletedMap={completedMap}
+      initialWatchedMap={watchedMap}
+    >
+      <div className={styles.playerContainer}>
       {/* Sidebar */}
       <SidebarWrapper>
         {/* Sidebar Header */}
@@ -64,13 +101,14 @@ export default async function PlayerLayout({ children, params }) {
         </div>
 
         {/* Lesson List */}
-        <LessonList lessons={lessons} slug={slug} completedMap={completedMap} />
+        <LessonList modules={courseModules} slug={slug} />
       </SidebarWrapper>
 
       {/* Content Area */}
       <main className={styles.mainContent}>
         {children}
       </main>
-    </div>
+      </div>
+    </CourseProgressProvider>
   )
 }

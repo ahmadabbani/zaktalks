@@ -2,32 +2,30 @@
 
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { FaChevronLeft, FaChevronRight, FaRedo } from 'react-icons/fa';
+import { FaChevronLeft, FaRedo } from 'react-icons/fa';
 import ResultScreenshotButton from '@/components/ResultScreenshotButton';
 import styles from './assessment.module.css';
 
-export default function LikertEngine({ definition, onComplete, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture' }) {
+export default function LikertEngine({ definition, onComplete, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture', resultDownloadFormat = 'png' }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const currentQuestion = definition.questions[currentIndex];
   const totalQuestions = definition.questions.length;
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
 
   const handleSelect = (value) => {
-    setAnswers({ ...answers, [currentQuestion.id]: value });
-  };
+    if (isSubmitting) return;
 
-  const handleNext = () => {
-    if (!answers[currentQuestion.id]) {
-      toast.error('Please select an answer before continuing.');
-      return;
-    }
+    const nextAnswers = { ...answers, [currentQuestion.id]: value };
+    setAnswers(nextAnswers);
+
     if (currentIndex < totalQuestions - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      calculateResult();
+      calculateResult(nextAnswers);
     }
   };
 
@@ -42,8 +40,8 @@ export default function LikertEngine({ definition, onComplete, enableResultScree
     window.location.reload();
   };
 
-  const calculateResult = () => {
-    const values = Object.values(answers);
+  const calculateResult = async (submittedAnswers = answers) => {
+    const values = Object.values(submittedAnswers);
     const sum = values.reduce((a, b) => a + b, 0);
     const average = sum / values.length;
     
@@ -60,9 +58,16 @@ export default function LikertEngine({ definition, onComplete, enableResultScree
       }
     }
 
-    setShowResult(true);
-    if (onComplete) {
-      onComplete({ score: scoreToUse, label: resultLabel, answers });
+    setIsSubmitting(true);
+    try {
+      if (onComplete) {
+        await onComplete({ score: scoreToUse, label: resultLabel, answers: submittedAnswers });
+      }
+      setShowResult(true);
+    } catch {
+      toast.error('Your result could not be saved. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -79,7 +84,7 @@ export default function LikertEngine({ definition, onComplete, enableResultScree
           <p className={styles.resultMessage}>{result?.message}</p>
         </div>
         {enableResultScreenshot && (
-          <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} />
+          <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} format={resultDownloadFormat} />
         )}
         <button className={styles.retakeBtn} onClick={handleRetake} data-screenshot-exclude="true">
           <FaRedo style={{ marginRight: '8px' }} />
@@ -134,15 +139,9 @@ export default function LikertEngine({ definition, onComplete, enableResultScree
         <button 
           className={`${styles.navBtn} ${styles.prevBtn}`}
           onClick={handlePrev} 
-          disabled={currentIndex === 0}
+          disabled={currentIndex === 0 || isSubmitting}
         >
           <FaChevronLeft /> Previous
-        </button>
-        <button 
-          className={`${styles.navBtn} ${styles.nextBtn}`} 
-          onClick={handleNext}
-        >
-          {currentIndex === totalQuestions - 1 ? 'Finish' : 'Next'} <FaChevronRight />
         </button>
       </div>
     </div>

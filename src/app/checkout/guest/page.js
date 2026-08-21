@@ -4,6 +4,7 @@ import { useState, Suspense, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import DiscountSection from '@/components/DiscountSection'
+import TurnstileWidget from '@/components/TurnstileWidget'
 import styles from './guest.module.css'
 
 function GuestForm() {
@@ -17,6 +18,8 @@ function GuestForm() {
   })
   const [emailExists, setEmailExists] = useState(false)
   const [courseName, setCourseName] = useState('')
+  const [captchaToken, setCaptchaToken] = useState('')
+  const [captchaReset, setCaptchaReset] = useState(0)
 
   // Fetch course name on load
   useEffect(() => {
@@ -63,7 +66,8 @@ function GuestForm() {
       isGuest: true,
       // Include discount options
       couponCode: discountOptions.couponCode,
-      pointsToUse: discountOptions.pointsToUse
+      pointsToUse: discountOptions.pointsToUse,
+      captchaToken,
     }
 
     try {
@@ -77,10 +81,12 @@ function GuestForm() {
       if (data.url) {
         window.location.href = data.url
       } else {
+        setCaptchaReset(value => value + 1)
         alert(data.error || 'Something went wrong')
       }
     } catch (error) {
       console.error('Checkout error:', error)
+      setCaptchaReset(value => value + 1)
       alert('Failed to initiate checkout')
     } finally {
       setLoading(false)
@@ -154,9 +160,14 @@ function GuestForm() {
             </div>
           )}
 
+          <TurnstileWidget
+            onTokenChange={setCaptchaToken}
+            resetSignal={captchaReset}
+          />
+
           <button 
             type="submit" 
-            disabled={loading || emailExists} 
+            disabled={loading || emailExists || !captchaToken}
             className={styles.submitButton}
           >
             {loading ? 'Processing...' : 'Proceed to Payment'}

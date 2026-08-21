@@ -1,14 +1,13 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { requireAdmin } from '@/lib/auth-utils'
+import { requirePermission } from '@/lib/auth-utils'
 
 export async function createCourse(formData) {
-  await requireAdmin()
-  const supabase = await createClient()
+  await requirePermission('courses.create')
+  const supabase = await createAdminClient()
 
   const title = formData.get('title')
   let slug = formData.get('slug')
@@ -149,12 +148,12 @@ export async function createCourse(formData) {
   }
 
   revalidatePath('/admin/courses')
-  redirect('/admin/courses?success=true')
+  redirect(`/admin/courses/${data.id}/lessons?created=true`)
 }
 
 export async function updateCourse(id, formData) {
-  await requireAdmin()
-  const supabase = await createClient()
+  await requirePermission('courses.edit')
+  const supabase = await createAdminClient()
 
   const title = formData.get('title')
   let slug = formData.get('slug')
@@ -311,8 +310,8 @@ export async function updateCourse(id, formData) {
 }
 
 export async function deleteCourse(id) {
-  await requireAdmin()
-  const supabase = await createClient()
+  await requirePermission('courses.edit')
+  const supabase = await createAdminClient()
 
   // First, get the course data to find all files that need to be deleted
   const { data: course, error: fetchError } = await supabase

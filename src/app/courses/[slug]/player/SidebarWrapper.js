@@ -1,40 +1,51 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { FaChevronDown, FaList } from 'react-icons/fa'
+import { FaChevronDown, FaLayerGroup } from 'react-icons/fa'
+import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand } from 'react-icons/tb'
 import styles from './player-layout.module.css'
 
 export default function SidebarWrapper({ children }) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [mobileMenuState, setMobileMenuState] = useState(null)
+  const [isDesktopOpen, setIsDesktopOpen] = useState(true)
   const pathname = usePathname()
-
-  // Close dropdown when navigating to a new lesson
-  useEffect(() => {
-    setIsOpen(false)
-  }, [pathname])
+  const isMobileOpen = mobileMenuState?.pathname === pathname && mobileMenuState.isOpen
 
   return (
     <>
       {/* Desktop sidebar (visible on > 992px via CSS) */}
-      <aside className={styles.sidebar}>
-        {children}
-      </aside>
+      <div className={`${styles.desktopSidebarShell} ${!isDesktopOpen ? styles.desktopSidebarShellClosed : ''}`}>
+        <aside className={styles.sidebar} aria-hidden={!isDesktopOpen}>
+          {children}
+        </aside>
+        <button
+          type="button"
+          className={styles.desktopSidebarToggle}
+          onClick={() => setIsDesktopOpen((current) => !current)}
+          aria-label={isDesktopOpen ? 'Hide course modules' : 'Show course modules'}
+          aria-expanded={isDesktopOpen}
+          title={isDesktopOpen ? 'Hide course modules' : 'Show course modules'}
+        >
+          {isDesktopOpen ? <TbLayoutSidebarLeftCollapse /> : <TbLayoutSidebarLeftExpand />}
+        </button>
+      </div>
 
       {/* Dropdown toggle button (visible on <= 992px via CSS) */}
       <button
         className={styles.sidebarToggle}
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label={isOpen ? 'Close lessons menu' : 'Open lessons menu'}
+        onClick={() => setMobileMenuState({ pathname, isOpen: !isMobileOpen })}
+        aria-label={isMobileOpen ? 'Close course modules' : 'Open course modules'}
+        aria-expanded={isMobileOpen}
       >
         <span className={styles.sidebarToggleLabel}>
-          <FaList /> Course Lessons
+          <FaLayerGroup /> Course Modules
         </span>
-        <FaChevronDown className={`${styles.toggleIcon} ${isOpen ? styles.toggleIconOpen : ''}`} />
+        <FaChevronDown className={`${styles.toggleIcon} ${isMobileOpen ? styles.toggleIconOpen : ''}`} />
       </button>
 
       {/* Dropdown panel (visible on <= 992px via CSS) */}
-      <div className={`${styles.dropdownPanel} ${isOpen ? styles.dropdownPanelOpen : ''}`}>
+      <div className={`${styles.dropdownPanel} ${isMobileOpen ? styles.dropdownPanelOpen : ''}`}>
         {children}
       </div>
     </>

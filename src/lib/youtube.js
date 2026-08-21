@@ -1,3 +1,5 @@
+import 'server-only'
+
 /**
  * Server-only YouTube playlist fetching.
  *
@@ -27,6 +29,14 @@ function parseIsoDuration(value) {
 
   const [, hours, minutes, seconds] = match
   return Number(hours || 0) * 3600 + Number(minutes || 0) * 60 + Number(seconds || 0)
+}
+
+export function extractYouTubeVideoId(value) {
+  const input = String(value || '').trim()
+  if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input
+
+  const match = input.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|shorts\/|watch\?(?:.*&)?v=))([a-zA-Z0-9_-]{11})/)
+  return match?.[1] || ''
 }
 
 function formatDuration(totalSeconds) {
@@ -124,6 +134,21 @@ async function fetchVideoDetails(videoIds, key) {
   }
 
   return details
+}
+
+export async function getYouTubeVideoDuration(videoUrlOrId) {
+  const key = process.env.YOUTUBE_API_KEY
+  const videoId = extractYouTubeVideoId(videoUrlOrId)
+
+  if (!key || !videoId) return 0
+
+  try {
+    const details = await fetchVideoDetails([videoId], key)
+    return parseIsoDuration(details.get(videoId)?.contentDetails?.duration)
+  } catch (error) {
+    console.error('[youtube] Failed to load course video duration:', error.message)
+    return 0
+  }
 }
 
 /**

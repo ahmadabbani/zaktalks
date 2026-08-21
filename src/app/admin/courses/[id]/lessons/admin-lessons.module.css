@@ -492,3 +492,298 @@
         order: 3;
     }
 }
+
+/* Module-based course structure */
+.headerDescription {
+    margin: 0.4rem 0 0;
+    color: var(--color-gray-dark);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.saveOrderButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+}
+
+.formHeadingRow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    color: var(--color-yellow);
+}
+
+.formHeadingRow .formTitle {
+    margin: 0;
+}
+
+.formHeadingRow svg {
+    font-size: 1.35rem;
+}
+
+.formGridThree {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(180px, 0.8fr) minmax(180px, 0.8fr);
+    gap: var(--space-md);
+}
+
+.formGroup label span {
+    color: var(--color-gray-dark);
+    font-weight: 500;
+}
+
+.moduleList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.moduleCard {
+    overflow: hidden;
+    border: 1px solid rgba(33, 44, 45, 0.12);
+    border-radius: 1rem;
+    background: white;
+    box-shadow: 0 8px 24px rgba(33, 44, 45, 0.06);
+}
+
+.moduleHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    background: var(--color-black);
+    color: white;
+}
+
+.moduleIdentity {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    min-width: 0;
+}
+
+.moduleNumber {
+    flex-shrink: 0;
+    color: var(--color-yellow);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+}
+
+.moduleIdentity h3 {
+    margin: 0;
+    color: white;
+    font-size: 1.2rem;
+    line-height: 1.25;
+}
+
+.moduleIdentity p {
+    margin: 0.3rem 0 0;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+.moduleActions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.45rem;
+    flex-shrink: 0;
+}
+
+.lessonCount {
+    margin-right: 0.35rem;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.76rem;
+    white-space: nowrap;
+}
+
+.moduleHeader .iconButton {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.moduleHeader .iconButton:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.moduleHeader .iconButton.edit {
+    color: var(--color-yellow);
+}
+
+.moduleHeader .iconButton.delete {
+    color: #ff8e8e;
+}
+
+.moduleAddButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-left: 0.25rem;
+    padding: 0.65rem 0.9rem;
+    border: 0;
+    border-radius: 0.6rem;
+    background: var(--color-yellow);
+    color: var(--color-black);
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.moduleEmpty {
+    width: calc(100% - 2rem);
+    margin: 1rem;
+    padding: 1.2rem;
+    border: 1px dashed rgba(33, 44, 45, 0.25);
+    border-radius: 0.75rem;
+    background: var(--color-gray-light);
+    color: var(--color-gray-dark);
+    font: inherit;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.moduleEmpty:hover {
+    border-color: var(--color-yellow);
+    color: var(--color-black);
+}
+
+.moduleCard .lessonList {
+    gap: 0;
+    padding: 0.7rem;
+}
+
+.moduleCard .lessonItem {
+    cursor: default;
+    border-bottom: 1px solid rgba(33, 44, 45, 0.08);
+    border-radius: 0.65rem;
+    box-shadow: none;
+}
+
+.moduleCard .lessonItem:hover {
+    box-shadow: none;
+}
+
+.lessonOrderActions {
+    display: grid;
+    grid-template-columns: 24px 32px 24px;
+    align-items: center;
+    justify-items: center;
+    color: var(--color-gray-dark);
+}
+
+.lessonOrderActions button {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+.lessonOrderActions button:disabled,
+.iconButton:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+}
+
+.lessonOrderActions span {
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.emptyState > svg {
+    margin-bottom: var(--space-md);
+    color: var(--color-yellow);
+    font-size: 2.4rem;
+}
+
+.emptyState h3 {
+    margin: 0 0 var(--space-xs);
+    color: var(--color-black);
+}
+
+.emptyState .addButton {
+    margin: var(--space-lg) auto 0;
+}
+
+@media (max-width: 900px) {
+    .formGridThree {
+        grid-template-columns: 1fr;
+    }
+
+    .moduleHeader,
+    .moduleIdentity {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .moduleActions {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .moduleAddButton {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .moduleCard .lessonItem {
+        flex-wrap: wrap;
+    }
+
+    .moduleCard .lessonContent {
+        flex-basis: calc(100% - 150px);
+        order: 1;
+    }
+
+    .moduleCard .lessonActions {
+        width: 100%;
+        justify-content: flex-end;
+        order: 2;
+    }
+}
+
+@media (max-width: 520px) {
+    .page {
+        padding-inline: var(--space-md);
+    }
+
+    .formCard,
+    .moduleHeader {
+        padding: var(--space-lg);
+    }
+
+    .formActions,
+    .lessonDeleteModalActions {
+        flex-direction: column;
+    }
+
+    .submitButton,
+    .cancelButton,
+    .lessonDeleteCancelButton,
+    .lessonDeleteConfirmButton {
+        width: 100%;
+    }
+
+    .moduleCard .lessonItem {
+        gap: var(--space-sm);
+        padding: var(--space-sm);
+    }
+
+    .moduleCard .lessonContent {
+        flex-basis: calc(100% - 110px);
+    }
+}

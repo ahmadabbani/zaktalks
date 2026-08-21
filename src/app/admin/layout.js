@@ -1,9 +1,9 @@
-import { requireAdmin } from '@/lib/auth-utils'
+import { requireStaff } from '@/lib/auth-utils'
 import { redirect } from 'next/navigation'
 
 export default async function AdminLayout({ children }) {
   try {
-    await requireAdmin()
+    await requireStaff()
   } catch (error) {
     redirect('/dashboard') // Or /login if not logged in at all
   }

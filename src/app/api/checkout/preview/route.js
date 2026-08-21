@@ -2,6 +2,11 @@ import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { calculateAllDiscounts } from '@/lib/discount-utils'
+import {
+  clientIpFromRequest,
+  enforceRateLimits,
+  PublicSecurityError,
+} from '@/lib/security/abuse-protection'
 
 /**
  * Preview discount calculations without creating a checkout session
@@ -10,6 +15,15 @@ import { calculateAllDiscounts } from '@/lib/discount-utils'
 export async function POST(req) {
   try {
     const { courseId, email, couponCode, pointsToUse } = await req.json()
+    const clientIp = clientIpFromRequest(req)
+
+    await enforceRateLimits([{
+      action: 'checkout_preview_ip',
+      value: clientIp,
+      limit: 60,
+      windowSeconds: 10 * 60,
+    }])
+
     const supabase = await createClient()
     const supabaseAdmin = await createAdminClient()
 
@@ -27,19 +41,6 @@ export async function POST(req) {
     // 2. Check Auth
     const { data: { user } } = await supabase.auth.getUser()
     let userId = user?.id || null
-
-    // If guest with email, check if they already have an account
-    if (!user && email) {
-      const { data: matchingUser } = await supabaseAdmin
-        .from('users')
-        .select('id')
-        .eq('email', email.toLowerCase())
-        .single()
-
-      if (matchingUser) {
-        return NextResponse.json({ emailExists: true })
-      }
-    }
 
     // 3. Calculate Discounts
     const discounts = await calculateAllDiscounts({
@@ -78,6 +79,12 @@ export async function POST(req) {
     })
   } catch (error) {
     console.error('Discount preview error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error instanceof PublicSecurityError) {
+      const headers = error.retryAfter
+        ? { 'Retry-After': String(error.retryAfter) }
+        : undefined
+      return NextResponse.json({ error: error.message }, { status: error.status, headers })
+    }
+    return NextResponse.json({ error: 'Unable to load pricing. Please try again.' }, { status: 500 })
   }
 }

@@ -46,7 +46,7 @@ function isComplete(definition, answers) {
   })
 }
 
-export default function FillableWorksheetEngine({ definition, lessonId }) {
+export default function FillableWorksheetEngine({ definition, lessonId, onComplete }) {
   const [answers, setAnswers] = useState(() => buildInitialAnswers(definition))
   const [submission, setSubmission] = useState(null)
   const [isEditing, setIsEditing] = useState(true)
@@ -156,6 +156,7 @@ export default function FillableWorksheetEngine({ definition, lessonId }) {
         setSubmission(result.submission)
         setAnswers(buildInitialAnswers(definition, result.submission.answers))
         setIsEditing(false)
+        onComplete?.()
         toast.success('Worksheet saved. Your PDF is ready.')
       } else {
         toast.error(result.error || 'Could not save worksheet.')

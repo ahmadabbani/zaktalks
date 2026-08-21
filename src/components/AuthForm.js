@@ -5,15 +5,18 @@ import { useFormStatus } from 'react-dom'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 import { IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5'
+import TurnstileWidget from '@/components/TurnstileWidget'
+import PasswordStrength from '@/components/PasswordStrength'
+import { PASSWORD_MAX_LENGTH, validateNewPassword } from '@/lib/auth/password-policy'
 import styles from './AuthForm.module.css'
 
-function SubmitButton({ label, loadingLabel }) {
+function SubmitButton({ label, loadingLabel, disabled }) {
   const { pending } = useFormStatus()
   return (
     <button 
       type="submit" 
       className={styles.submitBtn}
-      disabled={pending}
+      disabled={pending || disabled}
     >
       {pending ? (loadingLabel || 'Processing...') : label}
     </button>
@@ -26,6 +29,8 @@ export default function AuthForm({ type, action }) {
   const [validationErrors, setValidationErrors] = useState({})
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState('')
+  const [captchaReset, setCaptchaReset] = useState(0)
   const isLogin = type === 'login'
 
   const [formValues, setFormValues] = useState({
@@ -105,11 +110,13 @@ function validateForm() {
     errors.email = 'Please enter a valid email address'
   }
 
-  // Password validation
+  // Existing accounts must remain able to sign in with their current password.
+  // The strong-password policy applies only when creating a new password.
   if (!formValues.password || formValues.password.trim() === '') {
     errors.password = 'Password is required'
-  } else if (formValues.password.length < 6) {
-    errors.password = 'Password must be at least 6 characters'
+  } else if (!isLogin) {
+    const passwordError = validateNewPassword(formValues.password)
+    if (passwordError) errors.password = passwordError
   }
 
   // Register-specific validation
@@ -146,6 +153,7 @@ function validateForm() {
 
   // Backend action
   const result = await action(formData)
+  setCaptchaReset(value => value + 1)
   
   if (result?.error) {
     setError(result.error)
@@ -247,6 +255,9 @@ function validateForm() {
                 placeholder="••••••••"
                 value={formValues.password}
                 onChange={handleInputChange}
+                maxLength={isLogin ? undefined : PASSWORD_MAX_LENGTH}
+                autoComplete={isLogin ? 'current-password' : 'new-password'}
+                aria-describedby={!isLogin ? 'registration-password-guidance' : undefined}
                 className={`${styles.input} ${styles.passwordInput} ${validationErrors.password ? styles.inputError : ''}`}
               />
               <button
@@ -260,6 +271,9 @@ function validateForm() {
             </div>
             {validationErrors.password && (
               <span className={styles.fieldError}>{validationErrors.password}</span>
+            )}
+            {!isLogin && (
+              <PasswordStrength password={formValues.password} id="registration-password-guidance" />
             )}
           </div>
 
@@ -276,6 +290,8 @@ function validateForm() {
                   placeholder="••••••••"
                   value={formValues.confirm_password}
                   onChange={handleInputChange}
+                  maxLength={PASSWORD_MAX_LENGTH}
+                  autoComplete="new-password"
                   className={`${styles.input} ${styles.passwordInput} ${validationErrors.confirm_password ? styles.inputError : ''}`}
                 />
                 <button
@@ -305,9 +321,16 @@ function validateForm() {
             </div>
           )}
 
+          <input type="hidden" name="cf-turnstile-response" value={captchaToken} />
+          <TurnstileWidget
+            onTokenChange={setCaptchaToken}
+            resetSignal={captchaReset}
+          />
+
           <SubmitButton 
             label={isLogin ? 'Sign In' : 'Create Account'} 
-            loadingLabel={isLogin ? 'Signing in...' : 'Creating account...'} 
+            loadingLabel={isLogin ? 'Signing in...' : 'Creating account...'}
+            disabled={!captchaToken}
           />
         </form>
 

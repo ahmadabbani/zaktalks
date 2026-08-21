@@ -37,8 +37,9 @@ export default function NavbarClient({ user, role, signout }) {
   const [isServicesOpen, setIsServicesOpen] = useState(false)
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false)
 
-  const dashboardLink = role === 'admin' ? '/admin/dashboard' : '/dashboard'
-  const dashboardText = role === 'admin' ? 'Admin' : 'Dashboard'
+  const isStaff = role === 'admin' || role === 'creator'
+  const dashboardLink = isStaff ? '/admin/dashboard' : '/dashboard'
+  const dashboardText = role === 'admin' ? 'Admin' : role === 'creator' ? 'Creator' : 'Dashboard'
 
   const navLinks = [
     { href: '/', label: 'Home' },

@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { FaChevronLeft, FaChevronRight, FaRedo } from 'react-icons/fa';
+import { FaChevronLeft, FaRedo } from 'react-icons/fa';
 import ResultScreenshotButton from '@/components/ResultScreenshotButton';
 import styles from './assessment.module.css';
 
@@ -15,10 +15,13 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-export default function CathexisEngine({ definition, onComplete, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture' }) {
+export default function CathexisEngine({ definition, onComplete, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture', resultDownloadFormat = 'png' }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
+  const answersRef = useRef({});
+  const [savedResult, setSavedResult] = useState(null);
   const [showResult, setShowResult] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const currentQuestion = definition.questions[currentIndex];
   const totalQuestions = definition.questions.length;
@@ -27,14 +30,12 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
   const maxScaleValue = Math.max(...scaleValues);
 
   const handleSelect = (value) => {
-    setAnswers({ ...answers, [currentQuestion.id]: value });
-  };
+    if (isSubmitting) return;
 
-  const handleNext = () => {
-    if (answers[currentQuestion.id] === undefined) {
-      toast.error('Please select an answer before continuing.');
-      return;
-    }
+    const nextAnswers = { ...answersRef.current, [currentQuestion.id]: value };
+    answersRef.current = nextAnswers;
+    setAnswers(nextAnswers);
+
     if (currentIndex < totalQuestions - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
@@ -53,35 +54,58 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
     window.location.reload();
   };
 
-  const calculateResult = () => {
-    const totalSum = Object.values(answers).reduce((a, b) => a + b, 0);
+  const calculateResult = async () => {
+    const submittedAnswers = answersRef.current;
+    const totalSum = Object.values(submittedAnswers).reduce((a, b) => a + b, 0);
     const totalPossible = definition.questions.length * maxScaleValue;
     const normalizedScore = totalPossible > 0
       ? Math.round((totalSum / totalPossible) * 100)
       : 0;
 
-    setShowResult(true);
-    if (onComplete) {
-      onComplete({ score: normalizedScore });
+    setIsSubmitting(true);
+    try {
+      if (onComplete) {
+        const saved = await onComplete({ score: normalizedScore, answers: submittedAnswers });
+        setSavedResult(saved?.assessmentResult || null);
+      }
+      setShowResult(true);
+    } catch {
+      toast.error('Your result could not be saved. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   if (showResult) {
     const categoryScores = {};
     const categoryQuestionCounts = {};
+    const savedBreakdown = Array.isArray(savedResult?.scoreDetails?.breakdown)
+      ? savedResult.scoreDetails.breakdown
+      : [];
 
-    for (const question of definition.questions) {
-      const cat = question.category;
-      if (!categoryScores[cat]) categoryScores[cat] = 0;
-      categoryScores[cat] += answers[question.id] ?? 0;
-      categoryQuestionCounts[cat] = (categoryQuestionCounts[cat] || 0) + 1;
+    if (savedBreakdown.length) {
+      for (const item of savedBreakdown) {
+        categoryScores[item.key] = Number(item.score || 0);
+        categoryQuestionCounts[item.key] = Number(item.max || 0) / maxScaleValue;
+      }
+    } else {
+      for (const question of definition.questions) {
+        const cat = question.category;
+        if (!categoryScores[cat]) categoryScores[cat] = 0;
+        categoryScores[cat] += answers[question.id] ?? 0;
+        categoryQuestionCounts[cat] = (categoryQuestionCounts[cat] || 0) + 1;
+      }
     }
 
     const entries = Object.entries(categoryScores).sort((a, b) => b[1] - a[1]);
     const highest = entries[0];
     const secondHighest = entries[1];
     const isMixed = secondHighest ? highest[1] === secondHighest[1] : false;
-    const dominantKey = isMixed ? null : highest[0];
+    const savedDominantKey = Object.entries(definition.categories || {})
+      .find(([, category]) => category.label === savedResult?.resultLabel)?.[0];
+    const dominantKey = savedResult
+      ? savedDominantKey || null
+      : isMixed ? null : highest[0];
     const dominantColor = dominantKey ? definition.categories[dominantKey].color : '#8B5CF6';
 
     const resultMode = definition.resultMode || '';
@@ -336,7 +360,7 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
         )}
 
         {enableResultScreenshot && (
-          <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} />
+          <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} format={resultDownloadFormat} />
         )}
 
         <button className={styles.retakeBtn} onClick={handleRetake} data-screenshot-exclude="true">
@@ -401,15 +425,9 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
         <button
           className={`${styles.navBtn} ${styles.prevBtn}`}
           onClick={handlePrev}
-          disabled={currentIndex === 0}
+          disabled={currentIndex === 0 || isSubmitting}
         >
           <FaChevronLeft /> Previous
-        </button>
-        <button
-          className={`${styles.navBtn} ${styles.nextBtn}`}
-          onClick={handleNext}
-        >
-          {currentIndex === totalQuestions - 1 ? 'Finish' : 'Next'} <FaChevronRight />
         </button>
       </div>
     </div>

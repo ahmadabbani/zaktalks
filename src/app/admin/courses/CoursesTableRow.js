@@ -5,7 +5,7 @@ import { FaBook, FaUsers } from 'react-icons/fa'
 import DeleteCourseBtn from '@/components/admin/DeleteCourseBtn'
 import styles from './admin-courses.module.css'
 
-export default function CoursesTableRow({ course }) {
+export default function CoursesTableRow({ course, canEdit = true, canManageContent = true }) {
   return (
     <tr>
       <td>
@@ -36,15 +36,15 @@ export default function CoursesTableRow({ course }) {
       </td>
       <td>
         <div className={styles.actions}>
-          <Link href={`/admin/courses/${course.id}/lessons`} className={styles.actionButton}>
-            Lessons
-          </Link>
-          <Link href={`/admin/courses/${course.id}/edit`} className={styles.actionButton}>
+          {canManageContent && <Link href={`/admin/courses/${course.id}/lessons`} className={styles.actionButton}>
+            Modules
+          </Link>}
+          {canEdit && <Link href={`/admin/courses/${course.id}/edit`} className={styles.actionButton}>
             Edit
-          </Link>
-          <div className={styles.deleteButtonWrapper}>
+          </Link>}
+          {canEdit && <div className={styles.deleteButtonWrapper}>
             <DeleteCourseBtn courseId={course.id} courseName={course.title} />
-          </div>
+          </div>}
         </div>
       </td>
     </tr>

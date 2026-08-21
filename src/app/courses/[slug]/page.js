@@ -43,12 +43,27 @@ export default async function CourseDetailPage({ params }) {
   const notForAudience = asList(course.who_this_is_not_for)
   const results = asList(course.why_attend)
 
-  // 2. Fetch Lessons
-  const { data: lessons } = await supabase
-    .from('lessons')
-    .select('*')
-    .eq('course_id', course.id)
-    .order('display_order', { ascending: true })
+  // 2. Fetch the curriculum structure.
+  const [{ data: modules }, { data: lessons }] = await Promise.all([
+    supabase
+      .from('course_modules')
+      .select('id, title, description, display_order')
+      .eq('course_id', course.id)
+      .order('display_order', { ascending: true }),
+    supabase
+      .from('lessons')
+      .select('*')
+      .eq('course_id', course.id)
+      .order('display_order', { ascending: true })
+  ])
+
+  let curriculumPosition = 0
+  const curriculumModules = (modules || []).map((module) => ({
+    ...module,
+    lessons: (lessons || [])
+      .filter((lesson) => lesson.module_id === module.id)
+      .map((lesson) => ({ ...lesson, curriculumPosition: ++curriculumPosition }))
+  }))
 
   // 3. Fetch Enrollment Count
   const { count: enrollmentCount } = await supabase
@@ -323,17 +338,26 @@ export default async function CourseDetailPage({ params }) {
                         </div>
                         
                         <div className={styles.curriculumList}>
-                            {lessons?.map((lesson, idx) => (
-                                <div key={lesson.id} className={styles.curriculumItem}>
-                                    <div className={styles.itemIndex}>{idx + 1}</div>
-                                    <div className={styles.itemContent}>
-                                        <div className={styles.itemTitle}>{lesson.title}</div>
-                                        <div className={styles.itemMeta}>
-                                            {lesson.type === 'video' ? <FaPlayCircle /> : <FaClipboardList />}
-                                            {lesson.type === 'video' ? 'Video Lesson' : 'Assessment'}
-                                        </div>
+                            {curriculumModules.map((module, moduleIndex) => (
+                                <div key={module.id} className={styles.curriculumModule}>
+                                    <div className={styles.curriculumModuleHeader}>
+                                        <span>MODULE {String(moduleIndex + 1).padStart(2, '0')}</span>
+                                        <h3>{module.title}</h3>
+                                        {module.description && <p>{module.description}</p>}
                                     </div>
-                                    {!isEnrolled && <FaLock style={{ opacity: 0.3, fontSize: '0.8rem' }} />}
+                                    {module.lessons.map((lesson) => (
+                                        <div key={lesson.id} className={styles.curriculumItem}>
+                                            <div className={styles.itemIndex}>{lesson.curriculumPosition}</div>
+                                            <div className={styles.itemContent}>
+                                                <div className={styles.itemTitle}>{lesson.title}</div>
+                                                <div className={styles.itemMeta}>
+                                                    {lesson.type === 'video' ? <FaPlayCircle /> : <FaClipboardList />}
+                                                    {lesson.type === 'video' ? 'Video Lesson' : 'Assessment'}
+                                                </div>
+                                            </div>
+                                            {!isEnrolled && <FaLock style={{ opacity: 0.3, fontSize: '0.8rem' }} />}
+                                        </div>
+                                    ))}
                                 </div>
                             ))}
 

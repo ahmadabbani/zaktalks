@@ -6,14 +6,15 @@ import toast from 'react-hot-toast'
 import { resetPassword } from '@/app/auth/actions'
 import Link from 'next/link'
 import styles from './resetPassword.module.css'
+import TurnstileWidget from '@/components/TurnstileWidget'
 
-function SubmitButton() {
+function SubmitButton({ disabled }) {
   const { pending } = useFormStatus()
   return (
     <button 
       type="submit" 
       className={styles.submitBtn}
-      disabled={pending}
+      disabled={pending || disabled}
     >
       {pending ? 'Sending...' : 'Send Reset Link'}
     </button>
@@ -24,6 +25,8 @@ export default function ResetPasswordPage() {
   const [message, setMessage] = useState(null)
   const [validationError, setValidationError] = useState('')
   const [email, setEmail] = useState('')
+  const [captchaToken, setCaptchaToken] = useState('')
+  const [captchaReset, setCaptchaReset] = useState(0)
   
   function validateEmail(emailValue) {
     if (!emailValue || emailValue.trim() === '') {
@@ -67,6 +70,7 @@ export default function ResetPasswordPage() {
     // Backend action
     const result = await resetPassword(formData)
     if (result?.error) {
+      setCaptchaReset(value => value + 1)
       toast.error(result.error)
     } else if (result?.success) {
       toast.success(result.message)
@@ -117,7 +121,13 @@ export default function ResetPasswordPage() {
                   )}
                 </div>
 
-                <SubmitButton />
+                <input type="hidden" name="cf-turnstile-response" value={captchaToken} />
+                <TurnstileWidget
+                  onTokenChange={setCaptchaToken}
+                  resetSignal={captchaReset}
+                />
+
+                <SubmitButton disabled={!captchaToken} />
                 
                 <Link href="/login" className={styles.backLink}>
                   Back to Login

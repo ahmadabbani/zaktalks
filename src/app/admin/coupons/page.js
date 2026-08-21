@@ -3,12 +3,14 @@ import CouponsTable from './CouponsTable'
 import Link from 'next/link'
 import { FaTag, FaArrowLeft } from 'react-icons/fa'
 import styles from './admin-coupons.module.css'
+import { requireAdminPagePermission } from '@/lib/auth/admin-page-access'
 
 export const metadata = {
   title: 'Coupon Management | Admin',
 }
 
 export default async function AdminCouponsPage() {
+  await requireAdminPagePermission('coupons.manage')
   const [coupons, courses] = await Promise.all([
     getCoupons(),
     getAllCourses()

@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { getAssessmentById } from '@/assessments/registry'
+import { verifyLessonProgressAccess } from '@/lib/course-progress.server'
 
 const BUCKET = 'specific-assessments'
 
@@ -213,22 +214,12 @@ async function generateWorksheetPdf(definition, answers, profile) {
 
 async function getVerifiedContext(supabase, user, lessonId, options = {}) {
   const requireSpecificAssessment = options.requireSpecificAssessment !== false
-  const { data: lesson, error: lessonError } = await supabase
-    .from('lessons')
-    .select('id, course_id, assessment_key')
-    .eq('id', lessonId)
-    .single()
-
-  if (lessonError || !lesson) throw new Error('Lesson not found.')
-
-  const { data: enrollment, error: enrollmentError } = await supabase
-    .from('user_enrollments')
-    .select('id')
-    .eq('user_id', user.id)
-    .eq('course_id', lesson.course_id)
-    .single()
-
-  if (enrollmentError || !enrollment) throw new Error('Enrollment not found.')
+  const { lesson, enrollment } = await verifyLessonProgressAccess(
+    supabase,
+    user.id,
+    lessonId,
+    'assessment'
+  )
 
   const { data: specificAssessment, error: specificAssessmentError } = await supabase
     .from('specific_assessment_lessons')
@@ -253,7 +244,7 @@ export async function getSpecificAssessmentSubmission({ lessonId, assessmentKey 
   if (!user) return { success: false, error: 'Unauthorized' }
 
   try {
-    await getVerifiedContext(supabase, user, lessonId, { requireSpecificAssessment: false })
+    await getVerifiedContext(adminSupabase, user, lessonId, { requireSpecificAssessment: false })
 
     const { data: submission, error } = await supabase
       .from('specific_assessment_submissions')
@@ -302,7 +293,7 @@ export async function submitSpecificAssessment({ lessonId, assessmentKey, answer
       throw new Error('Worksheet assessment not found.')
     }
 
-    const { lesson, enrollment } = await getVerifiedContext(supabase, user, lessonId)
+    const { lesson, enrollment } = await getVerifiedContext(adminSupabase, user, lessonId)
     if (lesson.assessment_key !== assessmentKey) {
       throw new Error('This worksheet does not belong to the current lesson.')
     }
@@ -355,7 +346,7 @@ export async function submitSpecificAssessment({ lessonId, assessmentKey, answer
       .eq('lesson_id', lessonId)
       .maybeSingle()
 
-    const { error: progressError } = await supabase
+    const { error: progressError } = await adminSupabase
       .from('lesson_progress')
       .upsert({
         user_id: user.id,
@@ -365,6 +356,8 @@ export async function submitSpecificAssessment({ lessonId, assessmentKey, answer
         is_completed: true,
         score: existingProgress?.score || null,
         completed_at: existingProgress?.completed_at || now,
+        playback_status: 'inactive',
+        last_accessed_at: now,
         updated_at: now
       }, {
         onConflict: 'user_id,lesson_id'

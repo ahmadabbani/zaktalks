@@ -1,254 +1,176 @@
-import { stripe } from '@/lib/stripe'
-import { createClient as createAdminClient } from '@/lib/supabase/admin'
-import { resend, ZAKTALKS_EMAIL_FROM } from '@/lib/resend'
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { 
-  spendPoints, 
-  earnPoints, 
-  recordCouponUsage, 
-  markFirstPurchaseUsed,
-  POINTS_PER_PURCHASE 
-} from '@/lib/discount-utils'
+import {
+  fulfillCheckoutSession,
+  markCheckoutTerminal,
+  syncPaymentAccessState,
+} from '@/lib/payments/fulfillment'
+import { stripe } from '@/lib/stripe'
+import { createClient as createAdminClient } from '@/lib/supabase/admin'
 
-function getWebhookSecret() {
+function webhookSecret() {
   if (process.env.NODE_ENV !== 'production') {
     return process.env.STRIPE_WEBHOOK_SECRET_LOCAL || process.env.STRIPE_WEBHOOK_SECRET
   }
-
   return process.env.STRIPE_WEBHOOK_SECRET
 }
 
-function getAuthRedirectBaseUrl(req) {
-  const requestOrigin = req.nextUrl.origin
-  const isLocalRequest = requestOrigin.includes('localhost') || requestOrigin.includes('127.0.0.1')
-
-  if (process.env.NODE_ENV !== 'production' && isLocalRequest) {
-    return requestOrigin
-  }
-
-  return process.env.NEXT_PUBLIC_APP_URL || requestOrigin
+function requestBaseUrl(req) {
+  const origin = req.nextUrl.origin
+  const local = origin.includes('localhost') || origin.includes('127.0.0.1')
+  if (process.env.NODE_ENV !== 'production' && local) return origin
+  return process.env.NEXT_PUBLIC_APP_URL || origin
 }
 
-async function sendWelcomeEmail(email, link) {
-  try {
-    const res = await resend.emails.send({
-      from: ZAKTALKS_EMAIL_FROM,
-      to: email,
-      subject: 'Welcome to ZakTalks! Set your password',
-      html: `
-        <h1>Thank you for your purchase!</h1>
-        <p>You now have access to your course. Since you checked out as a guest, please set a password for your account to log in later:</p>
-        <a href="${link}" style="padding: 10px 20px; background-color: #FFD700; color: black; text-decoration: none; border-radius: 5px; font-weight: bold;">Set Password</a>
-        <p>Or copy this link: ${link}</p>
-      `
-    })
+function stripeObjectId(event) {
+  return event.data?.object?.id || null
+}
 
-    if (res.error) {
-      console.error('Resend error:', res.error)
-      return null
+async function claimEvent(supabaseAdmin, event) {
+  const now = new Date().toISOString()
+  const { error: insertError } = await supabaseAdmin.from('stripe_webhook_events').insert({
+    id: event.id,
+    event_type: event.type,
+    stripe_object_id: stripeObjectId(event),
+    livemode: Boolean(event.livemode),
+    processing_status: 'processing',
+    attempts: 1,
+    received_at: now,
+    updated_at: now,
+  })
+
+  if (!insertError) return 'claimed'
+  if (insertError.code !== '23505') throw new Error(`Unable to record Stripe event: ${insertError.message}`)
+
+  const { data: existing, error: readError } = await supabaseAdmin
+    .from('stripe_webhook_events')
+    .select('processing_status, attempts, updated_at')
+    .eq('id', event.id)
+    .single()
+
+  if (readError) throw new Error(`Unable to read Stripe event state: ${readError.message}`)
+  if (['completed', 'ignored'].includes(existing.processing_status)) return 'done'
+
+  const recentlyClaimed = existing.processing_status === 'processing'
+    && Date.now() - new Date(existing.updated_at).getTime() < 120_000
+  if (recentlyClaimed) return 'busy'
+
+  const { error: updateError } = await supabaseAdmin
+    .from('stripe_webhook_events')
+    .update({
+      processing_status: 'processing',
+      attempts: (existing.attempts || 1) + 1,
+      last_error: null,
+      updated_at: now,
+    })
+    .eq('id', event.id)
+
+  if (updateError) throw new Error(`Unable to reclaim Stripe event: ${updateError.message}`)
+  return 'claimed'
+}
+
+async function finishEvent(supabaseAdmin, eventId, status = 'completed') {
+  const now = new Date().toISOString()
+  const { error } = await supabaseAdmin.from('stripe_webhook_events').update({
+    processing_status: status,
+    processed_at: now,
+    last_error: null,
+    updated_at: now,
+  }).eq('id', eventId)
+  if (error) throw new Error(`Unable to complete Stripe event tracking: ${error.message}`)
+}
+
+async function failEvent(supabaseAdmin, eventId, error) {
+  await supabaseAdmin.from('stripe_webhook_events').update({
+    processing_status: 'failed',
+    last_error: error.message.slice(0, 2000),
+    updated_at: new Date().toISOString(),
+  }).eq('id', eventId)
+}
+
+async function paymentIntentFromCharge(chargeReference) {
+  const charge = typeof chargeReference === 'string'
+    ? await stripe.charges.retrieve(chargeReference)
+    : chargeReference
+  if (typeof charge?.payment_intent === 'string') return charge.payment_intent
+  return charge?.payment_intent?.id || null
+}
+
+async function processEvent(event, req) {
+  switch (event.type) {
+    case 'checkout.session.completed':
+    case 'checkout.session.async_payment_succeeded':
+      await fulfillCheckoutSession(event.data.object.id, { requestOrigin: requestBaseUrl(req) })
+      return true
+
+    case 'checkout.session.async_payment_failed':
+      await markCheckoutTerminal(event.data.object.id, 'failed', 'Stripe reported an asynchronous payment failure')
+      return true
+
+    case 'checkout.session.expired':
+      await markCheckoutTerminal(event.data.object.id, 'expired')
+      return true
+
+    case 'charge.refunded': { // Covers full and partial refunds.
+      const charge = event.data.object
+      const intentId = typeof charge.payment_intent === 'string'
+        ? charge.payment_intent
+        : charge.payment_intent?.id
+      const fullyRefunded = charge.refunded || charge.amount_refunded >= charge.amount
+      await syncPaymentAccessState(intentId, fullyRefunded ? 'refunded' : 'partially_refunded', fullyRefunded)
+      return true
     }
 
-    console.log('Email response:', res)
-    return res
-  } catch (err) {
-    console.error('Resend error:', err)
+    case 'charge.dispute.created': {
+      const intentId = await paymentIntentFromCharge(event.data.object.charge)
+      await syncPaymentAccessState(intentId, 'disputed', true)
+      return true
+    }
+
+    case 'charge.dispute.closed': {
+      const dispute = event.data.object
+      const intentId = await paymentIntentFromCharge(dispute.charge)
+      const lost = dispute.status === 'lost'
+      await syncPaymentAccessState(intentId, lost ? 'dispute_lost' : 'paid', lost)
+      return true
+    }
+
+    default:
+      return false
   }
 }
 
 export async function POST(req) {
   const body = await req.text()
-  const sig = (await headers()).get('stripe-signature')
-  const webhookSecret = getWebhookSecret()
-  const authRedirectBaseUrl = getAuthRedirectBaseUrl(req)
-
+  const signature = (await headers()).get('stripe-signature')
+  const secret = webhookSecret()
   let event
 
   try {
-    if (!sig || !webhookSecret) throw new Error('Missing sig or secret')
-    event = stripe.webhooks.constructEvent(body, sig, webhookSecret)
-  } catch (err) {
-    console.error(`Webhook Error: ${err.message}`)
-    return NextResponse.json({ error: err.message }, { status: 400 })
+    if (!signature || !secret) throw new Error('The Stripe signature or webhook secret is missing')
+    event = stripe.webhooks.constructEvent(body, signature, secret)
+  } catch (error) {
+    console.error('Stripe webhook signature verification failed:', error.message)
+    return NextResponse.json({ error: 'Invalid webhook signature' }, { status: 400 })
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object
-    const { 
-      courseId, 
-      isGuest, 
-      firstName, 
-      lastName,
-      // Discount metadata from checkout
-      originalPriceCents,
-      firstPurchaseDiscountCents,
-      firstPurchaseApplied,
-      pointsDiscountCents,
-      pointsUsed,
-      couponDiscountCents,
-      couponId,
-      couponCode
-    } = session.metadata
-    
-    const email = session.customer_details.email.toLowerCase().trim()
-    const stripeSessionId = session.id
-    const stripePaymentIntentId = session.payment_intent
-    const amountPaid = session.amount_total
+  const supabaseAdmin = await createAdminClient()
+  let claimState = null
 
-    console.log(`Processing enrollment for ${email}, isGuest: ${isGuest}`)
-    console.log('Discount metadata:', { 
-      originalPriceCents, 
-      firstPurchaseApplied,
-      pointsUsed,
-      couponCode 
-    })
-    
-    const supabaseAdmin = await createAdminClient()
-
-    // Idempotency check: skip if this session was already processed
-    // This prevents duplicate point spend/earn on Stripe webhook retries
-    const { data: existingSession } = await supabaseAdmin
-      .from('checkout_sessions')
-      .select('status')
-      .eq('stripe_session_id', stripeSessionId)
-      .single()
-
-    if (existingSession?.status === 'completed') {
-      console.log('Webhook already processed for session:', stripeSessionId)
-      return NextResponse.json({ received: true })
-    }
-    let userId = session.client_reference_id
-    let isBrandNewUser = false
-
-    // 1. Handle Guest User
-    if (isGuest === 'true' && !userId) {
-      console.log('Guest logic triggered...')
-      
-      // Check if user already exists in public.users table (scales to any number of users)
-      const { data: existingUser } = await supabaseAdmin
-        .from('users')
-        .select('id')
-        .eq('email', email.toLowerCase())
-        .single()
-      
-      if (existingUser) {
-        userId = existingUser.id
-        console.log('Linked to existing Auth user:', userId)
-      } else {
-        console.log('Creating new Auth user...')
-        const tempPass = Math.random().toString(36).slice(-12)
-        const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
-          email,
-          password: tempPass,
-          email_confirm: true,
-          user_metadata: { first_name: firstName, last_name: lastName }
-        })
-
-        if (createError) {
-          console.error('User creation failed:', createError)
-          // Recheck - maybe user was created by another process
-          const { data: recheckUser } = await supabaseAdmin
-            .from('users')
-            .select('id')
-            .eq('email', email.toLowerCase())
-            .single()
-          userId = recheckUser?.id
-        } else {
-          userId = newUser.user.id
-          isBrandNewUser = true
-          console.log('Created new user:', userId)
-        }
-      }
-
-      // Generate Link for password setup
-      // For brand new users we just created with createUser(), use 'recovery' (password reset)
-      // because 'invite' tries to create the user again and fails
-      // For existing users who purchased as guest, also use 'recovery'
-      const linkType = 'recovery' // Always use recovery since user exists at this point
-      console.log(`Generating ${linkType} link for ${email}...`)
-      const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
-        type: linkType,
-        email,
-        options: { redirectTo: `${authRedirectBaseUrl}/auth/callback?next=/auth/update-password` }
-      })
-
-      if (linkError) {
-        console.error('Link Error:', linkError)
-        // Fallback to magiclink
-        const { data: mgLink } = await supabaseAdmin.auth.admin.generateLink({
-          type: 'magiclink',
-          email,
-          options: { redirectTo: `${authRedirectBaseUrl}/auth/callback?next=/auth/update-password` }
-        })
-        if (mgLink) await sendWelcomeEmail(email, mgLink.properties.action_link)
-      } else {
-        await sendWelcomeEmail(email, linkData.properties.action_link)
-      }
+  try {
+    claimState = await claimEvent(supabaseAdmin, event)
+    if (claimState === 'done') return NextResponse.json({ received: true, duplicate: true })
+    if (claimState === 'busy') {
+      return NextResponse.json({ error: 'Stripe event is already processing' }, { status: 503 })
     }
 
-    // 2. Process Discounts (NEW - after user is resolved)
-    if (userId) {
-      try {
-        // 2a. Mark first purchase discount as used
-        if (firstPurchaseApplied === 'true' && parseInt(firstPurchaseDiscountCents) > 0) {
-          console.log('Marking first purchase discount as used...')
-          await markFirstPurchaseUsed(userId)
-        }
-
-        // 2b. Spend points if used
-        const pointsToSpend = parseInt(pointsUsed) || 0
-        if (pointsToSpend > 0) {
-          console.log(`Spending ${pointsToSpend} points...`)
-          await spendPoints(userId, pointsToSpend, courseId, `Used for course purchase`)
-        }
-
-        // 2c. Record coupon usage
-        if (couponId && couponId !== '') {
-          console.log(`Recording coupon usage: ${couponCode}...`)
-          await recordCouponUsage(couponId, userId, courseId)
-        }
-
-        // 2d. Award points for this purchase (1000 points)
-        console.log(`Awarding ${POINTS_PER_PURCHASE} points...`)
-        await earnPoints(userId, courseId, `Earned from course purchase`)
-      } catch (discountError) {
-        console.error('Error processing discounts:', discountError)
-        // Continue with enrollment even if discount processing fails
-      }
-    }
-
-    // 3. Enrollment with discount details (ENHANCED)
-    console.log(`Upserting enrollment for user ${userId}...`)
-    const enrollmentData = {
-      user_id: userId,
-      course_id: courseId,
-      stripe_payment_intent_id: stripePaymentIntentId,
-      payment_status: 'completed',
-      amount_paid_cents: amountPaid,
-      original_price_cents: parseInt(originalPriceCents) || amountPaid,
-      discount_applied_cents: (parseInt(originalPriceCents) || amountPaid) - amountPaid,
-      // Store which discounts were applied
-      first_purchase_discount_applied: firstPurchaseApplied === 'true',
-      points_earned: POINTS_PER_PURCHASE,
-      coupon_id: couponId && couponId !== '' ? couponId : null
-    }
-    
-    const { error: enrollError } = await supabaseAdmin
-      .from('user_enrollments')
-      .upsert(enrollmentData, { onConflict: 'user_id, course_id' })
-
-    if (enrollError) console.error('Enrollment Error:', enrollError)
-    else console.log('Enrollment Success with discount tracking')
-
-    // 4. Update Session (UNCHANGED)
-    await supabaseAdmin.from('checkout_sessions').update({ 
-      status: 'completed', 
-      user_id: userId, 
-      completed_at: new Date().toISOString() 
-    }).eq('stripe_session_id', stripeSessionId)
-
-    console.log('Payment processing complete!')
+    const handled = await processEvent(event, req)
+    await finishEvent(supabaseAdmin, event.id, handled ? 'completed' : 'ignored')
+    return NextResponse.json({ received: true })
+  } catch (error) {
+    console.error(`Stripe event ${event.id} (${event.type}) failed:`, error.message)
+    if (claimState === 'claimed') await failEvent(supabaseAdmin, event.id, error)
+    // Stripe retries verified events when application processing returns non-2xx.
+    return NextResponse.json({ error: 'Stripe event processing failed' }, { status: 500 })
   }
-
-  return NextResponse.json({ received: true })
 }

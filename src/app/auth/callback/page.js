@@ -1,144 +1,137 @@
 'use client'
 
-import { useEffect, useState, Suspense } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense, useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import toast from 'react-hot-toast'
 
+function safeRedirectPath(value) {
+  if (!value || !value.startsWith('/') || value.startsWith('//')) {
+    return '/dashboard'
+  }
+
+  return value
+}
+
 function AuthContent() {
-  const router = useRouter()
   const searchParams = useSearchParams()
-  const next = searchParams.get('next') ?? '/dashboard'
-  const [status, setStatus] = useState('Verifying your session...')
+  const next = useMemo(
+    () => safeRedirectPath(searchParams.get('next')),
+    [searchParams],
+  )
+  const isEmailChange = next.includes('section=profile') && next.includes('email=confirmed')
+  const [status, setStatus] = useState(isEmailChange ? 'Confirming your email change...' : 'Confirming your secure link...')
+  const shouldSendWelcome = searchParams.get('welcome') === 'signup'
 
   useEffect(() => {
-    // Flag to prevent double firing in dev mode
-    let mounted = true
+    let active = true
+    let subscription = null
+    let redirectStarted = false
+    const supabase = createClient()
+
+    const finish = async (session) => {
+      if (!active || redirectStarted) return
+      redirectStarted = true
+
+      setStatus(isEmailChange ? 'Email confirmation recorded. Redirecting...' : 'Secure link confirmed. Redirecting...')
+      toast.success(isEmailChange ? 'Email confirmation recorded' : 'Secure link confirmed')
+
+      if (shouldSendWelcome && session?.access_token) {
+        try {
+          await fetch('/api/auth/welcome', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${session.access_token}` },
+            cache: 'no-store',
+          })
+        } catch (error) {
+          // Welcome delivery is retried on the user's next successful login.
+          console.error('Welcome email request failed:', error.message)
+        }
+      }
+
+      // Supabase has persisted the new session in browser cookies at this point.
+      // Use a full navigation so the destination request is made only after those
+      // cookies are available, and remove the one-time auth callback from history.
+      window.location.replace(next)
+    }
+
+    const fail = (message) => {
+      if (!active || redirectStarted) return
+      const safeMessage = message || 'This secure link is invalid or has expired.'
+      setStatus(safeMessage)
+      toast.error(safeMessage)
+    }
 
     const handleAuth = async () => {
-      setStatus('Initializing auth...')
-      const supabase = createClient()
-      
-      // Debug: Log what's in the URL
-      console.log('Callback URL:', window.location.href)
-      console.log('Hash:', window.location.hash)
-      console.log('Search:', window.location.search)
-      
-      // Check if URL contains recovery/auth tokens in hash
       const hash = window.location.hash
-      const hasTokensInHash = hash && hash.includes('access_token')
-      
-      // PRIORITY 1: If we have tokens in the hash, process them FIRST
-      // This handles recovery links and email confirmation links
-      if (hasTokensInHash) {
-        setStatus('Processing authentication link...')
-        try {
-          const params = new URLSearchParams(hash.substring(1)) // remove #
-          const accessToken = params.get('access_token')
-          const refreshToken = params.get('refresh_token')
-          
-          if (accessToken) {
-            // Set the new session with the tokens from the link
-            const { data, error: setSessionError } = await supabase.auth.setSession({
-              access_token: accessToken,
-              refresh_token: refreshToken || '',
-            })
-            
-            if (setSessionError) {
-              console.error('setSession error:', setSessionError)
-              if(mounted) {
-                setStatus(`Verification Failed: ${setSessionError.message}`)
-                toast.error(setSessionError.message)
-              }
-              return
-            }
-            
-            if (data.session) {
-              console.log('Session established from link, user:', data.session.user?.id)
-              console.log('Redirecting to:', next)
-              if(mounted) {
-                setStatus('Verified! Redirecting...')
-                toast.success('Successfully verified!')
-                // Clear the hash to prevent reprocessing
-                window.history.replaceState(null, '', window.location.pathname + window.location.search)
-                // Use window.location for more reliable redirect
-                window.location.href = next
-              }
-              return
-            }
-          }
-        } catch (err) {
-          console.error('Hash parsing error', err)
-          if(mounted) setStatus(`Error processing link: ${err.message}`)
-        }
-        return
-      }
-      
-      // PRIORITY 2: Check for Code (PKCE flow)
-      const code = searchParams.get('code')
-      if (code) {
-        setStatus('Exchanging code for session...')
-        const { error } = await supabase.auth.exchangeCodeForSession(code)
-        if (error) {
-          console.error('Exchange error:', error)
-          if(mounted) {
-             setStatus(`Code Exchange Failed: ${error.message}`)
-             toast.error(error.message)
-          }
+      const hashParams = new URLSearchParams(hash.startsWith('#') ? hash.slice(1) : hash)
+      const accessToken = hashParams.get('access_token')
+      const refreshToken = hashParams.get('refresh_token')
+
+      if (accessToken) {
+        setStatus(isEmailChange ? 'Confirming your email change...' : 'Confirming your secure link...')
+        const { data, error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken || '',
+        })
+
+        if (error || !data.session) {
+          fail(error?.message)
           return
         }
-        // If success, check session below
+
+        await finish(data.session)
+        return
       }
 
-      // PRIORITY 3: Setup listener for auth state changes
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-        console.log('Auth Event:', event)
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'PASSWORD_RECOVERY' || (event === 'INITIAL_SESSION' && session)) {
-           if(mounted) {
-             setStatus('Verified! Redirecting...')
-             toast.success('Successfully verified!')
-             router.push(next)
-             router.refresh()
-           }
+      const code = searchParams.get('code')
+      if (code) {
+        setStatus(isEmailChange ? 'Confirming your email change...' : 'Confirming your secure link...')
+        const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+
+        if (error || !data.session) {
+          fail(error?.message)
+          return
         }
-        if (event === 'SIGNED_OUT') {
-           if(mounted) setStatus('User signed out. Please login.')
+
+        await finish(data.session)
+        return
+      }
+
+      const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+        if (
+          session
+          && ['SIGNED_IN', 'PASSWORD_RECOVERY', 'INITIAL_SESSION'].includes(event)
+        ) {
+          finish(session)
         }
       })
+      subscription = authListener.subscription
 
-      // PRIORITY 4: Check current session (for PKCE code exchange result or existing session)
-      const { data: { session }, error } = await supabase.auth.getSession()
-      
+      const { data, error } = await supabase.auth.getSession()
+
       if (error) {
-         console.error('Session Error:', error)
-         if(mounted) setStatus(`Session Error: ${error.message}`)
-      } else if (session) {
-         console.log('Session found, user:', session.user?.id)
-         if(mounted) {
-             setStatus('Verified! Redirecting...')
-             router.push(next)
-             router.refresh()
-         }
-      } else {
-        if(mounted) setStatus('Waiting for authentication...')
-      }
-      
-      return () => {
-        mounted = false
-        subscription.unsubscribe()
+        fail(error.message)
+      } else if (data.session) {
+        finish(data.session)
+      } else if (active) {
+        setStatus('This secure link is invalid or has expired.')
       }
     }
 
+    handleAuth().catch((error) => fail(error.message))
 
-    handleAuth()
-  }, [router, searchParams, next])
+    return () => {
+      active = false
+      subscription?.unsubscribe()
+    }
+  }, [isEmailChange, next, searchParams, shouldSendWelcome])
 
   return (
     <div className="container" style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
       <div className="card" style={{ textAlign: 'center' }}>
-        <div className="spinner" style={{ margin: '0 auto var(--space-md)' }}></div>
-        <h2>{status}</h2>
-        <p>Please wait while we log you in...</p>
+        <h2>{isEmailChange ? 'Email confirmation' : 'Account setup'}</h2>
+        <p>{status}</p>
       </div>
     </div>
   )
@@ -146,7 +139,7 @@ function AuthContent() {
 
 export default function AuthCallbackPage() {
   return (
-    <Suspense fallback={<div className="container" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading...</div>}>
+    <Suspense fallback={<div>Confirming your secure link...</div>}>
       <AuthContent />
     </Suspense>
   )
