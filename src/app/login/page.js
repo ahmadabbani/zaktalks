@@ -1,6 +1,4 @@
-import AuthForm from '@/components/AuthForm'
-import { login } from '@/app/auth/actions'
-import styles from '../auth.module.css'
+import AuthExperience from '@/components/AuthExperience'
 
 export const metadata = {
   title: 'Sign In - ZakTalks',
@@ -8,11 +6,5 @@ export const metadata = {
 }
 
 export default function LoginPage() {
-  return (
-    <div className={styles.authContainer}>
-      <div className="container">
-        <AuthForm type="login" action={login} />
-      </div>
-    </div>
-  )
+  return <AuthExperience initialMode="login" />
 }

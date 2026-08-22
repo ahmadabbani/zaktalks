@@ -198,6 +198,23 @@ export default function NavbarClient({ user, role, signout }) {
                 </button>
               </form>
             )}
+
+            {!user && (
+              <div className={styles.authActions} aria-label="Account access">
+                <Link
+                  href="/login"
+                  className={`${styles.signInLink} ${pathname === '/login' ? styles.authActionActive : ''}`}
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/register"
+                  className={`${styles.registerLink} ${pathname === '/register' ? styles.authActionActive : ''}`}
+                >
+                  Create account
+                </Link>
+              </div>
+            )}
           </div>
 
           <button
@@ -287,6 +304,25 @@ export default function NavbarClient({ user, role, signout }) {
                 Sign Out
               </button>
             </form>
+          )}
+
+          {!user && (
+            <div className={styles.mobileAuthActions} aria-label="Account access">
+              <Link
+                href="/login"
+                className={`${styles.mobileSignInLink} ${pathname === '/login' ? styles.mobileAuthActive : ''}`}
+                onClick={closeMenu}
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/register"
+                className={`${styles.mobileRegisterLink} ${pathname === '/register' ? styles.mobileAuthActive : ''}`}
+                onClick={closeMenu}
+              >
+                Create account
+              </Link>
+            </div>
           )}
         </div>
       </div>

@@ -1,6 +1,4 @@
-import AuthForm from '@/components/AuthForm'
-import { signup } from '@/app/auth/actions'
-import styles from '../auth.module.css'
+import AuthExperience from '@/components/AuthExperience'
 
 export const metadata = {
   title: 'Create Account - ZakTalks',
@@ -8,11 +6,5 @@ export const metadata = {
 }
 
 export default function RegisterPage() {
-  return (
-    <div className={styles.authContainer}>
-      <div className="container">
-        <AuthForm type="register" action={signup} />
-      </div>
-    </div>
-  )
+  return <AuthExperience initialMode="register" />
 }

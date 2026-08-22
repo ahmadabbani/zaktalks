@@ -89,20 +89,55 @@
     color: var(--color-yellow);
 }
 
-.loginLink {
-    padding-inline: 1.05rem;
-    color: var(--color-white);
-    border: 1px solid var(--color-yellow);
-    border-radius: 999px;
-    background: var(--color-yellow);
+.authActions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: .45rem;
+    margin-left: .35rem;
+    padding-left: .8rem;
+    border-left: 1px solid rgba(255, 255, 255, .16);
 }
 
-.loginLink:hover,
-.loginLink:focus-visible,
-.loginLink.active {
-    border-color: var(--color-yellow);
+.signInLink,
+.registerLink {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: .62rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: .84rem;
+    font-weight: 760;
+    line-height: 1;
+    white-space: nowrap;
+    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.signInLink {
+    border-color: var(--color-white);
+    color: var(--color-black);
+    background: var(--color-white);
+}
+
+.registerLink {
+    border-color: var(--color-white);
     color: var(--color-white);
-    background: var(--color-yellow);
+    background: var(--color-black);
+}
+
+.signInLink:hover,
+.signInLink:focus-visible,
+.registerLink:hover,
+.registerLink:focus-visible,
+.authActionActive {
+    border-color: var(--color-white);
+    color: var(--color-black);
+    background: var(--color-white);
+    box-shadow: 0 .55rem 1.25rem rgba(0, 0, 0, .16);
+    transform: translateY(-1px);
+    outline: none;
 }
 
 .servicesDropdown {
@@ -442,21 +477,53 @@
     outline: none;
 }
 
-.mobileLoginLink {
+.mobileAuthActions {
+    display: grid;
+    grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+    gap: .55rem;
+    margin-top: .45rem;
+    padding-top: .8rem;
+    border-top: 1px solid rgba(255, 255, 255, .14);
+}
+
+.mobileSignInLink,
+.mobileRegisterLink {
+    display: flex;
+    min-height: 3rem;
+    align-items: center;
     justify-content: center;
-    margin-top: 0.35rem;
-    color: var(--color-white);
-    border: 1px solid var(--color-yellow);
+    padding: .75rem .85rem;
+    border: 1px solid transparent;
     border-radius: 999px;
+    color: var(--color-white);
+    font-size: 1rem;
+    font-weight: 750;
+    line-height: 1.2;
+    text-align: center;
+    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.mobileSignInLink {
+    border-color: var(--color-white);
+    color: var(--color-dark-blue);
+    background: var(--color-white);
+}
+
+.mobileRegisterLink {
+    border-color: var(--color-yellow);
     background: var(--color-yellow);
 }
 
-.mobileLoginLink:hover,
-.mobileLoginLink:focus-visible,
-.mobileLoginLink.mobileActive {
-    border-color: var(--color-yellow);
-    color: var(--color-white);
-    background: var(--color-yellow);
+.mobileSignInLink:hover,
+.mobileSignInLink:focus-visible,
+.mobileRegisterLink:hover,
+.mobileRegisterLink:focus-visible,
+.mobileAuthActive {
+    border-color: var(--color-white);
+    color: var(--color-dark-blue);
+    background: var(--color-white);
+    transform: translateY(-1px);
+    outline: none;
 }
 
 .mobileServicesTrigger {
@@ -556,6 +623,43 @@
 .podcastTheme .serviceSubmenu,
 .podcastTheme .mobileServiceMenuList {
     border-left-color: rgba(33, 44, 45, 0.42);
+}
+
+.podcastTheme .authActions {
+    border-left-color: rgba(33, 44, 45, .24);
+}
+
+.podcastTheme .mobileAuthActions {
+    border-top-color: rgba(33, 44, 45, .2);
+}
+
+.podcastTheme .signInLink,
+.podcastTheme .mobileSignInLink {
+    border-color: var(--color-white);
+    color: var(--color-dark-blue);
+    background: var(--color-white);
+}
+
+.podcastTheme .registerLink,
+.podcastTheme .mobileRegisterLink {
+    border-color: var(--color-white);
+    color: var(--color-white);
+    background: var(--color-yellow);
+}
+
+.podcastTheme .signInLink:hover,
+.podcastTheme .signInLink:focus-visible,
+.podcastTheme .registerLink:hover,
+.podcastTheme .registerLink:focus-visible,
+.podcastTheme .authActionActive,
+.podcastTheme .mobileSignInLink:hover,
+.podcastTheme .mobileSignInLink:focus-visible,
+.podcastTheme .mobileRegisterLink:hover,
+.podcastTheme .mobileRegisterLink:focus-visible,
+.podcastTheme .mobileAuthActive {
+    border-color: var(--color-white);
+    color: var(--color-black);
+    background: var(--color-white);
 }
 
 .podcastTheme .burgerMenu {

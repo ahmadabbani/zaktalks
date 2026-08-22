@@ -37,27 +37,63 @@ export default async function AdminDashboardPage() {
         </h2>
         <div className={styles.statsGrid}>
           <div className={styles.statCard}>
-            <div className={styles.statIcon}>
-              <FaGraduationCap />
+            <div className={styles.statCardTop}>
+              <span className={styles.statCode}>01 / Courses</span>
             </div>
-            <div className={styles.statLabel}>Total Courses</div>
-            <div className={styles.statValue}>{coursesCount || 0}</div>
+            <div className={styles.statMain}>
+              <div className={styles.statCopy}>
+                <div className={styles.statLabel}>Total Courses</div>
+                <div className={styles.statValue}>{coursesCount || 0}</div>
+              </div>
+              <div className={styles.statVisual} aria-hidden="true">
+                <span className={styles.statOrbit} />
+                <span className={styles.statOrbitInner} />
+                <div className={styles.statIcon}>
+                  <FaGraduationCap />
+                </div>
+              </div>
+            </div>
+            <div className={styles.statFooter}><span />Course records</div>
           </div>
 
           <div className={styles.statCard}>
-            <div className={styles.statIcon}>
-              <FaUsers />
+            <div className={styles.statCardTop}>
+              <span className={styles.statCode}>02 / Learners</span>
             </div>
-            <div className={styles.statLabel}>Verified Students</div>
-            <div className={styles.statValue}>{verifiedStudentsCount || 0}</div>
+            <div className={styles.statMain}>
+              <div className={styles.statCopy}>
+                <div className={styles.statLabel}>Verified Students</div>
+                <div className={styles.statValue}>{verifiedStudentsCount || 0}</div>
+              </div>
+              <div className={styles.statVisual} aria-hidden="true">
+                <span className={styles.statOrbit} />
+                <span className={styles.statOrbitInner} />
+                <div className={styles.statIcon}>
+                  <FaUsers />
+                </div>
+              </div>
+            </div>
+            <div className={styles.statFooter}><span />Verified learner accounts</div>
           </div>
 
           <div className={styles.statCard}>
-            <div className={styles.statIcon}>
-              <FaDollarSign />
+            <div className={styles.statCardTop}>
+              <span className={styles.statCode}>03 / Revenue</span>
             </div>
-            <div className={styles.statLabel}>Total Revenue</div>
-            <div className={styles.statValue}>${totalRevenue}</div>
+            <div className={styles.statMain}>
+              <div className={styles.statCopy}>
+                <div className={styles.statLabel}>Total Revenue</div>
+                <div className={styles.statValue}>${totalRevenue}</div>
+              </div>
+              <div className={styles.statVisual} aria-hidden="true">
+                <span className={styles.statOrbit} />
+                <span className={styles.statOrbitInner} />
+                <div className={styles.statIcon}>
+                  <FaDollarSign />
+                </div>
+              </div>
+            </div>
+            <div className={styles.statFooter}><span />Completed enrollment payments</div>
           </div>
         </div>
       </section>}

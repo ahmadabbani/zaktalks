@@ -1380,160 +1380,160 @@
 .enrollmentMetricCard::after { content: none; }
 
 .panelHeading h2 { font-size: clamp(1.78rem,2.6vw,2.7rem); }
-.panelHeading p { font-size: .98rem; }
+.panelHeading p { font-size: 1.06rem; }
 
 .metricCard { padding: 1.12rem; }
-.metricIcon { width: 2.05rem; height: 2.05rem; font-size: .77rem; }
-.metricLabel { font-size: .76rem; }
+.metricIcon { width: 2.05rem; height: 2.05rem; font-size: 0.87rem; }
+.metricLabel { font-size: 0.86rem; }
 .metricValue { font-size: clamp(1.88rem,2.4vw,2.78rem); }
-.metricFooter { font-size: .68rem; }
+.metricFooter { font-size: 0.8rem; }
 .metricDeltaPositive,
 .metricDeltaNegative,
 .metricDeltaNeutral,
-.metricContext { font-size: .64rem; }
+.metricContext { font-size: 0.8rem; }
 .dashboardCard { padding: clamp(1.25rem,1.9vw,1.72rem); }
 .cardHeader h3 { font-size: clamp(1.06rem,1.45vw,1.36rem); }
-.cardMeta { font-size: .66rem; }
-.growthValue { font-size: .68rem; }
-.growthLabel { font-size: .62rem; }
-.healthVisuals>div>span { font-size: .62rem; }
+.cardMeta { font-size: 0.8rem; }
+.growthValue { font-size: 0.8rem; }
+.growthLabel { font-size: 0.8rem; }
+.healthVisuals>div>span { font-size: 0.8rem; }
 .healthRing strong { font-size: 1.38rem; }
-.healthRing span { font-size: .66rem; }
-.healthRows span { font-size: .72rem; }
-.healthRows strong { font-size: .82rem; }
-.engagementSummary span { font-size: .66rem; }
-.engagementCaption { font-size: .7rem; }
-.activityIcon { width: 2rem; height: 2rem; font-size: .72rem; }
-.activityItem strong { font-size: .72rem; }
-.activityItem>div span { font-size: .64rem; }
-.activityItem time { font-size: .62rem; }
-.activityMoreButton { font-size: .69rem; }
-.recentUsersHead { font-size: .62rem; }
+.healthRing span { font-size: 0.8rem; }
+.healthRows span { font-size: 0.82rem; }
+.healthRows strong { font-size: 0.92rem; }
+.engagementSummary span { font-size: 0.8rem; }
+.engagementCaption { font-size: 0.8rem; }
+.activityIcon { width: 2rem; height: 2rem; font-size: 0.82rem; }
+.activityItem strong { font-size: 0.82rem; }
+.activityItem>div span { font-size: 0.8rem; }
+.activityItem time { font-size: 0.8rem; }
+.activityMoreButton { font-size: 0.8rem; }
+.recentUsersHead { font-size: 0.8rem; }
 .recentUserRow { padding-block: .85rem; }
-.userAvatar { width: 2.35rem; height: 2.35rem; font-size: .69rem; }
-.userIdentity strong { font-size: .76rem; }
+.userAvatar { width: 2.35rem; height: 2.35rem; font-size: 0.8rem; }
+.userIdentity strong { font-size: 0.86rem; }
 .userIdentity>div span,
-.recentUserRow time { font-size: .66rem; }
+.recentUserRow time { font-size: 0.8rem; }
 .statusVerified,
 .statusPending,
 .statusAdmin,
 .learningEnrolled,
-.learningNotEnrolled { font-size: .6rem; }
+.learningNotEnrolled { font-size: 0.8rem; }
 
-.directorySearch input { font-size: .86rem; }
-.directorySelectLabel { font-size: .62rem; }
-.directorySelectShell select { min-height: 2.65rem; font-size: .69rem; }
+.directorySearch input { font-size: 0.96rem; }
+.directorySelectLabel { font-size: 0.8rem; }
+.directorySelectShell select { min-height: 2.65rem; font-size: 0.8rem; }
 .directoryToolbarBottom>span,
-.directoryToolbarBottom button { font-size: .66rem; }
-.directoryTableHeader { font-size: .59rem; }
+.directoryToolbarBottom button { font-size: 0.8rem; }
+.directoryTableHeader { font-size: 0.8rem; }
 .directoryRow { min-height: 4.85rem; padding-block: .72rem; }
 .directoryIdentity strong,
 .directoryLearning strong,
-.directoryDate strong { font-size: .73rem; }
+.directoryDate strong { font-size: 0.83rem; }
 .directoryIdentity small,
 .directoryAccess small,
 .directoryLearning small,
-.directoryDate small { font-size: .62rem; }
+.directoryDate small { font-size: 0.8rem; }
 .directoryOpen { width: 2rem; height: 2rem; }
 .directoryPagination>label,
 .directoryPagination select,
 .directoryPagination>span,
-.directoryPagination>div>span { font-size: .66rem; }
+.directoryPagination>div>span { font-size: 0.8rem; }
 
 .enrollmentRangeBar { padding: .92rem 1.08rem; }
-.enrollmentRangeBar>div:first-child>span { font-size: .72rem; }
-.enrollmentRangeBar p { font-size: .6rem; }
+.enrollmentRangeBar>div:first-child>span { font-size: 0.82rem; }
+.enrollmentRangeBar p { font-size: 0.8rem; }
 .enrollmentRangeOption,
-.enrollmentRangeActive { font-size: .61rem; }
+.enrollmentRangeActive { font-size: 0.8rem; }
 .enrollmentMetricCard { gap: .82rem; min-height: 5.55rem; padding: 1.08rem; }
-.enrollmentMetricIcon { width: 2.48rem; height: 2.48rem; font-size: .88rem; }
-.enrollmentMetricCard>div>span { font-size: .62rem; }
+.enrollmentMetricIcon { width: 2.48rem; height: 2.48rem; font-size: 0.98rem; }
+.enrollmentMetricCard>div>span { font-size: 0.8rem; }
 .enrollmentMetricCard strong { font-size: 1.82rem; }
-.enrollmentMetricCard small { font-size: .56rem; }
+.enrollmentMetricCard small { font-size: 0.8rem; }
 .enrollmentInsightCard { padding: 1.08rem; }
 .enrollmentCardHeader>div>span,
-.enrollmentSectionHeading>div>span { font-size: .56rem; }
+.enrollmentSectionHeading>div>span { font-size: 0.8rem; }
 .enrollmentCardHeader h3,
-.enrollmentSectionHeading h3 { font-size: .92rem; }
-.enrollmentCardHeader>span { font-size: .54rem; }
+.enrollmentSectionHeading h3 { font-size: 1rem; }
+.enrollmentCardHeader>span { font-size: 0.8rem; }
 .enrollmentTrendItem>div>span,
 .learningTrendItem>span,
-.courseTrendItem>span { font-size: .52rem; }
+.courseTrendItem>span { font-size: 0.8rem; }
 .enrollmentTrendItem small,
 .learningTrendItem small,
-.courseTrendItem small { font-size: .48rem; }
-.enrollmentCourseMix strong { font-size: .64rem; }
-.enrollmentCourseMix>div>div>span { font-size: .54rem; }
-.enrollmentCourseMix small { font-size: .52rem; }
+.courseTrendItem small { font-size: 0.8rem; }
+.enrollmentCourseMix strong { font-size: 0.8rem; }
+.enrollmentCourseMix>div>div>span { font-size: 0.8rem; }
+.enrollmentCourseMix small { font-size: 0.8rem; }
 .enrollmentHealthRing strong { font-size: 1.32rem; }
-.enrollmentHealthRing span { font-size: .52rem; }
-.enrollmentStateRows span { font-size: .54rem; }
-.enrollmentStateRows strong { font-size: .62rem; }
-.enrollmentSectionHeading p { font-size: .61rem; }
-.enrollmentSelectLabel { font-size: .58rem; }
-.enrollmentSelectShell select { min-height: 2.62rem; font-size: .66rem; }
+.enrollmentHealthRing span { font-size: 0.8rem; }
+.enrollmentStateRows span { font-size: 0.8rem; }
+.enrollmentStateRows strong { font-size: 0.8rem; }
+.enrollmentSectionHeading p { font-size: 0.8rem; }
+.enrollmentSelectLabel { font-size: 0.8rem; }
+.enrollmentSelectShell select { min-height: 2.62rem; font-size: 0.8rem; }
 .enrollmentTableHeader,
-.learningTableHeader { font-size: .56rem; }
+.learningTableHeader { font-size: 0.8rem; }
 .enrollmentRow { min-height: 4.85rem; padding-block: .72rem; }
 .enrollmentCourseCell strong,
-.enrollmentSourceCell strong { font-size: .69rem; }
+.enrollmentSourceCell strong { font-size: 0.8rem; }
 .enrollmentCourseCell small,
 .enrollmentStatusCell small,
-.enrollmentSourceCell small { font-size: .58rem; }
-.enrollmentPill { font-size: .54rem; }
+.enrollmentSourceCell small { font-size: 0.8rem; }
+.enrollmentPill { font-size: 0.8rem; }
 
-.learningHealthList article>div strong { font-size: .63rem; }
-.learningHealthList article>div span { font-size: .57rem; }
-.learningHealthList article>small { font-size: .51rem; }
-.learningProgressTrack>strong { font-size: .5rem; }
-.learningModuleOrder { width: 1.8rem; height: 1.8rem; font-size: .52rem; }
-.learningModuleHealth strong { font-size: .6rem; }
-.learningModuleHealth small { font-size: .49rem; }
-.learningModuleHealth b { font-size: .6rem; }
+.learningHealthList article>div strong { font-size: 0.8rem; }
+.learningHealthList article>div span { font-size: 0.8rem; }
+.learningHealthList article>small { font-size: 0.8rem; }
+.learningProgressTrack>strong { font-size: 0.8rem; }
+.learningModuleOrder { width: 1.8rem; height: 1.8rem; font-size: 0.8rem; }
+.learningModuleHealth strong { font-size: 0.8rem; }
+.learningModuleHealth small { font-size: 0.8rem; }
+.learningModuleHealth b { font-size: 0.8rem; }
 .learningRow { min-height: 5rem; padding-block: .74rem; }
 
 .coursePortfolioToolbar>span,
-.courseLearnerToolbar>span { font-size: .59rem; }
+.courseLearnerToolbar>span { font-size: 0.8rem; }
 .coursePortfolioToolbar>span>button,
-.courseLearnerToolbar>span>button { font-size: .56rem; }
+.courseLearnerToolbar>span>button { font-size: 0.8rem; }
 .coursePerformanceCard { gap: .98rem; padding: 1.08rem; }
-.courseNumber { width: 1.85rem; height: 1.85rem; font-size: .52rem; }
-.courseCardTitle>span { font-size: .52rem; }
-.courseCardTitle h4 { font-size: .96rem; }
-.courseCardTitle small { font-size: .55rem; }
+.courseNumber { width: 1.85rem; height: 1.85rem; font-size: 0.8rem; }
+.courseCardTitle>span { font-size: 0.8rem; }
+.courseCardTitle h4 { font-size: 1.04rem; }
+.courseCardTitle small { font-size: 0.8rem; }
 .courseProgressRing strong { font-size: 1.06rem; }
-.courseProgressRing small { font-size: .47rem; }
-.courseCardProgress dt { font-size: .49rem; }
-.courseCardProgress dd { font-size: .76rem; }
-.courseStateDistribution small { font-size: .5rem; }
-.courseAttention small { font-size: .48rem; }
-.courseAttention strong { font-size: .61rem; }
-.courseAttention b { font-size: .62rem; }
-.coursePerformanceCard>footer>span { font-size: .5rem; }
-.coursePerformanceCard>footer>button { min-height: 2.2rem; font-size: .56rem; }
-.courseModalHeader>div:first-child>span { font-size: .54rem; }
+.courseProgressRing small { font-size: 0.8rem; }
+.courseCardProgress dt { font-size: 0.8rem; }
+.courseCardProgress dd { font-size: 0.86rem; }
+.courseStateDistribution small { font-size: 0.8rem; }
+.courseAttention small { font-size: 0.8rem; }
+.courseAttention strong { font-size: 0.8rem; }
+.courseAttention b { font-size: 0.8rem; }
+.coursePerformanceCard>footer>span { font-size: 0.8rem; }
+.coursePerformanceCard>footer>button { min-height: 2.2rem; font-size: 0.8rem; }
+.courseModalHeader>div:first-child>span { font-size: 0.8rem; }
 .courseModalHeader h3 { font-size: 1.14rem; }
-.courseModalHeader small { font-size: .54rem; }
+.courseModalHeader small { font-size: 0.8rem; }
 .courseDetailMetrics article { padding: .78rem; }
-.courseDetailMetrics article>span { width: 1.9rem; height: 1.9rem; font-size: .62rem; }
-.courseDetailMetrics strong { font-size: .9rem; }
-.courseDetailMetrics small { font-size: .49rem; }
-.courseDetailCard>p { font-size: .49rem; }
-.courseHeatLegend { font-size: .47rem; }
-.courseDetailSectionHeading>div>span { font-size: .52rem; }
-.courseDetailSectionHeading h3 { font-size: .86rem; }
-.courseDetailSectionHeading p { font-size: .52rem; }
+.courseDetailMetrics article>span { width: 1.9rem; height: 1.9rem; font-size: 0.8rem; }
+.courseDetailMetrics strong { font-size: 0.98rem; }
+.courseDetailMetrics small { font-size: 0.8rem; }
+.courseDetailCard>p { font-size: 0.8rem; }
+.courseHeatLegend { font-size: 0.8rem; }
+.courseDetailSectionHeading>div>span { font-size: 0.8rem; }
+.courseDetailSectionHeading h3 { font-size: 0.96rem; }
+.courseDetailSectionHeading p { font-size: 0.8rem; }
 .courseModuleHeader,
-.courseLearnerHeader { font-size: .5rem; }
+.courseLearnerHeader { font-size: 0.8rem; }
 .courseModuleIdentity strong,
 .courseModuleTable article>span>strong,
 .courseLearnerProgress strong,
-.courseLearnerPosition strong { font-size: .59rem; }
+.courseLearnerPosition strong { font-size: 0.8rem; }
 .courseModuleIdentity small,
 .courseModuleTable article>span>small,
 .courseLearnerProgress small,
 .courseLearnerPosition small,
-.courseLearnerState small { font-size: .48rem; }
+.courseLearnerState small { font-size: 0.8rem; }
 .courseLearnerTable>div>article { min-height: 4.45rem; }
 
 @media (max-width: 1180px) {
@@ -1552,7 +1552,7 @@
   .adminLoadingMetrics span { min-height: 5.8rem; }
   .adminLoadingRows span { min-height: 4.35rem; }
   .panelHeading h2 { font-size: 1.6rem; }
-  .panelHeading p { font-size: .86rem; }
+  .panelHeading p { font-size: 0.96rem; }
   .metricCard { padding: .96rem; }
   .dashboardCard,
   .enrollmentInsightCard,
@@ -1575,26 +1575,26 @@
 .assessmentMetricGrid>article { display: flex; align-items: center; gap: .9rem; min-width: 0; min-height: 6.25rem; padding: 1rem 1.08rem; border: 1px solid rgba(33,44,45,.08); border-radius: 1.05rem; background: var(--color-white); animation: assessmentItemIn .42s cubic-bezier(.22,1,.36,1) both; animation-delay: var(--assessment-delay); }
 .assessmentMetricGrid>article>span { display: grid; flex: 0 0 auto; place-items: center; width: 2.55rem; height: 2.55rem; border-radius: .78rem; color: var(--color-white); background: var(--color-dark-blue); }
 .assessmentMetricGrid>article>div { display: grid; min-width: 0; gap: .08rem; }
-.assessmentMetricGrid small { color: var(--color-gray-dark); font-size: .8rem; font-weight: 780; }
+.assessmentMetricGrid small { color: var(--color-gray-dark); font-size: 0.9rem; font-weight: 780; }
 .assessmentMetricGrid strong { color: var(--color-black); font-size: clamp(1.42rem,2vw,1.9rem); line-height: 1; }
-.assessmentMetricGrid p { overflow: hidden; margin: .12rem 0 0; color: var(--color-gray-dark); font-size: .73rem; line-height: 1.42; text-overflow: ellipsis; }
+.assessmentMetricGrid p { overflow: hidden; margin: .12rem 0 0; color: var(--color-gray-dark); font-size: 0.83rem; line-height: 1.42; text-overflow: ellipsis; }
 
 .assessmentActivityCard { display: grid; gap: .9rem; padding: 1.1rem; border: 1px solid rgba(33,44,45,.08); border-radius: 1.12rem; background: var(--color-gray-light); }
-.assessmentActivityIntro { margin: -.2rem 0 0; color: var(--color-gray-dark); font-size: .76rem; line-height: 1.5; }
+.assessmentActivityIntro { margin: -.2rem 0 0; color: var(--color-gray-dark); font-size: 0.86rem; line-height: 1.5; }
 .assessmentActivityLegend { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .65rem; }
 .assessmentActivityLegend>article { display: flex; align-items: center; gap: .62rem; min-width: 0; padding: .68rem .72rem; border-radius: .78rem; background: var(--color-white); }
 .assessmentActivityLegend>article>i { display: grid; flex: 0 0 auto; place-items: center; width: 2rem; height: 2rem; border-radius: .6rem; font-style: normal; }
 .assessmentActivityLegend>article>span { display: grid; min-width: 0; gap: .06rem; }
-.assessmentActivityLegend small { color: var(--color-gray-dark); font-size: .7rem; font-weight: 740; }
+.assessmentActivityLegend small { color: var(--color-gray-dark); font-size: 0.8rem; font-weight: 740; }
 .assessmentActivityLegend strong { color: var(--color-black); font-size: 1rem; line-height: 1; }
 .assessmentActivityScroll { overflow-x: auto; padding: .2rem .1rem .25rem; scrollbar-color: var(--color-dark-blue) rgba(33,44,45,.08); scrollbar-width: thin; }
 .assessmentActivityChart { display: flex; min-width: 100%; height: 14rem; gap: .5rem; padding: .6rem .25rem 0; border-bottom: 1px solid rgba(33,44,45,.14); }
 .assessmentActivityBucket { display: grid; flex: 1 0 4.8rem; grid-template-rows: minmax(0,1fr) auto; gap: .48rem; min-width: 0; }
 .assessmentActivityBars { display: flex; align-items: stretch; justify-content: center; gap: .22rem; min-height: 0; }
 .assessmentActivityBars>span { display: flex; flex: 1 1 0; align-items: center; flex-direction: column; justify-content: flex-end; min-width: .55rem; height: 100%; gap: .2rem; }
-.assessmentActivityBars>span>strong { color: var(--color-black); font-size: .68rem; line-height: 1; }
+.assessmentActivityBars>span>strong { color: var(--color-black); font-size: 0.8rem; line-height: 1; }
 .assessmentActivityBars>span>i { display: block; width: 100%; max-width: .85rem; border-radius: .28rem .28rem 0 0; transition: height .35s cubic-bezier(.22,1,.36,1); }
-.assessmentActivityBucket time { overflow: hidden; padding-bottom: .4rem; color: var(--color-gray-dark); font-size: .68rem; font-weight: 740; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+.assessmentActivityBucket time { overflow: hidden; padding-bottom: .4rem; color: var(--color-gray-dark); font-size: 0.8rem; font-weight: 740; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
 .assessmentActivityTonefirst { color: var(--color-white); background: var(--color-dark-blue); }
 .assessmentActivityToneretake { color: var(--color-white); background: var(--color-yellow); }
 .assessmentActivityTonelearner { color: var(--color-white); background: var(--color-slate-blue); }
@@ -1602,128 +1602,128 @@
 
 .assessmentDirectorySection { display: grid; gap: .85rem; padding-top: .2rem; }
 .assessmentLensSwitch { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); width: min(100%,30rem); padding: .28rem; border-radius: .82rem; background: var(--color-gray-light); }
-.assessmentLensSwitch button { display: flex; align-items: center; justify-content: center; gap: .46rem; min-height: 2.55rem; border: 0; border-radius: .64rem; color: var(--color-gray-dark); background: transparent; cursor: pointer; font: inherit; font-size: .82rem; font-weight: 820; transition: color .18s ease,background .18s ease,transform .18s ease; }
+.assessmentLensSwitch button { display: flex; align-items: center; justify-content: center; gap: .46rem; min-height: 2.55rem; border: 0; border-radius: .64rem; color: var(--color-gray-dark); background: transparent; cursor: pointer; font: inherit; font-size: 0.92rem; font-weight: 820; transition: color .18s ease,background .18s ease,transform .18s ease; }
 .assessmentLensSwitch button:hover { color: var(--color-dark-blue); }
 .assessmentLensSwitch .assessmentLensActive { color: var(--color-white); background: var(--color-dark-blue); box-shadow: 0 .45rem 1rem rgba(33,44,45,.13); }
 .assessmentLensSwitch button:active { transform: scale(.98); }
 
 .assessmentToolbar { display: grid; grid-template-columns: minmax(15rem,1fr) minmax(24rem,1.45fr); gap: .75rem; padding: 1rem; border: 1px solid rgba(33,44,45,.08); border-radius: 1.05rem; background: var(--color-gray-light); }
 .assessmentToolbar>div { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .6rem; }
-.assessmentToolbar>span { display: flex; align-items: center; gap: .65rem; grid-column: 1/-1; color: var(--color-gray-dark); font-size: .77rem; font-weight: 720; }
-.assessmentToolbar>span>button { border: 0; color: var(--color-dark-blue); background: transparent; cursor: pointer; font: inherit; font-size: .76rem; font-weight: 850; text-decoration: underline; text-underline-offset: .18rem; }
+.assessmentToolbar>span { display: flex; align-items: center; gap: .65rem; grid-column: 1/-1; color: var(--color-gray-dark); font-size: 0.87rem; font-weight: 720; }
+.assessmentToolbar>span>button { border: 0; color: var(--color-dark-blue); background: transparent; cursor: pointer; font: inherit; font-size: 0.86rem; font-weight: 850; text-decoration: underline; text-underline-offset: .18rem; }
 
 .assessmentTable { overflow: hidden; border: 1px solid rgba(33,44,45,.08); border-radius: 1.08rem; background: var(--color-white); transition: opacity .18s ease; }
 .assessmentTableUpdating { opacity: .5; pointer-events: none; }
 .assessmentLearnerHeader,.assessmentRecordHeader,.assessmentLearnerRow,.assessmentRecordRow { display: grid; align-items: center; gap: .65rem; min-width: 0; padding: .72rem .8rem; }
 .assessmentLearnerHeader,.assessmentLearnerRow { grid-template-columns: minmax(12rem,1.5fr) repeat(3,minmax(4.4rem,.48fr)) minmax(7.5rem,.82fr) minmax(9rem,.9fr) 2.2rem; }
 .assessmentRecordHeader,.assessmentRecordRow { grid-template-columns: minmax(15rem,1.7fr) minmax(5.7rem,.52fr) repeat(2,minmax(4.8rem,.48fr)) minmax(7.5rem,.8fr) minmax(9rem,.9fr) 2.2rem; }
-.assessmentLearnerHeader,.assessmentRecordHeader { color: var(--color-gray-dark); background: var(--color-gray-light); font-size: .7rem; font-weight: 850; letter-spacing: .035em; text-transform: uppercase; }
+.assessmentLearnerHeader,.assessmentRecordHeader { color: var(--color-gray-dark); background: var(--color-gray-light); font-size: 0.8rem; font-weight: 850; letter-spacing: .035em; text-transform: uppercase; }
 .assessmentLearnerRow,.assessmentRecordRow { min-height: 5rem; border-top: 1px solid rgba(33,44,45,.07); animation: assessmentItemIn .38s ease both; animation-delay: var(--assessment-delay); }
 .assessmentLearnerRow:hover,.assessmentRecordRow:hover { background: rgba(85,135,166,.045); }
 .assessmentIdentity { display: flex; align-items: center; gap: .62rem; min-width: 0; }
 .assessmentIdentity>i { display: grid; flex: 0 0 auto; place-items: center; font-style: normal; }
 .assessmentIdentity>span { display: grid; min-width: 0; gap: .16rem; }
-.assessmentIdentity strong,.assessmentDate strong { overflow: hidden; color: var(--color-black); font-size: .85rem; text-overflow: ellipsis; white-space: nowrap; }
-.assessmentIdentity small,.assessmentDate small { overflow: hidden; color: var(--color-gray-dark); font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }
+.assessmentIdentity strong,.assessmentDate strong { overflow: hidden; color: var(--color-black); font-size: 0.95rem; text-overflow: ellipsis; white-space: nowrap; }
+.assessmentIdentity small,.assessmentDate small { overflow: hidden; color: var(--color-gray-dark); font-size: 0.82rem; text-overflow: ellipsis; white-space: nowrap; }
 .assessmentKindScored,.assessmentKindWorksheet { width: 2.2rem; height: 2.2rem; border-radius: .68rem; }
 .assessmentKindScored { color: var(--color-white); background: var(--color-dark-blue); }
 .assessmentKindWorksheet { color: var(--color-white); background: var(--color-yellow); }
 .assessmentNumeric,.assessmentDate { display: grid; min-width: 0; gap: .12rem; }
-.assessmentNumeric strong { color: var(--color-black); font-size: .92rem; }
-.assessmentNumeric small { color: var(--color-gray-dark); font-size: .7rem; }
+.assessmentNumeric strong { color: var(--color-black); font-size: 1rem; }
+.assessmentNumeric small { color: var(--color-gray-dark); font-size: 0.8rem; }
 .assessmentScore { display: grid; min-width: 0; grid-template-columns: minmax(4rem,1fr) auto; align-items: center; gap: .46rem; }
 .assessmentScore>span { display: block; height: .42rem; overflow: hidden; border-radius: 999px; background: rgba(33,44,45,.1); }
 .assessmentScore>span>i { display: block; height: 100%; border-radius: inherit; background: var(--color-dark-blue); }
-.assessmentScore>strong { color: var(--color-dark-blue); font-size: .82rem; }
+.assessmentScore>strong { color: var(--color-dark-blue); font-size: 0.92rem; }
 .assessmentScoreCompact { grid-template-columns: minmax(3.2rem,1fr) auto; }
-.assessmentNoScore { color: var(--color-gray-dark); font-size: .72rem; font-weight: 750; }
+.assessmentNoScore { color: var(--color-gray-dark); font-size: 0.82rem; font-weight: 750; }
 
 .assessmentMethodNote { display: flex; align-items: flex-start; gap: .62rem; padding: .8rem .9rem; border-radius: .82rem; color: var(--color-dark-blue); background: rgba(85,135,166,.1); }
 .assessmentMethodNote>svg { flex: 0 0 auto; margin-top: .12rem; }
-.assessmentMethodNote p { margin: 0; color: var(--color-gray-dark); font-size: .75rem; line-height: 1.55; }
+.assessmentMethodNote p { margin: 0; color: var(--color-gray-dark); font-size: 0.85rem; line-height: 1.55; }
 .assessmentMethodNote strong { color: var(--color-black); }
 
 .assessmentDrawer { width: min(100%,52rem); }
 .assessmentDrawerHeader { position: sticky; z-index: 4; top: 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.2rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,.12); color: var(--color-white); background: var(--color-dark-blue); }
 .assessmentDrawerHeader>div { display: grid; min-width: 0; gap: .14rem; }
-.assessmentDrawerHeader>div>span { color: var(--color-yellow); font-size: .72rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+.assessmentDrawerHeader>div>span { color: var(--color-yellow); font-size: 0.82rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
 .assessmentDrawerHeader h3 { margin: 0; font-size: clamp(1.15rem,2vw,1.55rem); line-height: 1.15; }
-.assessmentDrawerHeader small { overflow: hidden; color: rgba(255,255,255,.78); font-size: .75rem; text-overflow: ellipsis; white-space: nowrap; }
+.assessmentDrawerHeader small { overflow: hidden; color: rgba(255,255,255,.78); font-size: 0.85rem; text-overflow: ellipsis; white-space: nowrap; }
 .assessmentDrawerHeader button { display: grid; flex: 0 0 auto; place-items: center; width: 2.25rem; height: 2.25rem; border: 0; border-radius: 50%; color: var(--color-white); background: var(--color-yellow); cursor: pointer; }
 .assessmentDrawerBody { display: grid; gap: 1rem; padding: 1.1rem 1.25rem 1.35rem; }
 .assessmentDrawerLoading { display: grid; gap: .7rem; padding: 1.2rem; }
 .assessmentDrawerLoading>span { min-height: 5rem; border-radius: .9rem; background: linear-gradient(100deg,var(--color-gray-light),#fff,var(--color-gray-light)); background-size: 220% 100%; animation: directoryShimmer 1.15s linear infinite; }
-.assessmentDrawerLoading>strong { color: var(--color-gray-dark); font-size: .8rem; }
+.assessmentDrawerLoading>strong { color: var(--color-gray-dark); font-size: 0.9rem; }
 .assessmentDrawerMetrics { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .55rem; }
 .assessmentDrawerMetrics article { display: grid; gap: .16rem; padding: .72rem; border-radius: .78rem; background: var(--color-gray-light); }
-.assessmentDrawerMetrics small { color: var(--color-gray-dark); font-size: .71rem; font-weight: 730; }
+.assessmentDrawerMetrics small { color: var(--color-gray-dark); font-size: 0.81rem; font-weight: 730; }
 .assessmentDrawerMetrics strong { color: var(--color-black); font-size: 1.08rem; }
 .assessmentResultList,.assessmentLearnerDetail,.assessmentLearnerCards { display: grid; gap: .72rem; }
 .assessmentResultCard,.assessmentLearnerCards>article { overflow: hidden; border: 1px solid rgba(33,44,45,.08); border-radius: .95rem; background: var(--color-white); }
 .assessmentResultCard>header,.assessmentLearnerCards>article>header { display: flex; align-items: center; gap: .65rem; padding: .76rem; background: var(--color-gray-light); }
 .assessmentResultCard>header>div,.assessmentLearnerCards>article>header>div { display: grid; min-width: 0; flex: 1; gap: .08rem; }
-.assessmentResultCard h4 { overflow: hidden; margin: 0; color: var(--color-black); font-size: .93rem; text-overflow: ellipsis; white-space: nowrap; }
-.assessmentResultCard>header small,.assessmentLearnerCards>article>header small { overflow: hidden; color: var(--color-gray-dark); font-size: .7rem; text-overflow: ellipsis; white-space: nowrap; }
-.assessmentLearnerCards>article>header strong { color: var(--color-black); font-size: .86rem; }
+.assessmentResultCard h4 { overflow: hidden; margin: 0; color: var(--color-black); font-size: 1.01rem; text-overflow: ellipsis; white-space: nowrap; }
+.assessmentResultCard>header small,.assessmentLearnerCards>article>header small { overflow: hidden; color: var(--color-gray-dark); font-size: 0.8rem; text-overflow: ellipsis; white-space: nowrap; }
+.assessmentLearnerCards>article>header strong { color: var(--color-black); font-size: 0.96rem; }
 .assessmentResultSummary { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .5rem; padding: .72rem; }
 .assessmentResultSummary>span { display: grid; gap: .1rem; min-width: 0; }
-.assessmentResultSummary small { color: var(--color-gray-dark); font-size: .7rem; }
-.assessmentResultSummary strong { overflow: hidden; color: var(--color-black); font-size: .82rem; text-overflow: ellipsis; white-space: nowrap; }
+.assessmentResultSummary small { color: var(--color-gray-dark); font-size: 0.8rem; }
+.assessmentResultSummary strong { overflow: hidden; color: var(--color-black); font-size: 0.92rem; text-overflow: ellipsis; white-space: nowrap; }
 .assessmentHistoryDisclosure { border-top: 1px solid rgba(33,44,45,.07); }
-.assessmentHistoryDisclosure>summary { display: flex; align-items: center; gap: .42rem; padding: .75rem .8rem; color: var(--color-dark-blue); cursor: pointer; font-size: .77rem; font-weight: 820; list-style: none; }
+.assessmentHistoryDisclosure>summary { display: flex; align-items: center; gap: .42rem; padding: .75rem .8rem; color: var(--color-dark-blue); cursor: pointer; font-size: 0.87rem; font-weight: 820; list-style: none; }
 .assessmentHistoryDisclosure>summary::-webkit-details-marker { display: none; }
 .assessmentHistoryDisclosure>summary>svg:last-child { margin-left: auto; transition: transform .2s ease; }
 .assessmentHistoryDisclosure[open]>summary>svg:last-child { transform: rotate(180deg); }
 .assessmentAttemptHistory { display: grid; gap: .52rem; padding: 0 .72rem .72rem; }
 .assessmentAttemptHistory>article { display: grid; gap: .46rem; padding: .65rem; border-radius: .72rem; background: var(--color-gray-light); }
 .assessmentAttemptHistory header { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: .55rem; }
-.assessmentAttemptHistory header>span { color: var(--color-dark-blue); font-size: .75rem; font-weight: 850; }
-.assessmentAttemptHistory header>strong { color: var(--color-black); font-size: .85rem; }
-.assessmentAttemptHistory time { justify-self: end; color: var(--color-gray-dark); font-size: .7rem; }
+.assessmentAttemptHistory header>span { color: var(--color-dark-blue); font-size: 0.85rem; font-weight: 850; }
+.assessmentAttemptHistory header>strong { color: var(--color-black); font-size: 0.95rem; }
+.assessmentAttemptHistory time { justify-self: end; color: var(--color-gray-dark); font-size: 0.8rem; }
 .assessmentAttemptScore { display: grid; grid-template-columns: minmax(7rem,.8fr) minmax(8rem,1fr); align-items: center; gap: .6rem; }
-.assessmentAttemptScore>small,.assessmentHistoricalNote { color: var(--color-gray-dark); font-size: .7rem; }
+.assessmentAttemptScore>small,.assessmentHistoricalNote { color: var(--color-gray-dark); font-size: 0.8rem; }
 .assessmentBreakdown { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .38rem; }
 .assessmentBreakdown>span { display: flex; justify-content: space-between; gap: .35rem; padding: .42rem .5rem; border-radius: .55rem; background: var(--color-white); }
-.assessmentBreakdown b { overflow: hidden; color: var(--color-black); font-size: .7rem; text-overflow: ellipsis; white-space: nowrap; }
-.assessmentBreakdown small { flex: 0 0 auto; color: var(--color-dark-blue); font-size: .7rem; font-weight: 820; }
+.assessmentBreakdown b { overflow: hidden; color: var(--color-black); font-size: 0.8rem; text-overflow: ellipsis; white-space: nowrap; }
+.assessmentBreakdown small { flex: 0 0 auto; color: var(--color-dark-blue); font-size: 0.8rem; font-weight: 820; }
 .assessmentWorksheetSummary { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .78rem; }
 .assessmentWorksheetSummary>div { display: grid; gap: .12rem; }
-.assessmentWorksheetSummary>div>strong { color: var(--color-black); font-size: .72rem; }
-.assessmentWorksheetSummary>div>span { color: var(--color-gray-dark); font-size: .66rem; }
-.assessmentWorksheetSummary>a { display: flex; align-items: center; justify-content: center; gap: .38rem; min-height: 2.2rem; padding: .45rem .75rem; border-radius: 999px; color: var(--color-white); background: var(--color-dark-blue); font-size: .7rem; font-weight: 820; text-decoration: none; }
+.assessmentWorksheetSummary>div>strong { color: var(--color-black); font-size: 0.82rem; }
+.assessmentWorksheetSummary>div>span { color: var(--color-gray-dark); font-size: 0.8rem; }
+.assessmentWorksheetSummary>a { display: flex; align-items: center; justify-content: center; gap: .38rem; min-height: 2.2rem; padding: .45rem .75rem; border-radius: 999px; color: var(--color-white); background: var(--color-dark-blue); font-size: 0.8rem; font-weight: 820; text-decoration: none; }
 .assessmentWorksheetSummary>a:hover { background: var(--color-yellow); }
-.assessmentFileMissing { color: var(--color-gray-dark); font-size: .68rem; font-weight: 750; }
+.assessmentFileMissing { color: var(--color-gray-dark); font-size: 0.8rem; font-weight: 750; }
 .assessmentDetailToolbar { display: grid; grid-template-columns: minmax(0,1fr) minmax(10rem,.42fr); gap: .65rem; }
 .assessmentLearnerScore { display: grid; grid-template-columns: minmax(10rem,.7fr) minmax(10rem,1fr); align-items: center; gap: .65rem; padding: .74rem; }
-.assessmentLearnerScore>small { color: var(--color-gray-dark); font-size: .73rem; }
+.assessmentLearnerScore>small { color: var(--color-gray-dark); font-size: 0.83rem; }
 
 .assessmentActualResult { display: grid; gap: .72rem; margin: .75rem; padding: .85rem; border: 1px solid rgba(85,135,166,.16); border-radius: .82rem; background: rgba(85,135,166,.055); }
 .assessmentAttemptHistory .assessmentActualResult { margin: 0; background: var(--color-white); }
 .assessmentActualResult>header { display: grid; grid-template-columns: minmax(0,1fr); gap: .18rem; }
-.assessmentActualResult>header>span { color: var(--color-dark-blue); font-size: .72rem; font-weight: 850; letter-spacing: .045em; text-transform: uppercase; }
+.assessmentActualResult>header>span { color: var(--color-dark-blue); font-size: 0.82rem; font-weight: 850; letter-spacing: .045em; text-transform: uppercase; }
 .assessmentActualResult h5 { margin: 0; color: var(--color-black); font-size: 1.04rem; line-height: 1.25; }
-.assessmentActualResult>header>p { margin: 0; color: var(--color-gray-dark); font-size: .79rem; line-height: 1.55; }
+.assessmentActualResult>header>p { margin: 0; color: var(--color-gray-dark); font-size: 0.89rem; line-height: 1.55; }
 .assessmentActualBreakdown { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .48rem; }
 .assessmentActualBreakdown>div { display: flex; align-items: flex-start; justify-content: space-between; gap: .7rem; min-width: 0; padding: .62rem .68rem; border-radius: .66rem; background: var(--color-white); }
 .assessmentActualBreakdown>div>span { display: grid; min-width: 0; gap: .12rem; }
-.assessmentActualBreakdown strong { color: var(--color-black); font-size: .82rem; line-height: 1.3; }
-.assessmentActualBreakdown span>small { color: var(--color-gray-dark); font-size: .72rem; line-height: 1.45; }
-.assessmentActualBreakdown>div>b { flex: 0 0 auto; color: var(--color-dark-blue); font-size: .94rem; }
-.assessmentActualBreakdown>div>b>small { font-size: .72rem; }
+.assessmentActualBreakdown strong { color: var(--color-black); font-size: 0.92rem; line-height: 1.3; }
+.assessmentActualBreakdown span>small { color: var(--color-gray-dark); font-size: 0.82rem; line-height: 1.45; }
+.assessmentActualBreakdown>div>b { flex: 0 0 auto; color: var(--color-dark-blue); font-size: 1.02rem; }
+.assessmentActualBreakdown>div>b>small { font-size: 0.82rem; }
 .assessmentConclusion { display: grid; gap: .25rem; padding: .85rem .9rem; border-radius: .72rem; color: var(--color-white); background: var(--color-dark-blue); }
-.assessmentConclusion>span { color: var(--color-yellow); font-size: .74rem; font-weight: 850; letter-spacing: .045em; text-transform: uppercase; }
+.assessmentConclusion>span { color: var(--color-yellow); font-size: 0.84rem; font-weight: 850; letter-spacing: .045em; text-transform: uppercase; }
 .assessmentConclusion>strong { font-size: 1.08rem; line-height: 1.25; }
-.assessmentConclusion>p { margin: .08rem 0 0; color: rgba(255,255,255,.84); font-size: .79rem; line-height: 1.55; }
+.assessmentConclusion>p { margin: .08rem 0 0; color: rgba(255,255,255,.84); font-size: 0.89rem; line-height: 1.55; }
 .assessmentRoleSummary { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .5rem; }
 .assessmentRoleSummary>article { display: grid; gap: .42rem; padding: .7rem; border-radius: .7rem; color: var(--color-white); background: var(--color-slate-blue); }
-.assessmentRoleSummary>article>small { color: var(--color-yellow); font-size: .72rem; font-weight: 850; text-transform: uppercase; }
+.assessmentRoleSummary>article>small { color: var(--color-yellow); font-size: 0.82rem; font-weight: 850; text-transform: uppercase; }
 .assessmentRoleSummary>article>div { display: grid; gap: .28rem; }
 .assessmentRoleSummary>article>div>span { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
-.assessmentRoleSummary strong { font-size: .82rem; }
-.assessmentRoleSummary b { font-size: .9rem; }
-.assessmentRoleSummary b>small { color: rgba(255,255,255,.72); font-size: .72rem; }
-.assessmentActualNotes { display: grid; gap: .35rem; margin: 0; padding-left: 1.1rem; color: var(--color-gray-dark); font-size: .76rem; line-height: 1.5; }
-.assessmentActualEmpty { margin: .75rem; padding: .8rem; border-radius: .7rem; color: var(--color-gray-dark); background: var(--color-gray-light); font-size: .76rem; }
+.assessmentRoleSummary strong { font-size: 0.92rem; }
+.assessmentRoleSummary b { font-size: 0.98rem; }
+.assessmentRoleSummary b>small { color: rgba(255,255,255,.72); font-size: 0.82rem; }
+.assessmentActualNotes { display: grid; gap: .35rem; margin: 0; padding-left: 1.1rem; color: var(--color-gray-dark); font-size: 0.86rem; line-height: 1.5; }
+.assessmentActualEmpty { margin: .75rem; padding: .8rem; border-radius: .7rem; color: var(--color-gray-dark); background: var(--color-gray-light); font-size: 0.86rem; }
 
 @keyframes assessmentItemIn { from { opacity: 0; transform: translateY(.38rem); } to { opacity: 1; transform: translateY(0); } }
 
@@ -1755,7 +1755,7 @@
 @media (max-width: 520px) {
   .assessmentActivityLegend { grid-template-columns: minmax(0,1fr); }
   .assessmentActivityCard,.assessmentToolbar { padding: .88rem; }
-  .assessmentLensSwitch button { font-size: .76rem; }
+  .assessmentLensSwitch button { font-size: 0.86rem; }
   .assessmentDrawerMetrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .assessmentBreakdown { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .assessmentWorksheetSummary { align-items: stretch; flex-direction: column; }
@@ -1772,11 +1772,11 @@
 .rolesSummary>article { display: flex; align-items: center; gap: .9rem; min-height: 7.4rem; padding: 1rem; border: 1px solid rgba(33,44,45,.08); border-radius: 1rem; background: var(--color-white); }
 .rolesSummary>article>span { display: grid; flex: 0 0 auto; place-items: center; width: 2.85rem; height: 2.85rem; border-radius: .82rem; color: var(--color-white); background: var(--color-dark-blue); font-size: 1.1rem; }
 .rolesSummary>article>div { display: grid; gap: .12rem; }
-.rolesSummary small { color: var(--color-gray-dark); font-size: .76rem; font-weight: 800; }
+.rolesSummary small { color: var(--color-gray-dark); font-size: 0.86rem; font-weight: 800; }
 .rolesSummary strong { color: var(--color-black); font-size: 1.55rem; line-height: 1.05; }
-.rolesSummary p { margin: .12rem 0 0; color: var(--color-gray-dark); font-size: .77rem; line-height: 1.45; }
+.rolesSummary p { margin: .12rem 0 0; color: var(--color-gray-dark); font-size: 0.87rem; line-height: 1.45; }
 .rolesCreateActions { display: grid; gap: .55rem; }
-.rolesCreateActions button,.rolesSubmit { display: flex; align-items: center; justify-content: center; gap: .52rem; border: 0; border-radius: .78rem; color: var(--color-white); background: var(--color-dark-blue); cursor: pointer; font: inherit; font-size: .8rem; font-weight: 850; transition: color .18s ease,background .18s ease,transform .18s ease; }
+.rolesCreateActions button,.rolesSubmit { display: flex; align-items: center; justify-content: center; gap: .52rem; border: 0; border-radius: .78rem; color: var(--color-white); background: var(--color-dark-blue); cursor: pointer; font: inherit; font-size: 0.9rem; font-weight: 850; transition: color .18s ease,background .18s ease,transform .18s ease; }
 .rolesCreateActions button:first-child { color: var(--color-white); background: var(--color-yellow); }
 .rolesCreateActions button:hover,.rolesSubmit:hover:not(:disabled) { color: var(--color-white); background: var(--color-yellow); }
 .rolesCreateActions button:first-child:hover { color: var(--color-white); background: var(--color-dark-blue); }
@@ -1784,30 +1784,30 @@
 .rolesAccessNotice { display: flex; align-items: flex-start; gap: .8rem; padding: .9rem 1rem; border-radius: .9rem; color: var(--color-dark-blue); background: rgba(85,135,166,.1); }
 .rolesAccessNotice>svg { flex: 0 0 auto; margin-top: .15rem; font-size: 1rem; }
 .rolesAccessNotice>div { display: grid; gap: .18rem; }
-.rolesAccessNotice strong { color: var(--color-black); font-size: .86rem; }
-.rolesAccessNotice p { margin: 0; color: var(--color-gray-dark); font-size: .77rem; line-height: 1.5; }
+.rolesAccessNotice strong { color: var(--color-black); font-size: 0.96rem; }
+.rolesAccessNotice p { margin: 0; color: var(--color-gray-dark); font-size: 0.87rem; line-height: 1.5; }
 .rolesPermissionPanel { display: grid; gap: .85rem; padding: 1rem; border: 1px solid rgba(33,44,45,.08); border-radius: 1.05rem; background: var(--color-white); }
 .rolesPermissionPanel>header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
 .rolesPermissionPanel>header>div { display: grid; gap: .15rem; }
-.rolesPermissionPanel>header>div>span { color: var(--color-dark-blue); font-size: .7rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+.rolesPermissionPanel>header>div>span { color: var(--color-dark-blue); font-size: 0.8rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
 .rolesPermissionPanel h3 { margin: 0; color: var(--color-black); font-size: 1.08rem; }
-.rolesPermissionPanel>header p { margin: 0; color: var(--color-gray-dark); font-size: .76rem; line-height: 1.5; }
-.rolesPermissionPanel>header>i { display: flex; align-items: center; gap: .4rem; flex: 0 0 auto; padding: .45rem .65rem; border-radius: 999px; color: var(--color-dark-blue); background: rgba(85,135,166,.11); font-size: .68rem; font-style: normal; font-weight: 820; }
+.rolesPermissionPanel>header p { margin: 0; color: var(--color-gray-dark); font-size: 0.86rem; line-height: 1.5; }
+.rolesPermissionPanel>header>i { display: flex; align-items: center; gap: .4rem; flex: 0 0 auto; padding: .45rem .65rem; border-radius: 999px; color: var(--color-dark-blue); background: rgba(85,135,166,.11); font-size: 0.8rem; font-style: normal; font-weight: 820; }
 .rolesPermissionGroups { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; }
 .rolesPermissionGroups>article { overflow: hidden; border: 1px solid rgba(33,44,45,.08); border-radius: .88rem; background: var(--color-gray-light); }
 .rolesPermissionGroupHeading { display: flex; align-items: flex-start; justify-content: space-between; gap: .7rem; padding: .78rem .82rem; border-bottom: 1px solid rgba(33,44,45,.08); }
 .rolesPermissionGroupHeading>div { display: grid; gap: .14rem; }
-.rolesPermissionGroupHeading strong { color: var(--color-black); font-size: .82rem; }
-.rolesPermissionGroupHeading p { margin: 0; color: var(--color-gray-dark); font-size: .69rem; line-height: 1.42; }
-.rolesPermissionGroupHeading>small { flex: 0 0 auto; color: var(--color-dark-blue); font-size: .66rem; font-weight: 820; }
+.rolesPermissionGroupHeading strong { color: var(--color-black); font-size: 0.92rem; }
+.rolesPermissionGroupHeading p { margin: 0; color: var(--color-gray-dark); font-size: 0.8rem; line-height: 1.42; }
+.rolesPermissionGroupHeading>small { flex: 0 0 auto; color: var(--color-dark-blue); font-size: 0.8rem; font-weight: 820; }
 .rolesPermissionList { display: grid; }
 .rolesPermissionList>div { display: flex; align-items: center; justify-content: space-between; gap: .8rem; min-height: 4.3rem; padding: .68rem .78rem; border-top: 1px solid rgba(33,44,45,.065); background: var(--color-white); transition: background .18s ease; }
 .rolesPermissionList>div:first-child { border-top: 0; }
 .rolesPermissionList>div.rolesPermissionEnabled { background: rgba(85,135,166,.065); }
 .rolesPermissionList>div>span { display: grid; min-width: 0; gap: .12rem; }
-.rolesPermissionList strong { color: var(--color-black); font-size: .77rem; }
-.rolesPermissionList small { color: var(--color-gray-dark); font-size: .67rem; line-height: 1.4; }
-.rolesPermissionList button { display: grid; flex: 0 0 auto; grid-template-columns: auto; justify-items: center; gap: .2rem; min-width: 4.3rem; border: 0; color: var(--color-gray-dark); background: transparent; cursor: pointer; font: inherit; font-size: .61rem; font-weight: 820; }
+.rolesPermissionList strong { color: var(--color-black); font-size: 0.87rem; }
+.rolesPermissionList small { color: var(--color-gray-dark); font-size: 0.8rem; line-height: 1.4; }
+.rolesPermissionList button { display: grid; flex: 0 0 auto; grid-template-columns: auto; justify-items: center; gap: .2rem; min-width: 4.3rem; border: 0; color: var(--color-gray-dark); background: transparent; cursor: pointer; font: inherit; font-size: 0.8rem; font-weight: 820; }
 .rolesPermissionList button>i { position: relative; display: block; width: 2.55rem; height: 1.38rem; border-radius: 999px; background: rgba(33,44,45,.18); transition: background .2s ease; }
 .rolesPermissionList button>i::after { position: absolute; top: .19rem; left: .19rem; width: 1rem; height: 1rem; border-radius: 50%; background: var(--color-white); box-shadow: 0 .12rem .35rem rgba(33,44,45,.18); content: ''; transition: transform .2s ease; }
 .rolesPermissionList button[aria-checked="true"] { color: var(--color-dark-blue); }
@@ -1817,18 +1817,18 @@
 .rolesDirectory { overflow: hidden; border: 1px solid rgba(33,44,45,.08); border-radius: 1.05rem; background: var(--color-white); }
 .rolesDirectory>header { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding: 1rem 1.05rem; background: var(--color-gray-light); }
 .rolesDirectory>header>div { display: grid; gap: .15rem; }
-.rolesDirectory>header span { color: var(--color-dark-blue); font-size: .72rem; font-weight: 850; letter-spacing: .055em; text-transform: uppercase; }
+.rolesDirectory>header span { color: var(--color-dark-blue); font-size: 0.82rem; font-weight: 850; letter-spacing: .055em; text-transform: uppercase; }
 .rolesDirectory h3 { margin: 0; color: var(--color-black); font-size: 1.05rem; }
-.rolesDirectory>header>p { margin: 0; color: var(--color-gray-dark); font-size: .77rem; font-weight: 780; }
+.rolesDirectory>header>p { margin: 0; color: var(--color-gray-dark); font-size: 0.87rem; font-weight: 780; }
 .rolesTable { overflow-x: auto; scrollbar-color: var(--color-dark-blue) rgba(33,44,45,.08); scrollbar-width: thin; }
 .rolesTableHeader,.rolesTable>article { display: grid; grid-template-columns: minmax(12rem,1.15fr) minmax(13rem,1.25fr) minmax(7.5rem,.7fr) minmax(8.5rem,.78fr) minmax(8rem,.7fr); align-items: center; gap: .75rem; min-width: 58rem; padding: .78rem 1rem; }
-.rolesTableHeader { color: var(--color-gray-dark); background: rgba(244,245,245,.78); font-size: .69rem; font-weight: 850; letter-spacing: .04em; text-transform: uppercase; }
-.rolesTable>article { min-height: 4.8rem; border-top: 1px solid rgba(33,44,45,.07); color: var(--color-black); font-size: .78rem; }
+.rolesTableHeader { color: var(--color-gray-dark); background: rgba(244,245,245,.78); font-size: 0.8rem; font-weight: 850; letter-spacing: .04em; text-transform: uppercase; }
+.rolesTable>article { min-height: 4.8rem; border-top: 1px solid rgba(33,44,45,.07); color: var(--color-black); font-size: 0.88rem; }
 .rolesTable>article:hover { background: rgba(85,135,166,.045); }
 .rolesIdentity { display: flex; align-items: center; gap: .65rem; min-width: 0; }
-.rolesIdentity>i { display: grid; flex: 0 0 auto; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: .65rem; color: var(--color-white); background: var(--color-dark-blue); font-size: .72rem; font-style: normal; font-weight: 850; }
+.rolesIdentity>i { display: grid; flex: 0 0 auto; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: .65rem; color: var(--color-white); background: var(--color-dark-blue); font-size: 0.82rem; font-style: normal; font-weight: 850; }
 .rolesIdentity>strong,.rolesTable>article>span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.rolesReady,.rolesPending,.rolesAdminPill,.rolesCreatorPill { justify-self: start; padding: .38rem .58rem; border-radius: 999px; font-size: .69rem; font-weight: 820; }
+.rolesReady,.rolesPending,.rolesAdminPill,.rolesCreatorPill { justify-self: start; padding: .38rem .58rem; border-radius: 999px; font-size: 0.8rem; font-weight: 820; }
 .rolesReady { color: var(--color-dark-blue); background: rgba(85,135,166,.12); }
 .rolesPending { color: var(--color-black); background: rgba(240,196,25,.24); }
 .rolesAdminPill { color: var(--color-white); background: var(--color-dark-blue); }
@@ -1839,26 +1839,26 @@
 .rolesModal>header>div { display: flex; align-items: center; gap: .72rem; }
 .rolesModal>header>div>span { display: grid; place-items: center; width: 2.35rem; height: 2.35rem; border-radius: .7rem; color: var(--color-white); background: var(--color-yellow); }
 .rolesModal>header>div>div { display: grid; gap: .08rem; }
-.rolesModal>header small { color: var(--color-yellow); font-size: .68rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+.rolesModal>header small { color: var(--color-yellow); font-size: 0.8rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
 .rolesModal h3 { margin: 0; font-size: 1.15rem; }
 .rolesModal>header>button { display: grid; flex: 0 0 auto; place-items: center; width: 2.3rem; height: 2.3rem; border: 0; border-radius: 50%; color: var(--color-white); background: var(--color-yellow); cursor: pointer; }
 .rolesModal>header>button:disabled { cursor: not-allowed; opacity: .55; }
 .rolesModalIntro { display: grid; gap: .18rem; margin: 1rem 1.1rem 0; padding: .8rem .9rem; border-radius: .8rem; background: var(--color-gray-light); }
-.rolesModalIntro strong { color: var(--color-black); font-size: .83rem; }
-.rolesModalIntro p { margin: 0; color: var(--color-gray-dark); font-size: .75rem; line-height: 1.5; }
+.rolesModalIntro strong { color: var(--color-black); font-size: 0.93rem; }
+.rolesModalIntro p { margin: 0; color: var(--color-gray-dark); font-size: 0.85rem; line-height: 1.5; }
 .rolesModal form { display: grid; gap: .85rem; padding: 1rem 1.1rem 1.2rem; }
 .rolesNameGrid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; }
 .rolesField { display: grid; gap: .4rem; }
-.rolesField>span:first-child { color: var(--color-black); font-size: .76rem; font-weight: 820; }
-.rolesField input { width: 100%; min-height: 2.9rem; padding: .7rem .8rem; border: 1px solid rgba(33,44,45,.18); border-radius: .7rem; outline: 0; color: var(--color-black); background: var(--color-white); font: inherit; font-size: .8rem; transition: border-color .18s ease,box-shadow .18s ease; }
+.rolesField>span:first-child { color: var(--color-black); font-size: 0.86rem; font-weight: 820; }
+.rolesField input { width: 100%; min-height: 2.9rem; padding: .7rem .8rem; border: 1px solid rgba(33,44,45,.18); border-radius: .7rem; outline: 0; color: var(--color-black); background: var(--color-white); font: inherit; font-size: 0.9rem; transition: border-color .18s ease,box-shadow .18s ease; }
 .rolesField input:focus { border-color: var(--color-dark-blue); box-shadow: 0 0 0 3px rgba(85,135,166,.13); }
 .rolesField input[aria-invalid="true"] { border-color: #a33838; box-shadow: 0 0 0 3px rgba(163,56,56,.08); }
-.rolesField>small { color: #8f2f2f; font-size: .69rem; font-weight: 740; }
+.rolesField>small { color: #8f2f2f; font-size: 0.8rem; font-weight: 740; }
 .rolesPasswordShell { position: relative; display: block; }
 .rolesPasswordShell input { padding-right: 3rem; }
 .rolesPasswordShell>button { position: absolute; top: 50%; right: .42rem; display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border: 0; border-radius: .55rem; color: var(--color-dark-blue); background: transparent; cursor: pointer; transform: translateY(-50%); }
 .rolesPasswordShell>button:hover { background: var(--color-gray-light); }
-.rolesSuccess,.rolesError { display: flex; align-items: flex-start; gap: .55rem; padding: .72rem .8rem; border-radius: .7rem; font-size: .75rem; font-weight: 760; line-height: 1.45; }
+.rolesSuccess,.rolesError { display: flex; align-items: flex-start; gap: .55rem; padding: .72rem .8rem; border-radius: .7rem; font-size: 0.85rem; font-weight: 760; line-height: 1.45; }
 .rolesSuccess { color: var(--color-dark-blue); background: rgba(85,135,166,.12); }
 .rolesError { color: #7b2929; background: rgba(163,56,56,.1); }
 .rolesSuccess>svg,.rolesError>svg { flex: 0 0 auto; margin-top: .14rem; }
@@ -1892,88 +1892,88 @@
 .paymentsDashboard { display: grid; gap: 1rem; padding-top: 1.35rem; }
 .paymentRangeBar { display: flex; align-items: center; justify-content: space-between; gap: 1.2rem; padding: 1rem 1.1rem; border-radius: 1rem; color: var(--color-white); background: var(--color-dark-blue); }
 .paymentRangeBar>div:first-child { display: grid; gap: .16rem; max-width: 35rem; }
-.paymentRangeBar>div:first-child>span { color: var(--color-white); font-size: .76rem; font-weight: 860; letter-spacing: .06em; text-transform: uppercase; }
-.paymentRangeBar p { margin: 0; color: rgba(255,255,255,.78); font-size: .82rem; line-height: 1.48; }
+.paymentRangeBar>div:first-child>span { color: var(--color-white); font-size: 0.86rem; font-weight: 860; letter-spacing: .06em; text-transform: uppercase; }
+.paymentRangeBar p { margin: 0; color: rgba(255,255,255,.78); font-size: 0.92rem; line-height: 1.48; }
 .paymentRangeBar>div:last-child { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .38rem; }
-.paymentRangeBar button { min-height: 2.35rem; padding: .48rem .72rem; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; color: rgba(255,255,255,.82); background: transparent; cursor: pointer; font: inherit; font-size: .74rem; font-weight: 800; transition: color .18s ease,background .18s ease,border-color .18s ease,transform .18s ease; }
+.paymentRangeBar button { min-height: 2.35rem; padding: .48rem .72rem; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; color: rgba(255,255,255,.82); background: transparent; cursor: pointer; font: inherit; font-size: 0.84rem; font-weight: 800; transition: color .18s ease,background .18s ease,border-color .18s ease,transform .18s ease; }
 .paymentRangeBar button:hover,.paymentRangeBar button.paymentRangeActive { border-color: var(--color-white); color: var(--color-dark-blue); background: var(--color-white); transform: translateY(-1px); }
 .paymentMetricGrid { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: .75rem; }
 .paymentMetricGrid>article { display: flex; align-items: center; gap: .82rem; min-height: 7.8rem; padding: 1rem; border: 1px solid rgba(33,44,45,.08); border-radius: 1rem; background: var(--color-white); box-shadow: 0 .6rem 1.6rem rgba(33,44,45,.045); animation: paymentRise .5s both; animation-delay: var(--payment-delay); }
 .paymentMetricGrid>article>span { display: grid; flex: 0 0 auto; place-items: center; width: 2.9rem; height: 2.9rem; border-radius: .82rem; color: var(--color-white); background: var(--color-dark-blue); font-size: 1.08rem; }
 .paymentMetricGrid>article>div { display: grid; min-width: 0; gap: .12rem; }
-.paymentMetricGrid small { color: var(--color-gray-dark); font-size: .77rem; font-weight: 800; }
+.paymentMetricGrid small { color: var(--color-gray-dark); font-size: 0.87rem; font-weight: 800; }
 .paymentMetricGrid strong { overflow: hidden; color: var(--color-black); font-size: clamp(1.25rem,1.5vw,1.72rem); line-height: 1.05; text-overflow: ellipsis; white-space: nowrap; }
-.paymentMetricGrid p { margin: .18rem 0 0; color: var(--color-gray-dark); font-size: .74rem; line-height: 1.42; }
+.paymentMetricGrid p { margin: .18rem 0 0; color: var(--color-gray-dark); font-size: 0.84rem; line-height: 1.42; }
 .paymentMetricGrid>article.paymentMetricWarning>span { color: var(--color-white); background: var(--color-yellow); }
 .paymentInsightsGrid { display: grid; grid-template-columns: minmax(0,1.35fr) repeat(2,minmax(14rem,.82fr)); gap: .8rem; }
 .paymentInsightsGrid>section { min-width: 0; min-height: 18rem; padding: 1rem; border: 1px solid rgba(33,44,45,.08); border-radius: 1rem; background: var(--color-white); }
 .paymentInsightsGrid>section>header { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; padding-bottom: .8rem; border-bottom: 1px solid rgba(33,44,45,.08); }
 .paymentInsightsGrid>section>header>div { display: grid; gap: .14rem; }
-.paymentInsightsGrid>section>header span,.paymentSectionHeading>div>span { color: var(--color-dark-blue); font-size: .73rem; font-weight: 860; letter-spacing: .065em; text-transform: uppercase; }
+.paymentInsightsGrid>section>header span,.paymentSectionHeading>div>span { color: var(--color-dark-blue); font-size: 0.83rem; font-weight: 860; letter-spacing: .065em; text-transform: uppercase; }
 .paymentInsightsGrid h3,.paymentSectionHeading h3 { margin: 0; color: var(--color-black); font-size: 1.12rem; line-height: 1.2; }
-.paymentInsightsGrid>section>header em { flex: 0 0 auto; padding: .38rem .55rem; border-radius: 999px; color: var(--color-dark-blue); background: rgba(85,135,166,.11); font-size: .69rem; font-style: normal; font-weight: 810; }
+.paymentInsightsGrid>section>header em { flex: 0 0 auto; padding: .38rem .55rem; border-radius: 999px; color: var(--color-dark-blue); background: rgba(85,135,166,.11); font-size: 0.8rem; font-style: normal; font-weight: 810; }
 .paymentTrend { display: flex; align-items: stretch; gap: clamp(.25rem,.7vw,.65rem); height: 11.6rem; padding: 1rem .2rem .15rem; overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--color-dark-blue) rgba(33,44,45,.08); }
 .paymentTrend>article { display: grid; grid-template-rows: minmax(0,1fr) auto; flex: 1 0 2.25rem; min-width: 2.25rem; gap: .4rem; }
 .paymentTrendPlot { position: relative; display: flex; align-items: flex-end; justify-content: center; min-height: 0; border-bottom: 1px solid rgba(33,44,45,.12); }
 .paymentTrendAmount { width: min(1.65rem,68%); min-height: .35rem; border-radius: .45rem .45rem .12rem .12rem; background: var(--color-dark-blue); box-shadow: 0 .35rem .75rem rgba(85,135,166,.13); transition: height .35s ease; }
-.paymentTrendPlot>i { position: absolute; left: 50%; display: grid; place-items: center; width: 1.36rem; height: 1.36rem; border: 2px solid var(--color-white); border-radius: 50%; color: var(--color-white); background: var(--color-yellow); box-shadow: 0 .25rem .55rem rgba(33,44,45,.13); font-size: .62rem; font-style: normal; font-weight: 900; transform: translate(-50%,50%); }
-.paymentTrend>article>small { color: var(--color-gray-dark); font-size: .61rem; font-weight: 760; text-align: center; white-space: nowrap; }
-.paymentTrendLegend { display: flex; align-items: center; justify-content: center; gap: 1rem; padding-top: .6rem; color: var(--color-gray-dark); font-size: .69rem; font-weight: 760; }
+.paymentTrendPlot>i { position: absolute; left: 50%; display: grid; place-items: center; width: 1.36rem; height: 1.36rem; border: 2px solid var(--color-white); border-radius: 50%; color: var(--color-white); background: var(--color-yellow); box-shadow: 0 .25rem .55rem rgba(33,44,45,.13); font-size: 0.8rem; font-style: normal; font-weight: 900; transform: translate(-50%,50%); }
+.paymentTrend>article>small { color: var(--color-gray-dark); font-size: 0.8rem; font-weight: 760; text-align: center; white-space: nowrap; }
+.paymentTrendLegend { display: flex; align-items: center; justify-content: center; gap: 1rem; padding-top: .6rem; color: var(--color-gray-dark); font-size: 0.8rem; font-weight: 760; }
 .paymentTrendLegend span { display: flex; align-items: center; gap: .35rem; }
 .paymentTrendLegend i { width: .8rem; height: .55rem; border-radius: .18rem; background: var(--color-dark-blue); }
 .paymentTrendLegend b { width: .72rem; height: .72rem; border-radius: 50%; background: var(--color-yellow); }
-.paymentChartEmpty { display: grid; place-items: center; align-content: center; gap: .6rem; min-height: 12.4rem; color: var(--color-gray-dark); font-size: .82rem; }
+.paymentChartEmpty { display: grid; place-items: center; align-content: center; gap: .6rem; min-height: 12.4rem; color: var(--color-gray-dark); font-size: 0.92rem; }
 .paymentChartEmpty svg { color: var(--color-dark-blue); font-size: 1.4rem; }
 .paymentMixBars { display: grid; gap: .82rem; padding-top: 1rem; }
 .paymentMixBars>div { display: grid; gap: .34rem; }
-.paymentMixBars>div>span { display: flex; align-items: center; justify-content: space-between; gap: .8rem; color: var(--color-black); font-size: .76rem; }
+.paymentMixBars>div>span { display: flex; align-items: center; justify-content: space-between; gap: .8rem; color: var(--color-black); font-size: 0.86rem; }
 .paymentMixBars strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.paymentMixBars b { flex: 0 0 auto; color: var(--color-gray-dark); font-size: .7rem; }
+.paymentMixBars b { flex: 0 0 auto; color: var(--color-gray-dark); font-size: 0.8rem; }
 .paymentMixBars i { display: block; height: .48rem; overflow: hidden; border-radius: 999px; background: rgba(33,44,45,.08); }
 .paymentMixBars em { display: block; min-width: .4rem; height: 100%; border-radius: inherit; background: var(--color-dark-blue); }
 .paymentMixBars>div:nth-child(2) em { background: var(--color-yellow); }
 .paymentMixBars>div:nth-child(3) em { background: var(--color-black); }
 .paymentMixBars>div:nth-child(4) em { background: rgba(85,135,166,.48); }
 .paymentMixBars>div:nth-child(5) em { background: rgba(33,44,45,.42); }
-.paymentMixEmpty { display: grid; min-height: 10rem; place-items: center; color: var(--color-gray-dark); font-size: .8rem; }
+.paymentMixEmpty { display: grid; min-height: 10rem; place-items: center; color: var(--color-gray-dark); font-size: 0.9rem; }
 .paymentSplitSummary { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .55rem; padding-top: .85rem; }
 .paymentSplitSummary>article { display: flex; align-items: center; gap: .55rem; padding: .62rem; border-radius: .72rem; background: var(--color-gray-light); }
-.paymentSplitSummary>article>span { display: grid; flex: 0 0 auto; place-items: center; width: 2rem; height: 2rem; border-radius: .55rem; color: var(--color-white); background: var(--color-dark-blue); font-size: .75rem; }
+.paymentSplitSummary>article>span { display: grid; flex: 0 0 auto; place-items: center; width: 2rem; height: 2rem; border-radius: .55rem; color: var(--color-white); background: var(--color-dark-blue); font-size: 0.85rem; }
 .paymentSplitSummary>article>div { display: grid; gap: .04rem; }
 .paymentSplitSummary strong { color: var(--color-black); font-size: 1rem; }
-.paymentSplitSummary small { color: var(--color-gray-dark); font-size: .64rem; font-weight: 740; }
+.paymentSplitSummary small { color: var(--color-gray-dark); font-size: 0.8rem; font-weight: 740; }
 .paymentRecordsSection { overflow: hidden; border: 1px solid rgba(33,44,45,.08); border-radius: 1.05rem; background: var(--color-white); }
 .paymentSectionHeading { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding: 1rem 1.05rem; background: var(--color-gray-light); }
 .paymentSectionHeading>div { display: grid; gap: .14rem; }
-.paymentSectionHeading>p { max-width: 38rem; margin: 0; color: var(--color-gray-dark); font-size: .77rem; line-height: 1.48; text-align: right; }
+.paymentSectionHeading>p { max-width: 38rem; margin: 0; color: var(--color-gray-dark); font-size: 0.87rem; line-height: 1.48; text-align: right; }
 .paymentToolbar { position: relative; display: grid; gap: .85rem; padding: 1rem 1.05rem; border-bottom: 1px solid rgba(33,44,45,.08); }
 .paymentToolbarTitle { display: flex; align-items: center; gap: .62rem; }
 .paymentToolbarTitle>span { display: grid; flex: 0 0 auto; place-items: center; width: 2.35rem; height: 2.35rem; border-radius: .68rem; color: var(--color-white); background: var(--color-dark-blue); }
 .paymentToolbarTitle>div { display: grid; gap: .08rem; }
-.paymentToolbarTitle strong { color: var(--color-black); font-size: .85rem; }
-.paymentToolbarTitle small { color: var(--color-gray-dark); font-size: .72rem; }
+.paymentToolbarTitle strong { color: var(--color-black); font-size: 0.95rem; }
+.paymentToolbarTitle small { color: var(--color-gray-dark); font-size: 0.82rem; }
 .paymentFilterGrid { display: grid; grid-template-columns: repeat(5,minmax(8.5rem,1fr)); gap: .65rem; }
 .paymentSelectLabel { display: grid; gap: .35rem; min-width: 0; }
-.paymentSelectLabel>span:first-child { color: var(--color-gray-dark); font-size: .67rem; font-weight: 830; letter-spacing: .045em; text-transform: uppercase; }
+.paymentSelectLabel>span:first-child { color: var(--color-gray-dark); font-size: 0.8rem; font-weight: 830; letter-spacing: .045em; text-transform: uppercase; }
 .paymentSelectShell { position: relative; display: block; min-width: 0; }
-.paymentSelectShell select { width: 100%; min-height: 2.75rem; padding: .65rem 2.2rem .65rem .72rem; border: 1px solid rgba(33,44,45,.16); border-radius: .7rem; outline: 0; color: var(--color-black); background: var(--color-white); cursor: pointer; appearance: none; font: inherit; font-size: .76rem; font-weight: 720; transition: border-color .18s ease,box-shadow .18s ease; }
+.paymentSelectShell select { width: 100%; min-height: 2.75rem; padding: .65rem 2.2rem .65rem .72rem; border: 1px solid rgba(33,44,45,.16); border-radius: .7rem; outline: 0; color: var(--color-black); background: var(--color-white); cursor: pointer; appearance: none; font: inherit; font-size: 0.86rem; font-weight: 720; transition: border-color .18s ease,box-shadow .18s ease; }
 .paymentSelectShell select:focus { border-color: var(--color-dark-blue); box-shadow: 0 0 0 3px rgba(85,135,166,.12); }
-.paymentSelectShell svg { position: absolute; top: 50%; right: .72rem; color: var(--color-dark-blue); font-size: .68rem; pointer-events: none; transform: translateY(-50%); }
-.paymentResetButton { position: absolute; top: .9rem; right: 1.05rem; display: inline-flex; align-items: center; gap: .4rem; min-height: 2.2rem; padding: .45rem .65rem; border: 0; border-radius: 999px; color: var(--color-dark-blue); background: rgba(85,135,166,.11); cursor: pointer; font: inherit; font-size: .69rem; font-weight: 810; }
+.paymentSelectShell svg { position: absolute; top: 50%; right: .72rem; color: var(--color-dark-blue); font-size: 0.8rem; pointer-events: none; transform: translateY(-50%); }
+.paymentResetButton { position: absolute; top: .9rem; right: 1.05rem; display: inline-flex; align-items: center; gap: .4rem; min-height: 2.2rem; padding: .45rem .65rem; border: 0; border-radius: 999px; color: var(--color-dark-blue); background: rgba(85,135,166,.11); cursor: pointer; font: inherit; font-size: 0.8rem; font-weight: 810; }
 .paymentResetButton:hover { color: var(--color-white); background: var(--color-dark-blue); }
 .paymentTable,.paymentTableUpdating { overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--color-dark-blue) rgba(33,44,45,.08); transition: opacity .2s ease; }
 .paymentTableUpdating { opacity: .48; pointer-events: none; }
 .paymentTableHeader,.paymentTable>article,.paymentTableUpdating>article { display: grid; grid-template-columns: minmax(13rem,1.3fr) minmax(11rem,1fr) minmax(7.8rem,.72fr) minmax(7.5rem,.68fr) minmax(9.5rem,.9fr) minmax(8.5rem,.78fr) 2.7rem; align-items: center; gap: .72rem; min-width: 75rem; padding: .8rem 1.05rem; }
-.paymentTableHeader { color: var(--color-gray-dark); background: rgba(244,245,245,.78); font-size: .69rem; font-weight: 850; letter-spacing: .045em; text-transform: uppercase; }
+.paymentTableHeader { color: var(--color-gray-dark); background: rgba(244,245,245,.78); font-size: 0.8rem; font-weight: 850; letter-spacing: .045em; text-transform: uppercase; }
 .paymentTable>article,.paymentTableUpdating>article { min-height: 5.75rem; border-top: 1px solid rgba(33,44,45,.075); background: var(--color-white); animation: paymentRise .42s both; animation-delay: var(--payment-row-delay); transition: background .18s ease; }
 .paymentTable>article:hover { background: rgba(85,135,166,.045); }
 .paymentCustomer { display: flex; align-items: center; gap: .68rem; min-width: 0; }
-.paymentCustomer>i { display: grid; flex: 0 0 auto; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: .74rem; color: var(--color-white); background: var(--color-dark-blue); font-size: .72rem; font-style: normal; font-weight: 860; }
+.paymentCustomer>i { display: grid; flex: 0 0 auto; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: .74rem; color: var(--color-white); background: var(--color-dark-blue); font-size: 0.82rem; font-style: normal; font-weight: 860; }
 .paymentCustomer>span,.paymentCourse,.paymentStatusCell,.paymentAmountCell,.paymentDateCell { display: grid; min-width: 0; gap: .14rem; }
-.paymentCustomer strong,.paymentCourse strong,.paymentAmountCell strong,.paymentDateCell strong { overflow: hidden; color: var(--color-black); font-size: .8rem; text-overflow: ellipsis; white-space: nowrap; }
-.paymentCustomer small,.paymentCourse small,.paymentStatusCell small,.paymentAmountCell small,.paymentDateCell small { overflow: hidden; color: var(--color-gray-dark); font-size: .7rem; line-height: 1.38; text-overflow: ellipsis; white-space: nowrap; }
-.paymentCustomer em { justify-self: start; color: var(--color-dark-blue); font-size: .64rem; font-style: normal; font-weight: 790; }
-.paymentPill,.paymentSourcePill { display: inline-flex; align-items: center; justify-content: center; justify-self: start; min-height: 1.7rem; padding: .35rem .55rem; border-radius: 999px; font-size: .68rem; font-weight: 830; white-space: nowrap; }
+.paymentCustomer strong,.paymentCourse strong,.paymentAmountCell strong,.paymentDateCell strong { overflow: hidden; color: var(--color-black); font-size: 0.9rem; text-overflow: ellipsis; white-space: nowrap; }
+.paymentCustomer small,.paymentCourse small,.paymentStatusCell small,.paymentAmountCell small,.paymentDateCell small { overflow: hidden; color: var(--color-gray-dark); font-size: 0.8rem; line-height: 1.38; text-overflow: ellipsis; white-space: nowrap; }
+.paymentCustomer em { justify-self: start; color: var(--color-dark-blue); font-size: 0.8rem; font-style: normal; font-weight: 790; }
+.paymentPill,.paymentSourcePill { display: inline-flex; align-items: center; justify-content: center; justify-self: start; min-height: 1.7rem; padding: .35rem .55rem; border-radius: 999px; font-size: 0.8rem; font-weight: 830; white-space: nowrap; }
 .paymentPillsuccess { color: var(--color-white); background: var(--color-dark-blue); }
 .paymentPillyellow { color: var(--color-white); background: var(--color-yellow); }
 .paymentPilldanger { color: #7b2929; background: rgba(163,56,56,.12); }
@@ -1981,92 +1981,92 @@
 .paymentSourcePill { color: var(--color-dark-blue); background: rgba(85,135,166,.11); }
 .paymentOpenButton { display: grid; place-items: center; width: 2.35rem; height: 2.35rem; border: 0; border-radius: .68rem; color: var(--color-white); background: var(--color-dark-blue); cursor: pointer; transition: color .18s ease,background .18s ease,transform .18s ease; }
 .paymentOpenButton:hover { color: var(--color-white); background: var(--color-yellow); transform: translateY(-2px); }
-.paymentLoadMore { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .9rem 1.05rem; border-top: 1px solid rgba(33,44,45,.08); color: var(--color-gray-dark); background: var(--color-gray-light); font-size: .75rem; font-weight: 760; }
-.paymentLoadMore button { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 2.55rem; padding: .55rem .85rem; border: 0; border-radius: .7rem; color: var(--color-white); background: var(--color-dark-blue); cursor: pointer; font: inherit; font-size: .74rem; font-weight: 830; }
+.paymentLoadMore { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .9rem 1.05rem; border-top: 1px solid rgba(33,44,45,.08); color: var(--color-gray-dark); background: var(--color-gray-light); font-size: 0.85rem; font-weight: 760; }
+.paymentLoadMore button { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 2.55rem; padding: .55rem .85rem; border: 0; border-radius: .7rem; color: var(--color-white); background: var(--color-dark-blue); cursor: pointer; font: inherit; font-size: 0.84rem; font-weight: 830; }
 .paymentLoadMore button:hover:not(:disabled) { color: var(--color-white); background: var(--color-yellow); }
 .paymentLoadMore button:disabled { cursor: wait; opacity: .66; }
-.paymentLoadMore em { font-size: .71rem; font-style: normal; }
+.paymentLoadMore em { font-size: 0.81rem; font-style: normal; }
 .paymentMethodNote { display: flex; align-items: flex-start; gap: .72rem; padding: .9rem 1rem; border-radius: .9rem; color: var(--color-dark-blue); background: rgba(85,135,166,.1); }
 .paymentMethodNote>svg { flex: 0 0 auto; margin-top: .18rem; }
-.paymentMethodNote p { margin: 0; color: var(--color-gray-dark); font-size: .78rem; line-height: 1.5; }
+.paymentMethodNote p { margin: 0; color: var(--color-gray-dark); font-size: 0.88rem; line-height: 1.5; }
 .paymentMethodNote strong { color: var(--color-black); }
 .paymentDrawer { width: min(100%,49rem); }
 .paymentDrawerHeader { position: sticky; z-index: 4; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.05rem 1.15rem; color: var(--color-white); background: var(--color-dark-blue); }
 .paymentDrawerHeader>button { display: grid; flex: 0 0 auto; place-items: center; width: 2.45rem; height: 2.45rem; border: 0; border-radius: 50%; color: var(--color-white); background: var(--color-yellow); cursor: pointer; }
 .paymentDrawerIdentity { display: flex; align-items: center; gap: .75rem; min-width: 0; }
-.paymentDrawerIdentity>span { display: grid; flex: 0 0 auto; place-items: center; width: 2.8rem; height: 2.8rem; border-radius: .78rem; color: var(--color-dark-blue); background: var(--color-white); font-size: .78rem; font-weight: 880; }
+.paymentDrawerIdentity>span { display: grid; flex: 0 0 auto; place-items: center; width: 2.8rem; height: 2.8rem; border-radius: .78rem; color: var(--color-dark-blue); background: var(--color-white); font-size: 0.88rem; font-weight: 880; }
 .paymentDrawerIdentity>div { display: grid; min-width: 0; gap: .04rem; }
-.paymentDrawerIdentity small { color: var(--color-yellow); font-size: .68rem; font-weight: 850; letter-spacing: .065em; text-transform: uppercase; }
+.paymentDrawerIdentity small { color: var(--color-yellow); font-size: 0.8rem; font-weight: 850; letter-spacing: .065em; text-transform: uppercase; }
 .paymentDrawerIdentity h3 { overflow: hidden; margin: 0; font-size: 1.16rem; text-overflow: ellipsis; white-space: nowrap; }
-.paymentDrawerIdentity a { overflow: hidden; color: rgba(255,255,255,.78); font-size: .74rem; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
+.paymentDrawerIdentity a { overflow: hidden; color: rgba(255,255,255,.78); font-size: 0.84rem; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
 .paymentDrawerBody { display: grid; gap: .9rem; padding: 1rem 1.15rem 1.4rem; }
 .paymentDrawerPills { display: flex; flex-wrap: wrap; gap: .42rem; }
 .paymentHeroDetail { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); overflow: hidden; border: 1px solid rgba(33,44,45,.08); border-radius: .95rem; background: var(--color-gray-light); }
 .paymentHeroDetail>div { display: grid; align-content: start; min-width: 0; gap: .16rem; padding: .9rem; border-left: 1px solid rgba(33,44,45,.08); }
 .paymentHeroDetail>div:first-child { border-left: 0; }
-.paymentHeroDetail span { color: var(--color-gray-dark); font-size: .69rem; font-weight: 820; text-transform: uppercase; }
+.paymentHeroDetail span { color: var(--color-gray-dark); font-size: 0.8rem; font-weight: 820; text-transform: uppercase; }
 .paymentHeroDetail strong { overflow: hidden; color: var(--color-black); font-size: 1.14rem; line-height: 1.15; text-overflow: ellipsis; }
-.paymentHeroDetail small { color: var(--color-gray-dark); font-size: .68rem; line-height: 1.4; }
+.paymentHeroDetail small { color: var(--color-gray-dark); font-size: 0.8rem; line-height: 1.4; }
 .paymentDrawerLoading { display: grid; gap: .6rem; padding: .5rem 0; }
 .paymentDrawerLoading>span { display: block; height: 5rem; border-radius: .8rem; background: linear-gradient(90deg,rgba(33,44,45,.06),rgba(85,135,166,.13),rgba(33,44,45,.06)); background-size: 220% 100%; animation: paymentShimmer 1.2s linear infinite; }
 .paymentDrawerSection { display: grid; gap: .78rem; padding: 1rem; border: 1px solid rgba(33,44,45,.08); border-radius: .92rem; background: var(--color-white); }
 .paymentDrawerSection>header { display: flex; align-items: center; gap: .62rem; }
 .paymentDrawerSection>header>span { display: grid; flex: 0 0 auto; place-items: center; width: 2.35rem; height: 2.35rem; border-radius: .67rem; color: var(--color-white); background: var(--color-dark-blue); }
 .paymentDrawerSection>header>div { display: grid; gap: .05rem; }
-.paymentDrawerSection>header small { color: var(--color-dark-blue); font-size: .67rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
-.paymentDrawerSection h4 { margin: 0; color: var(--color-black); font-size: .94rem; }
+.paymentDrawerSection>header small { color: var(--color-dark-blue); font-size: 0.8rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+.paymentDrawerSection h4 { margin: 0; color: var(--color-black); font-size: 1.02rem; }
 .paymentDetailGrid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .55rem; margin: 0; }
 .paymentDetailGrid>div { min-width: 0; padding: .67rem .72rem; border-radius: .7rem; background: var(--color-gray-light); }
-.paymentDetailGrid dt { margin-bottom: .22rem; color: var(--color-gray-dark); font-size: .67rem; font-weight: 810; }
-.paymentDetailGrid dd { overflow-wrap: anywhere; margin: 0; color: var(--color-black); font-size: .77rem; font-weight: 760; line-height: 1.42; }
+.paymentDetailGrid dt { margin-bottom: .22rem; color: var(--color-gray-dark); font-size: 0.8rem; font-weight: 810; }
+.paymentDetailGrid dd { overflow-wrap: anywhere; margin: 0; color: var(--color-black); font-size: 0.87rem; font-weight: 760; line-height: 1.42; }
 .paymentDiscountCards { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .55rem; }
 .paymentDiscountCards>article { display: flex; align-items: center; gap: .6rem; min-width: 0; padding: .7rem; border-radius: .72rem; background: var(--color-gray-light); }
 .paymentDiscountCards>article>span { display: grid; flex: 0 0 auto; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: .6rem; color: var(--color-gray-dark); background: var(--color-white); }
 .paymentDiscountCards>article.paymentDiscountActive>span { color: var(--color-white); background: var(--color-yellow); }
 .paymentDiscountCards>article>div { display: grid; min-width: 0; gap: .08rem; }
-.paymentDiscountCards small { color: var(--color-gray-dark); font-size: .67rem; font-weight: 760; }
-.paymentDiscountCards strong { overflow: hidden; color: var(--color-black); font-size: .8rem; text-overflow: ellipsis; white-space: nowrap; }
+.paymentDiscountCards small { color: var(--color-gray-dark); font-size: 0.8rem; font-weight: 760; }
+.paymentDiscountCards strong { overflow: hidden; color: var(--color-black); font-size: 0.9rem; text-overflow: ellipsis; white-space: nowrap; }
 .paymentMethodTags { display: flex; flex-wrap: wrap; gap: .38rem; }
-.paymentMethodTags span { padding: .36rem .55rem; border-radius: 999px; color: var(--color-dark-blue); background: rgba(85,135,166,.11); font-size: .68rem; font-weight: 810; }
-.paymentAccuracyNote { display: flex; align-items: flex-start; gap: .5rem; margin: 0; padding: .68rem .72rem; border-radius: .68rem; color: var(--color-gray-dark); background: rgba(85,135,166,.08); font-size: .7rem; line-height: 1.45; }
+.paymentMethodTags span { padding: .36rem .55rem; border-radius: 999px; color: var(--color-dark-blue); background: rgba(85,135,166,.11); font-size: 0.8rem; font-weight: 810; }
+.paymentAccuracyNote { display: flex; align-items: flex-start; gap: .5rem; margin: 0; padding: .68rem .72rem; border-radius: .68rem; color: var(--color-gray-dark); background: rgba(85,135,166,.08); font-size: 0.8rem; line-height: 1.45; }
 .paymentAccuracyNote svg { flex: 0 0 auto; margin-top: .12rem; color: var(--color-dark-blue); }
 .paymentFailureBox { display: flex; align-items: flex-start; gap: .62rem; padding: .75rem; border-radius: .72rem; color: #7b2929; background: rgba(163,56,56,.09); }
 .paymentFailureBox>svg { flex: 0 0 auto; margin-top: .14rem; }
 .paymentFailureBox>div { display: grid; gap: .16rem; }
-.paymentFailureBox strong { font-size: .77rem; }
-.paymentFailureBox p { overflow-wrap: anywhere; margin: 0; font-size: .7rem; line-height: 1.45; }
+.paymentFailureBox strong { font-size: 0.87rem; }
+.paymentFailureBox p { overflow-wrap: anywhere; margin: 0; font-size: 0.8rem; line-height: 1.45; }
 .paymentNoticeList,.paymentEventList,.paymentPointList,.paymentReferenceList { display: grid; gap: .5rem; }
 .paymentNoticeRow { display: flex; align-items: flex-start; gap: .62rem; padding: .68rem .72rem; border-radius: .7rem; background: var(--color-gray-light); }
-.paymentNoticeRow>span { display: grid; flex: 0 0 auto; place-items: center; width: 2rem; height: 2rem; border-radius: .55rem; font-size: .76rem; }
+.paymentNoticeRow>span { display: grid; flex: 0 0 auto; place-items: center; width: 2rem; height: 2rem; border-radius: .55rem; font-size: 0.86rem; }
 .paymentNoticesent { color: var(--color-white); background: var(--color-dark-blue); }
 .paymentNoticeerror { color: #7b2929; background: rgba(163,56,56,.13); }
 .paymentNoticeidle { color: var(--color-black); background: rgba(240,196,25,.32); }
 .paymentNoticeRow>div { display: grid; gap: .08rem; }
-.paymentNoticeRow strong { color: var(--color-black); font-size: .76rem; }
-.paymentNoticeRow small { overflow-wrap: anywhere; color: var(--color-gray-dark); font-size: .69rem; line-height: 1.4; }
+.paymentNoticeRow strong { color: var(--color-black); font-size: 0.86rem; }
+.paymentNoticeRow small { overflow-wrap: anywhere; color: var(--color-gray-dark); font-size: 0.8rem; line-height: 1.4; }
 .paymentReferenceList>div { display: grid; grid-template-columns: 9rem minmax(0,1fr); align-items: center; gap: .65rem; min-width: 0; padding: .62rem .7rem; border-radius: .68rem; background: var(--color-gray-light); }
-.paymentReferenceList>div>strong { color: var(--color-black); font-size: .72rem; }
+.paymentReferenceList>div>strong { color: var(--color-black); font-size: 0.82rem; }
 .paymentCopyValue { display: flex; align-items: center; min-width: 0; gap: .45rem; }
-.paymentCopyValue code { overflow: hidden; flex: 1 1 auto; color: var(--color-gray-dark); font-family: inherit; font-size: .68rem; text-overflow: ellipsis; white-space: nowrap; }
-.paymentCopyValue button { display: inline-flex; flex: 0 0 auto; align-items: center; gap: .3rem; padding: .34rem .48rem; border: 0; border-radius: .5rem; color: var(--color-dark-blue); background: var(--color-white); cursor: pointer; font: inherit; font-size: .64rem; font-weight: 810; }
-.paymentMissingValue { color: var(--color-gray-dark); font-size: .7rem; }
+.paymentCopyValue code { overflow: hidden; flex: 1 1 auto; color: var(--color-gray-dark); font-family: inherit; font-size: 0.8rem; text-overflow: ellipsis; white-space: nowrap; }
+.paymentCopyValue button { display: inline-flex; flex: 0 0 auto; align-items: center; gap: .3rem; padding: .34rem .48rem; border: 0; border-radius: .5rem; color: var(--color-dark-blue); background: var(--color-white); cursor: pointer; font: inherit; font-size: 0.8rem; font-weight: 810; }
+.paymentMissingValue { color: var(--color-gray-dark); font-size: 0.8rem; }
 .paymentEventList>article { display: grid; grid-template-columns: 2.15rem minmax(0,1fr) auto; align-items: start; gap: .62rem; padding: .7rem; border-radius: .7rem; background: var(--color-gray-light); }
 .paymentEventList>article>span { display: grid; place-items: center; width: 2.05rem; height: 2.05rem; border-radius: .55rem; }
 .paymentEventSuccess { color: var(--color-white); background: var(--color-dark-blue); }
 .paymentEventWarning { color: var(--color-white); background: var(--color-yellow); }
 .paymentEventList>article>div { display: grid; min-width: 0; gap: .08rem; }
-.paymentEventList strong { overflow: hidden; color: var(--color-black); font-size: .75rem; text-overflow: ellipsis; white-space: nowrap; }
-.paymentEventList small { color: var(--color-gray-dark); font-size: .67rem; }
-.paymentEventList p { overflow-wrap: anywhere; margin: .22rem 0 0; color: #7b2929; font-size: .68rem; line-height: 1.4; }
-.paymentEventList em { padding: .3rem .46rem; border-radius: 999px; color: var(--color-dark-blue); background: var(--color-white); font-size: .62rem; font-style: normal; font-weight: 820; text-transform: capitalize; }
+.paymentEventList strong { overflow: hidden; color: var(--color-black); font-size: 0.85rem; text-overflow: ellipsis; white-space: nowrap; }
+.paymentEventList small { color: var(--color-gray-dark); font-size: 0.8rem; }
+.paymentEventList p { overflow-wrap: anywhere; margin: .22rem 0 0; color: #7b2929; font-size: 0.8rem; line-height: 1.4; }
+.paymentEventList em { padding: .3rem .46rem; border-radius: 999px; color: var(--color-dark-blue); background: var(--color-white); font-size: 0.8rem; font-style: normal; font-weight: 820; text-transform: capitalize; }
 .paymentPointList>article { display: flex; align-items: center; gap: .62rem; padding: .65rem .7rem; border-radius: .68rem; background: var(--color-gray-light); }
-.paymentPointList>article>span { display: grid; flex: 0 0 auto; place-items: center; min-width: 3.2rem; min-height: 2.1rem; padding: .35rem; border-radius: .55rem; font-size: .73rem; font-weight: 850; }
+.paymentPointList>article>span { display: grid; flex: 0 0 auto; place-items: center; min-width: 3.2rem; min-height: 2.1rem; padding: .35rem; border-radius: .55rem; font-size: 0.83rem; font-weight: 850; }
 .paymentPointsEarned { color: var(--color-white); background: var(--color-dark-blue); }
 .paymentPointsSpent { color: var(--color-white); background: var(--color-yellow); }
 .paymentPointList>article>div { display: grid; gap: .07rem; }
-.paymentPointList strong { color: var(--color-black); font-size: .74rem; }
-.paymentPointList small { color: var(--color-gray-dark); font-size: .67rem; }
-.paymentEmptyDetail { margin: 0; padding: .75rem; border-radius: .7rem; color: var(--color-gray-dark); background: var(--color-gray-light); font-size: .72rem; line-height: 1.45; }
+.paymentPointList strong { color: var(--color-black); font-size: 0.84rem; }
+.paymentPointList small { color: var(--color-gray-dark); font-size: 0.8rem; }
+.paymentEmptyDetail { margin: 0; padding: .75rem; border-radius: .7rem; color: var(--color-gray-dark); background: var(--color-gray-light); font-size: 0.82rem; line-height: 1.45; }
 @keyframes paymentRise { from { opacity: 0; transform: translateY(.5rem); } to { opacity: 1; transform: translateY(0); } }
 @keyframes paymentShimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
 @media (max-width: 1480px) {
@@ -2112,4 +2112,188 @@
 @media (prefers-reduced-motion: reduce) {
   .paymentMetricGrid>article,.paymentTable>article,.paymentTableUpdating>article,.paymentDrawerLoading>span { animation: none; }
   .paymentTrendAmount,.paymentRangeBar button,.paymentOpenButton { transition: none; }
+}
+
+/* Keep every opened admin detail view as readable as its parent dashboard. */
+.drawerIdentity>div>span,
+.learningDrawerHero>div>span,
+.videoDrawerHeader>div>span,
+.videoDrawerHeader small {
+  font-size: .82rem;
+}
+
+.drawerIdentity a,
+.drawerSectionTitle>span,
+.detailGrid dt,
+.drawerListItem>div span,
+.progressTimelineTop time,
+.progressTimelineItem>div>span,
+.progressMeta span,
+.drawerEmpty,
+.learningDrawerHero small,
+.learningDrawerStats span,
+.videoDrawerSummary span,
+.videoMeasurementNote p,
+.videoViewerIdentity small,
+.videoViewerReach small,
+.videoViewerDates small {
+  font-size: .8rem;
+  line-height: 1.42;
+}
+
+.drawerSectionTitle h4,
+.detailGrid dd,
+.drawerListItem strong,
+.progressTimelineTop strong,
+.learningDrawerHero h4,
+.learningDrawerStats strong,
+.learningModule>button strong,
+.learningModulePercent,
+.learningLessonList strong,
+.videoDrawerSummary strong,
+.videoViewerIdentity strong,
+.videoViewerReach b,
+.videoViewerDates strong {
+  font-size: .9rem;
+  line-height: 1.4;
+}
+
+.drawerListItem,
+.progressTimelineItem,
+.learningModule>button,
+.videoViewerRow {
+  min-height: 3.2rem;
+}
+
+.detailGrid>div,
+.learningDrawerStats>div,
+.videoDrawerSummary>div {
+  padding: .82rem;
+}
+
+/* Keep progress values visually separate from horizontal tracks. */
+.learningProgressTrack:has(>strong) {
+  margin-top: 1.35rem;
+}
+
+.learningProgressTrack>strong {
+  top: auto;
+  right: 0;
+  bottom: calc(100% + .42rem);
+  line-height: 1.15;
+  transform: none;
+}
+
+.learningProgressCell {
+  gap: .48rem;
+}
+
+/* Give enlarged graph labels their own row instead of crowding the bars. */
+.enrollmentTrend,
+.learningTrend,
+.courseTrend {
+  height: 11.35rem;
+}
+
+.enrollmentTrendItem>div {
+  grid-template-rows: 1.3rem minmax(0,1fr);
+}
+
+.learningTrendItem,
+.courseTrendItem {
+  grid-template-rows: 1.3rem minmax(0,1fr) auto;
+}
+
+.paymentTrend {
+  height: 12.25rem;
+}
+
+.paymentTrendPlot>i {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+/* Stable search-field alignment across every admin-users dashboard. */
+.mainPanel :global(.sr-only) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  clip-path: inset(50%) !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+.directorySearch {
+  grid-template-columns: 1.15rem minmax(0,1fr) 2rem;
+  column-gap: .65rem;
+  overflow: hidden;
+}
+
+.directorySearch>svg {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: center;
+  width: .95rem;
+  height: .95rem;
+}
+
+.directorySearch input {
+  grid-column: 2;
+  grid-row: 1;
+  width: 100%;
+  min-width: 0;
+  padding: .72rem 0;
+  direction: ltr;
+  line-height: 1.35;
+  text-align: left;
+  text-overflow: ellipsis;
+}
+
+.directorySearch input::placeholder {
+  font-size: .86rem;
+  line-height: inherit;
+  opacity: 1;
+  text-overflow: ellipsis;
+}
+
+.directorySearch input::-webkit-search-cancel-button,
+.directorySearch input::-webkit-search-decoration {
+  display: none;
+  appearance: none;
+}
+
+.directorySearch button {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: center;
+  justify-self: end;
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .directorySearch {
+    grid-template-columns: 1rem minmax(0,1fr) 1.85rem;
+    min-height: 2.8rem;
+    padding-inline: .72rem;
+    column-gap: .5rem;
+  }
+
+  .directorySearch input {
+    padding-block: .64rem;
+    font-size: .88rem;
+  }
+
+  .directorySearch input::placeholder {
+    font-size: .78rem;
+  }
+
+  .directorySearch button {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
 }

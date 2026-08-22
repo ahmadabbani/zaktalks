@@ -23,7 +23,7 @@ function SubmitButton({ label, loadingLabel, disabled }) {
   )
 }
 
-export default function AuthForm({ type, action }) {
+export default function AuthForm({ type, action, showSwitch = true }) {
   const [error, setError] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [validationErrors, setValidationErrors] = useState({})
@@ -334,12 +334,14 @@ function validateForm() {
           />
         </form>
 
-        <p className={styles.switchText}>
-          {isLogin ? "Don't have an account? " : "Already have an account? "}
-          <Link href={isLogin ? '/register' : '/login'} className={styles.switchLink}>
-            {isLogin ? 'Sign up' : 'Sign in'}
-          </Link>
-        </p>
+        {showSwitch && (
+          <p className={styles.switchText}>
+            {isLogin ? "Don't have an account? " : "Already have an account? "}
+            <Link href={isLogin ? '/register' : '/login'} className={styles.switchLink}>
+              {isLogin ? 'Sign up' : 'Sign in'}
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   )
