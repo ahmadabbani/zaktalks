@@ -47,7 +47,7 @@ export async function updateAdminSetting(key, value) {
     return { success: false, error: error.message }
   }
   
-  revalidatePath('/admin/settings')
+  revalidatePath('/admin/dashboard')
   return { success: true }
 }
 
@@ -90,6 +90,6 @@ export async function updateAdminSettings(formData) {
     return { success: false, error: 'Failed to update settings' }
   }
   
-  revalidatePath('/admin/settings')
+  revalidatePath('/admin/dashboard')
   return { success: true }
 }

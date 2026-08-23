@@ -229,6 +229,7 @@ function validateForm() {
               placeholder="email"
               value={formValues.email}
               onChange={handleInputChange}
+              autoComplete={isLogin ? 'username' : 'email'}
               className={`${styles.input} ${validationErrors.email ? styles.inputError : ''}`}
             />
             {validationErrors.email && (

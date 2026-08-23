@@ -308,7 +308,7 @@ export default function VideoAnalyticsDashboard() {
     {loading && data && <AdminDashboardUpdate label="Updating video analytics" />}
 
     <div className={styles.enrollmentRangeBar}>
-      <div><span>Viewing window</span><p>Controls viewer activity and lesson comparisons. Completion reflects the current state of records active in this window.</p></div>
+      <div><span>Viewing window</span><p>Shows viewing activity, lesson comparisons, and current completion for this period.</p></div>
       <div className={styles.enrollmentRangeOptions}>{RANGE_OPTIONS.map(([value, label]) => <button type="button" key={value} className={filters.range === value ? styles.enrollmentRangeActive : styles.enrollmentRangeOption} onClick={() => { setPage(1); setFilters((current) => ({ ...current, range: value })) }}>{label}</button>)}</div>
     </div>
 

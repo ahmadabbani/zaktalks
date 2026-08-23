@@ -33,12 +33,12 @@
 .introTitle {
     font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 900;
-    color: var(--color-black);
+    color: var(--color-dark-blue);
     margin: 0 0 var(--space-md) 0;
 }
 
 .introDescription {
-    color: var(--color-gray-dark);
+    color: var(--color-black);
     line-height: 1.7;
     font-size: 1rem;
     margin: 0 auto var(--space-xl) auto;
@@ -51,11 +51,12 @@
     align-items: center;
     justify-content: center;
     line-height: normal;
-    padding: 14px 28px;
-    background: var(--color-black);
-    color: var(--color-yellow);
-    border: none;
-    border-radius: 0.75rem;
+    min-height: var(--home-cta-min-height);
+    padding: 0.9rem clamp(1.2rem, 2vw, 1.75rem);
+    background: var(--color-dark-blue);
+    color: var(--color-white);
+    border: 2px solid var(--color-dark-blue);
+    border-radius: 999px;
     font-weight: 800;
     font-size: 1rem;
     cursor: pointer;
@@ -63,9 +64,11 @@
 }
 
 .introStartBtn:hover {
-    opacity: 0.92;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    border-color: var(--color-yellow);
+    background: var(--color-yellow);
+    color: var(--color-white);
+    transform: var(--home-cta-hover-transform);
+    box-shadow: 0 12px 28px rgba(48, 48, 48, 0.2);
 }
 
 @keyframes fadeIn {
@@ -153,15 +156,18 @@
 }
 
 .scaleButtons {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--space-md);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: minmax(48px, 1fr);
+    gap: 0.65rem;
 }
 
 .scaleBtn {
-    flex: 1;
-    padding: var(--space-lg) 0;
-    font-size: 1.5rem;
+    width: 100%;
+    min-height: 48px;
+    height: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 1.05rem;
     font-weight: 700;
     background: white;
     border: 2px solid var(--color-gray);
@@ -173,7 +179,8 @@
 
 .scaleBtn:hover {
     border-color: var(--color-yellow);
-    background: rgba(255, 215, 0, 0.05);
+    background: var(--color-yellow);
+    color: var(--color-black);
     transform: translateY(-2px);
 }
 
@@ -214,15 +221,22 @@
     gap: var(--space-sm);
 }
 
-.prevBtn {
-    background: transparent;
-    color: var(--color-gray-dark);
-    border: 2px solid var(--color-gray);
+.navigation .prevBtn {
+    min-height: 2.65rem;
+    padding: 0.62rem 1rem;
+    border-radius: 999px;
+    background: var(--color-yellow);
+    color: var(--color-white);
+    border: 1px solid var(--color-yellow);
+    font-size: 0.9rem;
 }
 
-.prevBtn:hover:not(:disabled) {
-    background: var(--color-gray-light);
-    color: var(--color-black);
+.navigation .prevBtn:hover:not(:disabled) {
+    background: var(--color-yellow);
+    color: var(--color-white);
+    border-color: var(--color-yellow);
+    opacity: 0.88;
+    transform: translateX(-2px);
 }
 
 .prevBtn:disabled {
@@ -501,19 +515,22 @@
 
 .binaryOptions {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-md);
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: minmax(50px, 1fr);
+    gap: 0.65rem;
     margin-bottom: var(--space-2xl);
 }
 
 .binaryOptionBtn {
-    min-height: 74px;
-    padding: var(--space-md);
+    width: 100%;
+    min-height: 50px;
+    height: 100%;
+    padding: 0.7rem 1rem;
     border: 2px solid rgba(0, 0, 0, 0.14);
     border-radius: 0.9rem;
     background: white;
     color: var(--color-black);
-    font-size: 1.15rem;
+    font-size: 1rem;
     font-weight: 900;
     cursor: pointer;
     transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal), background var(--transition-normal);
@@ -521,7 +538,9 @@
 
 .binaryOptionBtn:hover {
     transform: translateY(-2px);
-    border-color: #f1c40f;
+    border-color: var(--color-yellow);
+    background: var(--color-yellow);
+    color: var(--color-black);
     box-shadow: 0 10px 22px rgba(15, 23, 42, 0.1);
 }
 
@@ -530,6 +549,12 @@
     border-color: var(--color-black);
     color: var(--color-yellow);
     box-shadow: 0 12px 26px rgba(15, 23, 42, 0.18);
+}
+
+.binaryOptionBtnSelected:hover {
+    background: var(--color-yellow);
+    border-color: var(--color-yellow);
+    color: var(--color-black);
 }
 
 .binaryResultContainer {
@@ -643,14 +668,17 @@
 
 .driverOptions {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-md);
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: minmax(50px, 1fr);
+    gap: 0.65rem;
     margin-bottom: var(--space-2xl);
 }
 
 .driverOptionBtn {
-    min-height: 72px;
-    padding: var(--space-md);
+    width: 100%;
+    min-height: 50px;
+    height: 100%;
+    padding: 0.7rem 1rem;
     border: 2px solid rgba(0, 0, 0, 0.14);
     border-radius: 0.9rem;
     background: white;
@@ -663,7 +691,9 @@
 
 .driverOptionBtn:hover {
     transform: translateY(-2px);
-    border-color: #f1c40f;
+    border-color: var(--color-yellow);
+    background: var(--color-yellow);
+    color: var(--color-black);
     box-shadow: 0 10px 22px rgba(15, 23, 42, 0.1);
 }
 
@@ -672,6 +702,12 @@
     border-color: var(--color-black);
     color: var(--color-yellow);
     box-shadow: 0 12px 26px rgba(15, 23, 42, 0.18);
+}
+
+.driverOptionBtnSelected:hover {
+    background: var(--color-yellow);
+    border-color: var(--color-yellow);
+    color: var(--color-black);
 }
 
 .driverResultContainer {
@@ -908,8 +944,9 @@
 
 .egoOptions {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-md);
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: minmax(0, 1fr);
+    gap: 0.65rem;
     margin-bottom: var(--space-2xl);
 }
 
@@ -917,9 +954,10 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: var(--space-md);
+    gap: 0.65rem;
     min-width: 0;
-    padding: var(--space-md);
+    height: 100%;
+    padding: 0.75rem 0.9rem;
     border: 1px solid rgba(15, 23, 42, 0.12);
     border-radius: 1rem;
     background: white;
@@ -941,14 +979,15 @@
 
 .egoOptionActions {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-sm);
 }
 
 .egoRankBtn,
 .egoRankBtnSelected {
-    min-height: 44px;
-    padding: 10px 12px;
+    width: 100%;
+    min-height: 42px;
+    padding: 0.6rem 0.8rem;
     border-radius: 0.75rem;
     border: 2px solid rgba(15, 23, 42, 0.14);
     font-size: 0.78rem;
@@ -964,7 +1003,9 @@
 
 .egoRankBtn:hover {
     transform: translateY(-1px);
-    border-color: #f1c40f;
+    border-color: var(--color-yellow);
+    background: var(--color-yellow);
+    color: var(--color-black);
 }
 
 .egoRankBtnSelected {
@@ -972,6 +1013,13 @@
     border-color: var(--color-black);
     color: var(--color-yellow);
     box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14);
+}
+
+.egoRankBtnSelected:hover {
+    background: var(--color-yellow);
+    border-color: var(--color-yellow);
+    color: var(--color-black);
+    transform: translateY(-1px);
 }
 
 .egoResultContainer {
@@ -1132,16 +1180,19 @@
 
 /* Option Buttons */
 .ciOptionsSection {
-    display: flex;
-    flex-direction: row;
-    gap: var(--space-md);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: minmax(48px, 1fr);
+    gap: 0.65rem;
     margin-bottom: var(--space-2xl);
 }
 
 .ciOptionBtn {
-    flex: 1;
+    width: 100%;
+    min-height: 48px;
+    height: 100%;
     min-width: 0;
-    padding: var(--space-md) var(--space-lg);
+    padding: 0.7rem 1rem;
     font-size: 1rem;
     font-weight: 700;
     background: white;
@@ -1154,24 +1205,25 @@
 }
 
 .ciOptionBtn:hover {
-    border-color: var(--color-gray-dark);
-    background: rgba(0, 0, 0, 0.02);
-    transform: translateX(4px);
+    border-color: var(--color-yellow);
+    background: var(--color-yellow);
+    color: var(--color-black);
+    transform: translateY(-1px);
 }
 
 .ciOptionBtnSelected {
     background: var(--color-black);
     border-color: var(--color-black);
     color: var(--color-yellow);
-    transform: translateX(4px);
+    transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .ciOptionBtnSelected:hover {
-    background: var(--color-black);
-    border-color: var(--color-black);
-    color: var(--color-yellow);
-    transform: translateX(4px);
+    background: var(--color-yellow);
+    border-color: var(--color-yellow);
+    color: var(--color-black);
+    transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -1742,13 +1794,13 @@
     }
 
     .scaleBtn {
-        padding: var(--space-md) 0;
-        font-size: 1.25rem;
+        padding: 0.7rem 1rem;
+        font-size: 1.05rem;
     }
 
     .ciOptionBtn {
-        padding: var(--space-sm) var(--space-md);
-        font-size: 0.9375rem;
+        padding: 0.7rem 1rem;
+        font-size: 1rem;
     }
 
 }
@@ -1829,14 +1881,14 @@
         font-size: 1.25rem;
     }
 
-    /* Likert scale: tighter */
+    /* Keep answer choices in one clear vertical list. */
     .scaleButtons {
-        gap: var(--space-xs);
+        gap: 0.6rem;
     }
 
     .scaleBtn {
-        font-size: 1.125rem;
-        padding: var(--space-sm) 0;
+        font-size: 1rem;
+        padding: 0.65rem 0.9rem;
     }
 
     /* CI options: stack vertically, center text */
@@ -1846,7 +1898,7 @@
 
     .ciOptionBtn {
         text-align: center;
-        padding: var(--space-md) var(--space-lg);
+        padding: 0.65rem 0.9rem;
         font-size: 1rem;
     }
 
@@ -2061,7 +2113,7 @@
         font-size: 1.0625rem;
     }
 
-    /* Likert scale: wrap into grid */
+    /* Likert scale */
     .scaleLabels {
         display: none;
     }
@@ -2071,16 +2123,14 @@
     }
 
     .scaleButtons {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: var(--space-sm);
+        gap: 0.55rem;
     }
 
     .scaleBtn {
-        flex: 0 0 auto;
-        width: 48px;
-        height: 48px;
-        padding: 0;
+        width: 100%;
+        min-height: 46px;
+        height: 100%;
+        padding: 0.6rem 0.85rem;
         font-size: 1rem;
         display: flex;
         align-items: center;
@@ -2089,8 +2139,8 @@
 
     /* CI options */
     .ciOptionBtn {
-        font-size: 0.875rem;
-        padding: var(--space-sm) var(--space-md);
+        font-size: 0.95rem;
+        padding: 0.6rem 0.85rem;
         text-align: center;
     }
 
@@ -2158,8 +2208,9 @@
     }
 
     .binaryOptionBtn {
-        min-height: 58px;
-        font-size: 1rem;
+        min-height: 46px;
+        padding: 0.6rem 0.85rem;
+        font-size: 0.95rem;
     }
 
     .binaryScoreCard span {
@@ -2176,7 +2227,8 @@
     }
 
     .driverOptionBtn {
-        min-height: 58px;
+        min-height: 46px;
+        padding: 0.6rem 0.85rem;
         font-size: 0.95rem;
     }
 

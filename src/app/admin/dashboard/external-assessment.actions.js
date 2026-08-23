@@ -41,7 +41,7 @@ export async function generateExternalAssessmentLink(formData) {
     return { success: false, error: 'Could not generate link. Make sure the Supabase SQL was run.' }
   }
 
-  revalidatePath('/admin/courses')
+  revalidatePath('/admin/dashboard')
 
   return {
     success: true,
@@ -67,6 +67,6 @@ export async function revokeExternalAssessmentLink(linkId) {
     return { success: false, error: 'Could not delete link.' }
   }
 
-  revalidatePath('/admin/courses')
+  revalidatePath('/admin/dashboard')
   return { success: true }
 }

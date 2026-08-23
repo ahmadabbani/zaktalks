@@ -11,11 +11,11 @@ export default function CourseSuccessToast() {
     if (searchParams.get('success') === 'true') {
       toast.success('Course saved successfully!')
       // Clean up URL
-      window.history.replaceState({}, '', '/admin/courses')
+      window.history.replaceState({}, '', '/admin/dashboard?view=courses')
     } else if (searchParams.get('deleted') === 'true') {
       toast.success('Course deleted successfully!')
       // Clean up URL
-      window.history.replaceState({}, '', '/admin/courses')
+      window.history.replaceState({}, '', '/admin/dashboard?view=courses')
     }
   }, [searchParams])
   

@@ -78,32 +78,31 @@ export default async function LessonPage({ params }) {
       : `/courses/${slug}`)
   }
 
+  const learningContext = currentModule ? (
+    <section className={styles.learningContext} aria-label="Current module and lesson">
+      <article className={styles.contextItem}>
+        <div className={styles.contextEyebrow}>
+          <span className={styles.contextIcon}><FaLayerGroup /></span>
+          <span>Module {String(currentModuleIndex + 1).padStart(2, '0')}</span>
+        </div>
+        <h2>{currentModule.title}</h2>
+        {currentModule.description && <p>{currentModule.description}</p>}
+      </article>
+
+      <article className={`${styles.contextItem} ${styles.contextLesson}`}>
+        <div className={styles.contextEyebrow}>
+          <span className={styles.contextIcon}><FaBookOpen /></span>
+          <span>Current lesson / {String(currentIndex + 1).padStart(2, '0')}</span>
+        </div>
+        <h2>{lesson.title}</h2>
+        {lesson.description && <p>{lesson.description}</p>}
+      </article>
+    </section>
+  ) : null
+
   return (
     <div className={styles.lessonPage}>
       <div className={styles.lessonStage}>
-      {/* Current module and lesson context */}
-      {currentModule && (
-        <section className={styles.learningContext} aria-label="Current module and lesson">
-          <article className={styles.contextItem}>
-            <div className={styles.contextEyebrow}>
-              <span className={styles.contextIcon}><FaLayerGroup /></span>
-              <span>Module {String(currentModuleIndex + 1).padStart(2, '0')}</span>
-            </div>
-            <h2>{currentModule.title}</h2>
-            {currentModule.description && <p>{currentModule.description}</p>}
-          </article>
-
-          <article className={`${styles.contextItem} ${styles.contextLesson}`}>
-            <div className={styles.contextEyebrow}>
-              <span className={styles.contextIcon}><FaBookOpen /></span>
-              <span>Current lesson / {String(currentIndex + 1).padStart(2, '0')}</span>
-            </div>
-            <h2>{lesson.title}</h2>
-            {lesson.description && <p>{lesson.description}</p>}
-          </article>
-        </section>
-      )}
-
       {/* Lesson Header */}
       <div className={styles.lessonHeader}>
         <h1 className={styles.lessonTitle}>{lesson.title}</h1>
@@ -118,9 +117,9 @@ export default async function LessonPage({ params }) {
       {/* Lesson Content */}
       {lesson.type === 'video' ? (
         <div className={styles.videoContainer}>
-          <YouTubePlayer 
-            videoId={lesson.youtube_url} 
-            lessonId={lesson.id} 
+          <YouTubePlayer
+            videoId={lesson.youtube_url}
+            lessonId={lesson.id}
             durationSeconds={lesson.duration_seconds}
             initialProgress={progress}
           />
@@ -138,6 +137,7 @@ export default async function LessonPage({ params }) {
           </div>
         </div>
       )}
+      {learningContext}
       </div>
 
       {/* Course Completion Notice */}

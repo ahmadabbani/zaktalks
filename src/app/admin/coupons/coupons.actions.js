@@ -151,7 +151,7 @@ export async function createCoupon(formData) {
     }
   }
   
-  revalidatePath('/admin/coupons')
+  revalidatePath('/admin/dashboard')
   return { success: true, coupon }
 }
 
@@ -232,7 +232,7 @@ export async function updateCoupon(couponId, formData) {
       .insert(courseLinks)
   }
   
-  revalidatePath('/admin/coupons')
+  revalidatePath('/admin/dashboard')
   return { success: true }
 }
 
@@ -253,7 +253,7 @@ export async function deleteCoupon(couponId) {
     return { success: false, error: 'Failed to delete coupon' }
   }
   
-  revalidatePath('/admin/coupons')
+  revalidatePath('/admin/dashboard')
   return { success: true }
 }
 
@@ -274,6 +274,6 @@ export async function toggleCouponActive(couponId, isActive) {
     return { success: false, error: 'Failed to update coupon status' }
   }
   
-  revalidatePath('/admin/coupons')
+  revalidatePath('/admin/dashboard')
   return { success: true }
 }

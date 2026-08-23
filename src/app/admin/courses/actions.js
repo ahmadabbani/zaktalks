@@ -147,7 +147,7 @@ export async function createCourse(formData) {
     }
   }
 
-  revalidatePath('/admin/courses')
+  revalidatePath('/admin/dashboard')
   redirect(`/admin/courses/${data.id}/lessons?created=true`)
 }
 
@@ -303,10 +303,10 @@ export async function updateCourse(id, formData) {
       }
   }
 
-  revalidatePath('/admin/courses')
+  revalidatePath('/admin/dashboard')
   revalidatePath(`/admin/courses/${id}/edit`)
   revalidatePath(`/courses/${slug}`)
-  redirect('/admin/courses?success=true')
+  redirect('/admin/dashboard?view=courses&success=true')
 }
 
 export async function deleteCourse(id) {
@@ -375,6 +375,6 @@ export async function deleteCourse(id) {
     return { error: error.message }
   }
 
-  revalidatePath('/admin/courses')
-  redirect('/admin/courses?deleted=true')
+  revalidatePath('/admin/dashboard')
+  redirect('/admin/dashboard?view=courses&deleted=true')
 }

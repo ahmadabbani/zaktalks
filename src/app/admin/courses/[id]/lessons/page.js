@@ -41,7 +41,7 @@ export default async function AdminLessonsPage({ params }) {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <Link href="/admin/courses" className={styles.backLink}>
+        <Link href="/admin/dashboard?view=courses" className={styles.backLink}>
           <FaArrowLeft /> Back to Courses
         </Link>
         <h1 className={styles.pageTitle}>Course Modules: {course.title}</h1>

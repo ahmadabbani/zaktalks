@@ -21,7 +21,7 @@ function formatDate(value) {
   return new Date(value).toLocaleString()
 }
 
-export default function ExternalAssessmentLinks({ assessments, initialLinks }) {
+export default function ExternalAssessmentLinks({ assessments, initialLinks, showHeading = true }) {
   const [links, setLinks] = useState(initialLinks || [])
   const [selectedAssessment, setSelectedAssessment] = useState(assessments[0]?.id || '')
   const [isPending, startTransition] = useTransition()
@@ -77,14 +77,14 @@ export default function ExternalAssessmentLinks({ assessments, initialLinks }) {
 
   return (
     <section className={styles.externalLinksSection}>
-      <div className={styles.externalLinksHeader}>
+      {showHeading && <div className={styles.externalLinksHeader}>
         <div>
           <h2 className={styles.sectionTitle}>
             <FaLink /> External Assessment Links
           </h2>
           <p>Generate public 24-hour links that work outside courses and do not save submissions.</p>
         </div>
-      </div>
+      </div>}
 
       <form className={styles.externalLinkForm} onSubmit={handleGenerate}>
         <label htmlFor="external-assessment-select">Assessment</label>

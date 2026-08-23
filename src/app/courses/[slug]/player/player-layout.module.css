@@ -126,13 +126,13 @@
 .desktopSidebarShellClosed .desktopSidebarToggle {
     right: 0.38rem;
     border-color: rgba(33, 44, 45, 0.12);
-    background: var(--color-black);
+    background: var(--color-dark-blue);
     box-shadow: 0 5px 14px rgba(33, 44, 45, 0.14);
 }
 
 .sidebarHeader {
     padding: var(--space-lg) 4rem var(--space-lg) var(--space-lg);
-    background: var(--color-black);
+    background: var(--color-dark-blue);
 }
 
 .backLink {
@@ -140,7 +140,7 @@
     align-items: center;
     gap: var(--space-xs);
     font-size: 0.875rem;
-    color: var(--color-yellow);
+    color: var(--color-white);
     margin-bottom: var(--space-md);
     text-decoration: none;
     font-weight: 600;
@@ -565,7 +565,7 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        background: var(--color-black);
+        background: var(--color-dark-blue);
         color: var(--color-white);
         border: none;
         padding: var(--space-md) var(--space-lg);
@@ -576,7 +576,7 @@
     }
 
     .sidebarToggle:hover {
-        background: var(--color-black);
+        background: var(--color-dark-blue);
     }
 
     .sidebarToggleLabel {

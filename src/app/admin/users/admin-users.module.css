@@ -90,6 +90,8 @@
 
 .sidebar {
   position: relative;
+  align-self: start;
+  height: fit-content;
   padding: 1.4rem 1rem;
   color: var(--color-black);
   background: var(--color-white);
@@ -121,16 +123,16 @@
   border-radius: 50%;
   color: var(--color-white);
   background: var(--color-yellow);
-  font-size: 1rem;
+  font-size: 1.08rem;
 }
 
 .sidebarIntro strong {
-  font-size: 0.94rem;
+  font-size: 1rem;
 }
 
 .sidebarNavigation {
-  max-height: 31.5rem;
-  overflow-y: auto;
+  max-height: none;
+  overflow: visible;
   padding: 1rem 0.35rem 0 0;
   scrollbar-width: thin;
   scrollbar-color: rgba(85, 135, 166, 0.72) rgba(33, 44, 45, 0.06);
@@ -147,7 +149,7 @@
 .groupLabel {
   padding: 0 0.65rem 0.5rem;
   color: var(--color-gray-dark);
-  font-size: 0.62rem;
+  font-size: 0.68rem;
 }
 
 .navigationItems {
@@ -168,9 +170,10 @@
   background: transparent;
   cursor: pointer;
   font: inherit;
-  font-size: 0.85rem;
+  font-size: 0.92rem;
   font-weight: 650;
   text-align: left;
+  text-decoration: none;
   transition: color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
 
@@ -194,7 +197,7 @@
   border-radius: 0.55rem;
   color: var(--color-dark-blue);
   background: rgba(85, 135, 166, 0.12);
-  font-size: 0.78rem;
+  font-size: 0.88rem;
 }
 
 .navigationItemActive .navigationIcon {
@@ -213,7 +216,7 @@
 
 .navigationLock {
   margin-left: auto;
-  font-size: .68rem;
+  font-size: .75rem;
 }
 
 .mainPanel {
@@ -253,6 +256,66 @@
   color: var(--color-black);
   font-size: 0.92rem;
   line-height: 1.5;
+}
+
+.workspaceAccessNotice {
+  width: 100%;
+  margin: 0 auto 1rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid rgba(85, 135, 166, 0.24);
+  border-radius: 1rem;
+  color: var(--color-black);
+  background: rgba(85, 135, 166, 0.09);
+  font-size: 0.92rem;
+  font-weight: 650;
+}
+
+.embeddedAdminPanel {
+  width: 100%;
+  margin-top: clamp(1.4rem, 2.5vw, 2.25rem);
+}
+
+.embeddedAdminPanelNarrow {
+  max-width: 58rem;
+}
+
+.embeddedPanelActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.25rem;
+}
+
+.workspaceComingSoon,
+.workspaceEmptyAccess {
+  display: grid;
+  justify-items: center;
+  gap: 0.65rem;
+  min-height: 20rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  align-content: center;
+}
+
+.workspaceComingSoon > svg,
+.workspaceEmptyAccess > svg {
+  font-size: 2rem;
+  color: var(--color-dark-blue);
+}
+
+.workspaceComingSoon strong,
+.workspaceEmptyAccess h2 {
+  margin: 0;
+  color: var(--home-headline-color);
+  font-size: 1.25rem;
+}
+
+.workspaceComingSoon p,
+.workspaceEmptyAccess p {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--color-black);
+  font-size: 0.94rem;
+  line-height: 1.55;
 }
 
 .mobileMenuButton {
@@ -579,7 +642,7 @@
   }
   .sidebarOpen { display: block; }
   .sidebarIntro { display: none; }
-  .sidebarNavigation { max-height: 22rem; padding-top: 0.6rem; }
+  .sidebarNavigation { max-height: none; padding-top: 0.6rem; overflow: visible; }
   .mainPanel { min-height: 30rem; padding: 1.25rem; border-radius: 0 0 1.4rem 1.4rem; }
   .panelIcon { width: 3rem; height: 3rem; border-radius: 0.9rem; }
   .overviewDashboard { padding-top: 1.1rem; }
@@ -2295,5 +2358,478 @@
   .directorySearch button {
     width: 1.75rem;
     height: 1.75rem;
+  }
+}
+
+/* Operational data must remain readable without competing with headings. */
+.mainPanel {
+  --admin-data-primary: .94rem;
+  --admin-data-secondary: .87rem;
+  --admin-data-compact: .83rem;
+}
+
+/* Activity and recent-account data. */
+.mainPanel .activityItem strong,
+.mainPanel .userIdentity strong {
+  font-size: var(--admin-data-primary);
+}
+
+.mainPanel .activityItem>div span,
+.mainPanel .activityItem time,
+.mainPanel .userIdentity>div span,
+.mainPanel .recentUserRow time {
+  font-size: var(--admin-data-secondary);
+  line-height: 1.42;
+}
+
+.mainPanel .recentUsersHead {
+  font-size: var(--admin-data-compact);
+}
+
+/* Shared directory, enrollment, and progress tables. */
+.mainPanel .directoryTableHeader,
+.mainPanel .enrollmentTableHeader,
+.mainPanel .learningTableHeader,
+.mainPanel .videoLessonHeader,
+.mainPanel .assessmentLearnerHeader,
+.mainPanel .assessmentRecordHeader,
+.mainPanel .rolesTableHeader,
+.mainPanel .paymentTableHeader {
+  font-size: var(--admin-data-compact);
+  line-height: 1.3;
+}
+
+.mainPanel .directoryIdentity strong,
+.mainPanel .directoryLearning strong,
+.mainPanel .directoryDate strong,
+.mainPanel .enrollmentCourseCell strong,
+.mainPanel .enrollmentSourceCell strong,
+.mainPanel .videoLessonIdentity strong,
+.mainPanel .videoDurationCell strong,
+.mainPanel .videoNumericCell strong,
+.mainPanel .videoDateCell strong,
+.mainPanel .videoReachCell strong,
+.mainPanel .assessmentIdentity strong,
+.mainPanel .assessmentDate strong,
+.mainPanel .paymentCustomer strong,
+.mainPanel .paymentCourse strong,
+.mainPanel .paymentAmountCell strong,
+.mainPanel .paymentDateCell strong,
+.mainPanel .rolesTable>article {
+  font-size: var(--admin-data-primary);
+  line-height: 1.38;
+}
+
+.mainPanel .directoryIdentity small,
+.mainPanel .directoryAccess small,
+.mainPanel .directoryLearning small,
+.mainPanel .directoryDate small,
+.mainPanel .enrollmentCourseCell small,
+.mainPanel .enrollmentStatusCell small,
+.mainPanel .enrollmentSourceCell small,
+.mainPanel .learningProgressCell small,
+.mainPanel .learningStateCell small,
+.mainPanel .videoLessonIdentity small,
+.mainPanel .videoDurationCell small,
+.mainPanel .videoNumericCell small,
+.mainPanel .videoDateCell small,
+.mainPanel .videoReachCell small,
+.mainPanel .assessmentIdentity small,
+.mainPanel .assessmentDate small,
+.mainPanel .assessmentNumeric small,
+.mainPanel .paymentCustomer small,
+.mainPanel .paymentCourse small,
+.mainPanel .paymentStatusCell small,
+.mainPanel .paymentAmountCell small,
+.mainPanel .paymentDateCell small,
+.mainPanel .paymentCustomer em {
+  font-size: var(--admin-data-secondary);
+  line-height: 1.42;
+}
+
+.mainPanel .directoryPill,
+.mainPanel .enrollmentPill,
+.mainPanel .paymentPill,
+.mainPanel .paymentSourcePill,
+.mainPanel .rolesReady,
+.mainPanel .rolesPending,
+.mainPanel .rolesAdminPill,
+.mainPanel .rolesCreatorPill {
+  font-size: var(--admin-data-compact);
+}
+
+/* Allow the enlarged operational text to breathe inside scrollable tables. */
+.mainPanel .directoryTableHeader,
+.mainPanel .directoryRows,
+.mainPanel .directoryRowsLoading {
+  min-width: 58rem;
+}
+
+.mainPanel .enrollmentTableHeader,
+.mainPanel .enrollmentRows,
+.mainPanel .enrollmentRowsLoading {
+  min-width: 64rem;
+}
+
+.mainPanel .learningTableHeader,
+.mainPanel .learningRows,
+.mainPanel .learningRowsLoading {
+  min-width: 68rem;
+}
+
+.mainPanel .videoLessonHeader,
+.mainPanel .videoLessonTable article,
+.mainPanel .videoLessonTableUpdating article {
+  min-width: 76rem;
+}
+
+.mainPanel .assessmentLearnerHeader,
+.mainPanel .assessmentLearnerRow {
+  min-width: 60rem;
+}
+
+.mainPanel .assessmentRecordHeader,
+.mainPanel .assessmentRecordRow {
+  min-width: 62rem;
+}
+
+.mainPanel .rolesTableHeader,
+.mainPanel .rolesTable>article {
+  min-width: 64rem;
+}
+
+.mainPanel .paymentTableHeader,
+.mainPanel .paymentTable>article,
+.mainPanel .paymentTableUpdating>article {
+  min-width: 80rem;
+}
+
+.mainPanel .directoryRow,
+.mainPanel .enrollmentRow,
+.mainPanel .learningRow,
+.mainPanel .videoLessonTable article,
+.mainPanel .videoLessonTableUpdating article,
+.mainPanel .assessmentLearnerRow,
+.mainPanel .assessmentRecordRow,
+.mainPanel .rolesTable>article,
+.mainPanel .paymentTable>article,
+.mainPanel .paymentTableUpdating>article {
+  min-height: 5.2rem;
+}
+
+/* Detail drawers and modals use the same readable hierarchy. */
+.mainPanel .drawerIdentity a,
+.mainPanel .detailGrid dt,
+.mainPanel .drawerListItem>div span,
+.mainPanel .progressTimelineTop time,
+.mainPanel .progressTimelineItem>div>span,
+.mainPanel .learningDrawerHero small,
+.mainPanel .learningDrawerStats span,
+.mainPanel .learningModule>button small,
+.mainPanel .learningLessonList small,
+.mainPanel .videoDrawerHeader small,
+.mainPanel .videoDrawerSummary span,
+.mainPanel .videoViewerIdentity small,
+.mainPanel .videoViewerReach small,
+.mainPanel .videoViewerDates small,
+.mainPanel .assessmentDrawerHeader small,
+.mainPanel .assessmentDrawerMetrics small,
+.mainPanel .assessmentResultCard>header small,
+.mainPanel .assessmentLearnerCards>article>header small,
+.mainPanel .assessmentAttemptHistory time,
+.mainPanel .paymentDrawerIdentity small,
+.mainPanel .paymentHeroDetail small,
+.mainPanel .paymentDrawerSection>header small,
+.mainPanel .paymentDetailGrid dt,
+.mainPanel .paymentDiscountCards small,
+.mainPanel .paymentNoticeRow small,
+.mainPanel .paymentEventList small,
+.mainPanel .paymentPointList small,
+.mainPanel .paymentCopyValue code {
+  font-size: var(--admin-data-secondary);
+  line-height: 1.45;
+}
+
+.mainPanel .detailGrid dd,
+.mainPanel .drawerListItem strong,
+.mainPanel .progressTimelineTop strong,
+.mainPanel .learningDrawerHero h4,
+.mainPanel .learningDrawerStats strong,
+.mainPanel .learningModule>button strong,
+.mainPanel .learningLessonList strong,
+.mainPanel .videoDrawerSummary strong,
+.mainPanel .videoViewerIdentity strong,
+.mainPanel .videoViewerReach b,
+.mainPanel .videoViewerDates strong,
+.mainPanel .paymentDetailGrid dd,
+.mainPanel .paymentNoticeRow strong,
+.mainPanel .paymentEventList strong,
+.mainPanel .paymentPointList strong {
+  font-size: var(--admin-data-primary);
+  line-height: 1.42;
+}
+
+/* Controls and pagination remain secondary, but no longer look microscopic. */
+.mainPanel .directorySelectLabel,
+.mainPanel .enrollmentSelectLabel,
+.mainPanel .paymentSelectLabel>span:first-child,
+.mainPanel .directoryToolbarBottom>span,
+.mainPanel .directoryToolbarBottom button,
+.mainPanel .directoryPagination>label,
+.mainPanel .directoryPagination select,
+.mainPanel .directoryPagination>span,
+.mainPanel .directoryPagination>div>span,
+.mainPanel .enrollmentRangeOption,
+.mainPanel .enrollmentRangeActive,
+.mainPanel .paymentRangeBar button,
+.mainPanel .paymentLoadMore,
+.mainPanel .paymentLoadMore button {
+  font-size: var(--admin-data-compact);
+}
+
+@media (max-width: 640px) {
+  .mainPanel {
+    --admin-data-primary: .91rem;
+    --admin-data-secondary: .85rem;
+    --admin-data-compact: .81rem;
+  }
+}
+
+/* Video analytics used an older compressed type scale. Keep its lesson table
+   unchanged, but align every summary and insight above it with other dashboards. */
+.videoAnalyticsDashboard .enrollmentRangeBar>div:first-child>span,
+.videoAnalyticsDashboard .enrollmentCardHeader>div>span,
+.videoAnalyticsDashboard .enrollmentSectionHeading>div>span,
+.videoAnalyticsDashboard .enrollmentSelectLabel {
+  font-size: .84rem;
+}
+
+.videoAnalyticsDashboard .enrollmentRangeBar p,
+.videoAnalyticsDashboard .enrollmentSectionHeading p {
+  font-size: .9rem;
+  line-height: 1.52;
+}
+
+.videoAnalyticsDashboard .enrollmentRangeOption,
+.videoAnalyticsDashboard .enrollmentRangeActive,
+.videoAnalyticsDashboard .enrollmentSelectShell select {
+  font-size: .86rem;
+}
+
+.videoAnalyticsDashboard .enrollmentCardHeader h3,
+.videoAnalyticsDashboard .enrollmentSectionHeading h3 {
+  font-size: 1.08rem;
+  line-height: 1.3;
+}
+
+.videoAnalyticsDashboard .enrollmentCardHeader>span {
+  font-size: .82rem;
+}
+
+.videoMetricCard {
+  min-height: 6.7rem;
+  gap: .9rem;
+  padding: 1.08rem;
+}
+
+.videoMetricCard>span {
+  width: 2.85rem;
+  height: 2.85rem;
+  font-size: 1rem;
+}
+
+.videoMetricCard small {
+  font-size: .88rem;
+  line-height: 1.35;
+}
+
+.videoMetricCard strong {
+  font-size: clamp(1.65rem, 2vw, 2rem);
+}
+
+.videoMetricCard p {
+  overflow: visible;
+  font-size: .84rem;
+  line-height: 1.45;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.videoDataNotice,
+.videoMethodNote {
+  padding: .95rem 1rem;
+}
+
+.videoDataNotice>span {
+  width: 2.15rem;
+  height: 2.15rem;
+  font-size: .84rem;
+}
+
+.videoDataNotice strong,
+.videoMethodNote strong {
+  font-size: .94rem;
+}
+
+.videoDataNotice p,
+.videoMethodNote p {
+  font-size: .88rem;
+  line-height: 1.55;
+}
+
+.videoTrend {
+  height: 11.25rem;
+  gap: .38rem;
+  padding-top: .6rem;
+}
+
+.videoTrendItem {
+  grid-template-rows: 1.25rem minmax(0, 1fr) 1.3rem;
+  min-width: 2.65rem;
+  gap: .32rem;
+}
+
+.videoTrendItem>span {
+  font-size: .82rem;
+}
+
+.videoTrendItem small {
+  font-size: .78rem;
+}
+
+.videoTrendLegend {
+  gap: 1rem;
+  margin-top: .72rem;
+  font-size: .84rem;
+}
+
+.videoTrendLegend i {
+  width: .62rem;
+  height: .62rem;
+}
+
+.videoReachGuide {
+  gap: .6rem;
+}
+
+.videoReachGuide>span {
+  padding: .7rem .75rem;
+  font-size: .86rem;
+  line-height: 1.48;
+}
+
+.videoReachLegend {
+  gap: .72rem .9rem;
+}
+
+.videoReachLegend>span {
+  gap: .55rem;
+}
+
+.videoReachLegend>span>i {
+  width: .82rem;
+  height: .82rem;
+}
+
+.videoReachLegend strong {
+  font-size: .9rem;
+  line-height: 1.3;
+}
+
+.videoReachLegend small {
+  font-size: .83rem;
+  line-height: 1.4;
+}
+
+.videoPlaybackGrid {
+  gap: .62rem;
+  padding-top: .55rem;
+}
+
+.videoPlaybackGrid article {
+  min-height: 4.25rem;
+  gap: .65rem;
+  padding: .72rem;
+}
+
+.videoPlaybackGrid article>span {
+  width: 2rem;
+  height: 2rem;
+  font-size: .72rem;
+}
+
+.videoPlaybackGrid strong {
+  font-size: 1.05rem;
+}
+
+.videoPlaybackGrid small,
+.videoSnapshotNote {
+  font-size: .86rem;
+  line-height: 1.48;
+}
+
+.videoCourseComparison {
+  gap: .85rem;
+  padding: 1.08rem;
+}
+
+.videoCourseComparison article {
+  min-height: 4.35rem;
+  padding: .75rem .82rem;
+}
+
+.videoCourseComparison article>div>strong {
+  font-size: .94rem;
+}
+
+.videoCourseComparison article small {
+  font-size: .84rem;
+  line-height: 1.4;
+}
+
+.videoCourseComparison article>span>b {
+  font-size: .96rem;
+}
+
+.videoToolbar {
+  gap: .82rem;
+  padding: 1rem;
+}
+
+.videoToolbar>span {
+  font-size: .87rem;
+  line-height: 1.4;
+}
+
+.videoToolbar>span>button {
+  font-size: .84rem;
+}
+
+.videoAnalyticsDashboard .enrollmentEmptyCompact {
+  font-size: .87rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+  .videoMetricCard {
+    min-height: 6.25rem;
+    padding: .95rem;
+  }
+
+  .videoMetricCard>span {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  .videoMetricCard strong {
+    font-size: 1.65rem;
+  }
+
+  .videoReachGuide {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .videoCourseComparison article {
+    min-height: 4.7rem;
   }
 }

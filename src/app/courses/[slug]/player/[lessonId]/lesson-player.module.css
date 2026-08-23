@@ -221,39 +221,40 @@
 }
 
 .navButton {
-    padding: var(--space-sm) var(--space-lg);
-    border-radius: 0.75rem;
+    min-height: 2.65rem;
+    padding: 0.62rem 1rem;
+    border-radius: 999px;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: all var(--transition-normal);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: var(--space-sm);
-    border: 2px solid;
+    border: 1px solid;
 }
 
 .prevButton {
-    background: white;
-    color: var(--color-black);
-    border-color: var(--color-gray);
+    background: var(--color-black);
+    color: var(--color-white);
+    border-color: var(--color-black);
 }
 
 .prevButton:hover {
-    background: var(--color-gray-light);
-    transform: translateX(-4px);
+    opacity: 0.88;
+    transform: translateX(-2px);
 }
 
 .nextButton {
-    background: var(--color-yellow);
-    color: var(--color-black);
-    border-color: var(--color-yellow);
+    background: var(--color-black);
+    color: var(--color-white);
+    border-color: var(--color-black);
 }
 
 .nextButton:hover {
-    opacity: 0.9;
-    transform: translateX(4px);
+    opacity: 0.88;
+    transform: translateX(2px);
 }
 
 .nextButtonLocked {
@@ -294,8 +295,8 @@
     }
 
     .navButton {
-        padding: var(--space-sm) var(--space-md);
-        font-size: 0.9375rem;
+        padding: 0.6rem 0.9rem;
+        font-size: 0.88rem;
     }
 }
 

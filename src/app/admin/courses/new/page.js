@@ -14,7 +14,7 @@ export default async function NewCoursePage() {
     <div className={styles.formContainer}>
       <div className={styles.formWrapper}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0', marginBottom: 'var(--space-sm)' }}>
-          <Link href="/admin/courses" className={styles.backButton}>
+          <Link href="/admin/dashboard?view=courses" className={styles.backButton}>
             <FaArrowLeft /> Back
           </Link>
           <h1 className={styles.pageTitle}>Create New Course</h1>

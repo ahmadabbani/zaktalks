@@ -30,7 +30,7 @@ export default async function EditCoursePage({ params }) {
     <div className={styles.formContainer}>
       <div className={styles.formWrapper}>
         <div style={{ marginBottom: 'var(--space-xl)' }}>
-          <Link href="/admin/courses" className={styles.backButton}>
+          <Link href="/admin/dashboard?view=courses" className={styles.backButton}>
             <FaArrowLeft /> Back to Courses
           </Link>
           

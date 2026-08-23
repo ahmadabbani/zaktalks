@@ -435,7 +435,7 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
 
       <div className={styles.formActions}>
         <SubmitButton buttonText={buttonText} />
-        <a href="/admin/courses" className={styles.cancelButton}>Cancel</a>
+        <a href="/admin/dashboard?view=courses" className={styles.cancelButton}>Cancel</a>
       </div>
     </form>
   )
