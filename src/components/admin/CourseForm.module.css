@@ -90,6 +90,7 @@
 
 .formGroup input[type="text"],
 .formGroup input[type="number"],
+.formGroup input[type="url"],
 .formGroup textarea {
     width: 100%;
     padding: var(--space-md);
@@ -103,6 +104,7 @@
 
 .formGroup input[type="text"]:focus,
 .formGroup input[type="number"]:focus,
+.formGroup input[type="url"]:focus,
 .formGroup textarea:focus {
     outline: none;
     border-color: var(--color-yellow);
@@ -112,6 +114,28 @@
 .formGroup textarea {
     resize: vertical;
     min-height: 100px;
+}
+
+.featuredField {
+    padding: clamp(1rem, 1.5vw, 1.35rem);
+    border: 1px solid rgba(33, 44, 45, 0.12);
+    border-radius: 0.85rem;
+    background: var(--color-gray-light);
+}
+
+.featuredField input[type="url"] {
+    min-height: 3.25rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid rgba(33, 44, 45, 0.18);
+    background: var(--color-white);
+}
+
+.featuredField input[type="url"]::placeholder {
+    color: rgba(33, 44, 45, 0.48);
+}
+
+.detailsField {
+    margin-top: var(--space-xl);
 }
 
 /* File Inputs */
@@ -232,6 +256,31 @@
     margin-top: var(--space-2xl);
 }
 
+.contentListSection {
+    margin-top: var(--space-xl);
+    padding: clamp(1rem, 1.5vw, 1.35rem);
+    border: 1px solid rgba(33, 44, 45, 0.12);
+    border-radius: 0.85rem;
+    background: var(--color-gray-light);
+}
+
+.contentListSection .listHeader {
+    gap: var(--space-md);
+}
+
+.contentListSection .listHeader label {
+    color: var(--color-black);
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    line-height: 1.35;
+    text-transform: uppercase;
+}
+
+.contentListSection .listHeader .notForLabel {
+    color: var(--color-error);
+}
+
 .listHeader {
     display: flex;
     justify-content: space-between;
@@ -253,6 +302,46 @@
 
 .listItem input {
     flex: 1;
+}
+
+.contentListSection .listItem input {
+    width: 100%;
+    min-width: 0;
+    min-height: 2.9rem;
+    padding: 0.78rem 0.95rem;
+    border: 1px solid rgba(33, 44, 45, 0.16);
+    border-radius: 0.6rem;
+    background: var(--color-white);
+    color: var(--color-black);
+    font: inherit;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    transition: border-color var(--transition-normal), box-shadow var(--transition-normal), background-color var(--transition-normal);
+}
+
+.contentListSection .listItem input::placeholder {
+    color: rgba(33, 44, 45, 0.48);
+}
+
+.contentListSection .listItem input:focus {
+    outline: none;
+    border-color: var(--color-yellow);
+    box-shadow: 0 0 0 3px rgba(255, 202, 40, 0.16);
+}
+
+.contentListSection .deleteSlotButton {
+    width: 2.9rem;
+    min-width: 2.9rem;
+    height: 2.9rem;
+    padding: 0;
+}
+
+.contentListSection .emptyState {
+    margin: 0;
+    padding: 0.85rem 0.95rem;
+    border: 1px dashed rgba(33, 44, 45, 0.2);
+    border-radius: 0.6rem;
+    background: rgba(255, 255, 255, 0.55);
 }
 
 .addButton {
@@ -447,5 +536,16 @@
 
     .galleryGrid {
         grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    .contentListSection .listHeader {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .contentListSection .addButton {
+        width: 100%;
     }
 }

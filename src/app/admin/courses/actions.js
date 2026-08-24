@@ -4,6 +4,9 @@ import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { requirePermission } from '@/lib/auth-utils'
+import { normalizeYouTubeVideoUrl } from '@/lib/youtube-url'
+
+const LESSON_RESOURCE_BUCKET = 'lesson-resources'
 
 export async function createCourse(formData) {
   await requirePermission('courses.create')
@@ -18,18 +21,22 @@ export async function createCourse(formData) {
 
   const description = formData.get('description')
   const subheadline = formData.get('subheadline')
+  const introductionVideoValue = String(formData.get('introduction_video_url') || '').trim()
+  const introduction_video_url = normalizeYouTubeVideoUrl(introductionVideoValue)
   const tutor_name = formData.get('tutor_name')
-  const the_problem = formData.get('the_problem')
-  const the_shift = formData.get('the_shift')
   const target_audience = formData.getAll('target_audience').filter(Boolean)
   const who_this_is_not_for = formData.getAll('who_this_is_not_for').filter(Boolean)
-  const why_attend = formData.getAll('why_attend').filter(Boolean)
+  const details_to_know = formData.get('details_to_know')
   const meet_the_tutor = formData.get('meet_the_tutor')
   const money_back_guarantee = formData.get('money_back_guarantee') === 'on'
   const price_cents = Math.round(parseFloat(formData.get('price')) * 100)
-  const course_offers = formData.getAll('course_offers').filter(Boolean)
-  const course_benefits = formData.getAll('course_benefits').filter(Boolean)
+  const what_youll_learn = formData.getAll('what_youll_learn').filter(Boolean)
+  const skills_youll_gain = formData.getAll('skills_youll_gain').filter(Boolean)
   const is_published = formData.get('is_published') === 'on'
+
+  if (introductionVideoValue && !introduction_video_url) {
+    return { error: 'Enter a valid YouTube video link for the course introduction.' }
+  }
   
   // Handle Logo Upload
   const logoFile = formData.get('logo')
@@ -84,11 +91,10 @@ export async function createCourse(formData) {
       slug,
       description,
       subheadline,
-      the_problem,
-      the_shift,
+      introduction_video_url,
       target_audience,
       who_this_is_not_for,
-      why_attend,
+      details_to_know,
       meet_the_tutor,
       money_back_guarantee,
       tutor_name,
@@ -96,8 +102,8 @@ export async function createCourse(formData) {
       is_published,
       logo_url,
       certificate_template_url,
-      course_offers,
-      course_benefits
+      what_youll_learn,
+      skills_youll_gain
     }])
     .select()
     .single()
@@ -164,36 +170,39 @@ export async function updateCourse(id, formData) {
 
   const description = formData.get('description')
   const subheadline = formData.get('subheadline')
+  const introductionVideoValue = String(formData.get('introduction_video_url') || '').trim()
+  const introduction_video_url = normalizeYouTubeVideoUrl(introductionVideoValue)
   const tutor_name = formData.get('tutor_name')
-  const the_problem = formData.get('the_problem')
-  const the_shift = formData.get('the_shift')
   const target_audience = formData.getAll('target_audience').filter(Boolean)
   const who_this_is_not_for = formData.getAll('who_this_is_not_for').filter(Boolean)
-  const why_attend = formData.getAll('why_attend').filter(Boolean)
+  const details_to_know = formData.get('details_to_know')
   const meet_the_tutor = formData.get('meet_the_tutor')
   const money_back_guarantee = formData.get('money_back_guarantee') === 'on'
   const price_cents = Math.round(parseFloat(formData.get('price')) * 100)
   const is_published = formData.get('is_published') === 'on'
-  const course_offers = formData.getAll('course_offers').filter(Boolean)
-  const course_benefits = formData.getAll('course_benefits').filter(Boolean)
+  const what_youll_learn = formData.getAll('what_youll_learn').filter(Boolean)
+  const skills_youll_gain = formData.getAll('skills_youll_gain').filter(Boolean)
+
+  if (introductionVideoValue && !introduction_video_url) {
+    return { error: 'Enter a valid YouTube video link for the course introduction.' }
+  }
   
   const updateData = {
     title,
     slug,
     description,
     subheadline,
-    the_problem,
-    the_shift,
+    introduction_video_url,
     target_audience,
     who_this_is_not_for,
-    why_attend,
+    details_to_know,
     meet_the_tutor,
     money_back_guarantee,
     tutor_name,
     price_cents,
     is_published,
-    course_offers,
-    course_benefits,
+    what_youll_learn,
+    skills_youll_gain,
     updated_at: new Date().toISOString()
   }
 
@@ -359,8 +368,27 @@ export async function deleteCourse(id) {
   // Delete FAQs
   await supabase.from('course_faqs').delete().eq('course_id', id)
 
+  // Capture private lesson PDF paths before lesson deletion cascades their metadata.
+  const { data: lessonResources, error: resourceLookupError } = await supabase
+    .from('lesson_resources')
+    .select('storage_path, lesson:lessons!inner(course_id)')
+    .eq('lesson.course_id', id)
+    .eq('resource_type', 'pdf')
+
+  if (resourceLookupError) {
+    console.error('Unable to load lesson resources before course deletion:', resourceLookupError.message)
+  }
+
   // Delete lessons
   await supabase.from('lessons').delete().eq('course_id', id)
+
+  const lessonResourcePaths = (lessonResources || []).map((resource) => resource.storage_path).filter(Boolean)
+  for (let index = 0; index < lessonResourcePaths.length; index += 100) {
+    const { error: resourceDeleteError } = await supabase.storage
+      .from(LESSON_RESOURCE_BUCKET)
+      .remove(lessonResourcePaths.slice(index, index + 100))
+    if (resourceDeleteError) console.error('Unable to remove some lesson resource PDFs:', resourceDeleteError.message)
+  }
 
   // Delete user enrollments for this course so it no longer appears in user dashboards
   await supabase.from('user_enrollments').delete().eq('course_id', id)

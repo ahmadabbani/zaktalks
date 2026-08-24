@@ -86,10 +86,10 @@ Application token store for `email_verification`, `password_reset`, or `set_pass
 
 Course catalog and long-form course-page content.
 
-- Key columns: unique `slug`; title/description/subheadline; tutor/media fields; `price_cents`; content arrays (`course_offers`, `course_benefits`, `target_audience`, `why_attend`, `who_this_is_not_for`); detail copy; publish/soft-delete flags; certificate template URL.
+- Key columns: unique `slug`; title/description/subheadline; optional public `introduction_video_url`; tutor/media fields; `price_cents`; content arrays (`what_youll_learn`, `skills_youll_gain`, `target_audience`, `who_this_is_not_for`); plain-text `details_to_know`; detail copy; publish/soft-delete flags; certificate template URL. The introduction video belongs to the course itself and is not a module lesson. The obsolete `the_problem` and `the_shift` fields were removed.
 - Constraints: nonnegative price.
 - RLS: anyone can read published, non-deleted courses; admins manage all.
-- Approximate rows: 2.
+- Approximate rows: 4.
 
 #### `course_images`
 
@@ -115,7 +115,7 @@ Ordered curriculum containers belonging to a course.
 - Constraints: `(id, course_id)` is unique so the lesson relationship can guarantee that a module and lesson belong to the same course.
 - RLS: modules for published, non-deleted courses are publicly readable; authenticated admins manage all.
 - Existing data migration: each of the two existing courses has one `Module 01`, preserving its original 17-lesson order.
-- Approximate rows: 2.
+- Approximate rows: 3.
 
 #### `lessons`
 
@@ -124,7 +124,16 @@ Ordered video or assessment units.
 - Key columns: `course_id` -> `courses`; required `module_id`; module-local `display_order`; title/description/thumbnail; `type`; YouTube URL/duration; assessment key/passing score.
 - Constraints: the composite `(module_id, course_id)` FK prevents cross-course assignment and restricts deletion of non-empty modules; videos require `youtube_url`; assessments require `assessment_key`; score is 0–100.
 - RLS: published-course lessons are publicly readable; admins manage all. Enrollment enforcement is performed by player layouts/actions, not by the lesson SELECT policy itself.
-- Approximate rows: 34.
+- Approximate rows: 36.
+
+#### `lesson_resources`
+
+One optional supplemental resource per lesson, available for either video or assessment lessons.
+
+- Key columns: unique `lesson_id` -> `lessons`; `resource_type` (`text`, `pdf`, or `link`); exactly one matching payload (`text_content`, `storage_path`, or `external_url`); original PDF name and byte size; timestamps.
+- Constraints: resource-type checks prevent mixed or incomplete payloads; lesson deletion cascades to its resource metadata.
+- RLS/grants: anonymous users have no access. Signed-in learners may read a resource only when they have a completed enrollment and that exact lesson is complete; admins may read all. Admin/creator mutations use permission-checked server actions and the server-only service role.
+- Approximate rows: 0.
 
 #### `user_enrollments`
 
@@ -246,6 +255,7 @@ Short-lived revocable public entry tokens created by admins.
 auth.users 1--1 users
 users 1--* user_enrollments *--1 courses
 courses 1--* course_modules 1--* lessons
+lessons 1--0..1 lesson_resources
 users 1--* lesson_progress *--1 lessons
 user_enrollments 1--* lesson_progress
 courses 1--* course_images
@@ -313,8 +323,9 @@ Direct browser execution is revoked; `supabase_auth_admin` and `service_role` re
 | `public-assets` | yes | 10 MiB | unrestricted | general public assets |
 | `certificates` | no | 10 MiB | PDF | certificate templates/generated certificates |
 | `specific-assessments` | no | 10 MiB | PDF, DOCX | templates and user-generated assessment files |
+| `lesson-resources` | no | 10 MiB | PDF | optional supplemental lesson PDFs |
 
-Storage policies allow public reads for public buckets, admin inserts/deletes for course/public assets, owner/admin reads for certificates, enrolled/template reads for specific assessments, and owner-path reads for generated assessments. Administrative assessment writes use the service role.
+Storage policies allow public reads for public buckets, admin inserts/deletes for course/public assets, owner/admin reads for certificates, enrolled/template reads for specific assessments, owner-path reads for generated assessments, and completed-lesson/admin reads for lesson-resource PDFs. Lesson-resource writes use permission-checked server actions and the service role.
 
 ## Application integration map
 
@@ -322,7 +333,7 @@ Storage policies allow public reads for public buckets, admin inserts/deletes fo
 - Course discovery/detail: `src/app/courses/page.js`, `src/app/courses/[slug]/page.js`.
 - Course player/progress: `src/app/courses/[slug]/player/*`, `src/app/courses/actions.js`.
 - Internal scored assessments: `src/components/AssessmentRenderer.js` and `src/assessments/results.js` validate answers, recalculate trusted score summaries, and append `assessment_attempts` through a service-role-only atomic RPC. Raw answers and interpretation copy are not stored in the attempt ledger. Scoreless fillable worksheets continue through their separate private submission/PDF flow.
-- Course administration: `src/app/admin/courses/*` -> courses, lessons, FAQs, image/certificate Storage.
+- Course administration: `src/app/admin/courses/*` -> courses, modules, lessons, optional lesson resources, FAQs, and image/certificate/resource Storage.
 - Checkout preview/create: `src/app/api/checkout/preview/route.js`, `src/app/api/checkout/route.js`.
 - Payment fulfillment: `src/app/api/webhooks/stripe/route.js` -> Auth admin, checkout sessions, enrollments, discounts, points, Resend.
 - Discounts/points/coupons: `src/lib/discount-utils.js`, `src/app/admin/coupons/*`, `src/app/admin/settings/*`.
@@ -357,6 +368,10 @@ The formal migration workflow was established on 2026-08-15:
 - `20260819103000_creator_permissions.sql` adds centralized creator permission switches, privileged-access auditing, and guarded service-role RPC support. It is applied on production.
 - `20260820184747_admin_payments_dashboard.sql` adds service-role-only payment reporting built from durable checkout orders, with indexed server-side filters, keyset pagination, fulfillment and payment health, exact recorded totals, discount/source summaries, and on-demand webhook and notification drill-downs. It is applied on production.
 - `20260820192526_optimize_user_purchase_history.sql` adds an ownership-scoped purchase-history index and optimizes the existing authenticated-user SELECT policy without changing its authorization boundary. It is applied on production.
+- `20260824120614_restructure_course_content_and_lesson_resources.sql` renames the course learning/skills/detail fields without losing existing values, converts course details from an array to plain text, removes the obsolete problem/shift fields, and adds constrained private lesson resources plus a private PDF-only Storage bucket. It is applied on production.
+- `20260824121831_consolidate_lesson_resource_read_policy.sql` combines learner and administrator resource reads into one authenticated policy to avoid duplicate-policy evaluation while preserving the same access boundary. It is applied on production.
+- `20260824125518_gate_lesson_resources_by_completion.sql` requires completed lesson progress before a learner can read resource metadata or a private lesson PDF, links Storage authorization to the exact resource row, and indexes unique PDF paths. It is applied on production.
+- `20260824182553_add_course_introduction_video.sql` adds an optional, publicly readable YouTube introduction-video URL to each course with a secure YouTube-domain constraint. It is applied on production.
 - The live and local migration histories now match.
 - Eight older scripts remain in the repository's root `migrations/` directory as historical references. Do not run them again or treat them as pending migrations.
 

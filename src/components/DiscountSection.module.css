@@ -252,6 +252,134 @@
     animation: spin 1s linear infinite;
 }
 
+/* Course-details checkout modal. The default variant above remains unchanged
+   for the separate guest-checkout page. */
+.checkoutVariant {
+    margin-top: 1rem;
+    padding: clamp(1rem, 2vw, 1.5rem);
+    border: 1px solid rgba(33, 44, 45, 0.11);
+    border-radius: 1rem;
+    background: rgba(169, 209, 225, 0.34);
+}
+
+.checkoutVariant .title {
+    color: var(--color-dark-blue);
+    font-size: clamp(0.88rem, 1vw, 1rem);
+}
+
+.checkoutVariant .icon {
+    color: var(--color-dark-blue);
+}
+
+.checkoutVariant .row {
+    color: var(--color-black);
+    font-size: clamp(0.78rem, 0.85vw, 0.92rem);
+}
+
+.checkoutVariant .rowDiscount {
+    color: #2f7b4d;
+}
+
+.checkoutVariant .divider {
+    border-top-color: rgba(33, 44, 45, 0.13);
+}
+
+.checkoutVariant .finalRow {
+    font-size: clamp(1rem, 1.4vw, 1.25rem);
+}
+
+.checkoutVariant .finalRow span:last-child {
+    color: var(--color-dark-blue);
+}
+
+.checkoutVariant .savingsText {
+    color: #2f7b4d;
+    font-size: 0.76rem;
+}
+
+.checkoutVariant .pointsSection {
+    margin-top: 1.15rem;
+    padding: 1rem;
+    border: 1px solid rgba(85, 135, 166, 0.38);
+    border-radius: 0.85rem;
+    background: rgba(255, 254, 254, 0.78);
+    box-shadow: none;
+}
+
+.checkoutVariant .pointsHint {
+    color: rgba(33, 44, 45, 0.64);
+    font-style: normal;
+}
+
+.checkoutVariant .pointsSelect {
+    border: 1px solid rgba(33, 44, 45, 0.18);
+    border-radius: 0.7rem;
+}
+
+.checkoutVariant .pointsSelect:hover:not(:disabled),
+.checkoutVariant .pointsSelect:focus {
+    border-color: var(--color-dark-blue);
+    box-shadow: 0 0 0 3px rgba(85, 135, 166, 0.13);
+}
+
+.checkoutVariant .pointsBalance {
+    background: rgba(255, 254, 254, 0.72);
+}
+
+.checkoutVariant .couponLabel {
+    color: var(--color-black);
+    font-size: 0.78rem;
+}
+
+.checkoutVariant .couponInput {
+    min-width: 0;
+    border: 1px solid rgba(33, 44, 45, 0.18);
+    border-radius: 0.7rem;
+}
+
+.checkoutVariant .couponInput:focus {
+    outline: none;
+    border-color: var(--color-dark-blue);
+    box-shadow: 0 0 0 3px rgba(85, 135, 166, 0.13);
+}
+
+.checkoutVariant .applyButton,
+.checkoutVariant .removeButton {
+    min-height: 2.8rem;
+    border-radius: 999px;
+}
+
+.checkoutVariant .applyButton {
+    border-color: var(--color-dark-blue);
+    background: var(--color-dark-blue);
+    color: var(--color-white);
+}
+
+.checkoutVariant .applyButton:hover:not(:disabled) {
+    border-color: var(--color-yellow);
+    background: var(--color-yellow);
+    color: var(--color-white);
+}
+
+@media (max-width: 520px) {
+    .checkoutVariant .pointsWrapper,
+    .checkoutVariant .couponInputWrapper {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .checkoutVariant .pointsSelect {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .checkoutVariant .applyButton,
+    .checkoutVariant .removeButton {
+        min-height: 2.75rem;
+        padding: 0.7rem 1rem;
+    }
+}
+
 @keyframes spin {
     from {
         transform: rotate(0deg);

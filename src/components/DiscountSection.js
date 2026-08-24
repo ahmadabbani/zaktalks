@@ -12,7 +12,8 @@ export default function DiscountSection({
   courseId, 
   email = null, 
   onDiscountsCalculated,
-  disabled = false 
+  disabled = false,
+  variant = 'default'
 }) {
   const [couponCode, setCouponCode] = useState('')
   const [pointsToUse, setPointsToUse] = useState(0)
@@ -133,7 +134,7 @@ export default function DiscountSection({
   const { course, userPoints, discounts } = discountData
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${variant === 'checkout' ? styles.checkoutVariant : ''}`}>
       <h3 className={styles.title}>
         <FaTag className={styles.icon} />
         Price Breakdown
@@ -213,7 +214,7 @@ export default function DiscountSection({
               disabled={disabled}
               className={styles.pointsSelect}
             >
-              <option value={0}>Don't use points</option>
+              <option value={0}>Don&apos;t use points</option>
               {/* Generate options for 1000, 2000, 3000, etc. up to user's balance */}
               {Array.from({ length: Math.floor(userPoints / 1000) }, (_, i) => (i + 1) * 1000).map(pts => (
                 <option key={pts} value={pts}>

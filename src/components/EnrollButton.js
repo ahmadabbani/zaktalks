@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { FaArrowRight } from 'react-icons/fa'
 import styles from './EnrollButton.module.css'
 import CheckoutModal from './CheckoutModal'
 
@@ -27,8 +28,9 @@ export default function EnrollButton({ courseId, courseName, price, isLoggedIn, 
         className={styles.enrollBtn}
       >
         <span className={styles.btnText}>
-          {loading ? 'Processing...' : `${text} - $${(price / 100).toFixed(2)}`}
+          {loading ? 'Processing...' : `${text}. $${(price / 100).toFixed(2)}`}
         </span>
+        {!loading && <FaArrowRight aria-hidden="true" />}
       </button>
 
       {/* Checkout Modal for logged-in users */}

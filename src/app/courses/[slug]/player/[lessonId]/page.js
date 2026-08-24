@@ -5,6 +5,7 @@ import AssessmentRenderer from '@/components/AssessmentRenderer'
 import { FaBookOpen, FaLayerGroup } from 'react-icons/fa'
 import { buildLessonAccessMap, getFirstAvailableLesson } from '@/lib/course-progression'
 import { CourseCompletionNotice, LessonCompletionBadge, LessonNavigation } from './LessonStatus'
+import LessonResource from './LessonResource'
 import styles from './lesson-player.module.css'
 
 export default async function LessonPage({ params }) {
@@ -30,7 +31,15 @@ export default async function LessonPage({ params }) {
     .maybeSingle()
 
   // 3. Find Next/Prev Lessons
-  const [{ data: lessonRows }, { data: moduleRows }] = await Promise.all([
+  const resourceQuery = progress?.is_completed
+    ? supabase
+        .from('lesson_resources')
+        .select('resource_type, text_content, external_url, original_file_name')
+        .eq('lesson_id', lesson.id)
+        .maybeSingle()
+    : Promise.resolve({ data: null, error: null })
+
+  const [{ data: lessonRows }, { data: moduleRows }, { data: initialResource, error: initialResourceError }] = await Promise.all([
     supabase
       .from('lessons')
       .select('id, module_id, display_order')
@@ -38,7 +47,8 @@ export default async function LessonPage({ params }) {
     supabase
       .from('course_modules')
       .select('id, title, description, display_order')
-      .eq('course_id', lesson.course_id)
+      .eq('course_id', lesson.course_id),
+    resourceQuery
   ])
 
   const orderedModules = [...(moduleRows || [])].sort((a, b) => a.display_order - b.display_order)
@@ -137,6 +147,12 @@ export default async function LessonPage({ params }) {
           </div>
         </div>
       )}
+      <LessonResource
+        key={lesson.id}
+        lessonId={lesson.id}
+        initialResource={initialResource || null}
+        initiallyCompleted={Boolean(progress?.is_completed && !initialResourceError)}
+      />
       {learningContext}
       </div>
 

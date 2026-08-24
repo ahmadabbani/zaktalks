@@ -1,9 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useFormStatus } from 'react-dom'
-import { useRouter, useSearchParams } from 'next/navigation'
-import toast from 'react-hot-toast'
 import styles from './CourseForm.module.css'
 
 function SubmitButton({ buttonText }) {
@@ -27,11 +25,10 @@ function toList(value) {
 }
 
 export default function CourseForm({ initialData = {}, action, buttonText = "Save Course" }) {
-  const [offers, setOffers] = useState(initialData.course_offers || [])
-  const [benefits, setBenefits] = useState(initialData.course_benefits || [])
+  const [learningOutcomes, setLearningOutcomes] = useState(initialData.what_youll_learn || [])
+  const [skills, setSkills] = useState(initialData.skills_youll_gain || [])
   const [targetAudience, setTargetAudience] = useState(toList(initialData.target_audience))
   const [notForAudience, setNotForAudience] = useState(toList(initialData.who_this_is_not_for))
-  const [results, setResults] = useState(toList(initialData.why_attend))
   const [faqs, setFaqs] = useState(initialData.faqs || [])
   const [existingImages, setExistingImages] = useState(initialData.images || [])
   const [deletedImageUrls, setDeletedImageUrls] = useState([])
@@ -161,16 +158,15 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         <textarea name="subheadline" rows="3" defaultValue={initialData.subheadline} placeholder="A short supporting line shown below the course description..."></textarea>
       </div>
 
-      <div className={styles.gridTwo}>
-        <div className={styles.formGroup}>
-          <label>The Problem</label>
-          <textarea name="the_problem" rows="4" defaultValue={initialData.the_problem} placeholder="Describe the problem this course helps solve..."></textarea>
-        </div>
-
-        <div className={styles.formGroup}>
-          <label>The Shift</label>
-          <textarea name="the_shift" rows="4" defaultValue={initialData.the_shift} placeholder="Describe the transformation this course creates..."></textarea>
-        </div>
+      <div className={`${styles.formGroup} ${styles.featuredField}`}>
+        <label>Introduction Video (YouTube)</label>
+        <input
+          type="url"
+          name="introduction_video_url"
+          maxLength="500"
+          defaultValue={initialData.introduction_video_url || ''}
+          placeholder="https://www.youtube.com/watch?v=..."
+        />
       </div>
 
       <div className={styles.formGroup}>
@@ -266,54 +262,54 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         <button type="button" onClick={addNewImageSlot} className={styles.addButton}>+ Add New Gallery Image</button>
       </div>
 
-      {/* Course Offers Array */}
-      <div className={styles.listSection}>
+      {/* Learning outcomes */}
+      <div className={`${styles.listSection} ${styles.contentListSection}`}>
         <div className={styles.listHeader}>
-          <label>What this course offers (List)</label>
-          <button type="button" onClick={() => addItem(setOffers, offers)} className={styles.addButton}>+ Add Item</button>
+          <label>What you&apos;ll learn</label>
+          <button type="button" onClick={() => addItem(setLearningOutcomes, learningOutcomes)} className={styles.addButton}>+ Add Item</button>
         </div>
         <div className={styles.listItems}>
-          {offers.map((item, index) => (
+          {learningOutcomes.map((item, index) => (
             <div key={index} className={styles.listItem}>
               <input 
                 type="text" 
-                name="course_offers" 
+                name="what_youll_learn"
                 value={item} 
-                onChange={(e) => updateItem(setOffers, offers, index, e.target.value)}
-                placeholder="e.g. 24/7 Support"
+                onChange={(e) => updateItem(setLearningOutcomes, learningOutcomes, index, e.target.value)}
+                placeholder="e.g. Recognize the patterns shaping your choices"
               />
-              <button type="button" onClick={() => removeItem(setOffers, offers, index)} className={styles.deleteSlotButton}>&times;</button>
+              <button type="button" onClick={() => removeItem(setLearningOutcomes, learningOutcomes, index)} className={styles.deleteSlotButton}>&times;</button>
             </div>
           ))}
-          {offers.length === 0 && <p className={styles.emptyState}>No offers added yet.</p>}
+          {learningOutcomes.length === 0 && <p className={styles.emptyState}>No learning outcomes added yet.</p>}
         </div>
       </div>
 
-      {/* Course Benefits Array */}
-      <div className={styles.listSection}>
+      {/* Skills */}
+      <div className={`${styles.listSection} ${styles.contentListSection}`}>
         <div className={styles.listHeader}>
-          <label>Student Benefits (List)</label>
-          <button type="button" onClick={() => addItem(setBenefits, benefits)} className={styles.addButton}>+ Add Item</button>
+          <label>Skills you&apos;ll gain</label>
+          <button type="button" onClick={() => addItem(setSkills, skills)} className={styles.addButton}>+ Add Item</button>
         </div>
         <div className={styles.listItems}>
-          {benefits.map((item, index) => (
+          {skills.map((item, index) => (
             <div key={index} className={styles.listItem}>
               <input 
                 type="text" 
-                name="course_benefits" 
+                name="skills_youll_gain"
                 value={item} 
-                onChange={(e) => updateItem(setBenefits, benefits, index, e.target.value)}
-                placeholder="e.g. Career Guidance"
+                onChange={(e) => updateItem(setSkills, skills, index, e.target.value)}
+                placeholder="e.g. Clearer communication"
               />
-              <button type="button" onClick={() => removeItem(setBenefits, benefits, index)} className={styles.deleteSlotButton}>&times;</button>
+              <button type="button" onClick={() => removeItem(setSkills, skills, index)} className={styles.deleteSlotButton}>&times;</button>
             </div>
           ))}
-          {benefits.length === 0 && <p className={styles.emptyState}>No benefits added yet.</p>}
+          {skills.length === 0 && <p className={styles.emptyState}>No skills added yet.</p>}
         </div>
       </div>
 
       <div className={styles.gridTwo}>
-        <div className={styles.listSection}>
+        <div className={`${styles.listSection} ${styles.contentListSection}`}>
           <div className={styles.listHeader}>
             <label>Who This Is For (List)</label>
             <button type="button" onClick={() => addItem(setTargetAudience, targetAudience)} className={styles.addButton}>+ Add Item</button>
@@ -335,7 +331,7 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
           </div>
         </div>
 
-        <div className={styles.listSection}>
+        <div className={`${styles.listSection} ${styles.contentListSection}`}>
           <div className={styles.listHeader}>
             <label className={styles.notForLabel}>Who This Is Not For (List)</label>
             <button type="button" onClick={() => addItem(setNotForAudience, notForAudience)} className={styles.addButton}>+ Add Item</button>
@@ -358,26 +354,14 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         </div>
       </div>
 
-      <div className={styles.listSection}>
-        <div className={styles.listHeader}>
-          <label>Results (List)</label>
-          <button type="button" onClick={() => addItem(setResults, results)} className={styles.addButton}>+ Add Item</button>
-        </div>
-        <div className={styles.listItems}>
-          {results.map((item, index) => (
-            <div key={index} className={styles.listItem}>
-              <input
-                type="text"
-                name="why_attend"
-                value={item}
-                onChange={(e) => updateItem(setResults, results, index, e.target.value)}
-                placeholder="e.g. A clear plan for..."
-              />
-              <button type="button" onClick={() => removeItem(setResults, results, index)} className={styles.deleteSlotButton}>&times;</button>
-            </div>
-          ))}
-          {results.length === 0 && <p className={styles.emptyState}>No results added yet.</p>}
-        </div>
+      <div className={`${styles.formGroup} ${styles.detailsField}`}>
+        <label>Details to know</label>
+        <textarea
+          name="details_to_know"
+          rows="5"
+          defaultValue={initialData.details_to_know || ''}
+          placeholder="Add practical details learners should know before enrolling..."
+        />
       </div>
 
       {/* Course FAQs Array */}

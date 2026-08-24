@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { FaTimes } from 'react-icons/fa'
+import { FaArrowRight, FaLock, FaTimes } from 'react-icons/fa'
 import DiscountSection from './DiscountSection'
 import styles from './CheckoutModal.module.css'
 
@@ -16,6 +16,7 @@ export default function CheckoutModal({
   onClose 
 }) {
   const [loading, setLoading] = useState(false)
+  const [checkoutError, setCheckoutError] = useState('')
   const [discountOptions, setDiscountOptions] = useState({
     couponCode: null,
     pointsToUse: 0
@@ -23,16 +24,18 @@ export default function CheckoutModal({
 
   // Lock body scroll when modal is open
   useEffect(() => {
-    // Save current overflow value
     const originalOverflow = document.body.style.overflow
-    // Lock scroll
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape' && !loading) onClose()
+    }
     document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKeyDown)
     
-    // Restore on unmount
     return () => {
       document.body.style.overflow = originalOverflow
+      window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [])
+  }, [loading, onClose])
 
   const handleDiscountsCalculated = (discounts) => {
     setDiscountOptions({
@@ -43,6 +46,7 @@ export default function CheckoutModal({
 
   const handleProceed = async () => {
     setLoading(true)
+    setCheckoutError('')
 
     try {
       const res = await fetch('/api/checkout', {
@@ -60,22 +64,27 @@ export default function CheckoutModal({
       if (data.url) {
         window.location.href = data.url
       } else {
-        alert(data.error || 'Something went wrong')
+        setCheckoutError(data.error || 'Unable to start payment. Please try again.')
         setLoading(false)
       }
     } catch (error) {
       console.error('Checkout error:', error)
-      alert('Failed to initiate checkout')
+      setCheckoutError('Unable to connect to checkout. Please try again.')
       setLoading(false)
     }
   }
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.modal}>
+    <div className={styles.overlay} onMouseDown={(event) => {
+      if (event.target === event.currentTarget && !loading) onClose()
+    }}>
+      <div className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="checkout-title">
         {/* Header */}
         <div className={styles.header}>
-          <h2 className={styles.title}>Complete Your Purchase</h2>
+          <div>
+            <span className={styles.eyebrow}><FaLock /> Secure checkout</span>
+            <h2 className={styles.title} id="checkout-title">Complete your purchase</h2>
+          </div>
           <button 
             onClick={onClose} 
             disabled={loading}
@@ -87,16 +96,21 @@ export default function CheckoutModal({
         </div>
 
         {/* Course Name */}
-        <p className={styles.courseName}>
-          {courseName}
-        </p>
+        <div className={styles.courseName}>
+          <span>Selected course</span>
+          <strong>{courseName}</strong>
+          <em>${(Number(price || 0) / 100).toFixed(2)}</em>
+        </div>
 
         {/* Discount Section */}
         <DiscountSection
           courseId={courseId}
           onDiscountsCalculated={handleDiscountsCalculated}
           disabled={loading}
+          variant="checkout"
         />
+
+        {checkoutError && <p className={styles.checkoutError} role="alert">{checkoutError}</p>}
 
         {/* Buttons */}
         <div className={styles.actions}>
@@ -114,7 +128,7 @@ export default function CheckoutModal({
             disabled={loading}
             className={`${styles.proceedButton} ${loading ? styles.loading : ''}`}
           >
-            {loading ? 'Redirecting...' : 'Proceed to Payment'}
+            {loading ? <><span className={styles.spinner} /> Preparing payment...</> : <>Proceed to payment <FaArrowRight /></>}
           </button>
         </div>
       </div>

@@ -17,8 +17,11 @@ import {
   FaChevronUp,
   FaClipboardList,
   FaEdit,
+  FaFileAlt,
+  FaFilePdf,
   FaFolderOpen,
   FaLayerGroup,
+  FaLink,
   FaPlay,
   FaPlus,
   FaSave,
@@ -44,6 +47,7 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
   const [moduleForm, setModuleForm] = useState(null)
   const [lessonForm, setLessonForm] = useState(null)
   const [lessonType, setLessonType] = useState('video')
+  const [resourceType, setResourceType] = useState('none')
   const [isSaving, setIsSaving] = useState(false)
   const [deleteModal, setDeleteModal] = useState(null)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -68,6 +72,7 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
   const openNewLessonForm = (moduleId) => {
     setModuleForm(null)
     setLessonType('video')
+    setResourceType('none')
     setLessonForm({ mode: 'create', moduleId, lesson: null })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -75,6 +80,7 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
   const openEditLessonForm = (lesson) => {
     setModuleForm(null)
     setLessonType(lesson.type)
+    setResourceType(lesson.additional_resource?.resource_type || 'none')
     setLessonForm({ mode: 'edit', moduleId: lesson.module_id, lesson })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -286,6 +292,73 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
               </div>
             )}
           </div>
+          <div className={`${styles.formSection} ${styles.resourceSection}`}>
+            <div className={styles.resourceHeading}>
+              <div>
+                <h4>Additional resource</h4>
+                <p>Optionally attach one text note, PDF, or external link to this lesson.</p>
+              </div>
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="resource-type">Resource Type</label>
+              <select id="resource-type" name="resource_type" value={resourceType} onChange={(event) => setResourceType(event.target.value)}>
+                <option value="none">No additional resource</option>
+                <option value="text">Text</option>
+                <option value="pdf">PDF upload</option>
+                <option value="link">External link</option>
+              </select>
+            </div>
+
+            {resourceType === 'text' && (
+              <div className={styles.formGroup}>
+                <label htmlFor="resource-text">Resource Text</label>
+                <textarea
+                  id="resource-text"
+                  name="resource_text"
+                  rows="5"
+                  maxLength="20000"
+                  defaultValue={lessonForm.lesson?.additional_resource?.text_content || ''}
+                  placeholder="Add the supporting text for this lesson..."
+                  required
+                />
+              </div>
+            )}
+
+            {resourceType === 'link' && (
+              <div className={styles.formGroup}>
+                <label htmlFor="resource-url">Resource Link</label>
+                <input
+                  id="resource-url"
+                  name="resource_url"
+                  type="url"
+                  maxLength="2000"
+                  defaultValue={lessonForm.lesson?.additional_resource?.external_url || ''}
+                  placeholder="https://example.com/resource"
+                  required
+                />
+              </div>
+            )}
+
+            {resourceType === 'pdf' && (
+              <div className={styles.formGroup}>
+                <label htmlFor="resource-pdf">Resource PDF <span>(10 MB maximum)</span></label>
+                {lessonForm.lesson?.additional_resource?.resource_type === 'pdf' && (
+                  <div className={styles.currentResourceFile}>
+                    <FaFilePdf />
+                    <span>{lessonForm.lesson.additional_resource.original_file_name}</span>
+                    <small>Choose another PDF only if you want to replace it.</small>
+                  </div>
+                )}
+                <input
+                  id="resource-pdf"
+                  name="resource_pdf"
+                  type="file"
+                  accept="application/pdf,.pdf"
+                  required={lessonForm.lesson?.additional_resource?.resource_type !== 'pdf'}
+                />
+              </div>
+            )}
+          </div>
           <div className={styles.formActions}>
             <button type="submit" disabled={isSaving} className={styles.submitButton}>
               {isSaving ? 'Saving...' : lessonForm.mode === 'edit' ? 'Update Lesson' : 'Create Lesson'}
@@ -340,7 +413,17 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
                       <div className={styles.lessonIcon}>{lesson.type === 'video' ? <FaPlay /> : <FaClipboardList />}</div>
                       <div className={styles.lessonContent}>
                         <div className={styles.lessonTitle}>{lesson.title}</div>
-                        <div className={styles.lessonMeta}>{lesson.type === 'video' ? 'VIDEO LESSON' : 'ASSESSMENT'}</div>
+                        <div className={styles.lessonMeta}>
+                          <span>{lesson.type === 'video' ? 'VIDEO LESSON' : 'ASSESSMENT'}</span>
+                          {lesson.additional_resource && (
+                            <span className={styles.resourceBadge}>
+                              {lesson.additional_resource.resource_type === 'pdf' && <FaFilePdf />}
+                              {lesson.additional_resource.resource_type === 'link' && <FaLink />}
+                              {lesson.additional_resource.resource_type === 'text' && <FaFileAlt />}
+                              {lesson.additional_resource.resource_type} resource
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <div className={styles.lessonActions}>
                         <button type="button" onClick={() => openEditLessonForm(lesson)} className={`${styles.iconButton} ${styles.edit}`} title="Edit or move lesson"><FaEdit /></button>

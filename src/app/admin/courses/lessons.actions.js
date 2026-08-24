@@ -3,8 +3,12 @@
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { requirePermission } from '@/lib/auth-utils'
+import { randomUUID } from 'node:crypto'
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+const LESSON_RESOURCE_BUCKET = 'lesson-resources'
+const LESSON_RESOURCE_TYPES = new Set(['none', 'text', 'pdf', 'link'])
+const MAX_RESOURCE_PDF_BYTES = 10 * 1024 * 1024
 
 function cleanText(value, maxLength) {
   return String(value || '').trim().slice(0, maxLength)
@@ -12,6 +16,130 @@ function cleanText(value, maxLength) {
 
 function isUuid(value) {
   return UUID_PATTERN.test(String(value || ''))
+}
+
+function isUploadedFile(value) {
+  return value && typeof value.name === 'string' && typeof value.arrayBuffer === 'function' && value.size > 0
+}
+
+function cleanFileName(value) {
+  return cleanText(value, 180).replace(/[\\/\u0000-\u001f]/g, '_') || 'lesson-resource.pdf'
+}
+
+function cleanExternalUrl(value) {
+  const candidate = cleanText(value, 2000)
+  if (!candidate) return null
+
+  try {
+    const url = new URL(candidate)
+    return ['http:', 'https:'].includes(url.protocol) ? url.toString() : null
+  } catch {
+    return null
+  }
+}
+
+async function getLessonResource(supabase, lessonId) {
+  const { data, error } = await supabase
+    .from('lesson_resources')
+    .select('id, lesson_id, resource_type, text_content, external_url, storage_path, original_file_name, file_size_bytes')
+    .eq('lesson_id', lessonId)
+    .maybeSingle()
+
+  if (error) throw new Error(`Unable to load the lesson resource: ${error.message}`)
+  return data || null
+}
+
+async function uploadResourcePdf(supabase, courseId, lessonId, file) {
+  if (file.size > MAX_RESOURCE_PDF_BYTES) throw new Error('The resource PDF must be 10 MB or smaller.')
+  if (!file.name.toLowerCase().endsWith('.pdf') || (file.type && file.type !== 'application/pdf')) {
+    throw new Error('Choose a valid PDF file.')
+  }
+
+  const bytes = Buffer.from(await file.arrayBuffer())
+  if (bytes.subarray(0, 5).toString('ascii') !== '%PDF-') throw new Error('The selected file is not a valid PDF.')
+
+  const storagePath = `${courseId}/${lessonId}/${randomUUID()}.pdf`
+  const { error } = await supabase.storage
+    .from(LESSON_RESOURCE_BUCKET)
+    .upload(storagePath, bytes, { contentType: 'application/pdf', upsert: false })
+
+  if (error) throw new Error(`Unable to upload the resource PDF: ${error.message}`)
+
+  return {
+    storagePath,
+    originalFileName: cleanFileName(file.name),
+    fileSizeBytes: file.size
+  }
+}
+
+async function saveLessonResource(supabase, courseId, lessonId, formData) {
+  const resourceType = cleanText(formData.get('resource_type'), 20) || 'none'
+  if (!LESSON_RESOURCE_TYPES.has(resourceType)) throw new Error('Choose a valid additional resource type.')
+
+  const currentResource = await getLessonResource(supabase, lessonId)
+  const oldStoragePath = currentResource?.resource_type === 'pdf' ? currentResource.storage_path : null
+
+  if (resourceType === 'none') {
+    if (currentResource) {
+      const { error } = await supabase.from('lesson_resources').delete().eq('lesson_id', lessonId)
+      if (error) throw new Error(`Unable to remove the lesson resource: ${error.message}`)
+    }
+    if (oldStoragePath) await supabase.storage.from(LESSON_RESOURCE_BUCKET).remove([oldStoragePath])
+    return
+  }
+
+  let resourceData
+  let newStoragePath = null
+
+  if (resourceType === 'text') {
+    const textContent = cleanText(formData.get('resource_text'), 20000)
+    if (!textContent) throw new Error('Enter the additional resource text.')
+    resourceData = { resource_type: 'text', text_content: textContent, external_url: null, storage_path: null, original_file_name: null, file_size_bytes: null }
+  } else if (resourceType === 'link') {
+    const externalUrl = cleanExternalUrl(formData.get('resource_url'))
+    if (!externalUrl) throw new Error('Enter a valid http or https resource link.')
+    resourceData = { resource_type: 'link', text_content: null, external_url: externalUrl, storage_path: null, original_file_name: null, file_size_bytes: null }
+  } else {
+    const pdfFile = formData.get('resource_pdf')
+    if (isUploadedFile(pdfFile)) {
+      const uploaded = await uploadResourcePdf(supabase, courseId, lessonId, pdfFile)
+      newStoragePath = uploaded.storagePath
+      resourceData = {
+        resource_type: 'pdf',
+        text_content: null,
+        external_url: null,
+        storage_path: uploaded.storagePath,
+        original_file_name: uploaded.originalFileName,
+        file_size_bytes: uploaded.fileSizeBytes
+      }
+    } else if (currentResource?.resource_type === 'pdf' && currentResource.storage_path) {
+      resourceData = {
+        resource_type: 'pdf',
+        text_content: null,
+        external_url: null,
+        storage_path: currentResource.storage_path,
+        original_file_name: currentResource.original_file_name,
+        file_size_bytes: currentResource.file_size_bytes
+      }
+    } else {
+      throw new Error('Choose a PDF to attach to this lesson.')
+    }
+  }
+
+  const { error } = await supabase.from('lesson_resources').upsert({
+    lesson_id: lessonId,
+    ...resourceData,
+    updated_at: new Date().toISOString()
+  }, { onConflict: 'lesson_id' })
+
+  if (error) {
+    if (newStoragePath) await supabase.storage.from(LESSON_RESOURCE_BUCKET).remove([newStoragePath])
+    throw new Error(`Unable to save the lesson resource: ${error.message}`)
+  }
+
+  if (oldStoragePath && oldStoragePath !== resourceData.storage_path) {
+    await supabase.storage.from(LESSON_RESOURCE_BUCKET).remove([oldStoragePath])
+  }
 }
 
 function revalidateCourseStructure(courseId) {
@@ -246,8 +374,19 @@ export async function createLesson(courseId, formData) {
     if (!lessonData.assessment_key) return { error: 'Choose an assessment.' }
   }
 
-  const { error } = await supabase.from('lessons').insert(lessonData)
+  const { data: lesson, error } = await supabase
+    .from('lessons')
+    .insert(lessonData)
+    .select('id')
+    .single()
   if (error) return { error: error.message }
+
+  try {
+    await saveLessonResource(supabase, courseId, lesson.id, formData)
+  } catch (resourceError) {
+    await supabase.from('lessons').delete().eq('id', lesson.id).eq('course_id', courseId)
+    return { error: resourceError.message }
+  }
 
   revalidateCourseStructure(courseId)
   return { success: true }
@@ -259,6 +398,14 @@ export async function deleteLesson(courseId, lessonId) {
 
   if (!isUuid(courseId) || !isUuid(lessonId)) return { error: 'Invalid lesson.' }
 
+  let resourcePath = null
+  try {
+    const resource = await getLessonResource(supabase, lessonId)
+    resourcePath = resource?.resource_type === 'pdf' ? resource.storage_path : null
+  } catch (resourceError) {
+    return { error: resourceError.message }
+  }
+
   const { error } = await supabase
     .from('lessons')
     .delete()
@@ -266,6 +413,11 @@ export async function deleteLesson(courseId, lessonId) {
     .eq('course_id', courseId)
 
   if (error) return { error: error.message }
+
+  if (resourcePath) {
+    const { error: storageError } = await supabase.storage.from(LESSON_RESOURCE_BUCKET).remove([resourcePath])
+    if (storageError) console.error(`Unable to remove lesson resource ${resourcePath}:`, storageError.message)
+  }
 
   revalidateCourseStructure(courseId)
   return { success: true }
@@ -328,6 +480,12 @@ export async function updateLesson(courseId, lessonId, formData) {
     .eq('course_id', courseId)
 
   if (error) return { error: error.message }
+
+  try {
+    await saveLessonResource(supabase, courseId, lessonId, formData)
+  } catch (resourceError) {
+    return { error: `The lesson was updated, but its additional resource was not saved. ${resourceError.message}` }
+  }
 
   revalidateCourseStructure(courseId)
   return { success: true }
