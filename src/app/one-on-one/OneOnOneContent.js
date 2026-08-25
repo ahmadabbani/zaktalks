@@ -57,7 +57,7 @@ const weightPoints = [
     id: `current-reality-${index + 1}`,
     kind: 'mid',
     text,
-    roadY: [78, 98, 66, 91, 57, 86, 70, 99, 63, 82][index],
+    roadY: [82, 38, 92, 45, 87, 34, 94, 42, 86, 36][index],
   })),
   {
     id: 'point-b',
@@ -79,20 +79,28 @@ function buildWeightRoadPath(points) {
   let path = `M ${points[0].x.toFixed(2)} ${points[0].y}`
 
   for (let index = 0; index < points.length - 1; index += 1) {
-    const before = points[index - 1] || points[index]
     const current = points[index]
     const next = points[index + 1]
-    const after = points[index + 2] || next
-    const controlA = {
-      x: current.x + (next.x - before.x) / 6,
-      y: current.y + (next.y - before.y) / 6,
-    }
-    const controlB = {
-      x: next.x - (after.x - current.x) / 6,
-      y: next.y - (after.y - current.y) / 6,
+    const distance = next.x - current.x
+
+    // The final middle point and Point B both sit high. Add one deliberate
+    // valley between them so the road finishes with the same wave rhythm.
+    // The return rises a little beyond Point B before approaching it from the
+    // right, giving this last curve the horizontal room available to the
+    // earlier waves without moving either point.
+    if (index === points.length - 2) {
+      const middleX = current.x + distance * 0.5
+      const valleyY = 82
+
+      path += ` C ${(current.x + distance * 0.3).toFixed(2)} ${current.y} ${(middleX - distance * 0.26).toFixed(2)} ${valleyY} ${middleX.toFixed(2)} ${valleyY}`
+      path += ` C ${(middleX + distance * 0.26).toFixed(2)} ${valleyY} ${(next.x + distance * 0.32).toFixed(2)} ${next.y} ${next.x.toFixed(2)} ${next.y}`
+      continue
     }
 
-    path += ` C ${controlA.x.toFixed(2)} ${controlA.y.toFixed(2)} ${controlB.x.toFixed(2)} ${controlB.y.toFixed(2)} ${next.x.toFixed(2)} ${next.y}`
+    // One controlled S-curve connects each pair directly. The point heights
+    // create the wave, while short handles make each change happen at a
+    // stronger angle instead of spreading the turn across the whole gap.
+    path += ` C ${(current.x + distance * 0.34).toFixed(2)} ${current.y} ${(next.x - distance * 0.34).toFixed(2)} ${next.y} ${next.x.toFixed(2)} ${next.y}`
   }
 
   return path
@@ -267,15 +275,6 @@ export default function OneOnOneContent() {
                 alt="Zak Dakkash holding a microphone during a session"
                 className={styles.heroImage}
               />
-
-              <div className={styles.heroFactCard}>
-                <p className={styles.factValue}>10+</p>
-                <p className={styles.factLabel}>Experience</p>
-
-                <p className={styles.factTitle}>
-                  Educator, Co-Creative Transactional Analyst and Coach
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -295,51 +294,38 @@ export default function OneOnOneContent() {
         aria-labelledby="who-is-it-for-heading"
       >
         <div className={styles.contentWidth}>
-          <div ref={register('fit-header')} className={cx(styles.fitHeader, 'fit-header')}>
-            <p className={styles.eyebrow}>Who this is for</p>
-            <h2 id="who-is-it-for-heading" className={styles.fitTitle}>
-              Who Is It For
-            </h2>
-          </div>
-
           <div className={styles.fitLayout}>
             <div ref={register('fit-intro')} className={cx(styles.fitIntro, 'fit-intro')}>
-
-            <div className={styles.fitImageWrap}>
-              <picture className={styles.fitPicture}>
-                <source media="(max-width: 900px)" srcSet="/one-on-one-who-is-it-for-mobile.webp" />
-                <img
-                  src="/one-on-one-who-is-it-for-cropped.webp"
-                  alt="Abstract forms moving from complexity toward clarity through a shared thread"
-                  className={styles.fitImage}
-                />
-              </picture>
-            </div>
-
-            <div className={styles.fitCopy}>
-              <p>
-                For people who feel the <strong>Need</strong> to change but don&rsquo;t know
-                where to start, this is a confidential, <strong>safe space</strong> where you
-                can be fully yourself, <strong>understand what&rsquo;s really happening inside</strong>,
-                and start moving toward the life you know you&rsquo;re meant to live.
-              </p>
-              <p>
-                When you&rsquo;re no longer willing to be led by the same patterns, One-to-One
-                Coaching offers a contracted, co-creative partnership to examine what is
-                shaping your life and relationships.
-              </p>
-              <p>
-                Together, we explore the assumptions, adaptations, and decisions beneath
-                recurring challenges, not to fix who you are, but to expand your awareness,
-                strengthen your capacity for choice, and develop greater autonomy in how you
-                think, relate, lead, and live.
-              </p>
-              <p>
-                This is not advice, accountability, or performance coaching. It is a
-                disciplined process of inquiry, grounded in a Co-Creative way, where lasting
-                change emerges through authentic contact, honest reflection, and new decisions.
-              </p>
-            </div>
+              <div ref={register('fit-header')} className={cx(styles.fitHeader, 'fit-header')}>
+                <p className={styles.eyebrow}>Who this is for</p>
+                <h2 id="who-is-it-for-heading" className={styles.fitTitle}>
+                  Who Is It For
+                </h2>
+              </div>
+              <div className={styles.fitCopy}>
+                <p>
+                  For people who feel the <strong>Need</strong> to change but don&rsquo;t know
+                  where to start, this is a confidential, <strong>safe space</strong> where you
+                  can be fully yourself, <strong>understand what&rsquo;s really happening inside</strong>,
+                  and start moving toward the life you know you&rsquo;re meant to live.
+                </p>
+                <p>
+                  When you&rsquo;re no longer willing to be led by the same patterns, One-to-One
+                  Coaching offers a contracted, co-creative partnership to examine what is
+                  shaping your life and relationships.
+                </p>
+                <p>
+                  Together, we explore the assumptions, adaptations, and decisions beneath
+                  recurring challenges, not to fix who you are, but to expand your awareness,
+                  strengthen your capacity for choice, and develop greater autonomy in how you
+                  think, relate, lead, and live.
+                </p>
+                <p>
+                  This is not advice, accountability, or performance coaching. It is a
+                  disciplined process of inquiry, grounded in a Co-Creative way, where lasting
+                  change emerges through authentic contact, honest reflection, and new decisions.
+                </p>
+              </div>
             </div>
 
             <div ref={register('fit-lists')} className={cx(styles.fitLists, 'fit-lists')}>

@@ -116,11 +116,10 @@ export default function BecomingAgainTestimonials() {
         >
           <div className={styles.headingBlock}>
             <h2 id="ba-testimonials-heading" className={styles.title}>
-              <span className={styles.titleLine}>Voices from people</span>
-              <span className={styles.titleLine}>who became again</span>
+              Voices from people who became again
             </h2>
             <p className={styles.intro}>
-              Real words from people who showed up for eight months, did the work
+              Real words from people who showed up for seven months, did the work
               in front of each other, and walked away leading their lives with
               more strength, clarity, and honesty.
             </p>

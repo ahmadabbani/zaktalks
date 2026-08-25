@@ -7,15 +7,12 @@ import {
   FiArrowUpRight,
   FiCalendar,
   FiCheck,
-  FiChevronDown,
   FiClipboard,
   FiClock,
   FiCompass,
   FiHelpCircle,
-  FiMapPin,
   FiMessageCircle,
   FiTarget,
-  FiUsers,
   FiVideo,
   FiX,
 } from 'react-icons/fi'
@@ -32,19 +29,19 @@ const cohortDetails = [
     id: 'date',
     Icon: FiCalendar,
     label: 'Next cohort starts',
-    value: 'Coming soon',
+    value: 'March 2027',
   },
   {
-    id: 'location',
-    Icon: FiMapPin,
-    label: 'Location',
-    value: 'Hybrid, online + in-person sessions in Lebanon',
+    id: 'enrollment-starts',
+    Icon: FiCalendar,
+    label: 'Enrollment starts',
+    value: 'Jan Feb 2027',
   },
   {
-    id: 'spots',
-    Icon: FiUsers,
-    label: 'Spots available',
-    value: '8–10 participants only',
+    id: 'enrollment-closes',
+    Icon: FiClock,
+    label: 'Enrollment closes',
+    value: '1st week of March 2027',
   },
 ]
 
@@ -60,100 +57,6 @@ const notFitPoints = [
   'You’re looking for pure business strategy without personal development and emotional honesty.',
   'You’re not willing to reflect, share, and be challenged in a respectful way.',
   'You prefer to stay in familiar patterns even if they are hurting you.',
-]
-
-const curriculum = [
-  {
-    id: 'intro',
-    kind: 'Introduction',
-    title: 'When life just “happens”',
-    points: [
-      'Why so many people live on autopilot, then suffer the consequences.',
-      'Naming your current patterns and the cost of staying where you are.',
-    ],
-  },
-  {
-    id: 'module-1',
-    kind: 'Module 1',
-    title: 'Personal Leadership: It starts with you',
-    points: [
-      'Understanding what it truly means to “lead your life.”',
-      'From unconscious patterns to conscious choices.',
-    ],
-  },
-  {
-    id: 'module-2',
-    kind: 'Module 2',
-    title: 'Strength',
-    points: [
-      'Redefining strength beyond “being tough” or “never breaking.”',
-      'Integrating vulnerability, courage, and inner stability.',
-    ],
-  },
-  {
-    id: 'module-3',
-    kind: 'Module 3',
-    title: 'Emotional Intelligence',
-    points: [
-      'Making sense of your emotions instead of fighting or ignoring them.',
-      'Practical tools to respond instead of react.',
-    ],
-  },
-  {
-    id: 'module-4',
-    kind: 'Module 4',
-    title: 'Personality',
-    points: [
-      'Exploring your personality structure and early life decisions.',
-      'Re-decisions: shifting old, limiting stories into conscious, empowering ones.',
-    ],
-  },
-  {
-    id: 'module-5',
-    kind: 'Module 5',
-    title: 'Resilience & Lebanese culture',
-    points: [
-      'Understanding how our culture shapes how we carry pain and responsibility.',
-      'Building resilience that does not depend on denial or burnout.',
-    ],
-  },
-  {
-    id: 'module-6',
-    kind: 'Module 6',
-    title: 'Personal Responsibility in the here and now',
-    points: [
-      'Taking ownership of your life without self-blame or victimhood.',
-      'How responsibility creates freedom instead of pressure.',
-    ],
-  },
-  {
-    id: 'module-7',
-    kind: 'Module 7',
-    title: 'Belief system & value system',
-    subtitle: 'Inspired by Viktor Frankl',
-    points: [
-      'Identifying the beliefs that are running your life without you noticing.',
-      'Clarifying your values and building a life that actually reflects them.',
-    ],
-  },
-  {
-    id: 'module-8',
-    kind: 'Module 8',
-    title: 'Decision-making & communication',
-    points: [
-      'Practical frameworks to make clearer, more grounded decisions.',
-      'How to communicate with anyone, at any time, in a healthier way.',
-    ],
-  },
-  {
-    id: 'module-9',
-    kind: 'Module 9',
-    title: 'Multiplication of leadership',
-    points: [
-      'Moving from self-leadership to influencing others with integrity.',
-      'Bringing your growth into your business, team, family, and community.',
-    ],
-  },
 ]
 
 const formatCards = [
@@ -192,7 +95,7 @@ const formatCards = [
     title: 'Tools & resources',
     points: [
       <>
-        <strong>9 assessments</strong> to help you see your blind spots and
+        <strong>9 assessments</strong> to help you see your patterns and
         measure your growth.
       </>,
       <>
@@ -226,19 +129,28 @@ const faqs = [
     id: 'length',
     question: 'How long is the program?',
     answer:
-      'The live sessions run across several months, with biweekly 2-hour group sessions and two one-on-one sessions. The impact is designed to last far beyond the program itself.',
+      'The live sessions run across seven months, with biweekly 2-hour group sessions and two one-on-one sessions. The impact is designed to last far beyond the program itself.',
   },
   {
     id: 'format',
     question: 'Is it online or in person?',
-    answer:
-      'It’s hybrid, a mix of online calls and in-person sessions in Lebanon (when possible). This allows for flexibility while still maintaining depth and connection.',
+    answer: (
+      <>
+        It&rsquo;s <strong>hybrid</strong>, a mix of online calls and in-person sessions
+        in Lebanon (when possible). This allows for flexibility while still maintaining
+        depth and connection.
+      </>
+    ),
   },
   {
     id: 'language',
     question: 'What language is the program in?',
-    answer:
-      'The program is primarily in Arabic and English (mixed), with a style that matches how people actually speak and think in real life.',
+    answer: (
+      <>
+        The program is primarily in <strong>English facilitated in Arabic</strong>, with
+        a style that matches how people actually speak and think in real life.
+      </>
+    ),
   },
   {
     id: 'entrepreneur',
@@ -255,8 +167,13 @@ const faqs = [
   {
     id: 'therapy',
     question: 'Is this therapy?',
-    answer:
-      'No. Becoming Again is a coaching and personal development program. It can complement therapy, but it does not replace professional mental health treatment.',
+    answer: (
+      <>
+        No. Becoming Again Program is a <strong>coaching and personal development</strong>{' '}
+        program. It can complement therapy, but it does not replace professional mental
+        health treatment.
+      </>
+    ),
   },
 ]
 
@@ -265,19 +182,19 @@ const enrollmentFacts = [
     id: 'starts',
     Icon: FiCalendar,
     label: 'Next cohort starts',
-    value: 'September 9, 2026',
+    value: 'March 2027',
   },
   {
-    id: 'closes',
+    id: 'enrollment-starts',
+    Icon: FiCalendar,
+    label: 'Enrollment starts',
+    value: 'Jan Feb 2027',
+  },
+  {
+    id: 'enrollment-closes',
     Icon: FiClock,
     label: 'Enrollment closes',
-    value: 'September 2, 2026',
-  },
-  {
-    id: 'seats',
-    Icon: FiUsers,
-    label: 'Seats per cohort',
-    value: 'Only 8–10, to protect depth and intimacy',
+    value: '1st week of March 2027',
   },
 ]
 
@@ -334,82 +251,8 @@ function useReveal() {
   return { register, cx }
 }
 
-function CurriculumAccordionItem({
-  item,
-  index,
-  layout,
-  isOpen,
-  onToggle,
-  register,
-  cx,
-}) {
-  const revealId = `curriculum-${layout}-${item.id}`
-  const triggerId = `curriculum-${layout}-trigger-${item.id}`
-  const panelId = `curriculum-${layout}-panel-${item.id}`
-
-  return (
-    <div
-      ref={register(revealId)}
-      className={cx(
-        [styles.curriculumItem, isOpen ? styles.curriculumItemOpen : '']
-          .filter(Boolean)
-          .join(' '),
-        revealId
-      )}
-    >
-      <h3 className={styles.curriculumHeading}>
-        <button
-          type="button"
-          className={styles.curriculumTrigger}
-          aria-expanded={isOpen}
-          aria-controls={panelId}
-          id={triggerId}
-          onClick={() => onToggle(isOpen ? -1 : index)}
-        >
-          <span className={styles.curriculumIndex} aria-hidden="true">
-            {String(index).padStart(2, '0')}
-          </span>
-
-          <span className={styles.curriculumTitleGroup}>
-            <span className={styles.curriculumKind}>{item.kind}</span>
-            <span className={styles.curriculumStepTitle}>
-              {item.title}
-              {item.subtitle && (
-                <span className={styles.curriculumStepSubtitle}>
-                  {' '}
-                  ({item.subtitle})
-                </span>
-              )}
-            </span>
-          </span>
-
-          <span className={styles.curriculumChevron} aria-hidden="true">
-            <FiChevronDown />
-          </span>
-        </button>
-      </h3>
-
-      <div
-        id={panelId}
-        role="region"
-        aria-labelledby={triggerId}
-        className={styles.curriculumPanel}
-      >
-        <div className={styles.curriculumPanelInner}>
-          <ul className={styles.curriculumPoints}>
-            {item.points.map((point) => (
-              <li key={point}>{point}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export default function BecomingAgainContent() {
   const [heroReady, setHeroReady] = useState(false)
-  const [openModule, setOpenModule] = useState(0)
   const [openFaq, setOpenFaq] = useState(-1)
   const { register, cx } = useReveal()
 
@@ -423,15 +266,15 @@ export default function BecomingAgainContent() {
       <section className={styles.hero} aria-labelledby="ba-hero-heading">
         <div className={`${styles.contentWidth} ${styles.heroInner}`}>
           <div className={styles.heroContent}>
-            <p className={styles.eyebrow}>Becoming Again</p>
+            <p className={styles.eyebrow}>Becoming Again Program</p>
 
             <h1 id="ba-hero-heading" className={styles.heroTitle}>
-              Becoming Again: Group Coaching for People Who Are Done Letting Life
-              Just Happen
+              <strong className={styles.heroTitleLead}>Becoming Again Program</strong>
+              <span>Group Coaching for People Who Are Done Letting Life Just Happen</span>
             </h1>
 
             <p className={styles.heroSubtitle}>
-              An 8-month journey to lead your life with strength, emotional
+              A 7-month journey to lead your life with strength, emotional
               intelligence, and conscious decisions, in a small group of people
               ready for real change.
             </p>
@@ -461,17 +304,8 @@ export default function BecomingAgainContent() {
                 rel="noreferrer"
                 className={styles.primaryCta}
               >
-                <span>Join the next cohort</span>
+                <span>Join waiting list</span>
                 <FiArrowUpRight aria-hidden="true" />
-              </Link>
-
-              <Link
-                href={DISCOVERY_CALL_URL}
-                target="_blank"
-                rel="noreferrer"
-                className={styles.secondaryCta}
-              >
-                <span>Book a discovery call</span>
               </Link>
             </div>
           </aside>
@@ -485,7 +319,7 @@ export default function BecomingAgainContent() {
             className={cx(styles.forHeader, 'for-header')}
           >
             <h2 id="ba-for-heading" className={styles.forTitle}>
-              Who Becoming Again is for
+              Who Becoming Again Program is for
             </h2>
 
             <p className={styles.forIntro}>
@@ -521,7 +355,7 @@ export default function BecomingAgainContent() {
               <h3 className={styles.forColumnTitle}>Who it&rsquo;s not for</h3>
 
               <p className={styles.forColumnLead}>
-                This program is <strong>not</strong> a fit if:
+                This Program is <strong>Not</strong> a fit if:
               </p>
 
               <ul className={styles.forList}>
@@ -536,8 +370,8 @@ export default function BecomingAgainContent() {
               </ul>
 
               <p className={styles.forColumnNote}>
-                Becoming Again is a space for people who are serious about growth,
-                not just interested in it.
+                <strong>Becoming Again Program</strong> is a space for people who are
+                serious about growth, not just interested in it.
               </p>
             </div>
           </div>
@@ -546,9 +380,9 @@ export default function BecomingAgainContent() {
             ref={register('for-closing')}
             className={cx(styles.forClosing, 'for-closing')}
           >
-            If you&rsquo;re ready to look honestly at your decisions, patterns, and
-            blind spots, and you want support, structure, and community as you
-            change, Becoming Again is for you.
+            If you&rsquo;re ready to look honestly at your decisions and patterns, and
+            you want support, structure, and community as you change, Becoming Again Program
+            is for you.
           </p>
         </div>
       </section>
@@ -570,102 +404,28 @@ export default function BecomingAgainContent() {
             </p>
           </div>
 
-          <div className={`${styles.curriculumList} ${styles.curriculumDesktopColumns}`}>
-            {[0, 1].map((columnIndex) => (
-              <div className={styles.curriculumColumn} key={`curriculum-column-${columnIndex}`}>
-                {curriculum.map((item, index) => (
-                  index % 2 === columnIndex ? (
-                    <CurriculumAccordionItem
-                      key={`desktop-${item.id}`}
-                      item={item}
-                      index={index}
-                      layout="desktop"
-                      isOpen={openModule === index}
-                      onToggle={setOpenModule}
-                      register={register}
-                      cx={cx}
-                    />
-                  ) : null
-                ))}
-              </div>
-            ))}
-          </div>
-
-          <div className={`${styles.curriculumList} ${styles.curriculumMobileList}`}>
-            {curriculum.map((item, index) => {
-              const isOpen = openModule === index
-
-              return (
-                <div
-                  key={item.id}
-                  ref={register(`curriculum-${item.id}`)}
-                  className={cx(
-                    [styles.curriculumItem, isOpen ? styles.curriculumItemOpen : '']
-                      .filter(Boolean)
-                      .join(' '),
-                    `curriculum-${item.id}`
-                  )}
-                >
-                  <h3 className={styles.curriculumHeading}>
-                    <button
-                      type="button"
-                      className={styles.curriculumTrigger}
-                      aria-expanded={isOpen}
-                      aria-controls={`curriculum-panel-${item.id}`}
-                      id={`curriculum-trigger-${item.id}`}
-                      onClick={() => setOpenModule(isOpen ? -1 : index)}
-                    >
-                      <span className={styles.curriculumIndex} aria-hidden="true">
-                        {String(index).padStart(2, '0')}
-                      </span>
-
-                      <span className={styles.curriculumTitleGroup}>
-                        <span className={styles.curriculumKind}>{item.kind}</span>
-                        <span className={styles.curriculumStepTitle}>
-                          {item.title}
-                          {item.subtitle && (
-                            <span className={styles.curriculumStepSubtitle}>
-                              {' '}
-                              ({item.subtitle})
-                            </span>
-                          )}
-                        </span>
-                      </span>
-
-                      <span className={styles.curriculumChevron} aria-hidden="true">
-                        <FiChevronDown />
-                      </span>
-                    </button>
-                  </h3>
-
-                  {/* 0fr → 1fr animates the panel open without measuring heights. */}
-                  <div
-                    id={`curriculum-panel-${item.id}`}
-                    role="region"
-                    aria-labelledby={`curriculum-trigger-${item.id}`}
-                    className={styles.curriculumPanel}
-                  >
-                    <div className={styles.curriculumPanelInner}>
-                      <ul className={styles.curriculumPoints}>
-                        {item.points.map((point) => (
-                          <li key={point}>{point}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-
-          <p
-            ref={register('curriculum-outro')}
-            className={cx(styles.curriculumOutro, 'curriculum-outro')}
+          <div
+            ref={register('curriculum-copy')}
+            className={cx(styles.curriculumBody, 'curriculum-copy')}
           >
-            By the end of Becoming Again, you walk away with a{' '}
-            <strong>deeper, clearer understanding of yourself</strong>, and a
-            practical way to lead your life day by day.
-          </p>
+            <p>
+              Becoming Again Program follows a structured growth journey built around
+              the areas that shape how you live, lead, connect, and make decisions.
+            </p>
+            <p>
+              Together, we explore self-awareness, emotional intelligence, resilience,
+              communication, responsibility, values, purpose, and personal leadership.
+            </p>
+            <p>
+              The exact process is intentionally experienced inside the program, not
+              simply explained on a page because real transformation comes through
+              reflection, practice, honest conversation, and consistent support.
+            </p>
+            <p>
+              You will leave with greater clarity about who you are, what is shaping
+              your choices, and how to move forward with more intention.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -680,7 +440,7 @@ export default function BecomingAgainContent() {
             </h2>
 
             <p className={styles.formatSubtitle}>
-              Becoming Again is designed to give you enough structure to create
+              Becoming Again Program is designed to give you enough structure to create
               change, and enough support to stay with it.
             </p>
           </div>
@@ -754,7 +514,7 @@ export default function BecomingAgainContent() {
 
               <p className={styles.enrollCallText}>
                 Before you join, we schedule a <strong>discovery call</strong> to
-                make sure Becoming Again is the right fit for you and for the
+                make sure Becoming Again Program is the right fit for you and for the
                 group.
               </p>
 
@@ -831,16 +591,15 @@ export default function BecomingAgainContent() {
 
               <div className={styles.instructorBio}>
                 <p>
-                  Becoming Again is led by <strong>Zak</strong>, founder of{' '}
-                  <strong>ZakTalks</strong>, a coach, trainer, and communicator who
-                  has spent years working with entrepreneurs, executives, and
-                  organizations in Lebanon and beyond.
+                  Becoming Again Program is led by Zak, a multipotentialite who has
+                  spent years working with entrepreneurs, executives, and organizations
+                  in Lebanon and beyond.
                 </p>
                 <p>
                   Zak&rsquo;s work combines <strong>real-life experience</strong>,
-                  coaching methodologies, and deep psychological insight. He
-                  doesn&rsquo;t just teach concepts, he shares what he has lived,
-                  tested, and seen work in actual businesses and personal lives.
+                  coaching methodologies, and deep psychological insight. He doesn&rsquo;t
+                  just teach concepts; he shares what he has lived, tested, and seen work
+                  in actual businesses and personal lives.
                 </p>
                 <p>
                   For more about Zak&rsquo;s background, work, and story, visit the{' '}
@@ -942,10 +701,6 @@ export default function BecomingAgainContent() {
                 ))}
               </ul>
 
-              <p className={styles.finalNote}>
-                Once the cohort is full, enrollment closes and you can join the
-                waitlist for the next round.
-              </p>
             </aside>
 
             <div
@@ -953,8 +708,8 @@ export default function BecomingAgainContent() {
               className={cx(styles.finalCtaBlock, 'final-cta')}
             >
               <h2 id="ba-final-heading" className={styles.finalTitle}>
-                If you&rsquo;re done letting life drag you, it&rsquo;s time to
-                become again.
+                If you&rsquo;re ready to live from choice instead of survival, it&rsquo;s time
+                to become&nbsp;again.
               </h2>
 
               <div className={styles.finalActions}>
@@ -964,28 +719,10 @@ export default function BecomingAgainContent() {
                   rel="noreferrer"
                   className={styles.primaryCta}
                 >
-                  <span>Join the next cohort</span>
+                  <span>Join waiting list</span>
                   <FiArrowUpRight aria-hidden="true" />
                 </Link>
-
-                <Link
-                  href={DISCOVERY_CALL_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={styles.secondaryCta}
-                >
-                  <span>Apply / book a discovery call</span>
-                </Link>
               </div>
-
-              <Link
-                href={WAITLIST_URL}
-                target="_blank"
-                rel="noreferrer"
-                className={styles.finalWaitlistLink}
-              >
-                Cohort full? Get on the waitlist for the next cohort
-              </Link>
             </div>
           </div>
         </div>

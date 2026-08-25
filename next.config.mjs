@@ -6,7 +6,7 @@ const nextConfig = {
     },
   },
   images: {
-    qualities: [74, 86],
+    qualities: [64, 74, 86],
     // Gallery URLs include a file-derived version query so replaced images
     // invalidate both the browser and Next.js image-optimizer caches.
     localPatterns: [

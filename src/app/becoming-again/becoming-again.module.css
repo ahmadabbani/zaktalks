@@ -33,9 +33,9 @@
 
 .heroInner {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(19rem, 0.85fr);
+  grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.65fr);
   align-items: start;
-  gap: clamp(2.5rem, 5vw, 5rem);
+  gap: clamp(1.75rem, 3vw, 3.5rem);
 }
 
 .heroContent {
@@ -73,6 +73,16 @@
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
+}
+
+.heroTitleLead,
+.heroTitle > span {
+  display: block;
+}
+
+.heroTitleLead {
+  margin-bottom: 0.16em;
+  font-weight: 900;
 }
 
 .heroSubtitle {
@@ -245,7 +255,7 @@
 .secondaryCta {
   padding: 0.78rem 1.6rem;
   color: var(--color-deep-slate);
-  border: 2px solid rgba(85, 135, 166, 0.45);
+  border: 2px solid rgba(var(--color-dark-blue-rgb), 0.45);
   background: transparent;
 }
 
@@ -254,7 +264,7 @@
   color: var(--color-white);
   border-color: var(--color-dark-blue);
   background: var(--color-dark-blue);
-  box-shadow: 0 1.1rem 2.4rem rgba(85, 135, 166, 0.24);
+  box-shadow: 0 1.1rem 2.4rem rgba(var(--color-dark-blue-rgb), 0.24);
   transform: var(--home-cta-hover-transform);
   outline: none;
 }
@@ -519,6 +529,23 @@
   font-size: var(--home-subheading-size);
   font-weight: var(--home-subheading-weight);
   line-height: var(--home-subheading-line-height);
+}
+
+.curriculumBody {
+  display: grid;
+  max-width: 58rem;
+  gap: clamp(0.9rem, 1.5vw, 1.2rem);
+  margin: clamp(2.25rem, 4vw, 3.4rem) auto 0;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-text-line-height);
+  text-align: center;
+  opacity: 0;
+}
+
+.curriculumBody.isVisible {
+  animation: baRise 0.85s var(--ba-ease) both;
 }
 
 .curriculumList {
@@ -1200,10 +1227,18 @@
   }
 
   .instructorLayout {
-    grid-template-columns: clamp(15rem, 18vw, 19rem) minmax(0, 1fr);
+    grid-template-columns: clamp(13rem, 16vw, 18rem) minmax(0, 1fr);
     align-items: start;
     justify-content: space-between;
-    column-gap: clamp(3.5rem, 7vw, 9rem);
+    column-gap: clamp(2.5rem, 4.5vw, 6rem);
+  }
+
+  .heroTitleLead {
+    white-space: nowrap;
+  }
+
+  .instructorTitle {
+    white-space: nowrap;
   }
 
   .instructorPortraitStage {
@@ -1213,12 +1248,18 @@
   }
 
   .instructorPortraitFrame {
-    width: clamp(15rem, 18vw, 19rem);
+    width: clamp(13rem, 16vw, 18rem);
     aspect-ratio: 0.45;
   }
 
   .instructorStory {
     width: 100%;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1999px) {
+  .instructorTitle {
+    font-size: clamp(1.85rem, 2.75vw, 3rem);
   }
 }
 
@@ -1496,6 +1537,7 @@
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: 1.25;
+  text-wrap: balance;
 }
 
 .finalActions {
@@ -1553,8 +1595,32 @@
     max-width: 56ch;
   }
 
+  .heroTitle,
+  .forTitle,
+  .curriculumTitle,
+  .formatTitle,
+  .enrollTitle,
+  .faqTitle {
+    width: 100%;
+    max-width: none;
+  }
+
+  .curriculumHeader,
+  .formatHeader,
+  .faqHeader {
+    width: 100%;
+    max-width: none;
+  }
+
+  .curriculumSubtitle,
+  .formatSubtitle {
+    max-width: 46rem;
+    margin-inline: auto;
+  }
+
   .cohortCard {
-    max-width: 28rem;
+    width: min(100%, clamp(28rem, 62vw, 40rem));
+    max-width: none;
     margin-inline: auto;
   }
 
@@ -1630,6 +1696,11 @@
 
   .instructorPortraitFrame {
     width: min(65vw, 16.5rem);
+  }
+
+  .instructorTitle {
+    width: 100%;
+    max-width: none;
   }
 }
 
@@ -1713,8 +1784,15 @@
   }
 
   .finalCtaBlock {
+    width: 100%;
+    max-width: none;
     align-items: center;
     text-align: center;
+  }
+
+  .finalTitle {
+    width: 100%;
+    max-width: none;
   }
 
   .finalActions {

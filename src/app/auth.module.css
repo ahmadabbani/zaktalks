@@ -15,7 +15,7 @@
   height: 100svh;
   overflow: hidden;
   isolation: isolate;
-  background: #5587a6;
+  background: var(--color-dark-blue);
 }
 
 .visualArtwork {
@@ -125,7 +125,7 @@
 }
 
 .modeSwitch button:focus-visible {
-  outline: 3px solid rgba(85,135,166,.22);
+  outline: 3px solid rgba(var(--color-dark-blue-rgb), .22);
   outline-offset: 2px;
 }
 

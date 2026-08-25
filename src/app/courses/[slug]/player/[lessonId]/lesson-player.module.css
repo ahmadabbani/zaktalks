@@ -247,7 +247,7 @@
 
 .lessonResourceButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 7px 18px rgba(85, 135, 166, 0.24);
+    box-shadow: 0 7px 18px rgba(var(--color-dark-blue-rgb), 0.24);
 }
 
 .lessonResourceButton:disabled {

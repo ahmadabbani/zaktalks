@@ -638,7 +638,7 @@ export default function AboutPageContent() {
               </span>
             </h2>
             <p className={styles.storyIntroCopy}>
-              I don&apos;t see myself as the expert on your life. I bring my experience, my curiosity, and my okayness; you bring yours. Together, we make meaning.
+              I don&apos;t see myself as the expert on your life. I bring my experience, my curiosity, and my Okayness; you bring yours. Together, we make meaning.
             </p>
           </div>
         </div>

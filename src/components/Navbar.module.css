@@ -71,7 +71,7 @@
     padding: 0.6rem 0.78rem;
     border-radius: 12px;
     color: var(--color-white);
-    font-size: clamp(0.84rem, 0.2vw + 0.7rem, 0.96rem);
+    font-size: clamp(0.9rem, 0.24vw + 0.74rem, 1.02rem);
     font-weight: 650;
     line-height: 1;
     white-space: nowrap;
@@ -108,7 +108,7 @@
     padding: .62rem 1rem;
     border: 1px solid transparent;
     border-radius: 999px;
-    font-size: .84rem;
+    font-size: clamp(0.9rem, 0.24vw + 0.74rem, 1.02rem);
     font-weight: 760;
     line-height: 1;
     white-space: nowrap;
@@ -260,10 +260,11 @@
 
 .btnPrimary {
     display: inline-flex;
+    height: 42px;
     align-items: center;
     justify-content: center;
     min-height: 42px;
-    padding: 0.62rem 1.05rem;
+    padding: 0 1.05rem;
     border: 1px solid var(--color-yellow);
     border-radius: 999px;
     background: var(--color-yellow);
@@ -273,6 +274,9 @@
     line-height: 1;
     white-space: nowrap;
     cursor: pointer;
+    font-family: inherit;
+    appearance: none;
+    -webkit-appearance: none;
     transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
@@ -563,6 +567,7 @@
 
 .mobileBtnPrimary {
     display: flex;
+    align-items: center;
     justify-content: center;
     width: 100%;
     margin-top: 0.35rem;
@@ -715,7 +720,12 @@
 
     .navLink {
         padding-inline: 0.62rem;
-        font-size: clamp(0.8rem, 1.6vw, 0.88rem);
+        font-size: clamp(0.86rem, 1.6vw, 0.94rem);
+    }
+
+    .signInLink,
+    .registerLink {
+        font-size: clamp(0.86rem, 1.6vw, 0.94rem);
     }
 
     .btnPrimary {
@@ -762,15 +772,13 @@
         scrollbar-width: thin;
     }
 
-    .mobileNavLink {
+    .mobileNavLink,
+    .mobileSignInLink,
+    .mobileRegisterLink,
+    .mobileBtnPrimary {
         min-height: 3rem;
         padding: 0.72rem 0.85rem;
-        font-size: var(--home-cta-size);
-        line-height: var(--home-cta-line-height);
-    }
-
-    .mobileBtnPrimary {
-        font-size: var(--home-cta-size);
+        font-size: clamp(0.98rem, calc(0.9rem + 0.35vw), 1.08rem);
         line-height: var(--home-cta-line-height);
     }
 

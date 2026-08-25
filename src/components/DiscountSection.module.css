@@ -300,7 +300,7 @@
 .checkoutVariant .pointsSection {
     margin-top: 1.15rem;
     padding: 1rem;
-    border: 1px solid rgba(85, 135, 166, 0.38);
+    border: 1px solid rgba(var(--color-dark-blue-rgb), 0.38);
     border-radius: 0.85rem;
     background: rgba(255, 254, 254, 0.78);
     box-shadow: none;
@@ -319,7 +319,7 @@
 .checkoutVariant .pointsSelect:hover:not(:disabled),
 .checkoutVariant .pointsSelect:focus {
     border-color: var(--color-dark-blue);
-    box-shadow: 0 0 0 3px rgba(85, 135, 166, 0.13);
+    box-shadow: 0 0 0 3px rgba(var(--color-dark-blue-rgb), 0.13);
 }
 
 .checkoutVariant .pointsBalance {
@@ -340,7 +340,7 @@
 .checkoutVariant .couponInput:focus {
     outline: none;
     border-color: var(--color-dark-blue);
-    box-shadow: 0 0 0 3px rgba(85, 135, 166, 0.13);
+    box-shadow: 0 0 0 3px rgba(var(--color-dark-blue-rgb), 0.13);
 }
 
 .checkoutVariant .applyButton,

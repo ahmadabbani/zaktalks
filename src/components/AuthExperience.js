@@ -69,6 +69,7 @@ export default function AuthExperience({ initialMode = 'login' }) {
           alt=""
           fill
           priority
+          quality={64}
           sizes="(max-width: 860px) 100vw, 50vw"
           className={styles.visualArtwork}
         />

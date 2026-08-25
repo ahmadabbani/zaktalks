@@ -497,7 +497,7 @@
   overflow: hidden;
   padding: clamp(1.35rem, 2vw, 2rem);
   color: var(--color-deep-slate);
-  border: 1px solid rgba(85, 135, 166, 0.25);
+  border: 1px solid rgba(var(--color-dark-blue-rgb), 0.25);
   border-radius: clamp(1.6rem, 2.5vw, 2.7rem);
   background: #dce8ee;
   opacity: 0;

@@ -8,7 +8,7 @@ import styles from './Navbar.module.css'
 
 const serviceLinks = [
   { href: '/one-on-one', label: 'Coaching 1 on 1' },
-  { href: '/becoming-again', label: 'Becoming Again' },
+  { href: '/becoming-again', label: 'Becoming Again Program' },
   {
     href: '/courses',
     label: 'Courses · E-learning',
@@ -17,14 +17,7 @@ const serviceLinks = [
       { href: '/courses', label: 'Unlock Your Financial Frequency' },
     ],
   },
-  {
-    href: '/events',
-    label: 'Events',
-    children: [
-      { href: '/events', label: 'Speaker' },
-      { href: '/events', label: 'Workshops' },
-    ],
-  },
+  { href: '/events', label: 'Events' },
 ]
 
 export default function NavbarClient({ user, role, signout }) {

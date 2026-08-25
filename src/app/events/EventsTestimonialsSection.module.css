@@ -4,7 +4,7 @@
   padding: clamp(5rem, 8vw, 9rem) 0;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0) 42%),
-    repeating-linear-gradient(90deg, rgba(85, 135, 166, 0.045) 0 1px, transparent 1px 5.5rem),
+    repeating-linear-gradient(90deg, rgba(var(--color-dark-blue-rgb), 0.045) 0 1px, transparent 1px 5.5rem),
     var(--color-gray-light);
 }
 
@@ -156,14 +156,14 @@
   inset: 0;
   background:
     linear-gradient(180deg, rgba(241, 196, 15, 0.16), transparent 30%),
-    linear-gradient(135deg, rgba(85, 135, 166, 0.13), transparent 44%);
+    linear-gradient(135deg, rgba(var(--color-dark-blue-rgb), 0.13), transparent 44%);
   opacity: 0;
   transition: opacity 0.42s ease;
   pointer-events: none;
 }
 
 .card:hover {
-  border-color: rgba(85, 135, 166, 0.22);
+  border-color: rgba(var(--color-dark-blue-rgb), 0.22);
   box-shadow: 0 0.65rem 1.65rem rgba(33, 44, 45, 0.045);
   transform: translateY(-0.45rem);
 }

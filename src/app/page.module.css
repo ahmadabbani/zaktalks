@@ -119,7 +119,7 @@
 .primaryHeroCta {
   background: var(--color-dark-blue);
   color: var(--color-white);
-  box-shadow: 0 10px 24px rgba(85, 135, 166, 0.22);
+  box-shadow: 0 10px 24px rgba(var(--color-dark-blue-rgb), 0.22);
 }
 
 .hiddenHeroCta {
@@ -129,7 +129,7 @@
 .secondaryHeroCta {
   background: var(--color-dark-blue);
   color: var(--color-white);
-  box-shadow: 0 10px 24px rgba(85, 135, 166, 0.22);
+  box-shadow: 0 10px 24px rgba(var(--color-dark-blue-rgb), 0.22);
 }
 
 .secondaryHeroCta svg {
@@ -349,7 +349,7 @@
 .forWhomCard4 {
   grid-column: 3;
   grid-row: 2;
-  aspect-ratio: 1.55;
+  aspect-ratio: 1.7;
   margin-top: 0.2rem;
   background: var(--color-deep-slate);
 }
@@ -461,7 +461,7 @@
 
   .forWhomCard4 {
     justify-self: end;
-    aspect-ratio: 1.95;
+    aspect-ratio: 2.1;
     margin-top: 0;
   }
 }
@@ -606,8 +606,7 @@
     min-height: clamp(11.75rem, 24vw, 14.5rem);
   }
 
-  .forWhomCard1,
-  .forWhomCard4 {
+  .forWhomCard1 {
     min-height: clamp(13rem, 26vw, 16rem);
   }
 
@@ -626,13 +625,13 @@
     padding-bottom: 0.35rem;
   }
 
-  .forWhomCard1,
-  .forWhomCard4 {
+  .forWhomCard1 {
     aspect-ratio: 1.41;
   }
 
   .forWhomCard2,
-  .forWhomCard3 {
+  .forWhomCard3,
+  .forWhomCard4 {
     aspect-ratio: 1.55;
   }
 }
@@ -2630,8 +2629,7 @@
     border-radius: clamp(1.4rem, 3vw, 2rem);
   }
 
-  .forWhomCard1,
-  .forWhomCard4 {
+  .forWhomCard1 {
     min-height: clamp(11rem, 22vw, 13.5rem);
   }
 

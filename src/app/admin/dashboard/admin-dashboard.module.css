@@ -329,7 +329,7 @@
 
 .widgetCard:hover {
     transform: translateY(-4px);
-    border-color: rgba(85, 135, 166, .45);
+    border-color: rgba(var(--color-dark-blue-rgb), .45);
     box-shadow: 0 18px 42px rgba(33, 44, 45, .11);
 }
 
@@ -353,7 +353,7 @@
     height: 3.35rem;
     border-radius: .9rem;
     color: var(--color-dark-blue);
-    background: rgba(85, 135, 166, .12);
+    background: rgba(var(--color-dark-blue-rgb), .12);
     font-size: 1.45rem;
     transition: color var(--transition-normal), background-color var(--transition-normal), transform var(--transition-normal);
     position: relative;

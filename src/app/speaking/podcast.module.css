@@ -1583,8 +1583,8 @@
 .themeTrigger:focus-visible,
 .themeTrigger[aria-expanded='true'] {
   border-color: var(--color-dark-blue);
-  background: rgba(85, 135, 166, 0.06);
-  box-shadow: 0 0 0 3px rgba(85, 135, 166, 0.12), 0 0.65rem 1.5rem rgba(33, 44, 45, 0.08);
+  background: rgba(var(--color-dark-blue-rgb), 0.06);
+  box-shadow: 0 0 0 3px rgba(var(--color-dark-blue-rgb), 0.12), 0 0.65rem 1.5rem rgba(33, 44, 45, 0.08);
 }
 
 .themeTrigger svg {
@@ -1662,7 +1662,7 @@
 
 .themeOption:hover,
 .themeOption:focus-visible {
-  background: rgba(85, 135, 166, 0.1);
+  background: rgba(var(--color-dark-blue-rgb), 0.1);
   color: var(--color-dark-blue);
   outline: none;
   transform: translateX(0.15rem);
@@ -1776,7 +1776,7 @@
 }
 
 .episodeCard:hover {
-  border-color: rgba(85, 135, 166, 0.28);
+  border-color: rgba(var(--color-dark-blue-rgb), 0.28);
   box-shadow: 0 1.4rem 3rem rgba(33, 44, 45, 0.11);
   transform: translateY(-0.4rem);
 }
@@ -1962,9 +1962,9 @@
 
 .episodeTheme {
   padding: 0.22rem 0.52rem;
-  border: 1px solid rgba(85, 135, 166, 0.24);
+  border: 1px solid rgba(var(--color-dark-blue-rgb), 0.24);
   border-radius: 999px;
-  background: rgba(85, 135, 166, 0.08);
+  background: rgba(var(--color-dark-blue-rgb), 0.08);
   color: var(--color-dark-blue);
   font-size: clamp(0.62rem, 0.55vw, 0.72rem);
   font-weight: 750;

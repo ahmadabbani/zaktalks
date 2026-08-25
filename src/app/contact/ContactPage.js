@@ -267,7 +267,7 @@ export default function ContactPage() {
         <div className={styles.container}>
           <div className={styles.layout}>
             <header className={styles.intro}>
-              <p className={styles.eyebrow}>Contact ZakTalks</p>
+              <p className={styles.eyebrow}>Contact Zak</p>
               <h1 id="contact-heading" className={styles.title}>Start a conversation</h1>
               <p className={styles.subheading}>
                 Tell us what brings you here. Share a little context, and we will make sure your message reaches the right place.

@@ -23,7 +23,7 @@
   background: var(--color-white);
   box-shadow: 0 2.5rem 7rem rgba(20, 27, 28, 0.35);
   animation: modalIn 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
-  scrollbar-color: rgba(85, 135, 166, 0.48) transparent;
+  scrollbar-color: rgba(var(--color-dark-blue-rgb), 0.48) transparent;
   scrollbar-width: thin;
 }
 
@@ -37,7 +37,7 @@
 
 .modal::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: rgba(85, 135, 166, 0.48);
+  background: rgba(var(--color-dark-blue-rgb), 0.48);
 }
 
 .header {

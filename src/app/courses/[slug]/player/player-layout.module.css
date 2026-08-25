@@ -45,7 +45,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: rgba(85, 135, 166, 0.72) rgba(33, 44, 45, 0.06);
+    scrollbar-color: rgba(var(--color-dark-blue-rgb), 0.72) rgba(33, 44, 45, 0.06);
     scrollbar-gutter: stable;
     border-right: 1px solid rgba(33, 44, 45, 0.12);
     border-radius: 0;
@@ -73,7 +73,7 @@
 .dropdownPanel::-webkit-scrollbar-thumb {
     border: 1px solid transparent;
     border-radius: 999px;
-    background: rgba(85, 135, 166, 0.72);
+    background: rgba(var(--color-dark-blue-rgb), 0.72);
     background-clip: padding-box;
 }
 
@@ -603,7 +603,7 @@
         background: var(--color-white);
         border-bottom: 1px solid rgba(33, 44, 45, 0.12);
         scrollbar-width: thin;
-        scrollbar-color: rgba(85, 135, 166, 0.72) rgba(33, 44, 45, 0.06);
+        scrollbar-color: rgba(var(--color-dark-blue-rgb), 0.72) rgba(33, 44, 45, 0.06);
         transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 

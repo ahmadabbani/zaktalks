@@ -1,7 +1,7 @@
 .section {
   --service-card-closed: #d5e2e9;
   --service-card-open: #ecece9;
-  --service-card-border: rgba(85, 135, 166, 0.3);
+  --service-card-border: rgba(var(--color-dark-blue-rgb), 0.3);
   --service-card-open-border: rgba(60, 90, 103, 0.24);
   position: relative;
   overflow: hidden;

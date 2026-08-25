@@ -439,7 +439,7 @@
 }
 
 .learningGrid article:hover {
-  border-color: rgba(85, 135, 166, 0.45);
+  border-color: rgba(var(--color-dark-blue-rgb), 0.45);
   background: rgba(169, 209, 225, 0.58);
   transform: translateY(-0.25rem);
 }
@@ -485,7 +485,7 @@
   align-items: center;
   gap: 0.6rem;
   padding: 0.7rem 1rem;
-  border: 1px solid rgba(85, 135, 166, 0.32);
+  border: 1px solid rgba(var(--color-dark-blue-rgb), 0.32);
   border-radius: 999px;
   background: rgba(169, 209, 225, 0.35);
   color: var(--color-dark-blue);
@@ -513,7 +513,7 @@
 }
 
 .moduleOpen {
-  border-color: rgba(85, 135, 166, 0.52);
+  border-color: rgba(var(--color-dark-blue-rgb), 0.52);
   box-shadow: 0 1.2rem 3rem rgba(33, 44, 45, 0.08);
 }
 
@@ -1383,7 +1383,7 @@
 }
 
 .faqOpen {
-  border-color: rgba(85, 135, 166, 0.5);
+  border-color: rgba(var(--color-dark-blue-rgb), 0.5);
 }
 
 .faqItem > button {

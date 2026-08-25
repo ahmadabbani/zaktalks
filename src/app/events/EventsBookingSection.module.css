@@ -389,7 +389,7 @@
 .field textarea:focus {
   border-color: var(--color-dark-blue);
   background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(85, 135, 166, 0.15);
+  box-shadow: 0 0 0 4px rgba(var(--color-dark-blue-rgb), 0.15);
 }
 
 .field input[aria-invalid='true'],
@@ -472,7 +472,7 @@
 .customSelectOpen .selectButton {
   border-color: var(--color-dark-blue);
   background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(85, 135, 166, 0.15);
+  box-shadow: 0 0 0 4px rgba(var(--color-dark-blue-rgb), 0.15);
   outline: none;
 }
 
@@ -533,7 +533,7 @@
 .selectOption:hover,
 .selectOption:focus-visible {
   color: var(--color-deep-slate);
-  background: rgba(85, 135, 166, 0.13);
+  background: rgba(var(--color-dark-blue-rgb), 0.13);
   outline: none;
   transform: translateX(0.15rem);
 }
