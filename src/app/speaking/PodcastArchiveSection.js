@@ -71,15 +71,13 @@ const listenPlatforms = [
  */
 const featuredEpisodes = [
   {
-    videoId: 'ZOPlNV-tkR0',
-    title: 'Have you truly met your Inner Child?',
+    videoId: 'hJ3XoT5br70',
+    title: "It's Not About Money: It's About You!",
     hook:
-      'There’s a part of you that keeps showing up in your reactions, fears, and ' +
-      'relationships, even if you’ve never named it. In this episode, we explore your ' +
-      'inner child not as a concept, but as a living influence you can finally listen ' +
-      'to, understand, and heal.',
-    tags: ['Self-awareness', 'Healing', 'Childhood patterns'],
-    watchUrl: 'https://youtu.be/ZOPlNV-tkR0',
+      'Zak explores the routines, beliefs, and comfort zones that can quietly shape our ' +
+      'relationship with money, success, and the life we believe is possible.',
+    tags: ['Money', 'Self-awareness', 'Personal development'],
+    watchUrl: 'https://www.youtube.com/watch?v=hJ3XoT5br70&list=PLPFgt_ywYJEM',
   },
   {
     videoId: 'CYq9yT0uBHs',
@@ -97,14 +95,14 @@ const seasons = [
   {
     id: 'season-1',
     label: 'Season 1',
-    image: '/season1.jpg',
+    image: '/podcast-s1.jpg',
     alt: 'ZakTalks Season 1 cover with Zak Dakkach holding a microphone',
     available: true,
   },
   {
     id: 'season-2',
     label: 'Season 2',
-    image: '/season2.jpg',
+    image: '/podcast-s2.jpg',
     alt: 'ZakTalks Season 2 cover, coming soon',
     available: false,
   },
@@ -409,6 +407,16 @@ export default function PodcastArchiveSection({ episodes = [] }) {
   const remaining = sortedEpisodes.length - visibleEpisodes.length
   const isArchiveOpen = openSeason === 'season-1'
 
+  useEffect(() => {
+    if (!isArchiveOpen || !archiveRef.current) return undefined
+
+    const frame = window.requestAnimationFrame(() => {
+      archiveRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+
+    return () => window.cancelAnimationFrame(frame)
+  }, [isArchiveOpen])
+
   const toggleSeason = (season) => {
     if (!season.available) return
 
@@ -470,11 +478,12 @@ export default function PodcastArchiveSection({ episodes = [] }) {
                 width={1100}
                 height={1100}
                 sizes="50vw"
+                quality={86}
                 className={styles.seasonImage}
               />
 
               <span className={styles.seasonHint}>
-                <span>{isOpen ? 'Hide episodes' : 'View episodes'}</span>
+                <span>{isOpen ? 'Hide Season 1' : 'Watch Season 1'}</span>
                 <FiChevronDown aria-hidden="true" />
               </span>
             </button>
@@ -486,6 +495,7 @@ export default function PodcastArchiveSection({ episodes = [] }) {
                 width={1100}
                 height={1100}
                 sizes="50vw"
+                quality={86}
                 className={styles.seasonImage}
               />
 
@@ -654,15 +664,18 @@ export default function PodcastArchiveSection({ episodes = [] }) {
           >
             <div className={styles.featuredCourseCopy}>
               <p className={styles.featuredCourseTitle}>
-                Unlock Your Financial Frequency
+                Interpersonal Communication Dynamics
               </p>
               <p className={styles.featuredCourseText}>
-                For those ready to change their relationship with money and
-                possibility.
+                Understand how communication patterns form, repeat, and shape the way we
+                relate to one another.
               </p>
             </div>
 
-            <Link href="/courses" className={styles.featuredCourseCta}>
+            <Link
+              href="/courses/interpersonal-communication-dynamics"
+              className={styles.featuredCourseCta}
+            >
               <span>Explore the course</span>
               <FiArrowUpRight aria-hidden="true" />
             </Link>

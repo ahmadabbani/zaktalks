@@ -174,7 +174,7 @@
 
   .heroVisual .heroImageFrame {
     width: 100%;
-    height: min(72svh, 46rem, calc(100svh - clamp(7.25rem, 9vw, 9.5rem)));
+    height: min(76svh, 46rem, calc(100svh - clamp(7.25rem, 9vw, 9.5rem)));
     border-radius: var(--oo-radius) 0 0 0;
   }
 

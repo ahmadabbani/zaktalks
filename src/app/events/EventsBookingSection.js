@@ -483,7 +483,7 @@ export default function EventsBookingSection() {
                 {submitMessage}
               </p>
               <button type="submit" className={styles.submitButton} disabled={status === 'submitting'}>
-                <span>{status === 'submitting' ? 'Sending request...' : 'Start a Booking Request'}</span>
+                <span>{status === 'submitting' ? 'Submitting...' : 'Submit'}</span>
                 <FiArrowUpRight aria-hidden="true" />
               </button>
             </div>
@@ -510,7 +510,7 @@ export default function EventsBookingSection() {
                 <p>Tell us about your audience, event date, format, topic, and the kind of shift you want the session to create. We will explore whether Zak is the right fit.</p>
               </div>
               <button ref={openerRef} type="button" className={styles.cta} onClick={openDialog}>
-                <span>Check Availability</span>
+                <span>Start a Booking Request</span>
                 <FiArrowUpRight aria-hidden="true" />
               </button>
             </div>
@@ -518,10 +518,10 @@ export default function EventsBookingSection() {
             <div className={styles.visualWrap}>
               <div className={styles.imageFrame}>
                 <Image
-                  src="/coursepreview-blue-bg-v2.png"
+                  src="/events-planning.jpg"
                   alt="Zak Dakkash leading a learning session"
-                  width={1029}
-                  height={1528}
+                  width={1000}
+                  height={1333}
                   sizes="(max-width: 700px) 70vw, (max-width: 1024px) 25vw, 18vw"
                   unoptimized
                   className={styles.image}

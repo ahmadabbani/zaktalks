@@ -197,7 +197,7 @@
   border-radius: 999px;
   background: var(--color-white);
   box-shadow: 0 0.8rem 1.9rem rgba(0, 0, 0, 0.28);
-  font-size: clamp(0.66rem, 0.85vw, 0.78rem);
+  font-size: var(--platform-badge-font-size);
   font-weight: 800;
   letter-spacing: 0.06em;
   line-height: 1.2;
@@ -725,7 +725,7 @@
 
 .subscribeName {
   color: var(--color-black);
-  font-size: clamp(0.86rem, 0.9vw, 0.96rem);
+  font-size: var(--platform-badge-font-size);
   font-weight: 800;
   letter-spacing: 0.015em;
   line-height: 1.2;
@@ -1189,10 +1189,10 @@
     max-width: 28ch;
   }
 
-  /* Back to the desktop value: the enlargement belongs to the stacked band
-     above 620, not here. */
+  /* Keep the secondary hero artwork at the same tablet size all the way down
+     through the stacked layout. Only the human figure steps down below. */
   .heroWave {
-    width: clamp(8.5rem, 13vw, 12rem);
+    width: clamp(13rem, 30vw, 17rem);
   }
 
   .proofLabel {
@@ -1200,7 +1200,7 @@
   }
 
   .subscribeName {
-    font-size: 0.95rem;
+    font-size: var(--platform-badge-font-size);
   }
 }
 
@@ -1244,10 +1244,10 @@
     padding-bottom: 0.4rem;
   }
 
-  /* Scaled down with the 620 reset above so short viewports stay smaller
-     than it rather than jumping back up. */
+  /* The secondary artwork stays at the tablet width; only the main figure
+     tightens on short viewports. */
   .heroWave {
-    width: clamp(7rem, 11vw, 9.5rem);
+    width: clamp(13rem, 30vw, 17rem);
   }
 
   .heroBadgeStack {
@@ -1284,7 +1284,7 @@
   }
 
   .heroWave {
-    width: clamp(5.5rem, 9vw, 7.5rem);
+    width: clamp(13rem, 30vw, 17rem);
   }
 
   .heroBadgeStack {
@@ -1418,24 +1418,24 @@
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  padding: 0.7rem 1.15rem;
+  padding: clamp(0.85rem, 1.1vw, 1.1rem) clamp(1.45rem, 2vw, 2rem);
   border-radius: 999px;
-  background: var(--color-yellow);
-  color: var(--color-black);
-  font-size: var(--home-cta-size);
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+  font-size: calc(var(--home-cta-size) * 1.12);
   font-weight: var(--home-cta-weight);
   line-height: 1;
-  box-shadow: 0 0.6rem 1.6rem rgba(33, 44, 45, 0.18);
-  transition: color 0.32s ease, background-color 0.32s ease, transform 0.32s ease;
+  box-shadow: 0 0.75rem 1.8rem rgba(33, 44, 45, 0.26);
+  transition: color 0.32s ease, background-color 0.32s ease, opacity 0.24s ease;
 }
 
 .seasonHint svg {
   transition: transform 0.35s var(--pod-ease);
 }
 
-.seasonTile:hover .seasonHint,
+.seasonHint:hover,
 .seasonTile:focus-visible .seasonHint {
-  transform: translateY(-0.18rem);
+  opacity: 0.9;
 }
 
 .seasonTileOpen .seasonHint svg {
@@ -1444,9 +1444,11 @@
 
 @media (min-width: 1025px) {
   .seasonHint {
+    min-width: clamp(14rem, 16vw, 19rem);
+    justify-content: center;
     gap: 0.7rem;
-    padding: clamp(0.85rem, 1vw, 1rem) clamp(1.35rem, 1.5vw, 1.65rem);
-    font-size: calc(var(--home-cta-size) * 1.12);
+    padding: clamp(1rem, 1.15vw, 1.2rem) clamp(1.6rem, 1.9vw, 2.05rem);
+    font-size: calc(var(--home-cta-size) * 1.2);
   }
 
   .seasonHint svg {
@@ -1457,7 +1459,7 @@
 
 /* Season 2: the blur is CSS, the "Season 2" wordmark is baked into the image. */
 .seasonTileLocked .seasonImage {
-  filter: blur(9px) saturate(0.85) brightness(0.94);
+  filter: blur(5px) saturate(0.85) brightness(0.94);
   transform: scale(1.06); /* covers the soft edge blur leaves at the border */
 }
 
@@ -1467,7 +1469,7 @@
   z-index: 2;
   display: grid;
   place-items: center;
-  background: rgba(33, 44, 45, 0.32);
+  background: rgba(33, 82, 91, 0.34);
 }
 
 .seasonComingSoonText {
@@ -1495,6 +1497,7 @@
 
 /* Rows animate 0fr to 1fr, so the panel opens smoothly without measuring. */
 .archivePanel {
+  scroll-margin-top: clamp(5.75rem, 7vw, 8rem);
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows 0.55s var(--pod-ease), visibility 0.55s;
@@ -2548,7 +2551,7 @@
 
   /* The season 2 blur is meaning, not motion, so it is preserved above. */
   .seasonTileLocked .seasonImage {
-    filter: blur(9px) saturate(0.85) brightness(0.94);
+    filter: blur(5px) saturate(0.85) brightness(0.94);
     transform: scale(1.06);
   }
 

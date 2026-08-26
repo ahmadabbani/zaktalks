@@ -10,7 +10,7 @@ const sessions = [
     subtitle: 'Understanding what happens between people.',
     copy: [
       'Why do two people hear the same conversation differently? Why do some conflicts keep repeating, even when everyone has good intentions?',
-      'This session explores communication beyond words: the ego states, protective roles, old messages, and relational patterns that shape how people connect, react, lead, and withdraw.',
+      'This session explores communication beyond words: the ego-state, protective roles, old messages, and relational patterns that shape how people connect, react, lead, and withdraw.',
     ],
     designedFor:
       'Teams, young professionals, leadership groups, communities, and learning events.',

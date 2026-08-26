@@ -38,11 +38,12 @@ export default async function Home() {
             <div className={styles.heroRight}>
               <div className={styles.heroImageWrapper}>
                 <Image
-                  src="/heromain.png"
+                  src="/home-hero.jpg"
                   alt="Zak speaking beside a flipchart during a live session"
-                  width={1029}
-                  height={1528}
+                  width={2500}
+                  height={3334}
                   priority
+                  quality={86}
                   className={styles.heroImage}
                   sizes="(max-width: 480px) 74vw, (max-width: 700px) 70vw, (max-width: 1024px) 62vw, 460px"
                 />

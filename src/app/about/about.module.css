@@ -3462,9 +3462,9 @@
 
   .storyNarrative:not(.storyPhilosophy) > .storyImageWrap {
     order: 1;
-    height: clamp(13rem, 40vw, 25.5rem);
+    height: auto;
     min-height: 0;
-    aspect-ratio: auto;
+    aspect-ratio: 16 / 10;
   }
 
   .storyNarrative:not(.storyPhilosophy) .storyDesktopImage {
@@ -3474,5 +3474,17 @@
   .storyNarrative:not(.storyPhilosophy) .storyMobileImage {
     display: block;
     object-position: 50% 25%;
+  }
+}
+
+@media (max-width: 700px) {
+  .storyNarrative:not(.storyPhilosophy) > .storyImageWrap {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .storyNarrative:not(.storyPhilosophy) .storyMobileImage {
+    object-position: 50% 35%;
   }
 }

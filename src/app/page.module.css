@@ -196,11 +196,12 @@
   height: min(var(--hero-image-height), 74svh);
   width: auto;
   max-width: 100%;
-  aspect-ratio: 0.48;
+  aspect-ratio: 0.5;
   margin-left: auto;
   overflow: hidden;
   border-radius: 999rem;
   background: #d7e7ee;
+  box-shadow: 0 0.8rem 2rem rgba(33, 44, 45, 0.1);
 }
 
 .heroImageWrapper::after {
@@ -213,7 +214,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 45% center;
+  object-position: calc(38% + 15px) center;
   display: block;
   transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -2544,6 +2545,10 @@
     box-shadow: 0 1.1rem 2.5rem rgba(33, 44, 45, 0.12);
   }
 
+  .heroImage {
+    object-position: center;
+  }
+
   .heroGrid {
     grid-template-columns: minmax(0, 1fr);
     gap: clamp(1.75rem, 4vw, 2.75rem);
@@ -2555,7 +2560,9 @@
     order: 0;
     width: 100%;
     max-width: none;
+    align-items: center;
     gap: clamp(1rem, 2.5vw, 1.45rem);
+    text-align: center;
   }
 
   .heroTitle {
@@ -2566,13 +2573,15 @@
   .heroDescription {
     width: 100%;
     max-width: 65ch;
+    margin-inline: auto;
   }
 
   .heroActions {
     display: grid;
-    grid-template-columns: minmax(0, 1.55fr) minmax(0, 0.85fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.7rem;
     width: min(100%, 48rem);
+    margin-inline: auto;
     margin-top: 0.15rem;
   }
 
@@ -2584,6 +2593,11 @@
     padding-inline: clamp(0.85rem, 2.4vw, 1.25rem);
     white-space: normal;
     overflow-wrap: normal;
+  }
+
+  .secondaryHeroCta {
+    width: fit-content;
+    justify-self: center;
   }
 
   .heroRight {

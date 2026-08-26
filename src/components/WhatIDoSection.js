@@ -12,7 +12,8 @@ const services = [
     copy: 'A focused space for adults who want to work deeply on themselves, understand the root of their patterns, and make meaningful change in how they think, relate, and live.',
     cta: 'Book a session',
     href: '/contact',
-    image: '/what-i-do/one-on-one-coaching.webp',
+    image: '/home-whatido-1on1.jpg',
+    mobileImage: '/home-whatido-1on1-mobile.jpg',
     imageAlt: 'Abstract illustration of two people connecting through a path of personal growth',
     tone: 'light',
   },
@@ -21,7 +22,8 @@ const services = [
     copy: 'A leadership coaching experience for executives, entrepreneurs, emerging leaders, and educators who want to lead consciously, live intentionally, and grow beyond old roles and reactions.',
     cta: 'Join Becoming Again',
     href: '/becoming-again',
-    image: '/what-i-do/becoming-again.webp',
+    image: '/home-whatido-becomeagain.jpg',
+    mobileImage: '/home-whatido-becomeagain-mobile.jpg',
     imageAlt: 'Abstract illustration of a leader moving toward a new horizon',
     tone: 'blue',
   },
@@ -40,7 +42,8 @@ const services = [
     copy: 'Live experiences for teams, organizations, and communities that want practical insight, emotional honesty, and conversations that lead to real change.',
     cta: 'Inquire about events',
     href: '/contact',
-    image: '/what-i-do/workshops-speaking.webp',
+    image: '/home-whatido-events.jpg',
+    mobileImage: '/home-whatido-events-mobile.jpg',
     imageAlt: 'Abstract illustration of a microphone connecting a community through conversation',
     tone: 'yellow',
   },
@@ -161,8 +164,20 @@ export default function WhatIDoSection() {
                         width={720}
                         height={720}
                         sizes="(max-width: 720px) 82vw, (max-width: 1040px) 38vw, 18vw"
-                        className={styles.image}
+                        quality={64}
+                        className={`${styles.image} ${styles.imageDesktop}`}
                       />
+                      {service.mobileImage && (
+                        <Image
+                          src={service.mobileImage}
+                          alt={service.imageAlt}
+                          width={1000}
+                          height={1234}
+                          sizes="(max-width: 720px) 82vw, 1px"
+                          quality={64}
+                          className={`${styles.image} ${styles.imageMobile}`}
+                        />
+                      )}
                     </div>
 
                     <Link href={service.href} className={styles.cardCta}>

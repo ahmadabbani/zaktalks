@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { FiArrowUpRight } from 'react-icons/fi'
 import styles from './AboutTeaserSection.module.css'
@@ -87,13 +86,9 @@ export default function AboutTeaserSection() {
             className={itemClassName(styles.portraitStage, 'portrait')}
           >
             <div className={styles.portraitFrame}>
-              <Image
-                src="/meetzak.jpg"
+              <img
+                src="/home-meetzak.jpg"
                 alt="Zak Dakkash speaking with a microphone"
-                width={1920}
-                height={1280}
-                sizes="(max-width: 900px) min(68vw, 22.5rem), 27vw"
-                unoptimized
                 className={styles.portrait}
               />
             </div>

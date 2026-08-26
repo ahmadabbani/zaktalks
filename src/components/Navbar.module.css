@@ -109,7 +109,7 @@
     border: 1px solid transparent;
     border-radius: 999px;
     font-size: clamp(0.9rem, 0.24vw + 0.74rem, 1.02rem);
-    font-weight: 760;
+    font-weight: 650;
     line-height: 1;
     white-space: nowrap;
     transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
@@ -269,8 +269,8 @@
     border-radius: 999px;
     background: var(--color-yellow);
     color: var(--color-black);
-    font-size: 0.84rem;
-    font-weight: 750;
+    font-size: clamp(0.9rem, 0.24vw + 0.74rem, 1.02rem);
+    font-weight: 650;
     line-height: 1;
     white-space: nowrap;
     cursor: pointer;
@@ -501,7 +501,7 @@
     border-radius: 999px;
     color: var(--color-white);
     font-size: 1rem;
-    font-weight: 750;
+    font-weight: 650;
     line-height: 1.2;
     text-align: center;
     transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
@@ -509,22 +509,31 @@
 
 .mobileSignInLink {
     border-color: var(--color-white);
-    color: var(--color-dark-blue);
+    color: var(--color-black);
     background: var(--color-white);
 }
 
 .mobileRegisterLink {
-    border-color: var(--color-yellow);
-    background: var(--color-yellow);
+    border-color: var(--color-white);
+    color: var(--color-white);
+    background: var(--color-black);
 }
 
 .mobileSignInLink:hover,
 .mobileSignInLink:focus-visible,
+.mobileSignInLink.mobileAuthActive {
+    border-color: var(--color-white);
+    color: var(--color-black);
+    background: var(--color-white);
+    transform: translateY(-1px);
+    outline: none;
+}
+
 .mobileRegisterLink:hover,
 .mobileRegisterLink:focus-visible,
-.mobileAuthActive {
+.mobileRegisterLink.mobileAuthActive {
     border-color: var(--color-white);
-    color: var(--color-dark-blue);
+    color: var(--color-black);
     background: var(--color-white);
     transform: translateY(-1px);
     outline: none;
@@ -640,31 +649,39 @@
 
 .podcastTheme .signInLink,
 .podcastTheme .mobileSignInLink {
-    border-color: var(--color-white);
-    color: var(--color-dark-blue);
-    background: var(--color-white);
+    border-color: var(--color-black);
+    color: var(--color-white);
+    background: var(--color-black);
 }
 
 .podcastTheme .registerLink,
 .podcastTheme .mobileRegisterLink {
-    border-color: var(--color-white);
-    color: var(--color-white);
-    background: var(--color-yellow);
+    border-color: var(--color-black);
+    color: var(--color-black);
+    background: transparent;
 }
 
 .podcastTheme .signInLink:hover,
 .podcastTheme .signInLink:focus-visible,
-.podcastTheme .registerLink:hover,
-.podcastTheme .registerLink:focus-visible,
-.podcastTheme .authActionActive,
 .podcastTheme .mobileSignInLink:hover,
 .podcastTheme .mobileSignInLink:focus-visible,
+.podcastTheme .signInLink.authActionActive,
+.podcastTheme .mobileSignInLink.mobileAuthActive {
+    border-color: var(--color-black);
+    color: var(--color-white);
+    background: var(--color-black);
+    opacity: 0.88;
+}
+
+.podcastTheme .registerLink:hover,
+.podcastTheme .registerLink:focus-visible,
 .podcastTheme .mobileRegisterLink:hover,
 .podcastTheme .mobileRegisterLink:focus-visible,
-.podcastTheme .mobileAuthActive {
-    border-color: var(--color-white);
+.podcastTheme .registerLink.authActionActive,
+.podcastTheme .mobileRegisterLink.mobileAuthActive {
+    border-color: var(--color-black);
     color: var(--color-black);
-    background: var(--color-white);
+    background: rgba(33, 44, 45, 0.08);
 }
 
 .podcastTheme .burgerMenu {
@@ -724,13 +741,13 @@
     }
 
     .signInLink,
-    .registerLink {
+    .registerLink,
+    .btnPrimary {
         font-size: clamp(0.86rem, 1.6vw, 0.94rem);
     }
 
     .btnPrimary {
         padding-inline: 0.85rem;
-        font-size: 0.78rem;
     }
 }
 

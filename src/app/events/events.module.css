@@ -226,9 +226,12 @@
 
 .introGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
-  gap: clamp(1.5rem, 2.5vw, 3.25rem);
+  width: min(100%, 78rem);
+  grid-template-columns: 1fr;
+  gap: clamp(1.25rem, 2vw, 1.75rem);
   align-items: start;
+  margin-inline: auto;
+  text-align: center;
 }
 
 .sectionLabel {
@@ -243,6 +246,10 @@
   letter-spacing: 0.16em;
   line-height: 1;
   text-transform: uppercase;
+}
+
+.introSection .sectionLabel {
+  margin-inline: auto;
 }
 
 .sectionLabel::before {
@@ -264,8 +271,8 @@
 }
 
 .introLead {
-  max-width: 62ch;
-  margin-top: clamp(1.25rem, 2vw, 1.8rem);
+  max-width: 68ch;
+  margin: clamp(1.25rem, 2vw, 1.8rem) auto 0;
   color: var(--home-subheading-color);
   font-size: var(--home-subheading-size);
   font-weight: var(--home-subheading-weight);
@@ -284,7 +291,9 @@
 
 .introCopy {
   display: grid;
+  max-width: 74ch;
   gap: clamp(1rem, 1.55vw, 1.35rem);
+  margin-inline: auto;
   color: var(--home-text-color);
   font-size: var(--home-text-size);
   font-weight: var(--home-text-weight);
@@ -974,12 +983,12 @@
   }
 
   .imageShell {
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 4 / 3;
     border-radius: clamp(1.5rem, 5vw, 2.6rem);
   }
 
   .heroImage {
-    object-position: center 37%;
+    object-position: center 24%;
   }
 
   .introSection {

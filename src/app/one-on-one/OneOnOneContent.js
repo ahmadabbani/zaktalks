@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import {
   FiArrowUpRight,
@@ -270,9 +271,13 @@ export default function OneOnOneContent() {
 
           <div className={styles.heroVisual}>
             <div className={styles.heroImageFrame}>
-              <img
-                src="/1on1-hero.jpg"
+              <Image
+                src="/1on1-hero.jpg?v=20260826"
                 alt="Zak Dakkash holding a microphone during a session"
+                width={1000}
+                height={1334}
+                sizes="(max-width: 1024px) 100vw, 42vw"
+                quality={86}
                 className={styles.heroImage}
               />
             </div>

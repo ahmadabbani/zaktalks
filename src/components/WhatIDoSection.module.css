@@ -1,6 +1,6 @@
 .section {
   --service-card-closed: #d5e2e9;
-  --service-card-open: #ecece9;
+  --service-card-open: #f8f8f5;
   --service-card-border: rgba(var(--color-dark-blue-rgb), 0.3);
   --service-card-open-border: rgba(60, 90, 103, 0.24);
   position: relative;
@@ -113,7 +113,7 @@
 }
 
 .card {
-  --active-image-width: clamp(12rem, 15vw, 15.5rem);
+  --active-image-width: clamp(13rem, 17vw, 18rem);
   position: relative;
   display: grid;
   min-width: 0;
@@ -260,6 +260,10 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.imageMobile {
+  display: none;
 }
 
 .cardActive:hover .image {
@@ -527,18 +531,27 @@
   .imageWrap {
     position: relative;
     inset: auto;
-    width: min(100%, 18rem);
+    width: min(100%, clamp(15rem, 62vw, 18rem));
     max-height: 0;
-    align-self: flex-start;
+    align-self: center;
     aspect-ratio: 1;
     opacity: 0;
     transform: translateY(0.75rem) scale(0.98);
   }
 
   .cardActive .imageWrap {
-    max-height: 18rem;
+    height: calc(18rem + 100px);
+    max-height: calc(18rem + 100px);
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+
+  .imageDesktop {
+    display: none;
+  }
+
+  .imageMobile {
+    display: block;
   }
 
   .cardCta {
@@ -594,7 +607,7 @@
 @media (min-width: 1025px) and (max-width: 1999px) {
   .card,
   .cardActive {
-    --active-image-width: clamp(8.5rem, 8vw, 10rem);
+    --active-image-width: clamp(10rem, 10vw, 12.5rem);
   }
 }
 
@@ -802,13 +815,15 @@
   }
 
   .imageWrap {
-    width: 100%;
+    width: min(100%, clamp(15rem, 62vw, 18rem));
+    align-self: center;
     border-radius: 1.1rem;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: auto;
   }
 
   .cardActive .imageWrap {
-    max-height: clamp(11rem, 48vw, 16rem);
+    height: calc(18rem + 100px);
+    max-height: calc(18rem + 100px);
   }
 
   .cardCta,

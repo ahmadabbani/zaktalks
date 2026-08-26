@@ -1125,6 +1125,12 @@
   background: #d7e7ee;
 }
 
+@media (min-width: 1025px) {
+  .instructorPortraitFrame {
+    box-shadow: 0 -0.5rem 1.25rem rgba(33, 44, 45, 0.08);
+  }
+}
+
 .instructorPortrait {
   width: 100%;
   height: 100%;
@@ -1675,9 +1681,13 @@
 
   .instructorPortraitFrame {
     width: 100%;
-    aspect-ratio: 1;
+    aspect-ratio: 0.94;
     border-radius: clamp(1.25rem, 3vw, 2rem);
     box-shadow: 0 1.1rem 2.5rem rgba(33, 44, 45, 0.1);
+  }
+
+  .instructorPortrait {
+    object-position: 52% 35%;
   }
 }
 
@@ -1739,7 +1749,7 @@
 
   .instructorPortraitFrame {
     width: min(70vw, 15.5rem);
-    aspect-ratio: 1;
+    aspect-ratio: 0.94;
     border-radius: clamp(1.25rem, 5vw, 1.75rem);
   }
 

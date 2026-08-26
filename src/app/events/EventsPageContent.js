@@ -153,7 +153,7 @@ export default function EventsPageContent({ galleryImages = [] }) {
               <div className={styles.heroGrid}>
                 <div className={styles.heroCopy}>
                   <h1 id="events-hero-heading" className={styles.heroTitle}>
-                    Bring ZakTalks to Your Event
+                    Bring Zak to Your Event
                   </h1>
 
                   <p className={styles.heroSubheading}>
@@ -163,12 +163,7 @@ export default function EventsPageContent({ galleryImages = [] }) {
 
                   <div className={styles.heroText}>
                     <p>
-                      Zak Dakkash is a Transactional Analyst, facilitator, and the voice behind{' '}
-                      <strong>ZakTalks</strong>, a platform for the conversations people often
-                      avoid, but deeply need.
-                    </p>
-                    <p>
-                      He is now available for keynotes, workshops, trainings, panels, and tailored
+                      Zak is now available for keynotes, workshops, trainings, panels, and tailored
                       sessions for organisations, companies, NGOs, institutions, and communities.
                     </p>
                   </div>
@@ -182,12 +177,12 @@ export default function EventsPageContent({ galleryImages = [] }) {
                 <div className={styles.heroVisual} aria-label="ZakTalks events and speaking">
                   <div className={styles.imageShell}>
                     <Image
-                      src="/eventshero1.jpg"
+                      src="/events-hero.jpg"
                       alt="Zak Dakkash speaking at an event"
-                      width={1535}
-                      height={1025}
+                      width={1000}
+                      height={1334}
                       priority
-                      unoptimized
+                      quality={86}
                       sizes="(max-width: 1024px) 88vw, 43vw"
                       className={styles.heroImage}
                     />
@@ -225,11 +220,6 @@ export default function EventsPageContent({ galleryImages = [] }) {
                   is about creating a space where people can recognise the roles they take on, the
                   messages they carry, and the ways these patterns show up in their relationships,
                   work, choices, and sense of self.
-                </p>
-
-                <p>
-                  Through a Transactional Analysis lens, Zak brings psychological insight into
-                  language people can actually use.
                 </p>
               </div>
             </div>

@@ -650,19 +650,19 @@ export default function AboutPageContent() {
           >
           <div className={styles.storyImageWrap}>
             <Image
-              src="/meetzak.jpg"
+              src="/about-about.jpg"
               alt="Zak Dakkash"
               fill
               sizes="(max-width: 1024px) calc(100vw - (2 * var(--featured-section-gutter))), 50vw"
-              unoptimized
+              quality={86}
               className={`${styles.storyImage} ${styles.storyDesktopImage}`}
             />
             <Image
-              src="/aboutmobile.png"
+              src="/about-about.jpg"
               alt="Zak Dakkash facilitating a group session"
               fill
               sizes="(max-width: 1024px) 100vw, 1px"
-              unoptimized
+              quality={86}
               className={`${styles.storyImage} ${styles.storyMobileImage}`}
             />
           </div>

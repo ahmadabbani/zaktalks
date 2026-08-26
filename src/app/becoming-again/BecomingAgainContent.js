@@ -561,21 +561,21 @@ export default function BecomingAgainContent() {
             >
               <div className={styles.instructorPortraitFrame}>
                 <Image
-                  src="/instructor.jpg"
+                  src="/becomingagain-mettheperson.jpg"
                   alt="Zak Dakkash, founder of ZakTalks"
-                  width={1920}
-                  height={1280}
+                  width={1000}
+                  height={1333}
                   sizes="(max-width: 900px) min(68vw, 22.5rem), 27vw"
-                  unoptimized
+                  quality={86}
                   className={`${styles.instructorPortrait} ${styles.instructorPortraitDesktop}`}
                 />
                 <Image
-                  src="/meetzak.jpg"
+                  src="/becomingagain-mettheperson.jpg"
                   alt="Zak Dakkash, founder of ZakTalks"
-                  width={1920}
-                  height={1280}
+                  width={1000}
+                  height={1333}
                   sizes="(max-width: 1024px) min(70vw, 18rem), 1px"
-                  unoptimized
+                  quality={86}
                   className={`${styles.instructorPortrait} ${styles.instructorPortraitMobile}`}
                 />
               </div>

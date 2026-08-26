@@ -4,7 +4,7 @@
   padding: clamp(5.5rem, 9vw, 11rem) 0;
   padding-top: clamp(2.75rem, 5vw, 5.5rem);
   scroll-margin-top: 7rem;
-  background: var(--color-white);
+  background: var(--color-gray-light);
   isolation: isolate;
 }
 
@@ -70,7 +70,7 @@
 .portraitFrame {
   position: relative;
   overflow: hidden;
-  width: min(100%, clamp(17rem, 22vw, 23.5rem));
+  width: min(100%, clamp(14rem, 17vw, 18.5rem));
   max-width: 100%;
   flex: 0 0 auto;
   aspect-ratio: 0.48;
@@ -167,10 +167,6 @@
 }
 
 @media (max-width: 1600px) {
-  .portraitFrame {
-    width: min(100%, clamp(15rem, 18vw, 20rem));
-  }
-
   .storyLink {
     padding-block: 0.52rem;
   }

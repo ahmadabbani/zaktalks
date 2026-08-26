@@ -6,10 +6,16 @@ const nextConfig = {
     },
   },
   images: {
-    qualities: [64, 74, 86],
+    qualities: [64, 74, 86, 100],
     // Gallery URLs include a file-derived version query so replaced images
     // invalidate both the browser and Next.js image-optimizer caches.
     localPatterns: [
+      {
+        // Keeps the original filename while allowing a one-off cache version
+        // when the source photo is replaced in place.
+        pathname: '/1on1-hero.jpg',
+        search: '?v=20260826',
+      },
       {
         pathname: '/events-gallery/**',
       },

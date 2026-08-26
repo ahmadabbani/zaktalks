@@ -347,11 +347,12 @@ export default function PodcastPageContent({ episodes = [] }) {
               className={cx(styles.audiencePhotoFrame, 'audience-photo')}
             >
               <Image
-                src="/Who this podcast is for.jpg"
+                src="/podcast-realtalk.jpeg"
                 alt="A room of people connecting after a ZakTalks live session"
-                width={1692}
-                height={1128}
+                width={960}
+                height={1280}
                 sizes="(max-width: 900px) 100vw, 48vw"
+                unoptimized
                 className={styles.audiencePhoto}
               />
             </div>

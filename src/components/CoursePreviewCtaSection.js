@@ -53,12 +53,12 @@ export default function CoursePreviewCtaSection() {
           <div className={styles.visualWrap}>
             <div className={styles.imageFrame}>
               <Image
-                src="/coursepreview-blue-bg-v2.png"
+                src="/home-coursepreview.jpg"
                 alt="Zak Dakkash teaching beside a whiteboard for Interpersonal Communication Dynamics"
                 width={1029}
                 height={1528}
                 sizes="(max-width: 840px) min(68vw, 22.5rem), 25vw"
-                unoptimized
+                quality={86}
                 className={styles.image}
               />
             </div>

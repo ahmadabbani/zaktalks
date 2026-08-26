@@ -24,7 +24,7 @@
   padding: clamp(1.65rem, 3.5vw, 4rem);
   color: var(--color-white);
   border-radius: clamp(1.75rem, 3vw, 3.4rem);
-  background: var(--color-dark-blue);
+  background: var(--color-deep-slate);
   box-shadow: 0 1.8rem 4rem rgba(33, 44, 45, 0.16);
   isolation: isolate;
 }
@@ -51,9 +51,9 @@
   aspect-ratio: 1;
   align-items: center;
   justify-content: center;
-  color: var(--color-white);
+  color: var(--color-yellow);
   border-radius: 50%;
-  background: var(--color-yellow);
+  background: var(--color-white);
   box-shadow: 0 1rem 2.2rem rgba(33, 44, 45, 0.2);
   transition: color 0.35s ease, background-color 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -67,7 +67,7 @@
    at 12ch it would break into a very narrow five-line column. */
 .title {
   max-width: 20ch;
-  color: var(--color-white);
+  color: var(--color-yellow);
   font-size: var(--home-headline-size);
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
@@ -87,12 +87,12 @@
 }
 
 .panel:hover .title {
-  color: var(--color-yellow);
+  color: var(--color-white);
 }
 
 .panel:hover .iconMark {
-  color: var(--color-yellow);
-  background: var(--color-white);
+  color: var(--color-white);
+  background: var(--color-yellow);
   transform: rotate(-5deg) scale(1.04);
 }
 

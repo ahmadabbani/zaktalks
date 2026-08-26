@@ -162,6 +162,16 @@
   transform: scale(1.025);
 }
 
+@media (min-width: 1025px) {
+  .imageFrame {
+    box-shadow: 0 -0.5rem 1.25rem rgba(33, 44, 45, 0.08);
+  }
+
+  .image {
+    object-position: 66% center;
+  }
+}
+
 .revealed .content {
   animation: bookingContentIn 0.82s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -742,9 +752,13 @@
   }
 
   .imageFrame {
-    aspect-ratio: 1;
+    aspect-ratio: 0.94;
     border-radius: clamp(1.25rem, 3vw, 2rem);
     box-shadow: 0 1rem 2.4rem rgba(33, 44, 45, 0.1);
+  }
+
+  .image {
+    object-position: center 32%;
   }
 }
 
@@ -765,7 +779,7 @@
   }
 
   .imageFrame {
-    aspect-ratio: 1;
+    aspect-ratio: 0.94;
   }
 
   .cta {
