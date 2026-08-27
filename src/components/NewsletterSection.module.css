@@ -13,11 +13,12 @@
 .panel {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(24rem, 1.08fr);
-  gap: clamp(2rem, 5vw, 6rem);
-  align-items: end;
+  grid-template-columns: minmax(0, 1.35fr) minmax(22rem, 0.65fr);
+  column-gap: clamp(2rem, 3vw, 4rem);
+  row-gap: clamp(0.75rem, 1.2vw, 1.25rem);
+  align-items: start;
   overflow: hidden;
-  padding: clamp(1.65rem, 3.5vw, 4rem);
+  padding: clamp(1.5rem, 3.15vw, 3.6rem) clamp(1.65rem, 3.5vw, 4rem);
   color: var(--color-white);
   border-radius: clamp(1.75rem, 3vw, 3.4rem);
   background: var(--color-dark-blue);
@@ -60,13 +61,14 @@
 }
 
 .title {
-  max-width: 12ch;
+  max-width: none;
   color: var(--color-white);
   font-size: var(--home-headline-size);
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
   text-wrap: balance;
+  overflow-wrap: anywhere;
   transition: color 0.35s ease;
 }
 
@@ -92,9 +94,9 @@
 
 .form {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.85rem;
-  align-items: end;
+  align-items: start;
 }
 
 .field {
@@ -115,8 +117,8 @@
 
 .field input {
   width: 100%;
-  min-height: var(--home-cta-min-height);
-  padding: 0.95rem 1.05rem;
+  min-height: calc(var(--home-cta-min-height) - 0.35rem);
+  padding: 0.72rem 1rem;
   color: var(--color-white);
   border: 1px solid rgba(255, 255, 255, 0.26);
   border-radius: 1.05rem;
@@ -146,6 +148,8 @@
 
 .submitButton {
   display: inline-flex;
+  grid-column: 1;
+  justify-self: start;
   min-height: 3.65rem;
   align-items: center;
   justify-content: center;
@@ -197,6 +201,7 @@
 
 .formNote {
   grid-column: 1 / -1;
+  margin: 0;
   min-height: 1.35rem;
   color: rgba(255, 255, 255, 0.72);
   font-size: 0.88rem;
@@ -264,7 +269,7 @@
     grid-template-columns: 1fr;
     gap: clamp(1.75rem, 4vw, 2.75rem);
     align-items: start;
-    padding: clamp(1.5rem, 4vw, 2.5rem);
+    padding: clamp(1.4rem, 3.6vw, 2.3rem) clamp(1.5rem, 4vw, 2.5rem);
   }
 
   .form {
@@ -284,8 +289,8 @@
 
   .field input {
     min-width: 0;
-    min-height: var(--home-cta-min-height);
-    padding-block: var(--home-cta-compact-padding-block);
+    min-height: calc(var(--home-cta-min-height) - 0.35rem);
+    padding-block: 0.62rem;
     font-size: var(--home-text-size);
     line-height: var(--home-text-line-height);
   }
@@ -303,7 +308,7 @@
 @media (min-width: 1025px) and (max-width: 1600px) {
   .panel {
     align-items: start;
-    padding-block: clamp(1.4rem, 2.25vw, 2.5rem);
+    padding-block: clamp(1.3rem, 2vw, 2.25rem);
   }
 
   .form {
@@ -316,13 +321,19 @@
   }
 }
 
+@media (min-width: 1025px) {
+  .content .copy {
+    margin-top: clamp(1rem, calc(1.6vw + 5px), calc(1.35rem + 5px));
+  }
+}
+
 @media (max-width: 680px) {
   .section {
     padding: 4rem 0;
   }
 
   .panel {
-    padding: 1.25rem;
+    padding: 1.15rem 1.25rem;
     border-radius: 1.55rem;
     gap: 1.75rem;
   }
@@ -359,7 +370,7 @@
   }
 
   .panel {
-    padding: 1.1rem;
+    padding: 1rem 1.1rem;
     border-radius: 1.35rem;
   }
 
@@ -375,8 +386,8 @@
   }
 
   .field input {
-    min-height: var(--home-cta-min-height);
-    padding: var(--home-cta-compact-padding-block) 0.9rem;
+    min-height: calc(var(--home-cta-min-height) - 0.35rem);
+    padding: 0.58rem 0.9rem;
     border-radius: 0.9rem;
   }
 
@@ -392,7 +403,7 @@
 
 @media (min-width: 2000px) {
   .panel {
-    grid-template-columns: minmax(0, 0.9fr) minmax(30rem, 1.1fr);
+    grid-template-columns: minmax(0, 1.35fr) minmax(29rem, 0.65fr);
   }
 
   .iconMark {
@@ -423,7 +434,7 @@
 
 @media (min-width: 2300px) {
   .panel {
-    grid-template-columns: minmax(0, 0.9fr) minmax(34rem, 1.1fr);
+    grid-template-columns: minmax(0, 1.35fr) minmax(33rem, 0.65fr);
   }
 
   .iconMark {

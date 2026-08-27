@@ -216,7 +216,7 @@
   height: 1.85rem;
   padding: 0.36rem;
   margin-inline-start: auto;
-  color: var(--color-deep-slate);
+  color: var(--color-dark-blue);
   border-radius: 50%;
   background: var(--color-white);
   transition: var(--home-cta-arrow-transition);
@@ -1854,5 +1854,13 @@
   .faqToggleLineH,
   .finalWaitlistLink {
     transition-duration: 0.01ms;
+  }
+}
+
+@media (min-width: 1025px) {
+  .instructorPortraitFrame {
+    width: var(--desktop-oval-width);
+    height: var(--desktop-oval-height);
+    aspect-ratio: 0.5;
   }
 }

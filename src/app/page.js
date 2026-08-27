@@ -18,7 +18,7 @@ export default async function Home() {
         <div className={styles.heroContainer}>
           <div className={styles.heroGrid}>
             <div className={styles.heroLeft}>
-              <h1 className={styles.heroTitle}>
+              <h1 id="home-hero-heading" className={styles.heroTitle}>
                 <span>What if you’ve been <strong><em>Okay</em></strong> all along?</span>
               </h1>
               <p className={styles.heroDescription}>

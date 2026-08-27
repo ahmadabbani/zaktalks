@@ -18,9 +18,9 @@ const services = [
     tone: 'light',
   },
   {
-    title: 'Becoming Again',
+    title: 'Becoming Again Program',
     copy: 'A leadership coaching experience for executives, entrepreneurs, emerging leaders, and educators who want to lead consciously, live intentionally, and grow beyond old roles and reactions.',
-    cta: 'Join Becoming Again',
+    cta: 'Join Becoming Again Program',
     href: '/becoming-again',
     image: '/home-whatido-becomeagain.jpg',
     mobileImage: '/home-whatido-becomeagain-mobile.jpg',
@@ -107,10 +107,6 @@ export default function WhatIDoSection() {
             </p>
           </div>
 
-          <Link href="/services" className={styles.servicesLink}>
-            <span>Explore all services</span>
-            <FiArrowUpRight aria-hidden="true" />
-          </Link>
         </header>
 
         <div className={styles.rail}>

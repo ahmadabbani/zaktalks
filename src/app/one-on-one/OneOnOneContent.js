@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import {
+  FiArrowDownRight,
   FiArrowUpRight,
   FiCheck,
   FiCompass,
@@ -52,7 +53,7 @@ const weightPoints = [
     kind: 'endpoint',
     label: 'Point A',
     text: "They don't truly know where they are right now",
-    roadY: 10,
+    roadY: -34,
   },
   ...currentRealityPoints.map((text, index) => ({
     id: `current-reality-${index + 1}`,
@@ -65,7 +66,7 @@ const weightPoints = [
     kind: 'endpoint',
     label: 'Point B',
     text: 'They know where they want to go',
-    roadY: 10,
+    roadY: -34,
   },
 ]
 
@@ -84,17 +85,14 @@ function buildWeightRoadPath(points) {
     const next = points[index + 1]
     const distance = next.x - current.x
 
-    // The final middle point and Point B both sit high. Add one deliberate
-    // valley between them so the road finishes with the same wave rhythm.
-    // The return rises a little beyond Point B before approaching it from the
-    // right, giving this last curve the horizontal room available to the
-    // earlier waves without moving either point.
+    // The final middle point and Point B both sit high. Add a deliberate
+    // valley between them so the road still approaches Point B from below.
     if (index === points.length - 2) {
       const middleX = current.x + distance * 0.5
-      const valleyY = 82
+      const valleyY = 88
 
-      path += ` C ${(current.x + distance * 0.3).toFixed(2)} ${current.y} ${(middleX - distance * 0.26).toFixed(2)} ${valleyY} ${middleX.toFixed(2)} ${valleyY}`
-      path += ` C ${(middleX + distance * 0.26).toFixed(2)} ${valleyY} ${(next.x + distance * 0.32).toFixed(2)} ${next.y} ${next.x.toFixed(2)} ${next.y}`
+      path += ` C ${(current.x + distance * 0.24).toFixed(2)} ${current.y} ${(middleX - distance * 0.22).toFixed(2)} ${valleyY} ${middleX.toFixed(2)} ${valleyY}`
+      path += ` C ${(middleX + distance * 0.22).toFixed(2)} ${valleyY} ${(next.x - distance * 0.24).toFixed(2)} ${next.y} ${next.x.toFixed(2)} ${next.y}`
       continue
     }
 
@@ -265,6 +263,7 @@ export default function OneOnOneContent() {
 
               <Link href="#who-is-it-for" className={styles.secondaryCta}>
                 <span>Who is it for</span>
+                <FiArrowDownRight aria-hidden="true" />
               </Link>
             </div>
           </div>
@@ -272,12 +271,12 @@ export default function OneOnOneContent() {
           <div className={styles.heroVisual}>
             <div className={styles.heroImageFrame}>
               <Image
-                src="/1on1-hero.jpg?v=20260826"
+                src="/1on1-hero-final-cutout.png"
                 alt="Zak Dakkash holding a microphone during a session"
                 width={1000}
                 height={1334}
                 sizes="(max-width: 1024px) 100vw, 42vw"
-                quality={86}
+                quality={74}
                 className={styles.heroImage}
               />
             </div>
@@ -394,12 +393,16 @@ export default function OneOnOneContent() {
                   className={[
                     styles.weightPoint,
                     point.kind === 'endpoint' ? styles.weightPointEndpoint : '',
+                    point.id === 'point-a' ? styles.weightPointStart : '',
+                    point.id === 'point-b' ? styles.weightPointEnd : '',
+                    point.kind === 'mid' && point.roadY < 60 ? styles.weightPointUpper : '',
+                    point.kind === 'mid' && point.roadY >= 60 ? styles.weightPointLower : '',
                   ]
                     .filter(Boolean)
                     .join(' ')}
                   style={{
                     '--point-delay': `${index * 70}ms`,
-                    '--point-y': `${3 + point.roadY * (8 / 120)}rem`,
+                    '--point-y': `${3.15 + point.roadY * (9 / 120)}rem`,
                   }}
                 >
                   {point.label && <span className={styles.weightPointLabel}>{point.label}</span>}

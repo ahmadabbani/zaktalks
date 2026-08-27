@@ -108,7 +108,7 @@
   width: 1.85rem;
   height: 1.85rem;
   padding: 0.36rem;
-  color: var(--color-deep-slate);
+  color: var(--color-dark-blue);
   border-radius: 50%;
   background: var(--color-white);
   transition: var(--home-cta-arrow-transition);
@@ -895,5 +895,17 @@
   .selectMenu {
     animation: none !important;
     transition-duration: 0.01ms;
+  }
+}
+
+@media (min-width: 1025px) {
+  .visualWrap {
+    width: var(--desktop-oval-width);
+    height: var(--desktop-oval-height);
+  }
+
+  .imageFrame {
+    height: 100%;
+    aspect-ratio: 0.5;
   }
 }

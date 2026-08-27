@@ -16,14 +16,15 @@
 
 .header {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: clamp(2rem, 6vw, 7rem);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
   align-items: end;
   margin-bottom: clamp(2.5rem, 5vw, 5rem);
 }
 
 .headingBlock {
-  max-width: 78rem;
+  width: 100%;
+  max-width: none;
 }
 
 .eyebrow {
@@ -48,13 +49,13 @@
 }
 
 .title {
-  max-width: 24ch;
+  max-width: none;
   color: var(--home-headline-color);
   font-size: var(--home-headline-size);
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
-  text-wrap: balance;
+  text-wrap: wrap;
 }
 
 .intro {
@@ -300,7 +301,7 @@
   width: 1.55rem;
   height: 1.55rem;
   padding: 0.28rem;
-  color: var(--color-deep-slate);
+  color: var(--color-dark-blue);
   border-radius: 50%;
   background: var(--color-white);
   transition: var(--home-cta-arrow-transition);
@@ -314,6 +315,11 @@
 .toneYellow .cardCta {
   color: var(--color-white);
   background: var(--color-dark-blue);
+}
+
+.toneDark .cardCta svg,
+.toneYellow .cardCta svg {
+  color: var(--color-dark-blue);
 }
 
 .cardCta:hover,
@@ -441,6 +447,19 @@
   }
 }
 
+/* The cards are stacked here, but their copy and image still sit side by side. */
+@media (min-width: 721px) and (max-width: 1024px) {
+  .card,
+  .cardActive {
+    --active-image-width: clamp(14rem, 18vw, 18rem);
+  }
+
+  .cardActive .details,
+  .cardActive .copy {
+    max-width: 33ch;
+  }
+}
+
 @media (min-width: 1025px) and (max-width: 1400px) {
   .rail {
     height: clamp(18.5rem, 24vw, 21rem);
@@ -484,8 +503,8 @@
 
   .title {
     width: 100%;
-    max-width: 24ch;
-    text-wrap: balance;
+    max-width: none;
+    text-wrap: wrap;
   }
 
   .intro {
@@ -604,10 +623,22 @@
   }
 }
 
+@media (min-width: 1025px) {
+  .cardActive .details,
+  .cardActive .copy {
+    max-width: 27ch;
+  }
+
+  .card,
+  .cardActive {
+    --active-image-width: clamp(15rem, 18vw, 20rem);
+  }
+}
+
 @media (min-width: 1025px) and (max-width: 1999px) {
   .card,
   .cardActive {
-    --active-image-width: clamp(10rem, 10vw, 12.5rem);
+    --active-image-width: clamp(12rem, 13.5vw, 16rem);
   }
 }
 
@@ -619,22 +650,28 @@
 
 @media (min-width: 1500px) and (max-width: 1999px) {
   .headingBlock {
-    max-width: 88rem;
+    max-width: none;
   }
 
   .title {
-    max-width: 24ch;
+    max-width: none;
     text-wrap: wrap;
+  }
+}
+
+@media (min-width: 1800px) {
+  .cardActive .cardToggle {
+    margin-bottom: clamp(0.35rem, 0.5vw, 0.6rem);
   }
 }
 
 @media (min-width: 2000px) {
   .headingBlock {
-    max-width: 94rem;
+    max-width: none;
   }
 
   .title {
-    max-width: 22ch;
+    max-width: none;
   }
 
   .eyebrow {
@@ -662,7 +699,18 @@
     font-size: var(--home-text-size);
   }
 
+  .card,
+  .cardActive {
+    --active-image-width: clamp(13.5rem, 17.25vw, 18.75rem);
+  }
+
+  .cardActive .details,
+  .cardActive .copy {
+    max-width: 31ch;
+  }
+
   .cardCta {
+    justify-self: start;
     min-height: 3rem;
     font-size: calc(var(--home-cta-size) - 0.06rem);
   }
@@ -675,11 +723,11 @@
 
 @media (min-width: 2300px) {
   .headingBlock {
-    max-width: 108rem;
+    max-width: none;
   }
 
   .title {
-    max-width: 23ch;
+    max-width: none;
   }
 
   .eyebrow {

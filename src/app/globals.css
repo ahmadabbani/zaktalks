@@ -94,6 +94,92 @@
   --home-cta-arrow-transition: color 0.32s ease, background-color 0.32s ease, transform 0.36s cubic-bezier(0.22, 1, 0.36, 1);
   /* Shared platform badges: homepage, podcast, and events use one responsive scale. */
   --platform-badge-font-size: clamp(0.7rem, 0.58vw, 0.84rem);
+
+  /* Shared desktop oval proportions, matched to the homepage hero portrait. */
+  --desktop-oval-height: min(38rem, 74svh);
+  --desktop-oval-width: min(19rem, 37svh);
+}
+
+/* Public-page hero and section headings only. Keeping this list explicit
+   prevents uppercase styling from leaking into cards, dialogs, forms,
+   navigation, dashboards, or FAQ questions. */
+:is(
+  #home-hero-heading,
+  #for-whom-heading,
+  #social-proof-heading,
+  #what-i-do-heading,
+  #podcast-feature-heading,
+  #about-teaser-heading,
+  #testimonials-heading,
+  #course-preview-heading,
+  #newsletter-heading,
+  #about-hero-heading,
+  #about-intro-heading,
+  #milestones-heading,
+  #values-heading,
+  #final-cta-heading,
+  #podcast-hero-heading,
+  #elephant-heading,
+  #audience-heading,
+  #archive-heading,
+  #podcast-newsletter-heading,
+  #one-on-one-hero-heading,
+  #who-is-it-for-heading,
+  #weight-heading,
+  #journey-heading,
+  #oo-testimonials-heading,
+  #closing-heading,
+  #ba-hero-heading,
+  #ba-for-heading,
+  #ba-curriculum-heading,
+  #ba-format-heading,
+  #ba-enroll-heading,
+  #ba-testimonials-heading,
+  #ba-instructor-heading,
+  #ba-faq-heading,
+  #ba-final-heading,
+  #events-hero-heading,
+  #events-intro-heading,
+  #workshop-gallery-heading,
+  #signature-sessions-heading,
+  #events-testimonials-heading,
+  #event-formats-heading,
+  #events-podcast-heading,
+  #events-newsletter-heading,
+  #event-planner-qa-heading,
+  #events-booking-heading,
+  #contact-heading,
+  #contact-newsletter-heading
+) {
+  text-transform: uppercase;
+}
+
+@media (min-width: 1025px) and (max-width: 1499px) {
+  :root {
+    --desktop-oval-height: min(34rem, 74svh);
+    --desktop-oval-width: min(17rem, 37svh);
+  }
+}
+
+@media (min-width: 2000px) and (max-width: 2399px) {
+  :root {
+    --desktop-oval-height: min(42rem, 74svh);
+    --desktop-oval-width: min(21rem, 37svh);
+  }
+}
+
+@media (min-width: 2400px) and (max-width: 2799px) {
+  :root {
+    --desktop-oval-height: min(46rem, 74svh);
+    --desktop-oval-width: min(23rem, 37svh);
+  }
+}
+
+@media (min-width: 2800px) {
+  :root {
+    --desktop-oval-height: min(56rem, 74svh);
+    --desktop-oval-width: min(28rem, 37svh);
+  }
 }
 
 /* Reset & Base Styles */

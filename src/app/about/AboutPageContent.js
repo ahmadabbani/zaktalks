@@ -932,7 +932,7 @@ export default function AboutPageContent() {
                   <FiArrowUpRight aria-hidden="true" />
                 </Link>
                 <Link href="/becoming-again" className={`${styles.storyCta} ${styles.finalCtaPrimary}`}>
-                  <span>Explore Becoming Again</span>
+                  <span>Explore Becoming Again Program</span>
                   <FiArrowUpRight aria-hidden="true" />
                 </Link>
               </div>

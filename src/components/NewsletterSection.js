@@ -41,10 +41,12 @@ export default function NewsletterSection() {
             <div className={styles.iconMark} aria-hidden="true">
               <FiMail />
             </div>
+
             <div>
               <h2 id="newsletter-heading" className={styles.title}>
                 Stay close to the work
               </h2>
+
               <p className={styles.copy}>
                 Get reflections, practical insights, and updates on new episodes, workshops, and courses.
               </p>

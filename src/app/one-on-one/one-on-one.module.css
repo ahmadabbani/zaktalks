@@ -116,7 +116,7 @@
   width: 1.85rem;
   height: 1.85rem;
   padding: 0.36rem;
-  color: var(--color-deep-slate);
+  color: var(--color-dark-blue);
   border-radius: 50%;
   background: var(--color-white);
   transition: var(--home-cta-arrow-transition);
@@ -140,10 +140,22 @@
 }
 
 .secondaryCta {
-  padding: 0.78rem 1.6rem;
+  gap: 0.72rem;
+  padding: 0.78rem 0.86rem 0.78rem 1.45rem;
   color: var(--color-white);
   border: 2px solid var(--color-dark-blue);
   background: var(--color-dark-blue);
+}
+
+.secondaryCta svg {
+  width: 1.85rem;
+  height: 1.85rem;
+  padding: 0.36rem;
+  flex: 0 0 auto;
+  color: var(--color-dark-blue);
+  border-radius: 50%;
+  background: var(--color-white);
+  transition: var(--home-cta-arrow-transition);
 }
 
 .secondaryCta:hover,
@@ -154,6 +166,13 @@
   box-shadow: 0 1.1rem 2.4rem rgba(196, 159, 12, 0.22);
   transform: var(--home-cta-hover-transform);
   outline: none;
+}
+
+.secondaryCta:hover svg,
+.secondaryCta:focus-visible svg {
+  color: var(--color-yellow);
+  background: var(--color-white);
+  transform: translate(0.12rem, 0.12rem);
 }
 
 /* ------------------------------------------------------- portrait + facts - */
@@ -192,7 +211,6 @@
   margin-inline-start: auto;
   overflow: hidden;
   border-radius: var(--oo-radius) var(--oo-radius) 0 0;
-  box-shadow: 0 -0.5rem 3rem rgba(33, 44, 45, 0.14);
 }
 
 .heroImage {
@@ -732,7 +750,8 @@
 
 .weightHeader {
   display: flex;
-  max-width: 60rem;
+  width: 100%;
+  max-width: none;
   flex-direction: column;
   align-items: center;
   text-align: center;
@@ -748,6 +767,8 @@
 }
 
 .weightTitle {
+  width: 100%;
+  max-width: none;
   margin-top: 0.6rem;
   color: var(--home-headline-color);
   font-size: var(--home-headline-size);
@@ -777,8 +798,8 @@
 }
 
 .weightTimeline {
-  --weight-road-top: 2.35rem;
-  --weight-road-height: 6.5rem;
+  --weight-road-top: 3.15rem;
+  --weight-road-height: 9rem;
   --weight-viewport-gutter: clamp(0.8rem, 1.75vw, 2rem);
 
   position: relative;
@@ -825,7 +846,7 @@
 }
 
 .weightPoint {
-  --point-y: 4.41rem;
+  --point-y: 7.65rem;
 
   position: relative;
   display: block;
@@ -867,6 +888,22 @@
   box-shadow: 0 0.4rem 1rem rgba(196, 159, 12, 0.35);
 }
 
+.weightPointStart .weightPointLabel,
+.weightPointStart .weightPointText {
+  color: var(--color-yellow-dark);
+}
+
+.weightPointEnd .weightDot {
+  border-color: var(--color-dark-blue);
+  background: var(--color-dark-blue);
+  box-shadow: 0 0.4rem 1rem rgba(var(--color-dark-blue-rgb), 0.3);
+}
+
+.weightPointEnd .weightPointLabel,
+.weightPointEnd .weightPointText {
+  color: var(--color-dark-blue);
+}
+
 .weightPointLabel {
   position: absolute;
   top: calc(var(--point-y) - 2.75rem);
@@ -885,13 +922,28 @@
 }
 
 .weightPointText {
+  position: absolute;
+  right: clamp(0.22rem, 0.42vw, 0.48rem);
+  left: clamp(0.22rem, 0.42vw, 0.48rem);
   display: block;
-  margin-top: 0;
-  padding-top: calc(var(--weight-road-top) + var(--weight-road-height) + 0.85rem);
+  margin: 0;
+  padding: 0;
   color: var(--home-text-color);
   font-size: clamp(0.66rem, 0.68vw, 0.82rem);
   font-weight: var(--home-text-weight);
   line-height: var(--home-text-line-height);
+}
+
+.weightPointLower .weightPointText {
+  top: calc(var(--point-y) + 1.15rem);
+}
+
+.weightPointEndpoint .weightPointText {
+  top: calc(var(--point-y) + 2rem);
+}
+
+.weightPointUpper .weightPointText {
+  bottom: calc(100% - var(--point-y) + 1rem);
 }
 
 .weightPointEndpoint .weightPointText {
@@ -900,7 +952,29 @@
   font-weight: 700;
 }
 
+.weightPointEndpoint.weightPointStart .weightPointLabel,
+.weightPointEndpoint.weightPointStart .weightPointText {
+  color: var(--color-yellow-dark);
+}
+
+.weightPointEndpoint.weightPointEnd .weightPointLabel,
+.weightPointEndpoint.weightPointEnd .weightPointText {
+  color: var(--color-dark-blue);
+}
+
 @media (min-width: 1025px) {
+  .weightTimeline {
+    margin-top: clamp(6rem, 7.2vw, 7.25rem);
+  }
+
+  .weightPointStart .weightPointText {
+    transform: translateX(-1.5rem);
+  }
+
+  .weightPointEnd .weightPointText {
+    transform: translateX(1.5rem);
+  }
+
   .weightRoad {
     right: 4%;
     left: 4%;
@@ -913,7 +987,7 @@
   }
 
   .weightPoint:not(.weightPointEndpoint) .weightPointText {
-    padding-top: calc(var(--weight-road-top) + var(--weight-road-height) + 1.3rem);
+    padding: 0;
   }
 }
 
@@ -1092,8 +1166,14 @@
   }
 
   .weightPointText {
+    position: static;
     margin-top: 0;
     padding-top: 0;
+  }
+
+  .weightPointText,
+  .weightPointEndpoint .weightPointText {
+    font-size: clamp(0.78rem, 1.7vw, 0.9rem);
   }
 
   .weightPoint:not(.weightPointEndpoint) .weightPointLabel {

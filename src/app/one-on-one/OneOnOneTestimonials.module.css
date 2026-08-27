@@ -22,11 +22,13 @@
 }
 
 .headingBlock {
-  max-width: 69rem;
+  width: 100%;
+  max-width: none;
 }
 
 .title {
-  max-width: 23ch;
+  width: 100%;
+  max-width: none;
   color: var(--home-headline-color);
   font-size: var(--home-headline-size);
   font-weight: var(--home-headline-weight);
@@ -409,22 +411,22 @@
 
 @media (min-width: 1500px) and (max-width: 1999px) {
   .headingBlock {
-    max-width: 82rem;
+    max-width: none;
   }
 
   .title {
-    max-width: 23ch;
+    max-width: none;
     text-wrap: wrap;
   }
 }
 
 @media (min-width: 2000px) {
   .headingBlock {
-    max-width: 92rem;
+    max-width: none;
   }
 
   .title {
-    max-width: 22ch;
+    max-width: none;
   }
 
   .controlButton {
@@ -462,11 +464,11 @@
 
 @media (min-width: 2300px) {
   .headingBlock {
-    max-width: 108rem;
+    max-width: none;
   }
 
   .title {
-    max-width: 23ch;
+    max-width: none;
   }
 
   .controlButton {

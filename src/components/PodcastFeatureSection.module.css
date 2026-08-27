@@ -64,7 +64,7 @@
   width: 1.75rem;
   height: 1.75rem;
   padding: 0.34rem;
-  color: var(--color-deep-slate);
+  color: var(--color-dark-blue);
   border-radius: 50%;
   background: var(--color-white);
   transition: var(--home-cta-arrow-transition);

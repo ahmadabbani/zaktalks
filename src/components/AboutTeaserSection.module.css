@@ -1,4 +1,6 @@
 .section {
+  --about-teaser-image-bleed: calc(var(--featured-section-gutter) + clamp(0.75rem, 4vw, 5rem));
+
   position: relative;
   overflow: hidden;
   padding: clamp(5.5rem, 9vw, 11rem) 0;
@@ -10,7 +12,8 @@
 
 .container {
   width: auto;
-  margin-inline: calc(var(--featured-section-gutter) + clamp(0.75rem, 4vw, 5rem));
+  margin-left: var(--about-teaser-image-bleed);
+  margin-right: var(--featured-section-gutter);
 }
 
 .quoteBlock {
@@ -88,6 +91,20 @@
 
 .portraitFrame:hover .portrait {
   transform: scale(1.025);
+}
+
+@media (min-width: 1025px) {
+  .portraitStage {
+    width: calc(100% + var(--about-teaser-image-bleed));
+    margin-left: calc(-1 * var(--about-teaser-image-bleed));
+    justify-content: flex-start;
+  }
+
+  .portraitFrame {
+    width: 100%;
+    aspect-ratio: 1.08;
+    border-radius: 0 clamp(1.5rem, 2.5vw, 2.5rem) clamp(1.5rem, 2.5vw, 2.5rem) 0;
+  }
 }
 
 .storyColumn {
@@ -331,7 +348,7 @@
   }
 
   .portraitFrame {
-    width: min(100%, 26rem);
+    width: 100%;
   }
 
   .story,
@@ -347,7 +364,7 @@
   }
 
   .portraitFrame {
-    width: min(100%, 29rem);
+    width: 100%;
   }
 
   .story,

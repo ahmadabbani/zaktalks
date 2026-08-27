@@ -95,7 +95,7 @@
   width: 1.85rem;
   height: 1.85rem;
   padding: 0.36rem;
-  color: var(--color-deep-slate);
+  color: var(--color-dark-blue);
   border-radius: 50%;
   background: var(--color-white);
   transition: var(--home-cta-arrow-transition);
@@ -636,7 +636,7 @@
   width: 1.85rem;
   height: 1.85rem;
   padding: 0.36rem;
-  color: var(--color-deep-slate);
+  color: var(--color-dark-blue);
   border-radius: 50%;
   background: var(--color-white);
   transition: var(--home-cta-arrow-transition);
@@ -1976,7 +1976,7 @@
   flex-direction: column;
   justify-content: center;
   padding: 0;
-  color: var(--color-deep-slate);
+  color: var(--color-dark-blue);
   background: transparent;
   opacity: 0;
   text-align: center;
@@ -2067,7 +2067,7 @@
   width: 100%;
   max-width: 100%;
   margin-top: 0;
-  color: var(--color-deep-slate);
+  color: var(--color-dark-blue);
   font-size: clamp(1.28rem, 1.65vw, 1.85rem);
   font-weight: 900;
   letter-spacing: -0.045em;
@@ -2144,7 +2144,8 @@
 }
 
 .orbitNodeSlate {
-  background: var(--color-slate-blue);
+  color: var(--color-white);
+  background: var(--color-black);
 }
 
 .orbitNodeYellow {
@@ -3116,6 +3117,11 @@
   margin-top: 0;
 }
 
+.finalCtaPrimary svg {
+  color: var(--color-dark-blue);
+  background: var(--color-white);
+}
+
 .finalCtaSecondary {
   color: var(--color-dark-blue);
   background: transparent;
@@ -3474,6 +3480,18 @@
   .storyNarrative:not(.storyPhilosophy) .storyMobileImage {
     display: block;
     object-position: 50% 25%;
+  }
+}
+
+@media (min-width: 1025px) {
+  .finalCtaVisual {
+    width: var(--desktop-oval-width);
+  }
+
+  .finalCtaImageFrame {
+    width: 100%;
+    height: var(--desktop-oval-height);
+    aspect-ratio: 0.5;
   }
 }
 

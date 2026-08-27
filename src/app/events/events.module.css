@@ -1216,3 +1216,15 @@
     transition: none !important;
   }
 }
+
+@media (min-width: 1025px) {
+  .heroVisual {
+    width: var(--desktop-oval-width);
+    height: var(--desktop-oval-height);
+  }
+
+  .imageShell {
+    height: 100%;
+    aspect-ratio: 0.5;
+  }
+}

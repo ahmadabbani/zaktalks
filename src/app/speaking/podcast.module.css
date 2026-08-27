@@ -1977,7 +1977,7 @@
 .episodeWatch {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.95rem;
   padding: 0.6rem 1rem;
   border: 2px solid var(--color-deep-slate);
   border-radius: 999px;
@@ -1989,8 +1989,33 @@
   transition: var(--home-cta-transition);
 }
 
-.episodeWatch svg:last-child {
+.episodeWatch svg:last-child,
+.archiveMore svg,
+.featuredWatch svg:last-child,
+.featuredCourseCta svg {
+  flex: 0 0 auto;
+  width: 1.8rem;
+  height: 1.8rem;
+  padding: 0.35rem;
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-black);
   transition: var(--home-cta-arrow-transition);
+}
+
+.episodeWatch svg:last-child {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+.featuredWatch svg:last-child {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.featuredCourseCta svg {
+  background: var(--color-black);
+  color: var(--color-white);
 }
 
 .episodeWatch:hover,
@@ -2092,7 +2117,7 @@
   display: inline-flex;
   min-height: var(--home-cta-min-height);
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.95rem;
   padding: 0.78rem 1.6rem;
   border: 2px solid var(--color-deep-slate);
   border-radius: 999px;
@@ -2103,10 +2128,6 @@
   font-weight: var(--home-cta-weight);
   line-height: var(--home-cta-line-height);
   transition: var(--home-cta-transition);
-}
-
-.archiveMore svg {
-  transition: transform 0.35s var(--pod-ease);
 }
 
 .archiveMore:hover,
@@ -2299,7 +2320,7 @@
   display: inline-flex;
   align-self: flex-start;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.95rem;
   margin-top: auto;
   padding: 0.7rem 1.15rem;
   border: 2px solid var(--color-yellow);
@@ -2310,10 +2331,6 @@
   font-weight: var(--home-cta-weight);
   line-height: 1.1;
   transition: var(--home-cta-transition);
-}
-
-.featuredWatch svg:last-child {
-  transition: var(--home-cta-arrow-transition);
 }
 
 .featuredWatch:hover,
@@ -2374,7 +2391,7 @@
   flex: 0 0 auto;
   min-height: var(--home-cta-min-height);
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.95rem;
   padding: 0.7rem 1.35rem;
   border: 2px solid var(--color-yellow);
   border-radius: 999px;
@@ -2384,10 +2401,6 @@
   font-weight: var(--home-cta-weight);
   line-height: var(--home-cta-line-height);
   transition: var(--home-cta-transition);
-}
-
-.featuredCourseCta svg {
-  transition: var(--home-cta-arrow-transition);
 }
 
 .featuredCourseCta:hover,

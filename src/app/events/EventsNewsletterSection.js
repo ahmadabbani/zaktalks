@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { FiArrowUpRight, FiMail } from 'react-icons/fi'
-import styles from '@/app/speaking/PodcastNewsletterSection.module.css'
+import styles from '@/components/NewsletterSection.module.css'
 import eventStyles from './EventsNewsletterSection.module.css'
 
 export default function EventsNewsletterSection({
@@ -54,8 +54,10 @@ export default function EventsNewsletterSection({
             <div className={styles.iconMark} aria-hidden="true">
               <FiMail />
             </div>
+
             <div>
               <h2 id={headingId} className={styles.title}>{title}</h2>
+
               <div className={`${styles.copy} ${eventStyles.copyGroup}`}>
                 {paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
               </div>

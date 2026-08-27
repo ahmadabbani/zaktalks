@@ -41,10 +41,12 @@ export default function PodcastNewsletterSection() {
             <div className={styles.iconMark} aria-hidden="true">
               <FiMail />
             </div>
+
             <div>
               <h2 id="podcast-newsletter-heading" className={styles.title}>
-                Stay in the conversation, even off the podcast.
+                Stay close to the work
               </h2>
+
               <p className={styles.copy}>
                 If an episode speaks to you, you&rsquo;ll probably want more than just a
                 weekly listen. Join the ZakTalks list to receive episode alerts,

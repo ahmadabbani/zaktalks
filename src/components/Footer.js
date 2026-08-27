@@ -15,7 +15,7 @@ import styles from './Footer.module.css'
 
 const quickLinks = [
   { href: '/one-on-one', label: 'Coaching 1 on 1' },
-  { href: '/becoming-again', label: 'Becoming Again' },
+  { href: '/becoming-again', label: 'Becoming Again Program' },
   { href: '/courses', label: 'Online Courses' },
   { href: '/events', label: 'Events' },
 ]

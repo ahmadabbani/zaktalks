@@ -17,11 +17,12 @@
 .panel {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.28fr) minmax(24rem, 0.72fr);
-  gap: clamp(2rem, 5vw, 6rem);
+  grid-template-columns: minmax(0, 1.55fr) minmax(22rem, 0.45fr);
+  column-gap: clamp(2rem, 3vw, 4rem);
+  row-gap: clamp(0.75rem, 1.2vw, 1.25rem);
   align-items: start;
   overflow: hidden;
-  padding: clamp(1.65rem, 3.5vw, 4rem);
+  padding: clamp(1.5rem, 3.15vw, 3.6rem) clamp(1.65rem, 3.5vw, 4rem);
   color: var(--color-white);
   border-radius: clamp(1.75rem, 3vw, 3.4rem);
   background: var(--color-deep-slate);
@@ -51,9 +52,9 @@
   aspect-ratio: 1;
   align-items: center;
   justify-content: center;
-  color: var(--color-yellow);
+  color: var(--color-white);
   border-radius: 50%;
-  background: var(--color-white);
+  background: var(--color-yellow);
   box-shadow: 0 1rem 2.2rem rgba(33, 44, 45, 0.2);
   transition: color 0.35s ease, background-color 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -66,13 +67,14 @@
 /* 20ch, not the homepage's 12ch: this headline is roughly twice as long, and
    at 12ch it would break into a very narrow five-line column. */
 .title {
-  max-width: 20ch;
-  color: var(--color-yellow);
+  max-width: none;
+  color: var(--color-white);
   font-size: var(--home-headline-size);
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
   text-wrap: balance;
+  overflow-wrap: anywhere;
   transition: color 0.35s ease;
 }
 
@@ -87,12 +89,12 @@
 }
 
 .panel:hover .title {
-  color: var(--color-white);
+  color: var(--color-yellow);
 }
 
 .panel:hover .iconMark {
-  color: var(--color-white);
-  background: var(--color-yellow);
+  color: var(--color-yellow);
+  background: var(--color-white);
   transform: rotate(-5deg) scale(1.04);
 }
 
@@ -123,8 +125,8 @@
 
 .field input {
   width: 100%;
-  min-height: var(--home-cta-min-height);
-  padding: 0.95rem 1.05rem;
+  min-height: calc(var(--home-cta-min-height) - 0.35rem);
+  padding: 0.72rem 1rem;
   color: var(--color-white);
   border: 1px solid rgba(255, 255, 255, 0.26);
   border-radius: 1.05rem;
@@ -207,6 +209,7 @@
 
 .formNote {
   grid-column: 1 / -1;
+  margin: 0;
   min-height: 1.35rem;
   color: rgba(255, 255, 255, 0.72);
   font-size: 0.88rem;
@@ -277,7 +280,7 @@
     grid-template-columns: 1fr;
     gap: clamp(1.75rem, 4vw, 2.75rem);
     align-items: start;
-    padding: clamp(1.5rem, 4vw, 2.5rem);
+    padding: clamp(1.4rem, 3.6vw, 2.3rem) clamp(1.5rem, 4vw, 2.5rem);
   }
 
   .form {
@@ -297,8 +300,8 @@
 
   .field input {
     min-width: 0;
-    min-height: var(--home-cta-min-height);
-    padding-block: var(--home-cta-compact-padding-block);
+    min-height: calc(var(--home-cta-min-height) - 0.35rem);
+    padding-block: 0.62rem;
     font-size: var(--home-text-size);
     line-height: var(--home-text-line-height);
   }
@@ -315,7 +318,11 @@
 
 @media (min-width: 1440px) {
   .panel {
-    padding-block: clamp(1.4rem, 2.25vw, 2.5rem);
+    padding-block: clamp(1.3rem, 2vw, 2.25rem);
+  }
+
+  .content .copy {
+    margin-top: clamp(1rem, calc(1.6vw + 5px), calc(1.35rem + 5px));
   }
 }
 
@@ -325,7 +332,7 @@
   }
 
   .panel {
-    padding: 1.25rem;
+    padding: 1.15rem 1.25rem;
     border-radius: 1.55rem;
     gap: 1.75rem;
   }
@@ -362,7 +369,7 @@
   }
 
   .panel {
-    padding: 1.1rem;
+    padding: 1rem 1.1rem;
     border-radius: 1.35rem;
   }
 
@@ -378,8 +385,8 @@
   }
 
   .field input {
-    min-height: var(--home-cta-min-height);
-    padding: var(--home-cta-compact-padding-block) 0.9rem;
+    min-height: calc(var(--home-cta-min-height) - 0.35rem);
+    padding: 0.58rem 0.9rem;
     border-radius: 0.9rem;
   }
 
@@ -395,7 +402,7 @@
 
 @media (min-width: 2000px) {
   .panel {
-    grid-template-columns: minmax(0, 1.28fr) minmax(26rem, 0.72fr);
+    grid-template-columns: minmax(0, 1.55fr) minmax(25rem, 0.45fr);
   }
 
   .iconMark {
@@ -426,7 +433,7 @@
 
 @media (min-width: 2300px) {
   .panel {
-    grid-template-columns: minmax(0, 1.28fr) minmax(30rem, 0.72fr);
+    grid-template-columns: minmax(0, 1.55fr) minmax(29rem, 0.45fr);
   }
 
   .iconMark {
