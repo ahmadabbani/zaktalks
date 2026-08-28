@@ -1,3 +1,5 @@
+import { isValidPhoneNumber } from 'libphonenumber-js/min'
+
 export const CONTACT_SOURCE_OPTIONS = [
   'Instagram',
   'YouTube',
@@ -42,8 +44,7 @@ export function validateContactField(name, value) {
       return ''
     case 'phone': {
       if (!cleanValue) return 'Enter your phone number.'
-      const digits = cleanValue.replace(/\D/g, '').length
-      if (!/^[+\d().\-\s]+$/.test(cleanValue) || digits < 7 || digits > 15) {
+      if (!isValidPhoneNumber(cleanValue)) {
         return 'Enter a valid phone number.'
       }
       return ''
@@ -77,4 +78,3 @@ export function validateContactForm(values) {
     isValid: Object.keys(errors).length === 0,
   }
 }
-

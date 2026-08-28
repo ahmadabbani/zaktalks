@@ -454,6 +454,12 @@ export default function OneOnOneContent() {
               process. Rather than following a rigid method, we work with what emerges in the
               relationship, always in service of greater awareness, choice, and autonomy.
             </p>
+
+            <p className={styles.journeyOutroText}>
+              This is a practice of inquiry, not advice. A place where authentic contact,
+              honest reflection, and disciplined thinking create the conditions for lasting
+              change.
+            </p>
           </div>
 
           <ol className={styles.journeySteps}>
@@ -509,23 +515,6 @@ export default function OneOnOneContent() {
             })}
           </ol>
 
-          <div ref={register('journey-outro')} className={cx(styles.journeyOutro, 'journey-outro')}>
-            <p className={styles.journeyOutroText}>
-              This is a practice of inquiry, not advice. A place where authentic contact,
-              honest reflection, and disciplined thinking create the conditions for lasting
-              change.
-            </p>
-
-            <Link
-              href={BOOKING_URL}
-              target="_blank"
-              rel="noreferrer"
-              className={styles.primaryCta}
-            >
-              <span>Book Your Session</span>
-              <FiArrowUpRight aria-hidden="true" />
-            </Link>
-          </div>
         </div>
       </section>
 

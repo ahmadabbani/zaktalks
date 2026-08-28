@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { FiAlertCircle, FiArrowUpRight, FiCheck, FiChevronDown, FiX } from 'react-icons/fi'
+import InternationalPhoneField from '@/components/InternationalPhoneField'
 import {
   EVENT_BOOKING_INITIAL_VALUES,
   EVENT_BUDGET_OPTIONS,
@@ -266,6 +267,19 @@ export default function EventsBookingSection() {
     }
   }
 
+  const updatePhone = (value) => {
+    setValues((current) => ({ ...current, phone: value }))
+    setStatus((current) => (current === 'error' ? 'idle' : current))
+    setSubmitMessage('')
+
+    if (errors.phone) {
+      setErrors((current) => ({
+        ...current,
+        phone: validateEventBookingField('phone', value),
+      }))
+    }
+  }
+
   const validateOnBlur = (event) => {
     const { name, value } = event.target
     if (!String(value ?? '').trim() && !errors[name] && status !== 'error') return
@@ -400,7 +414,16 @@ export default function EventsBookingSection() {
               </div>
               <div className={styles.field}>
                 <label htmlFor={fieldIds.phone}>Phone number <span>*</span></label>
-                <input type="tel" inputMode="tel" autoComplete="tel" maxLength={30} placeholder="+961 ..." {...inputProps('phone')} />
+                <InternationalPhoneField
+                  id={fieldIds.phone}
+                  value={values.phone}
+                  error={errors.phone}
+                  describedBy={`${fieldIds.phone}-error`}
+                  variant="booking"
+                  disabled={status === 'submitting'}
+                  onChange={updatePhone}
+                  onBlur={() => validateCustomSelect('phone', values.phone)}
+                />
                 <FieldMessage id={`${fieldIds.phone}-error`} error={errors.phone} />
               </div>
 

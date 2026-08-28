@@ -1,3 +1,5 @@
+import { isValidPhoneNumber } from 'libphonenumber-js/min'
+
 export const EVENT_DELIVERY_OPTIONS = [
   'In person',
   'Online',
@@ -70,8 +72,7 @@ export function validateEventBookingField(name, value) {
       return ''
     case 'phone': {
       if (!cleanValue) return 'Enter a phone number.'
-      const digitCount = cleanValue.replace(/\D/g, '').length
-      if (!/^[+\d().\-\s]+$/.test(cleanValue) || digitCount < 7 || digitCount > 15) {
+      if (!isValidPhoneNumber(cleanValue)) {
         return 'Enter a valid phone number.'
       }
       return ''
@@ -133,4 +134,3 @@ export function validateEventBooking(values) {
     isValid: Object.keys(errors).length === 0,
   }
 }
-

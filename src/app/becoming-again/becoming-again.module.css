@@ -896,6 +896,7 @@
   min-width: 0;
   flex-direction: column;
   padding: clamp(2.25rem, 3.4vw, 3rem);
+  padding-top: clamp(1.85rem, 2.8vw, 2.45rem);
   border: 1px solid rgba(33, 44, 45, 0.1);
   border-radius: var(--ba-radius);
   background: var(--color-white);
@@ -933,7 +934,7 @@
   flex-direction: column;
   gap: 0.3rem;
   margin-top: auto;
-  padding-top: clamp(1.5rem, 2.6vw, 2rem);
+  padding-top: clamp(1.1rem, 1.9vw, 1.45rem);
   border-top: 1px solid rgba(33, 44, 45, 0.14);
 }
 
@@ -1065,7 +1066,7 @@
   padding: 0.36rem;
   border-radius: 50%;
   background: var(--color-white);
-  color: var(--color-deep-slate);
+  color: var(--color-dark-blue);
   transition: var(--home-cta-arrow-transition);
 }
 

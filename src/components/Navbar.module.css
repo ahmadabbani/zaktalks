@@ -122,6 +122,7 @@
 }
 
 .registerLink {
+    border-width: 2px;
     border-color: var(--color-white);
     color: var(--color-white);
     background: var(--color-black);
@@ -514,6 +515,7 @@
 }
 
 .mobileRegisterLink {
+    border-width: 2px;
     border-color: var(--color-white);
     color: var(--color-white);
     background: var(--color-black);

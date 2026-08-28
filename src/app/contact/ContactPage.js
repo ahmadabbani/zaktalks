@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { FiAlertCircle, FiArrowUpRight, FiCheck, FiChevronDown } from 'react-icons/fi'
 import EventsNewsletterSection from '@/app/events/EventsNewsletterSection'
+import InternationalPhoneField from '@/components/InternationalPhoneField'
 import {
   CONTACT_INITIAL_VALUES,
   CONTACT_SOURCE_OPTIONS,
@@ -308,7 +309,14 @@ export default function ContactPage() {
 
                     <div className={styles.field}>
                       <label htmlFor={fieldIds.phone}>Phone number <span>*</span></label>
-                      <input type="tel" inputMode="tel" autoComplete="tel" maxLength={30} placeholder="+961 ..." {...inputProps('phone')} />
+                      <InternationalPhoneField
+                        id={fieldIds.phone}
+                        value={values.phone}
+                        error={errors.phone}
+                        describedBy={`${fieldIds.phone}-error`}
+                        onChange={(value) => setFieldValue('phone', value)}
+                        onBlur={() => validateCustomField('phone', values.phone)}
+                      />
                       <FieldError id={`${fieldIds.phone}-error`} error={errors.phone} />
                     </div>
 

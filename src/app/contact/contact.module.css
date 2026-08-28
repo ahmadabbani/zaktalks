@@ -397,7 +397,7 @@
   height: 1.85rem;
   padding: 0.36rem;
   border-radius: 50%;
-  color: var(--color-deep-slate);
+  color: var(--color-dark-blue);
   background: var(--color-white);
   transition: var(--home-cta-arrow-transition);
 }

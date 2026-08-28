@@ -155,7 +155,7 @@
   justify-content: center;
   gap: 0.65rem;
   padding: 0.85rem 0.82rem 0.85rem 1.25rem;
-  color: var(--color-deep-slate);
+  color: var(--color-dark-blue);
   border: 2px solid var(--color-white);
   border-radius: 999px;
   background: var(--color-white);
@@ -172,7 +172,7 @@
   padding: 0.35rem;
   color: var(--color-white);
   border-radius: 50%;
-  background: var(--color-slate-blue);
+  background: var(--color-dark-blue);
   transition: var(--home-cta-arrow-transition);
 }
 

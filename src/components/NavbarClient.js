@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import {
+  PUBLIC_AUTH_ENTRY_ENABLED,
+  PUBLIC_COURSE_CATALOG_ENABLED,
+} from '@/lib/publicFeatureFlags'
 import styles from './Navbar.module.css'
 
 const serviceLinks = [
@@ -11,6 +15,7 @@ const serviceLinks = [
   { href: '/becoming-again', label: 'Becoming Again Program' },
   {
     href: '/courses',
+    visible: PUBLIC_COURSE_CATALOG_ENABLED,
     label: 'Courses · E-learning',
     children: [
       { href: '/courses', label: 'Interpersonal Communication Dynamics' },
@@ -20,10 +25,12 @@ const serviceLinks = [
   { href: '/events', label: 'Events' },
 ]
 
+const visibleServiceLinks = serviceLinks.filter((service) => service.visible !== false)
+
 export default function NavbarClient({ user, role, signout }) {
   const pathname = usePathname()
   const isPodcastPage = pathname === '/speaking'
-  const isServicesActive = ['/one-on-one', '/becoming-again', '/courses', '/events'].some((path) => (
+  const isServicesActive = visibleServiceLinks.map((service) => service.href).some((path) => (
     pathname === path || pathname.startsWith(`${path}/`)
   ))
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -83,7 +90,7 @@ export default function NavbarClient({ user, role, signout }) {
 
   const renderServicesMenu = (classNames) => (
     <ul className={classNames}>
-      {serviceLinks.map((service) => (
+      {visibleServiceLinks.map((service) => (
         <li key={service.label} className={styles.serviceItem}>
           <Link href={service.href} className={styles.serviceLink} onClick={closeMenu}>
             {service.label}
@@ -184,7 +191,7 @@ export default function NavbarClient({ user, role, signout }) {
               ))}
             </div>
 
-            {user && (
+            {user && PUBLIC_AUTH_ENTRY_ENABLED && (
               <form action={signout}>
                 <button type="submit" className={styles.btnPrimary}>
                   Sign Out
@@ -192,7 +199,7 @@ export default function NavbarClient({ user, role, signout }) {
               </form>
             )}
 
-            {!user && (
+            {!user && PUBLIC_AUTH_ENTRY_ENABLED && (
               <div className={styles.authActions} aria-label="Account access">
                 <Link
                   href="/login"
@@ -291,7 +298,7 @@ export default function NavbarClient({ user, role, signout }) {
             </Link>
           ))}
 
-          {user && (
+          {user && PUBLIC_AUTH_ENTRY_ENABLED && (
             <form action={signout}>
               <button type="submit" className={styles.mobileBtnPrimary} onClick={closeMenu}>
                 Sign Out
@@ -299,7 +306,7 @@ export default function NavbarClient({ user, role, signout }) {
             </form>
           )}
 
-          {!user && (
+          {!user && PUBLIC_AUTH_ENTRY_ENABLED && (
             <div className={styles.mobileAuthActions} aria-label="Account access">
               <Link
                 href="/login"

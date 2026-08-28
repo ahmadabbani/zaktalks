@@ -3051,7 +3051,7 @@
   position: relative;
   overflow: visible;
   margin-top: calc(clamp(4.5rem, 6vw, 7rem) + var(--final-cta-image-overlap));
-  padding: clamp(3.2rem, 4.8vw, 5rem) 0 clamp(0.35rem, 0.75vw, 0.85rem);
+  padding: clamp(3.2rem, 4.8vw, 5rem) 0 clamp(2.25rem, 3vw, 3.75rem);
   background: #dcecf3;
 }
 
@@ -3244,7 +3244,7 @@
     --final-cta-image-overlap: clamp(3.5rem, 7vw, 5rem);
 
     margin-top: calc(clamp(3.5rem, 6vw, 5rem) + var(--final-cta-image-overlap));
-    padding: clamp(2.8rem, 5vw, 3.75rem) 0 clamp(1.8rem, 3vw, 2.4rem);
+    padding: clamp(2.8rem, 5vw, 3.75rem) 0 clamp(2.4rem, 4vw, 3.2rem);
   }
 
   .finalCtaLayout {
@@ -3315,7 +3315,7 @@
     --final-cta-image-overlap: 4rem;
 
     margin-top: calc(3rem + var(--final-cta-image-overlap));
-    padding-bottom: 1.6rem;
+    padding-bottom: 2.2rem;
   }
 
   .finalCtaVisual {

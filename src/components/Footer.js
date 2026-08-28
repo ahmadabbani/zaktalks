@@ -11,14 +11,17 @@ import {
   FaTiktok,
   FaYoutube,
 } from 'react-icons/fa'
+import { PUBLIC_COURSE_CATALOG_ENABLED } from '@/lib/publicFeatureFlags'
 import styles from './Footer.module.css'
 
 const quickLinks = [
   { href: '/one-on-one', label: 'Coaching 1 on 1' },
   { href: '/becoming-again', label: 'Becoming Again Program' },
-  { href: '/courses', label: 'Online Courses' },
+  { href: '/courses', label: 'Online Courses', visible: PUBLIC_COURSE_CATALOG_ENABLED },
   { href: '/events', label: 'Events' },
 ]
+
+const visibleQuickLinks = quickLinks.filter((link) => link.visible !== false)
 
 const socialLinks = [
   { href: 'https://www.instagram.com/zak_talks/', label: 'Instagram', icon: FaInstagram },
@@ -97,7 +100,7 @@ export default function Footer() {
               <h2 id="footer-links-title" className={styles.footerTitle}>Quick access</h2>
               <nav aria-label="Footer navigation">
                 <ul className={styles.quickLinks}>
-                  {quickLinks.map((link) => (
+                  {visibleQuickLinks.map((link) => (
                     <li key={link.label}>
                       <Link href={link.href} className={styles.quickLink}>{link.label}</Link>
                     </li>

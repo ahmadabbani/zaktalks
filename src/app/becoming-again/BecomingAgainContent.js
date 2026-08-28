@@ -532,15 +532,6 @@ export default function BecomingAgainContent() {
                 join the next cohort.
               </p>
 
-              <Link
-                href={DISCOVERY_CALL_URL}
-                target="_blank"
-                rel="noreferrer"
-                className={styles.enrollCta}
-              >
-                <span>Book a discovery call</span>
-                <FiArrowUpRight aria-hidden="true" />
-              </Link>
             </div>
           </div>
         </div>

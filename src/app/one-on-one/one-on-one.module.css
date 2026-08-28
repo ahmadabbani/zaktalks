@@ -1462,6 +1462,20 @@
   line-height: 1.5;
 }
 
+@media (min-width: 901px) {
+  .journeyHeader {
+    grid-row: 1 / span 2;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .journeyOutroText {
+    margin-top: auto;
+    padding-top: clamp(2rem, 4vw, 4rem);
+  }
+}
+
 @media (max-width: 900px) {
   .journeyLayout {
     grid-template-columns: minmax(0, 1fr);
@@ -1478,6 +1492,10 @@
 
   .journeySubheading {
     max-width: 62ch;
+  }
+
+  .journeyOutroText {
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
   }
 }
 
@@ -1934,7 +1952,7 @@
   padding: 0.36rem;
   border-radius: 50%;
   background: var(--color-white);
-  color: var(--color-deep-slate);
+  color: var(--color-dark-blue);
   transition: var(--home-cta-arrow-transition);
 }
 
@@ -2296,7 +2314,7 @@
   padding: 0.4rem;
   border-radius: 50%;
   background: var(--color-white);
-  color: var(--color-deep-slate);
+  color: var(--color-dark-blue);
   transition: var(--home-cta-arrow-transition);
 }
 

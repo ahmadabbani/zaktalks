@@ -1,5 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
+import { PUBLIC_COURSE_CATALOG_ENABLED } from '@/lib/publicFeatureFlags'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import styles from './page.module.css'
 
 export const metadata = {
@@ -8,6 +10,8 @@ export const metadata = {
 }
 
 export default async function CoursesPage() {
+  if (!PUBLIC_COURSE_CATALOG_ENABLED) notFound()
+
   const supabase = await createClient()
   
   const { data: { user } } = await supabase.auth.getUser()
