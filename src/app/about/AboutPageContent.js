@@ -927,7 +927,7 @@ export default function AboutPageContent() {
               </p>
 
               <div className={styles.finalCtaActions}>
-                <Link href="/becoming-again" className={`${styles.storyCta} ${styles.finalCtaPrimary}`}>
+                <Link href="/one-on-one" className={`${styles.storyCta} ${styles.finalCtaPrimary}`}>
                   <span>Work With Zak</span>
                   <FiArrowUpRight aria-hidden="true" />
                 </Link>

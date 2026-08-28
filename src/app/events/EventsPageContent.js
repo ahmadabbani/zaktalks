@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
+import { FiArrowUpRight } from 'react-icons/fi'
 import EventsGallerySection from './EventsGallerySection'
 import SignatureSessionsSection from './SignatureSessionsSection'
 import EventsTestimonialsSection from './EventsTestimonialsSection'
@@ -172,6 +173,17 @@ export default function EventsPageContent({ galleryImages = [] }) {
                     For events and teams ready for a conversation with depth, participation, and
                     practical relevance.
                   </p>
+
+                  <div className={styles.heroActions}>
+                    <button
+                      type="button"
+                      className={styles.heroBookingCta}
+                      onClick={() => window.dispatchEvent(new Event('events:open-booking'))}
+                    >
+                      <span>Start a Booking Request</span>
+                      <FiArrowUpRight aria-hidden="true" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className={styles.heroVisual} aria-label="ZakTalks events and speaking">
@@ -202,8 +214,9 @@ export default function EventsPageContent({ galleryImages = [] }) {
             <div className={styles.introGrid}>
               <div className={styles.introHeader}>
                 <h2 id="events-intro-heading" className={styles.sectionTitle}>
-                  <span className={styles.titleLine}>A new speaker chapter.</span>
-                  <span className={styles.titleLine}>Work with real roots.</span>
+                  A new speaker chapter
+                  <br />
+                  Worth with real roots
                 </h2>
 
                 <p className={styles.introLead}>

@@ -57,7 +57,8 @@
 }
 
 .subheading {
-  max-width: 58ch;
+  width: 100%;
+  max-width: none;
   margin-inline: auto;
   margin-top: clamp(1.15rem, 1.8vw, 1.6rem);
   color: var(--home-subheading-color);
@@ -492,7 +493,7 @@
   }
 
   .subheading {
-    max-width: 58ch;
+    max-width: none;
   }
 }
 @media (max-width: 680px) {

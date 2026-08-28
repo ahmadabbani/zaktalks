@@ -86,7 +86,7 @@ export default function EventFormatsSection() {
         >
           <p className={styles.eyebrow}>Ways to work together</p>
           <h2 id="event-formats-heading" className={styles.title}>
-            More conversations Zak can bring to your event
+            Conversations Zak Can Bring to Your Event
           </h2>
           <p className={styles.intro}>Choose the format that fits</p>
         </header>

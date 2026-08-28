@@ -93,10 +93,11 @@
 }
 
 .track {
-  --cards-per-view: 4;
+  --cards-per-view: 3;
   --card-gap: clamp(0.85rem, 1.2vw, 1.25rem);
 
   display: flex;
+  align-items: stretch;
   gap: var(--card-gap);
   transform: translateX(calc(var(--testimonial-index) * -1 * ((100% - ((var(--cards-per-view) - 1) * var(--card-gap))) / var(--cards-per-view) + var(--card-gap))));
   transition: transform 0.62s cubic-bezier(0.22, 1, 0.36, 1);
@@ -159,6 +160,37 @@
   font-size: var(--home-text-size);
   font-weight: var(--home-text-weight);
   line-height: var(--home-text-line-height);
+  white-space: pre-line;
+}
+
+.track:has(.card.isExpanded) {
+  align-items: flex-start;
+}
+
+.quoteToggle {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  margin: -0.25rem 0 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-dark-blue);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  cursor: pointer;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.quoteToggle:hover,
+.quoteToggle:focus-visible {
+  color: var(--color-black);
+  outline: none;
+  transform: translateX(0.15rem);
 }
 
 .person {

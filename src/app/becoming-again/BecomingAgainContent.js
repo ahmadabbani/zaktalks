@@ -19,8 +19,6 @@ import {
 import BecomingAgainTestimonials from './BecomingAgainTestimonials'
 import styles from './becoming-again.module.css'
 
-const WAITLIST_URL =
-  'https://calendly.com/zaktalks/1-1-session-with-zak?back=1&month=2026-01'
 const DISCOVERY_CALL_URL =
   'https://calendly.com/zaktalks/1-1-session-with-zak?back=1&month=2026-01'
 
@@ -299,9 +297,7 @@ export default function BecomingAgainContent() {
 
             <div className={styles.cohortActions}>
               <Link
-                href={WAITLIST_URL}
-                target="_blank"
-                rel="noreferrer"
+                href="/contact"
                 className={styles.primaryCta}
               >
                 <span>Join waiting list</span>
@@ -591,7 +587,7 @@ export default function BecomingAgainContent() {
 
               <div className={styles.instructorBio}>
                 <p>
-                  Becoming Again Program is led by Zak, a multipotentialite who has
+                  <strong>Becoming Again Program</strong> is led by Zak, a multipotentialite who has
                   spent years working with entrepreneurs, executives, and organizations
                   in Lebanon and beyond.
                 </p>
@@ -714,9 +710,7 @@ export default function BecomingAgainContent() {
 
               <div className={styles.finalActions}>
                 <Link
-                  href={WAITLIST_URL}
-                  target="_blank"
-                  rel="noreferrer"
+                  href="/contact"
                   className={styles.primaryCta}
                 >
                   <span>Join waiting list</span>

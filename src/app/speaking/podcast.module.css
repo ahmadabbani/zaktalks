@@ -104,29 +104,38 @@
 /* The heading plane holds still through the whole drift; it only recedes a
    couple of percent while the next section is actually swallowing it. */
 .heroHeading {
+  width: 100%;
+  max-width: none;
   transform: scale(calc(1 - var(--pz-c) * 0.018));
   transform-origin: 50% 42%;
   opacity: calc(1 - var(--pz-c) * 0.35);
 }
 
 .heroTitle {
+  width: 100%;
+  max-width: none;
   color: var(--color-white);
   font-size: calc(var(--home-headline-size) * 1.1);
   font-weight: 900;
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
   text-transform: uppercase;
-  text-wrap: balance;
+  text-wrap: wrap;
 }
 
 .heroSubheading {
   margin: clamp(0.75rem, 1.4vw, 1.1rem) auto 0;
-  max-width: 34ch;
+  width: 100%;
+  max-width: 60ch;
   color: var(--color-white);
   opacity: 0.82;
   font-size: calc(var(--home-subheading-size) * 1.06);
   font-weight: var(--home-text-weight);
   line-height: var(--home-text-line-height);
+}
+
+.heroSubheading strong {
+  font-weight: 850;
 }
 
 /* Sits under the badge stack, left of the figure — a small signature mark
@@ -251,6 +260,7 @@
   width: auto;
   max-width: 100%;
   height: var(--pz-figure-h);
+  scale: 0.92;
   object-fit: contain;
   object-position: bottom center; /* keeps the painted bottom edge on the box bottom */
   transform: scale(calc(1 + var(--pz-p) * var(--pz-figure-grow)));
@@ -519,8 +529,9 @@
 }
 
 .audienceCards .sectionTitle {
-  max-width: 20ch;
+  max-width: none;
   margin-bottom: clamp(1.6rem, 2.4vw, 2.2rem);
+  text-wrap: wrap;
 }
 
 .audienceCard {
@@ -887,7 +898,7 @@
   }
 
   .audienceCards .sectionTitle {
-    max-width: 100%;
+    max-width: none;
   }
 }
 
@@ -994,7 +1005,7 @@
   }
 
   .audienceCards .sectionTitle {
-    max-width: 26ch;
+    max-width: none;
   }
 
   .elephantSubtitle,
@@ -1186,7 +1197,7 @@
   }
 
   .heroSubheading {
-    max-width: 28ch;
+    max-width: 52ch;
   }
 
   /* Keep the secondary hero artwork at the same tablet size all the way down
@@ -1227,6 +1238,12 @@
 
   .proofLabel {
     font-size: 0.72rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .heroCopyInner {
+    transform: translateY(0.45rem);
   }
 }
 
@@ -1275,7 +1292,7 @@
 
   .heroSubheading {
     margin-top: 0.5rem;
-    max-width: 24ch;
+    max-width: 42ch;
     font-size: calc(var(--home-subheading-size) * 1.02);
   }
 
@@ -1336,7 +1353,7 @@
    and centres the measure. Setting a gutter here too would compound the two
    and crush the text on wide screens. */
 .archiveHeader {
-  max-width: 62rem;
+  max-width: none;
   margin-inline: auto;
   text-align: center;
   opacity: 0;
@@ -1420,8 +1437,8 @@
   gap: 0.55rem;
   padding: clamp(0.85rem, 1.1vw, 1.1rem) clamp(1.45rem, 2vw, 2rem);
   border-radius: 999px;
-  background: var(--color-dark-blue);
-  color: var(--color-white);
+  background: var(--color-yellow);
+  color: var(--color-black);
   font-size: calc(var(--home-cta-size) * 1.12);
   font-weight: var(--home-cta-weight);
   line-height: 1;
@@ -1442,6 +1459,51 @@
   transform: rotate(180deg);
 }
 
+.seasonHintStatic {
+  cursor: default;
+}
+
+.seasonCenterLabel {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  color: var(--color-white);
+  font-size: clamp(1.2rem, 3vw, 2.7rem);
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 0.4rem 1.5rem rgba(0, 0, 0, 0.35);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.seasonCenterLabel > span {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 0.9rem 1.6rem;
+  border: 2px solid currentColor;
+  border-radius: clamp(1rem, 1.8vw, 1.5rem);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.seasonCenterLabel > span::before {
+  content: '';
+  position: absolute;
+  inset: -3rem;
+  z-index: -1;
+  background-image: url('/podcast-s1.jpg');
+  background-position: center;
+  background-size: cover;
+  filter: blur(0.6rem) saturate(1.1) brightness(0.8);
+  transform: scale(1.3);
+}
+
 @media (min-width: 1025px) {
   .seasonHint {
     min-width: clamp(14rem, 16vw, 19rem);
@@ -1457,10 +1519,10 @@
   }
 }
 
-/* Season 2: the blur is CSS, the "Season 2" wordmark is baked into the image. */
+/* The Season 2 cover stays sharp; only its centered announcement is blurred. */
 .seasonTileLocked .seasonImage {
-  filter: blur(5px) saturate(0.85) brightness(0.94);
-  transform: scale(1.06); /* covers the soft edge blur leaves at the border */
+  filter: none;
+  transform: none;
 }
 
 .seasonComingSoon {
@@ -1469,28 +1531,54 @@
   z-index: 2;
   display: grid;
   place-items: center;
-  background: rgba(33, 82, 91, 0.34);
+  background: transparent;
 }
 
 .seasonComingSoonText {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 0.35em;
-  padding: 0.9rem 1.6rem;
-  border: 2px solid var(--color-white);
+  max-width: min(82%, 34rem);
+  gap: 0.75rem;
+  padding: 1rem 1.35rem;
+  border: 2px solid rgba(255, 255, 255, 0.92);
   border-radius: clamp(1rem, 1.8vw, 1.5rem);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   color: var(--color-white);
-  font-size: clamp(1.05rem, 2.4vw, 2rem);
-  font-weight: 850;
-  letter-spacing: 0.08em;
-  line-height: 1;
+  font-size: clamp(0.85rem, 1.3vw, 1.15rem);
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.45;
   text-align: center;
-  text-transform: uppercase;
   text-shadow: 0 0.4rem 1.5rem rgba(0, 0, 0, 0.35);
 }
 
-.seasonComingSoonLine {
-  display: block;
+.seasonComingSoonText::before {
+  content: '';
+  position: absolute;
+  inset: -3rem;
+  z-index: -1;
+  background-image: url('/podcast-s2.jpg');
+  background-position: center;
+  background-size: cover;
+  filter: blur(0.6rem) saturate(1.1) brightness(0.8);
+  transform: scale(1.3);
+}
+
+.seasonComingSoonText strong {
+  font-weight: 850;
+}
+
+.seasonComingSoonHeadline {
+  font-size: clamp(1.2rem, 2.4vw, 2.35rem);
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  line-height: 1.05;
+  text-transform: uppercase;
 }
 
 /* ------------------------------------------------------------- archive -- */
@@ -2172,8 +2260,13 @@
 .featuredList {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
   gap: clamp(1.25rem, 2.2vw, 2rem);
   margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.featuredList:has(.featuredCardExpanded) {
+  align-items: start;
 }
 
 /* Stacked internally: with two cards sharing a row an image column would be
@@ -2291,6 +2384,30 @@
   font-size: var(--home-text-size);
   font-weight: var(--home-text-weight);
   line-height: var(--home-text-line-height);
+  white-space: pre-line;
+}
+
+.featuredHookToggle {
+  align-self: flex-start;
+  margin-top: 0.45rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-yellow);
+  font: inherit;
+  font-size: var(--home-small-text-size, 0.8rem);
+  font-weight: 800;
+  line-height: 1.3;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.featuredHookToggle:hover,
+.featuredHookToggle:focus-visible {
+  color: var(--color-white);
+  outline: none;
 }
 
 /* Bottom margin here rather than a top margin on the button, which uses
@@ -2562,10 +2679,10 @@
     will-change: auto;
   }
 
-  /* The season 2 blur is meaning, not motion, so it is preserved above. */
+  /* The Season 2 cover remains sharp in reduced-motion mode as well. */
   .seasonTileLocked .seasonImage {
-    filter: blur(5px) saturate(0.85) brightness(0.94);
-    transform: scale(1.06);
+    filter: none;
+    transform: none;
   }
 
   .heroBadge,

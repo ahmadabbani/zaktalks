@@ -189,6 +189,17 @@ export default function EventsBookingSection() {
   }, [])
 
   useEffect(() => {
+    const openFromHero = () => {
+      setStatus('idle')
+      setSubmitMessage('')
+      setIsOpen(true)
+    }
+
+    window.addEventListener('events:open-booking', openFromHero)
+    return () => window.removeEventListener('events:open-booking', openFromHero)
+  }, [])
+
+  useEffect(() => {
     if (!isOpen) return undefined
 
     const previousOverflow = document.body.style.overflow

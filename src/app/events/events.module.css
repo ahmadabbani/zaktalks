@@ -127,6 +127,58 @@
   line-height: var(--home-text-line-height);
 }
 
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: clamp(1.5rem, 2.4vw, 2rem);
+}
+
+.heroBookingCta {
+  display: inline-flex;
+  min-height: var(--home-cta-min-height);
+  align-items: center;
+  justify-content: center;
+  gap: 0.72rem;
+  padding: 0.78rem 0.86rem 0.78rem 1.45rem;
+  color: var(--color-white);
+  border: 2px solid var(--color-dark-blue);
+  border-radius: 999px;
+  background: var(--color-dark-blue);
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  line-height: var(--home-cta-line-height);
+  cursor: pointer;
+  transition: var(--home-cta-transition);
+}
+
+.heroBookingCta svg {
+  width: 1.85rem;
+  height: 1.85rem;
+  padding: 0.36rem;
+  flex: 0 0 auto;
+  color: var(--color-dark-blue);
+  border-radius: 50%;
+  background: var(--color-white);
+  transition: var(--home-cta-arrow-transition);
+}
+
+.heroBookingCta:hover,
+.heroBookingCta:focus-visible {
+  color: var(--color-white);
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  box-shadow: 0 1.1rem 2.4rem rgba(196, 159, 12, 0.22);
+  transform: var(--home-cta-hover-transform);
+  outline: none;
+}
+
+.heroBookingCta:hover svg,
+.heroBookingCta:focus-visible svg {
+  color: var(--color-yellow);
+  background: var(--color-white);
+  transform: var(--home-cta-arrow-hover-transform);
+}
+
 .heroVisual {
   position: relative;
   align-self: start;
@@ -158,6 +210,7 @@
 .heroSubheading,
 .heroText,
 .heroNote,
+.heroActions,
 .imageShell {
   opacity: 0;
 }
@@ -176,6 +229,10 @@
 
 .heroReady .heroNote {
   animation: eventsHeroIn 0.82s 0.26s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.heroReady .heroActions {
+  animation: eventsHeroIn 0.82s 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .heroReady .imageShell {
@@ -270,6 +327,12 @@
   text-wrap: balance;
 }
 
+.introHeader .sectionTitle {
+  width: 100%;
+  max-width: none;
+  text-wrap: wrap;
+}
+
 .introLead {
   max-width: 68ch;
   margin: clamp(1.25rem, 2vw, 1.8rem) auto 0;
@@ -277,16 +340,6 @@
   font-size: var(--home-subheading-size);
   font-weight: var(--home-subheading-weight);
   line-height: var(--home-subheading-line-height);
-}
-
-.titleLine {
-  display: block;
-}
-
-@media (min-width: 1025px) {
-  .titleLine {
-    white-space: nowrap;
-  }
 }
 
 .introCopy {
@@ -1197,6 +1250,7 @@
   .heroSubheading,
   .heroText,
   .heroNote,
+  .heroActions,
   .imageShell,
   .introHeader,
   .introCopy,
@@ -1221,6 +1275,7 @@
   .heroVisual {
     width: var(--desktop-oval-width);
     height: var(--desktop-oval-height);
+    margin-top: clamp(3rem, 5.5vh, 5rem);
   }
 
   .imageShell {

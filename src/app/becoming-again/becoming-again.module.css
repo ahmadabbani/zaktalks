@@ -82,7 +82,7 @@
 
 .heroTitleLead {
   margin-bottom: 0.16em;
-  font-weight: 900;
+  font-weight: inherit;
 }
 
 .heroSubtitle {
@@ -505,7 +505,8 @@
 }
 
 .curriculumHeader {
-  max-width: 46rem;
+  width: 100%;
+  max-width: none;
   margin-inline: auto;
   text-align: center;
   opacity: 0;
@@ -757,7 +758,8 @@
 }
 
 .formatHeader {
-  max-width: 46rem;
+  width: 100%;
+  max-width: none;
   margin-inline: auto;
   text-align: center;
   opacity: 0;
@@ -1277,7 +1279,8 @@
 }
 
 .faqHeader {
-  max-width: 62rem;
+  width: 100%;
+  max-width: none;
   margin-inline: auto;
   text-align: center;
   opacity: 0;

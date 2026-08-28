@@ -8,6 +8,15 @@ import { FiArrowUpRight, FiChevronDown, FiClock, FiPlay } from 'react-icons/fi'
 import styles from './podcast.module.css'
 
 const INITIAL_VISIBLE = 6
+const FEATURED_HOOK_PREVIEW_LENGTH = 260
+
+function getFeaturedHookPreview(hook) {
+  if (hook.length <= FEATURED_HOOK_PREVIEW_LENGTH) return hook
+
+  const preview = hook.slice(0, FEATURED_HOOK_PREVIEW_LENGTH)
+  const lastSpace = preview.lastIndexOf(' ')
+  return `${preview.slice(0, lastSpace > 0 ? lastSpace : FEATURED_HOOK_PREVIEW_LENGTH).trimEnd()}…`
+}
 
 const sortOptions = [
   { id: 'latest', label: 'Latest' },
@@ -73,10 +82,12 @@ const featuredEpisodes = [
   {
     videoId: 'hJ3XoT5br70',
     title: "It's Not About Money: It's About You!",
-    hook:
-      'Zak explores the routines, beliefs, and comfort zones that can quietly shape our ' +
-      'relationship with money, success, and the life we believe is possible.',
-    tags: ['Money', 'Self-awareness', 'Personal development'],
+    hook: `Your Relationship With Money Is Personal
+
+Money is rarely just about numbers. It can carry fear, pressure, guilt, shame, comparison, and the beliefs you learned long before you started earning, spending, or investing.
+
+In this conversation, Zak explores the deeper patterns behind the way we relate to money: why abundance can feel unsafe, why some people struggle to receive, and how unconscious beliefs can quietly shape financial choices. This is not about chasing wealth. It is about building a more aware, honest, and empowered relationship with money.`,
+    tags: ['Money mindset', 'Financial awareness', 'Self-worth', 'Personal growth'],
     watchUrl: 'https://www.youtube.com/watch?v=hJ3XoT5br70&list=PLPFgt_ywYJEM',
   },
   {
@@ -250,11 +261,13 @@ function FeaturedEpisodeCard({ item, details, index, register, cx }) {
   // playlist request failed or the video was removed from the playlist.
   const thumbnail = details?.thumbnail || `https://i.ytimg.com/vi/${item.videoId}/maxresdefault.jpg`
   const revealId = `featured-${item.videoId}`
+  const [isHookExpanded, setIsHookExpanded] = useState(false)
+  const canExpandHook = item.hook.length > FEATURED_HOOK_PREVIEW_LENGTH
 
   return (
     <article
       ref={register(revealId)}
-      className={cx(styles.featuredCard, revealId)}
+      className={`${cx(styles.featuredCard, revealId)} ${isHookExpanded ? styles.featuredCardExpanded : ''}`}
       style={{ '--featured-delay': `${index * 120}ms` }}
     >
       <a
@@ -295,7 +308,20 @@ function FeaturedEpisodeCard({ item, details, index, register, cx }) {
           </a>
         </h4>
 
-        <p className={styles.featuredHook}>{item.hook}</p>
+        <p className={styles.featuredHook}>
+          {isHookExpanded ? item.hook : getFeaturedHookPreview(item.hook)}
+        </p>
+
+        {canExpandHook && (
+          <button
+            type="button"
+            className={styles.featuredHookToggle}
+            onClick={() => setIsHookExpanded((current) => !current)}
+            aria-expanded={isHookExpanded}
+          >
+            {isHookExpanded ? 'Show less' : 'Learn more'}
+          </button>
+        )}
 
         <ul className={styles.featuredTags}>
           {item.tags.map((tag) => (
@@ -482,6 +508,8 @@ export default function PodcastArchiveSection({ episodes = [] }) {
                 className={styles.seasonImage}
               />
 
+              <span className={styles.seasonCenterLabel}><span>Season 1</span></span>
+
               <span className={styles.seasonHint}>
                 <span>{isOpen ? 'Hide Season 1' : 'Watch Season 1'}</span>
                 <FiChevronDown aria-hidden="true" />
@@ -501,9 +529,17 @@ export default function PodcastArchiveSection({ episodes = [] }) {
 
               <span className={styles.seasonComingSoon}>
                 <span className={styles.seasonComingSoonText}>
-                  <span className={styles.seasonComingSoonLine}>Season 2</span>
-                  <span className={styles.seasonComingSoonLine}>Coming Soon</span>
+                  <strong className={styles.seasonComingSoonHeadline}>Season 2 is now on air.</strong>
+                  <span>
+                    New episodes every <strong>Friday</strong> on <strong>Shift TV/Cablevision+</strong>{' '}
+                    and every <strong>Sunday</strong> on <strong>ZakTalks YouTube channel</strong>.
+                  </span>
                 </span>
+              </span>
+
+              <span className={`${styles.seasonHint} ${styles.seasonHintStatic}`}>
+                <span>Watch Season 2</span>
+                <FiChevronDown aria-hidden="true" />
               </span>
             </div>
           )
@@ -642,7 +678,7 @@ export default function PodcastArchiveSection({ episodes = [] }) {
             className={cx(styles.featuredHeader, 'featured-header')}
           >
             <p className={styles.eyebrow}>Featured</p>
-            <h3 className={styles.featuredTitle}>Most popular episodes</h3>
+            <h3 className={styles.featuredTitle}>MOST POPULAR EPISODES</h3>
           </div>
 
           <div className={styles.featuredList}>
@@ -658,7 +694,9 @@ export default function PodcastArchiveSection({ episodes = [] }) {
             ))}
           </div>
 
-          <div
+          {/* Course promotion is intentionally hidden for now. Keep this block
+              available so it can be restored beneath the featured episodes. */}
+          {/* <div
             ref={register('featured-course')}
             className={cx(styles.featuredCourse, 'featured-course')}
           >
@@ -679,7 +717,7 @@ export default function PodcastArchiveSection({ episodes = [] }) {
               <span>Explore the course</span>
               <FiArrowUpRight aria-hidden="true" />
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

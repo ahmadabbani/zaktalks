@@ -87,7 +87,7 @@ export default function PodcastFeatureSection() {
             </p>
 
             <Link href="/speaking" className={styles.cta}>
-              <span>Go to the podcast page</span>
+              <span>ZakTalks Podcast</span>
               <FiArrowUpRight aria-hidden="true" />
             </Link>
 

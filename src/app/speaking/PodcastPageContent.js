@@ -183,11 +183,13 @@ export default function PodcastPageContent({ episodes = [] }) {
               <div className={styles.heroHeading}>
                 <div className={styles.heroHeadingReveal}>
                   <h1 id="podcast-hero-heading" className={styles.heroTitle}>
-                    Season 2 is coming soon
+                    The elephant in the room is back
                   </h1>
 
                   <p className={styles.heroSubheading}>
-                    Season 2 arriving end of August, subscribe so you don&rsquo;t miss it.
+                    <strong>Season 2 of ZakTalks</strong> premieres <strong>Friday, 28 August</strong>{' '}
+                    on <strong>Shift TV/Cablevision+</strong> | <strong>7:00PM (GMT+2)</strong>. Full
+                    episodes arrive on <strong>YouTube</strong> every Sunday.
                   </p>
                 </div>
               </div>
@@ -227,13 +229,16 @@ export default function PodcastPageContent({ episodes = [] }) {
                   />
                 </div>
 
-                <Image
-                  src="/podcasthero.png"
-                  alt="Zak Dakkash holding a microphone"
-                  width={1100}
-                  height={1700}
-                  priority
-                  sizes="(max-width: 620px) 74vw, (max-width: 1024px) 52vw, 34vw"
+                {/* This prepared transparent cutout is intentionally served at
+                    its original quality rather than through Next's optimizer. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/p-hero.png"
+                  alt="Zak Dakkash seated with vinyl records"
+                  width={1912}
+                  height={823}
+                  fetchPriority="high"
+                  decoding="async"
                   className={styles.heroFigure}
                 />
               </div>
