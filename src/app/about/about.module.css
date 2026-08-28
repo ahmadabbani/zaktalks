@@ -1612,7 +1612,11 @@
 @media (max-width: 620px) {
   .hero {
     min-height: 100svh;
-    padding-top: clamp(7rem, 24vw, 8rem);
+    padding-top: clamp(6.15rem, 19vw, 6.9rem);
+  }
+
+  .heroContentWidth {
+    padding: clamp(1.55rem, 4.5vw, 1.95rem) 0 clamp(1.95rem, 5.5vw, 2.45rem);
   }
 
   .heroCopy {
@@ -1620,8 +1624,9 @@
   }
 
   .heroCta {
-    width: 100%;
-    justify-content: space-between;
+    width: fit-content;
+    max-width: 100%;
+    justify-content: center;
   }
 
   .counterPanel {
@@ -1711,8 +1716,9 @@
   }
 
   .storyCta {
-    width: 100%;
-    justify-content: space-between;
+    width: fit-content;
+    max-width: 100%;
+    justify-content: center;
   }
 
   .milestonesSection {
@@ -2999,36 +3005,46 @@
   }
 
   .valuesCta {
-    width: 100%;
-    justify-content: space-between;
+    width: fit-content;
+    max-width: 100%;
+    justify-content: center;
     white-space: normal;
   }
 }
 
-@media (max-width: 460px) {
+@media (max-width: 540px) {
   .valuesImageWrap {
-    top: 2.25rem;
-  }
-
-  .valuesReadingPanel {
-    margin-top: 1.25rem;
-  }
-}
-
-@media (max-width: 430px) {
-  .valuesImageWrap {
-    top: 3rem;
-  }
-
-  .valuesReadingPanel {
-    margin-top: 2rem;
-  }
-}
-
-@media (max-width: 425px) {
-  .valuesImageWrap {
-    top: 5rem;
+    top: 4.75rem;
     z-index: 6;
+  }
+
+  .valuesReadingPanel {
+    margin-top: 2.1rem;
+  }
+}
+
+@media (max-width: 475px) {
+  .valuesImageWrap {
+    top: 5.1rem;
+  }
+
+  .valuesReadingPanel {
+    margin-top: 2.3rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .valuesCanvas {
+    grid-template-columns: minmax(0, 1fr) 6.25rem;
+  }
+
+  .valuesImageWrap {
+    top: 5.35rem;
+    width: 6.25rem;
+  }
+
+  .valuesReadingPanel {
+    margin-top: 2.45rem;
   }
 }
 
@@ -3335,8 +3351,10 @@
 
   .finalCtaPrimary,
   .finalCtaSecondary {
-    width: 100%;
-    justify-content: space-between;
+    width: fit-content;
+    max-width: 100%;
+    justify-self: center;
+    justify-content: center;
   }
 }
 

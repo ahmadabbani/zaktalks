@@ -1734,7 +1734,7 @@
   }
 
   .enrollCta {
-    align-self: stretch;
+    align-self: flex-start;
     justify-content: center;
   }
 
@@ -1758,22 +1758,20 @@
   }
 
   .instructorLink {
-    display: grid;
-    width: 100%;
-    grid-template-columns: 1.8rem minmax(0, 1fr) 1.8rem;
-    column-gap: 0.75rem;
-    padding-inline: 0.7rem;
+    display: inline-flex;
+    width: fit-content;
+    max-width: 100%;
+    justify-content: center;
     text-align: center;
   }
 
   .instructorLink span {
-    grid-column: 2;
-    justify-self: center;
+    grid-column: auto;
   }
 
   .instructorLink svg {
-    grid-column: 3;
-    justify-self: end;
+    grid-column: auto;
+    justify-self: auto;
   }
 
   .faqItemOpen .faqPanelInner {

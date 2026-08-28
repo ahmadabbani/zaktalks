@@ -783,8 +783,9 @@
   }
 
   .cta {
-    width: 100%;
-    justify-content: space-between;
+    width: fit-content;
+    max-width: 100%;
+    justify-content: center;
     padding-block: var(--home-cta-compact-padding-block);
   }
 

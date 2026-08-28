@@ -463,7 +463,7 @@
   .heroActions {
     width: 100%;
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
   }
 
   .heroVisual {
@@ -2348,7 +2348,8 @@
   }
 
   .closingCta {
-    width: 100%;
+    width: fit-content;
+    max-width: 100%;
   }
 }
 

@@ -466,8 +466,9 @@
   }
 
   .cta {
-    width: 100%;
-    justify-content: space-between;
+    width: fit-content;
+    max-width: 100%;
+    justify-content: center;
   }
 
   .visual {

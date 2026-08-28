@@ -12,7 +12,7 @@ const testimonials = [
 
 At the beginning of the journey, I wondered what was happening to me. But through the growth, becoming, and learning to accept myself for who I am, I can say it has been worth every minute and every dime I invested in the process.`,
     name: 'Jean Paul El Hajj',
-    image: '/testimonials/avatar-1.jpg',
+    image: '/testimonials/1on1/Jean-Paul El Hage.jpeg',
   },
   {
     quote: `As an introspective overthinker, I believed I did not need therapy to solve my problems or understand what was going on. But in February 2026, I noticed a recurring pattern in my life and could not understand why it kept repeating.
@@ -21,7 +21,7 @@ I decided to start working with Zak, and although the first session was overwhel
 
 Through this process, I have changed how I approach relationships, becoming more mindful of who I allow into my life and how I view myself in every context. I have also learned to hold 'mini Jenny' dearly, wherever life takes me.`,
     name: 'Jenny Elia',
-    image: '/testimonials/avatar-2.jpg',
+    image: '/testimonials/1on1/Jenny Elia.JPG',
   },
   {
     quote: `At 25, I felt completely lost and stuck in recurring cycles across work, family, and relationships. As a fashion designer, I had been out of work for nearly two years, stepping back from opportunities because I was unsure of myself and my direction. I had also lost my creative spark and was facing financial instability and family strain.
@@ -30,12 +30,12 @@ Zak helped me feel safe while gently challenging the beliefs that kept me stuck.
 
 Through this experience, I found myself again. I am now launching my own brand, setting healthier boundaries with my family, and becoming more aware of patterns in my relationship. I also gained a deeper understanding of the connection between my emotional stress and physical health while living with endometriosis. The inner work continues, but returning home to myself has been worth every step.`,
     name: 'Romy Bader',
-    image: '/testimonials/avatar-3.jpg',
+    image: '/testimonials/1on1/Romy Bader.jpg',
   },
   {
     quote: `I was often feeling upset and exhausted, and I struggled to communicate clearly and deal with certain situations. From my first session with Zak, I felt relaxed after speaking with him. I felt that he understood me and recognized what I was truly feeling.`,
     name: 'Elie Saade',
-    image: '/testimonials/avatar-5.jpg',
+    image: '/testimonials/1on1/Elie Saadeh.jpeg',
   },
   {
     quote: `I began working with Zak during one of the most difficult periods of my life, while navigating major changes, motherhood, a demanding professional life, and the need to find balance again.
@@ -46,12 +46,12 @@ Our sessions helped me handle challenges with my children in a healthier way, se
 
 It was not one dramatic change. It was a series of small realizations and shifts that gradually changed the way I see myself, handle situations, make decisions, and trust myself.`,
     name: 'Amy Aoun',
-    image: '/testimonials/avatar-lara.jpg',
+    image: '/testimonials/1on1/Amy Aoun.JPG',
   },
   {
     quote: `I used to be afraid to speak in front of an audience, new people, or even friends. Through working with Zak and taking part in Becoming Again Program, I gained confidence, learned how to communicate more comfortably, and became more able to be myself around others.`,
     name: 'Arno Donerian',
-    image: '/testimonials/avatar-1.jpg',
+    image: '/testimonials/1on1/Arno Donerian.jpeg',
   },
   {
     quote: `Although many things in my life were going well on the outside, I felt overwhelmed and disconnected from myself. I was overthinking, questioning my decisions, and reacting emotionally without always understanding what was beneath those reactions.
@@ -60,7 +60,7 @@ What made working with Zak possible was the non-judgmental space he created. I n
 
 I am still in the process, but I have become more aware of my patterns, triggers, overthinking, and tendency to seek reassurance outside myself. I am learning to pause, understand what I feel before reacting, connect with my inner child, and express my feelings more clearly. I now see this as an ongoing journey of getting to know myself, including the parts that are not always easy to face.`,
     name: 'Christelle El Maasri',
-    image: '/testimonials/avatar-2.jpg',
+    image: '/testimonials/1on1/Christelle El Maasri.jpeg',
   },
   {
     quote: `Through Zak's mentorship, I found more clarity about my limiting beliefs. I learned about the importance of self-reflection and understanding my ego to open my heart more fully to life.
@@ -71,7 +71,7 @@ His compassion and loving kindness made this work possible. I am grateful for th
 
 Thank you Zak!`,
     name: 'Marianne Eid',
-    image: '/testimonials/avatar-3.jpg',
+    image: '/testimonials/1on1/Ianne Universe.jpeg',
   },
 ]
 
@@ -200,7 +200,7 @@ export default function OneOnOneTestimonials() {
                       width={160}
                       height={160}
                       sizes="(max-width: 680px) 68px, 76px"
-                      unoptimized
+                      quality={64}
                       className={styles.avatar}
                     />
                     <div>

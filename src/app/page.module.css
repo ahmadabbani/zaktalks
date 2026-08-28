@@ -855,10 +855,15 @@
     padding-top: 6.25rem;
   }
 
-  .heroActions,
+  .heroActions {
+    width: 100%;
+  }
+
   .primaryHeroCta,
   .secondaryHeroCta {
-    width: 100%;
+    width: fit-content;
+    max-width: 100%;
+    justify-self: center;
   }
 }
 
@@ -2635,8 +2640,9 @@
 
   .primaryHeroCta,
   .secondaryHeroCta {
-    width: 100%;
+    width: fit-content;
     min-width: 0;
+    justify-self: center;
     padding-block: var(--home-cta-compact-padding-block);
     padding-inline: clamp(0.85rem, 2.4vw, 1.25rem);
     white-space: normal;

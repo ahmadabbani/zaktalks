@@ -10,7 +10,7 @@ const testimonials = [
   {
     quote: `In brief, I was totally lost, in a very high anger state almost every day. I used to look and think badly of myself. I wanted to change but did not know how. Then Gilbert, a friend of mine, told me about the unrepeatable creature we are talking about, Zak Dakkash. We also cannot forget Ramy and Michel. Since then, life is easy, simple, beautiful. I am stronger, calmer, smarter, and the best change I made since then. I am always and ever grateful.`,
     name: 'Rony Charbel Nakhle',
-    image: '/testimonials/avatar-1.jpg',
+    image: '/testimonials/becomingagain/Rony Nakhle.png',
   },
   {
     quote: `Before this experience, I was focused on everything except what was within me. Without realizing it, I was constantly distracting myself from self-discovery. I felt something was wrong but did not yet have the words or awareness to understand it. I only knew I wanted to find the truth and change.
@@ -19,7 +19,7 @@ During my first call with Zak, I told him that I felt empty inside and was afrai
 
 The shift I have experienced through this ongoing, sometimes painful work can be summarized simply: learning who I truly am and pursuing God relentlessly.`,
     name: 'Paul Anthony Nakhle',
-    image: '/testimonials/avatar-2.jpg',
+    image: '/testimonials/becomingagain/Paul Anthony.jpg',
   },
   {
     quote: `I had many childhood experiences that were indirectly shaping my relationships, especially my relationship with my mother. My relationships were not working as I wanted them to, and I needed to understand what was behind those patterns.
@@ -28,7 +28,7 @@ Meeting Zak was eye-opening. I began to recognize how precious and important I a
 
 Setting boundaries became a central part of my journey. Step by step, I am learning to set clear, strong boundaries, even with the people closest to me, to protect both myself and my relationships.`,
     name: 'Edwine Zouein',
-    image: '/testimonials/avatar-3.jpg',
+    image: '/testimonials/becomingagain/edwine zouein.jpeg',
   },
   {
     quote: `I honestly do not know if I would still be here without Zak. I met him through my partner, Paul, and beginning this journey has been one of the most important experiences in my life.
@@ -37,7 +37,7 @@ Before working with Zak, I felt I had no personal leadership. Through our work, 
 
 I am eternally grateful for Zak's presence, guidance, and the role he has played in my journey. ❤️`,
     name: 'Pia Maria Obeid',
-    image: '/testimonials/avatar-5.jpg',
+    image: '/testimonials/becomingagain/Pia maria obeid.jpeg',
   },
   {
     quote: `At the beginning of the year, I promised myself I would seek greater clarity: to understand why I was stuck in certain patterns, unlock my inner potential, and know myself more deeply. A close friend shared an episode of ZakTalks with me, and that led me to begin this journey.
@@ -48,7 +48,7 @@ I now feel more aligned with my true self, have rebuilt healthier boundaries, an
 
 Eternal gratitude is an understatement to my journey with Zak.`,
     name: 'Christelle Aouad',
-    image: '/testimonials/avatar-lara.jpg',
+    image: '/testimonials/becomingagain/Christelle Aouad.jpeg',
   },
   {
     quote: `When I first started working with Zak, I had many questions about life, personal experiences, and work. I had heard about him from my older brother for a long time and had already attended the Money Workshop before beginning one-on-one sessions.
@@ -59,7 +59,7 @@ Becoming Again Program gave me the opportunity to explore my strengths, weakness
 
 I am sure I am leaving out many things in this testimony, but I want to sincerely thank Zak for all the change, growth, and awareness he has helped bring into my life.`,
     name: 'Alec Donerian',
-    image: '/testimonials/avatar-1.jpg',
+    image: '/testimonials/becomingagain/Alec Donerian.jpeg',
   },
   {
     quote: `Before starting coaching sessions with Zak, I felt lost and carried many questions about my fears, direction, potential, and how to move forward. Although I had experienced coaching and therapy before, I found that Zak created a space where I felt safe enough to open up and explore things more deeply.
@@ -70,7 +70,7 @@ I also developed a broader mindset, greater self-awareness, and a more grounded 
 
 So yes, I came to Zak with questions about my life, and somehow I ended up meeting myself along the way. And what a beautiful person she turned out to be.`,
     name: 'Rebecca Abi Khalil',
-    image: '/testimonials/avatar-2.jpg',
+    image: '/testimonials/becomingagain/Rebecca Abi Khalil.jpg',
   },
 ]
 
@@ -200,7 +200,7 @@ export default function BecomingAgainTestimonials() {
                       width={160}
                       height={160}
                       sizes="(max-width: 680px) 68px, 76px"
-                      unoptimized
+                      quality={64}
                       className={styles.avatar}
                     />
                     <div>
