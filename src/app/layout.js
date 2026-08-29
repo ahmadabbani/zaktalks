@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast'
 export const metadata = {
   title: 'ZakTalks - Online Learning Platform',
   description: 'Learn from expert tutors with interactive courses and assessments',
+  manifest: '/site.webmanifest',
 }
 
 export default function RootLayout({ children }) {
