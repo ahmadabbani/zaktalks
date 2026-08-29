@@ -377,6 +377,16 @@
   }
 }
 
+@media (min-width: 1025px) and (max-width: 1600px) {
+  .phoneWrap {
+    width: clamp(10.75rem, 11.5vw, 13rem);
+  }
+
+  .platformLinks {
+    right: calc(clamp(10.75rem, 11.5vw, 13rem) - 2.6rem);
+  }
+}
+
 @media (max-width: 1024px) {
   .section {
     padding: clamp(4rem, 7vw, 5.5rem) 0 2.5rem;
@@ -400,16 +410,19 @@
   .visual {
     width: min(100%, 39rem);
     min-height: clamp(27rem, 52vw, 33rem);
-    justify-self: center;
+    justify-self: start;
   }
 
   .phoneWrap {
-    width: clamp(10.5rem, 27vw, 13.5rem);
+    right: auto;
+    left: calc(clamp(13rem, 33vw, 16rem) - 0.85rem);
+    width: clamp(8.25rem, 15vw, 9.5rem);
   }
 
   .platformLinks {
     top: 3rem;
-    right: calc(clamp(10.5rem, 27vw, 13.5rem) - 0.85rem);
+    right: auto;
+    left: 0;
     width: clamp(13rem, 33vw, 16rem);
   }
 }
@@ -429,7 +442,7 @@
   }
 
   .visual {
-    --events-phone-width: min(28.6vw, 7.75rem);
+    --events-phone-width: clamp(6.25rem, 20vw, 8.35rem);
 
     width: min(100%, 24rem);
     min-height: clamp(18rem, 70vw, 23rem);
@@ -437,14 +450,16 @@
 
   .phoneWrap {
     top: 3rem;
-    right: 3%;
+    right: auto;
     bottom: auto;
+    left: calc(clamp(11.5rem, 48vw, 13.5rem) - 0.65rem);
     width: var(--events-phone-width);
   }
 
   .platformLinks {
     top: 3rem;
-    right: calc(3% + var(--events-phone-width) - 0.65rem);
+    right: auto;
+    left: 0;
     width: clamp(11.5rem, 48vw, 13.5rem);
     gap: 0.42rem;
   }
@@ -470,25 +485,25 @@
 
 @media (max-width: 580px) {
   .visual {
-    --events-phone-width: min(26.8vw, 6.85rem);
+    --events-phone-width: min(29vw, 7.35rem);
   }
 }
 
 @media (max-width: 500px) {
   .visual {
-    --events-phone-width: min(25.6vw, 5.95rem);
+    --events-phone-width: min(28vw, 6.4rem);
   }
 }
 
 @media (max-width: 420px) {
   .visual {
-    --events-phone-width: min(24.4vw, 5.2rem);
+    --events-phone-width: min(27vw, 5.65rem);
   }
 }
 
 @media (max-width: 360px) {
   .visual {
-    --events-phone-width: min(23.2vw, 4.75rem);
+    --events-phone-width: min(26vw, 5.1rem);
   }
 }
 

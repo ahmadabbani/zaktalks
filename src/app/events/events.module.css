@@ -1181,7 +1181,7 @@
   }
 
   .galleryTile {
-    height: clamp(8rem, 28vw, 10.75rem);
+    height: clamp(10rem, 34vw, 13rem);
   }
 
   .galleryOpenIcon {

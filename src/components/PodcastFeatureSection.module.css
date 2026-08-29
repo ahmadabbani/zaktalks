@@ -832,16 +832,16 @@
     right: calc(14% + clamp(6.8rem, 31%, 8.5rem) - 0.8rem);
     left: auto;
     order: initial;
-    width: max-content;
+    width: clamp(13rem, 27vw, 15.5rem);
     max-width: none;
     gap: clamp(0.32rem, 0.7vw, 0.48rem);
     transform: translateY(-50%);
   }
 
   .platformLink {
-    width: max-content;
-    max-width: 100%;
-    grid-template-columns: auto auto auto;
+    width: 100%;
+    max-width: none;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     justify-content: start;
     min-height: clamp(2.75rem, 5vw, 3.25rem);
     gap: clamp(0.3rem, 0.7vw, 0.44rem);
@@ -901,7 +901,7 @@
     top: 50%;
     right: calc(14% + clamp(8.5rem, 38%, 10rem) - 0.65rem);
     left: auto;
-    width: max-content;
+    width: clamp(10.5rem, 42vw, 12rem);
     gap: 0.3rem;
     transform: translateY(-50%);
   }

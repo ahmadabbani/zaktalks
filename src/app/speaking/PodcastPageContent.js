@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { FaApple, FaHeadphones, FaInstagram, FaSpotify, FaYoutube } from 'react-icons/fa'
+import { FiArrowUpRight } from 'react-icons/fi'
 import useHeroPin from './useHeroPin'
 import PodcastArchiveSection from './PodcastArchiveSection'
 import PodcastNewsletterSection from './PodcastNewsletterSection'
@@ -219,6 +220,7 @@ export default function PodcastPageContent({ episodes = [] }) {
                         <platform.Icon />
                       </span>
                       <span className={styles.heroBadgeLabel}>{platform.label}</span>
+                      <FiArrowUpRight className={styles.heroBadgeArrow} aria-hidden="true" />
                     </a>
                   ))}
                 </div>
@@ -273,6 +275,9 @@ export default function PodcastPageContent({ episodes = [] }) {
                 ref={register('elephant-content')}
                 className={cx(styles.elephantContent, 'elephant-content')}
               >
+                <p className={`${styles.eyebrow} ${styles.mobileSubscribeEyebrow}`}>
+                  Listen and subscribe
+                </p>
                 <h2 id="elephant-heading" className={styles.sectionTitle}>
                   Where the elephant in the room finally speaks.
                 </h2>
@@ -304,7 +309,9 @@ export default function PodcastPageContent({ episodes = [] }) {
                 className={cx(styles.visual, 'elephant-panel')}
               >
                 <div className={styles.subscribeHeading}>
-                  <p className={styles.eyebrow}>Listen and subscribe</p>
+                  <p className={`${styles.eyebrow} ${styles.desktopSubscribeEyebrow}`}>
+                    Listen and subscribe
+                  </p>
                   <p className={styles.subscribeIntro}>
                     Listen on your favorite platform and subscribe to stay part of the conversation.
                   </p>
@@ -324,6 +331,7 @@ export default function PodcastPageContent({ episodes = [] }) {
                         <span className={styles.subscribeNames}>
                           <span className={styles.subscribeName}>{platform.label}</span>
                         </span>
+                        <FiArrowUpRight className={styles.subscribeArrow} aria-hidden="true" />
                       </a>
                     </li>
                   ))}

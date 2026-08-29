@@ -164,7 +164,7 @@ export default function EventsPodcastSection() {
                 alt="Phone playing The Conversations We Avoid on ZakTalks"
                 width={564}
                 height={1466}
-                sizes="(max-width: 680px) 29vw, (max-width: 1024px) 28vw, 17vw"
+                sizes="(max-width: 420px) 27vw, (max-width: 680px) 20vw, (max-width: 1024px) 15vw, (max-width: 1600px) 12vw, 16rem"
                 className={styles.phone}
               />
             </div>
