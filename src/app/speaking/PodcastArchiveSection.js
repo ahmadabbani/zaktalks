@@ -93,10 +93,13 @@ In this conversation, Zak explores the deeper patterns behind the way we relate 
   {
     videoId: 'CYq9yT0uBHs',
     title: 'Your strengths aren’t missing; they’re being ignored.',
-    hook:
-      'You’re not empty; you’re unseen, even by yourself. This episode challenges the ' +
-      'story that you’re “not good enough” and shows you how your strengths are already ' +
-      'present, but trapped in old dynamics, environments, and beliefs.',
+    hook: `What if your biggest weakness was actually your greatest strength; simply misunderstood, or suppressed by the wrong environment?
+
+In this episode, we tackle one of the most pervasive flaws in workplace culture: the constant focus on fixing weaknesses rather than celebrating what’s already strong. We explore how early feedback or harsh environments can unintentionally cause people to bury their true strengths, and why many highly successful professionals still feel unfulfilled and disconnected from their work.
+
+This episode is for anyone who’s ever felt unseen, undervalued, or stuck in a role that doesn’t truly reflect who they are. It’s also a wake-up call for leaders who want to build teams that thrive by embracing people’s authentic potential.
+
+Tune in and rethink how we define strength, success, and human potential at work!`,
     tags: ['Work & career', 'Self-worth', 'Personal growth'],
     watchUrl: 'https://youtu.be/CYq9yT0uBHs',
   },

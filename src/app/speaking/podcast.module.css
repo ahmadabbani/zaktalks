@@ -124,14 +124,19 @@
 }
 
 .heroSubheading {
-  margin: clamp(0.75rem, 1.4vw, 1.1rem) auto 0;
-  width: 100%;
-  max-width: 60ch;
+  position: absolute;
+  z-index: 2;
+  top: 26%;
+  left: calc(100% + clamp(2rem, 4.5vw, 4.5rem));
+  width: clamp(13rem, 18vw, 23rem);
+  margin: 0;
   color: var(--color-white);
   opacity: 0.82;
-  font-size: calc(var(--home-subheading-size) * 1.06);
+  font-size: var(--home-subheading-size);
   font-weight: var(--home-text-weight);
   line-height: var(--home-text-line-height);
+  text-align: left;
+  text-wrap: balance;
 }
 
 .heroSubheading strong {
@@ -951,6 +956,16 @@
     align-items: center;
   }
 
+  .heroSubheading {
+    position: static;
+    top: auto;
+    left: auto;
+    order: -2;
+    width: min(100%, 52ch);
+    margin: 0 auto clamp(1rem, 3vw, 1.5rem);
+    text-align: center;
+  }
+
   .heroBadgeStack {
     position: static;
     top: auto;
@@ -1197,7 +1212,7 @@
   }
 
   .heroSubheading {
-    max-width: 52ch;
+    width: min(100%, 52ch);
   }
 
   /* Keep the secondary hero artwork at the same tablet size all the way down
@@ -1323,6 +1338,35 @@
   .heroBadgeIcon svg {
     width: 0.8rem;
     height: 0.8rem;
+  }
+}
+
+/* Keep the main cutout visually substantial across phone widths. The wider
+   source can extend beyond the rail, but the rail clips it symmetrically so
+   it never creates horizontal page overflow. The secondary artwork is not
+   needed in the compact hero. */
+@media (max-width: 768px) {
+  .page {
+    --pz-figure-h: clamp(14.5rem, 42vw, 20rem);
+  }
+
+  .heroFigureRail {
+    width: 100%;
+    margin-inline: 0;
+    overflow: clip;
+  }
+
+  .heroFigureBox {
+    width: 100%;
+  }
+
+  .heroFigure {
+    max-width: none;
+    align-self: center;
+  }
+
+  .heroWave {
+    display: none;
   }
 }
 

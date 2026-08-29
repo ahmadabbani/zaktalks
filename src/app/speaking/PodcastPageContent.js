@@ -185,12 +185,6 @@ export default function PodcastPageContent({ episodes = [] }) {
                   <h1 id="podcast-hero-heading" className={styles.heroTitle}>
                     The elephant in the room is back
                   </h1>
-
-                  <p className={styles.heroSubheading}>
-                    <strong>Season 2 of ZakTalks</strong> premieres <strong>Friday, 28 August</strong>{' '}
-                    on <strong>Shift TV/Cablevision+</strong> | <strong>7:00PM (GMT+2)</strong>. Full
-                    episodes arrive on <strong>YouTube</strong> every Sunday.
-                  </p>
                 </div>
               </div>
             </div>
@@ -241,6 +235,12 @@ export default function PodcastPageContent({ episodes = [] }) {
                   decoding="async"
                   className={styles.heroFigure}
                 />
+
+                <p className={styles.heroSubheading}>
+                  <strong>Season 2 of ZakTalks</strong> premieres <strong>Friday, 28 August</strong>{' '}
+                  on <strong>Shift TV/Cablevision+</strong> | <strong>7:00PM (GMT+2)</strong>. Full
+                  episodes arrive on <strong>YouTube</strong> every Sunday.
+                </p>
               </div>
             </div>
 
