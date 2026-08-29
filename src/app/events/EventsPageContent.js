@@ -5,7 +5,6 @@ import Image from 'next/image'
 import { FiArrowUpRight } from 'react-icons/fi'
 import EventsGallerySection from './EventsGallerySection'
 import SignatureSessionsSection from './SignatureSessionsSection'
-import EventsTestimonialsSection from './EventsTestimonialsSection'
 import EventFormatsSection from './EventFormatsSection'
 import EventsPodcastSection from './EventsPodcastSection'
 import EventsNewsletterSection from './EventsNewsletterSection'
@@ -241,7 +240,8 @@ export default function EventsPageContent({ galleryImages = [] }) {
 
         <EventsGallerySection images={galleryImages} />
         <SignatureSessionsSection />
-        <EventsTestimonialsSection />
+        {/* Events testimonials are intentionally hidden for now. The standalone
+            section remains available in EventsTestimonialsSection.js. */}
         <EventFormatsSection />
         <EventsPodcastSection />
         <EventsNewsletterSection />

@@ -143,8 +143,7 @@
   font-weight: 850;
 }
 
-/* Sits under the badge stack, left of the figure — a small signature mark
-   rather than a heading underline. */
+/* Decorative signature artwork beneath the main hero heading. */
 .heroWave {
   display: block;
   width: clamp(8.5rem, 13vw, 12rem);
@@ -986,9 +985,18 @@
     --pz-figure-h: clamp(13rem, 34svh, 22rem);
   }
 
+  .heroPin {
+    grid-template-rows: auto auto;
+    min-height: 0;
+  }
+
+  .heroWave {
+    display: none;
+  }
+
   .heroCopyRow {
-    padding-top: clamp(6.75rem, 12vw, 8rem);
-    padding-bottom: clamp(1.5rem, 3vw, 2.25rem);
+    padding-top: clamp(6.25rem, 10vw, 7.25rem);
+    padding-bottom: 0.75rem;
   }
 
   /* Applies across the whole stacked range (1024 down to 621), where the
@@ -1182,7 +1190,7 @@
   }
 
   .heroCopyRow {
-    padding-top: clamp(5.5rem, 9vw, 6.5rem);
+    padding-top: clamp(6rem, 9vw, 7rem);
     padding-bottom: 0.75rem;
   }
 
@@ -1208,7 +1216,7 @@
   }
 
   .heroCopyRow {
-    padding-top: 7rem;
+    padding-top: 6.25rem;
   }
 
   .heroSubheading {
@@ -1236,7 +1244,7 @@
   }
 
   .heroCopyRow {
-    padding-top: 6.5rem;
+    padding-top: 6rem;
   }
 
   .proofItem {
@@ -1272,7 +1280,7 @@
   }
 
   .heroCopyRow {
-    padding-top: 5.9rem;
+    padding-top: 5.85rem;
     padding-bottom: 0.4rem;
   }
 
@@ -1301,7 +1309,7 @@
   }
 
   .heroCopyRow {
-    padding-top: 4.5rem;
+    padding-top: 5.6rem;
     padding-bottom: 0.2rem;
   }
 
@@ -1343,8 +1351,7 @@
 
 /* Keep the main cutout visually substantial across phone widths. The wider
    source can extend beyond the rail, but the rail clips it symmetrically so
-   it never creates horizontal page overflow. The secondary artwork is not
-   needed in the compact hero. */
+   it never creates horizontal page overflow. */
 @media (max-width: 768px) {
   .page {
     --pz-figure-h: clamp(14.5rem, 42vw, 20rem);
@@ -1365,13 +1372,14 @@
     align-self: center;
   }
 
-  .heroWave {
-    display: none;
-  }
 }
 
 /* The homepage applies this final compact step to its h1/h2 as well. */
 @media (max-width: 500px) {
+  .page {
+    --pz-figure-h: clamp(13rem, 40vw, 15.5rem);
+  }
+
   .sectionTitle {
     font-size: clamp(1.65rem, 7vw, 1.8rem);
   }

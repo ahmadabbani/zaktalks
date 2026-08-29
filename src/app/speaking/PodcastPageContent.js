@@ -185,6 +185,15 @@ export default function PodcastPageContent({ episodes = [] }) {
                   <h1 id="podcast-hero-heading" className={styles.heroTitle}>
                     The elephant in the room is back
                   </h1>
+
+                  <Image
+                    src="/podcast4.png"
+                    alt=""
+                    aria-hidden="true"
+                    width={1310}
+                    height={264}
+                    className={styles.heroWave}
+                  />
                 </div>
               </div>
             </div>
@@ -212,15 +221,6 @@ export default function PodcastPageContent({ episodes = [] }) {
                       <span className={styles.heroBadgeLabel}>{platform.label}</span>
                     </a>
                   ))}
-
-                  <Image
-                    src="/podcast4.png"
-                    alt=""
-                    aria-hidden="true"
-                    width={1310}
-                    height={264}
-                    className={styles.heroWave}
-                  />
                 </div>
 
                 {/* This prepared transparent cutout is intentionally served at

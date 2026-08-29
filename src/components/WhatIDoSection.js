@@ -100,7 +100,7 @@ export default function WhatIDoSection() {
           <div className={styles.headingBlock}>
             <p className={styles.eyebrow}>What I do</p>
             <h2 id="what-i-do-heading" className={styles.title}>
-              Choose the path that meets you where you are
+              Choose the path that<br />meets you where you are
             </h2>
             <p className={styles.intro}>
               The work is built around what you need, what you are ready for, and what will actually move you forward.

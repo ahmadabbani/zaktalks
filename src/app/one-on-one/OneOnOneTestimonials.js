@@ -163,7 +163,7 @@ export default function OneOnOneTestimonials() {
         >
           <div className={styles.headingBlock}>
             <h2 id="oo-testimonials-heading" className={styles.title}>
-              What clients say about One-on-One Coaching
+              What clients say about<br />One-on-One Coaching
             </h2>
             <p className={styles.intro}>
               Real words from people who showed up, did the work, and started relating to
