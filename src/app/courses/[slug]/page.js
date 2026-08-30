@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
 import CourseDetailsExperience from './CourseDetailsExperience'
 
@@ -21,6 +22,7 @@ export async function generateMetadata({ params }) {
 export default async function CourseDetailPage({ params }) {
   const { slug } = await params
   const supabase = await createClient()
+  const publicCurriculumClient = await createAdminClient()
 
   const [{ data: course, error: courseError }, { data: authData }] = await Promise.all([
     supabase
@@ -58,7 +60,9 @@ export default async function CourseDetailPage({ params }) {
       .select('id, title, description, display_order')
       .eq('course_id', course.id)
       .order('display_order', { ascending: true }),
-    supabase
+    // This server-only query deliberately exposes curriculum metadata without
+    // granting anonymous clients access to protected lesson records.
+    publicCurriculumClient
       .from('lessons')
       .select('id, module_id, title, description, type, duration_seconds, display_order')
       .eq('course_id', course.id)

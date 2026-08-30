@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import UserDashboardShell from './UserDashboardShell'
 import MyCoursesDashboard from './MyCoursesDashboard'
@@ -19,6 +20,8 @@ export default async function DashboardPage() {
   if (!user) {
     redirect('/login')
   }
+
+  const publicCatalogClient = await createAdminClient()
 
   // 1. Fetch User Profile
   const { data: profile } = await supabase
@@ -81,7 +84,9 @@ export default async function DashboardPage() {
       .select('id, lesson_id, assessment_key, generated_file_path, generated_file_name, submitted_at, updated_at')
       .eq('user_id', user.id)
       .order('submitted_at', { ascending: false }),
-    supabase
+    // Keep unenrolled course counts available without opening raw lesson rows
+    // to authenticated users who have not purchased those courses.
+    publicCatalogClient
       .from('courses')
       .select(`
         id,
