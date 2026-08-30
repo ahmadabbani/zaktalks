@@ -397,6 +397,7 @@ Advisor references: [anonymous security-definer execution](https://supabase.com/
 - The service-role client boundary is now enforced with `import 'server-only'`.
 - Public login, signup, recovery, guest checkout, and checkout-preview entry points are protected by server-side fixed-window throttles. Only HMAC identifiers are stored; raw emails and IP addresses are not persisted in the throttle table.
 - Public login, signup, recovery, and guest checkout verify Cloudflare Turnstile on the server. Development uses Cloudflare's official always-pass test keys when local keys are absent; production fails closed until real keys are configured.
+- Password login can delegate the same single-use Turnstile token to Supabase Auth by setting `SUPABASE_AUTH_CAPTCHA_ENABLED=true`. This must be enabled together with Supabase Auth CAPTCHA; signup, recovery, guest checkout, payment fulfillment, and password setup retain their existing server/Admin flows and application-side Turnstile verification.
 - Password recovery always returns the same user-facing success result for existing and unknown addresses. This prevents account enumeration while preserving server-side error logging.
 
 ### Priority 2: query/RLS performance
@@ -416,7 +417,7 @@ The repository expects these names; values are intentionally not recorded:
 - Stripe: `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_WEBHOOK_SECRET_LOCAL`
 - Resend: `RESEND_API_KEY`
 - App: `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_APP_NAME`
-- Abuse protection: `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, and preferably a dedicated `SECURITY_RATE_LIMIT_SECRET` (the server falls back to the existing service-role secret if omitted)
+- Abuse protection: `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `SUPABASE_AUTH_CAPTCHA_ENABLED`, and preferably a dedicated `SECURITY_RATE_LIMIT_SECRET` (the server falls back to the existing service-role secret if omitted)
 - Other: `FIRST_PURCHASE_DISCOUNT_PERCENT`, `YOUTUBE_API_KEY`
 
 ## Working rules for future backend tasks

@@ -99,6 +99,28 @@ function turnstileSecret() {
   return ''
 }
 
+export function isSupabaseAuthCaptchaEnabled() {
+  const value = String(process.env.SUPABASE_AUTH_CAPTCHA_ENABLED || '')
+    .trim()
+    .toLowerCase()
+
+  if (!value || value === 'false') return false
+  if (value === 'true') return true
+
+  throw new Error('SUPABASE_AUTH_CAPTCHA_ENABLED must be either true or false')
+}
+
+export function requireTurnstileToken(token) {
+  if (typeof token !== 'string' || !token.trim()) {
+    throw new PublicSecurityError(
+      'Please complete the security check and try again.',
+      400,
+    )
+  }
+
+  return token.trim()
+}
+
 export async function verifyTurnstileToken(token, remoteIp) {
   const secret = turnstileSecret()
 
@@ -110,16 +132,11 @@ export async function verifyTurnstileToken(token, remoteIp) {
     )
   }
 
-  if (typeof token !== 'string' || !token.trim()) {
-    throw new PublicSecurityError(
-      'Please complete the security check and try again.',
-      400,
-    )
-  }
+  const normalizedToken = requireTurnstileToken(token)
 
   const body = new URLSearchParams({
     secret,
-    response: token.trim(),
+    response: normalizedToken,
   })
 
   if (remoteIp && remoteIp !== 'unknown') body.set('remoteip', remoteIp)

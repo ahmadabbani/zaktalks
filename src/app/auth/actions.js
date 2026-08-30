@@ -12,16 +12,19 @@ import { validateNewPassword } from '@/lib/auth/password-policy'
 import {
   clientIpFromServerAction,
   enforceRateLimits,
+  isSupabaseAuthCaptchaEnabled,
   normalizeSecurityEmail,
   PublicSecurityError,
+  requireTurnstileToken,
   verifyTurnstileToken,
 } from '@/lib/security/abuse-protection'
 
 const AUTH_EMAIL_BUTTON_STYLE = 'display:inline-block;padding:10px 20px;background-color:#f4c400;color:#212c2d;text-decoration:none;border-radius:999px;font-weight:bold;'
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-async function protectAuthAction(formData, action, email, limits) {
+async function protectAuthAction(formData, action, email, limits, options = {}) {
   const ip = await clientIpFromServerAction()
+  const captchaToken = requireTurnstileToken(formData.get('cf-turnstile-response'))
 
   await enforceRateLimits([
     {
@@ -38,7 +41,11 @@ async function protectAuthAction(formData, action, email, limits) {
     },
   ])
 
-  await verifyTurnstileToken(formData.get('cf-turnstile-response'), ip)
+  if (options.verifyTurnstile !== false) {
+    await verifyTurnstileToken(captchaToken, ip)
+  }
+
+  return captchaToken
 }
 
 function securityActionError(error) {
@@ -58,11 +65,19 @@ export async function login(formData) {
     return { error: 'Invalid email or password.' }
   }
 
+  let captchaToken
+  let supabaseAuthCaptchaEnabled
+
   try {
-    await protectAuthAction(formData, 'auth_login', email, {
+    supabaseAuthCaptchaEnabled = isSupabaseAuthCaptchaEnabled()
+    captchaToken = await protectAuthAction(formData, 'auth_login', email, {
       ipLimit: 30,
       emailLimit: 15,
       windowSeconds: 15 * 60,
+    }, {
+      // Turnstile tokens are single-use. When Supabase Auth CAPTCHA is enabled,
+      // Supabase must be the only service that redeems the login token.
+      verifyTurnstile: !supabaseAuthCaptchaEnabled,
     })
   } catch (error) {
     return securityActionError(error)
@@ -71,6 +86,9 @@ export async function login(formData) {
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
+    ...(supabaseAuthCaptchaEnabled
+      ? { options: { captchaToken } }
+      : {}),
   })
 
   if (error) {

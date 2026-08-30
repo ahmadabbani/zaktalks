@@ -18,6 +18,7 @@
 - [ ] `RESEND_API_KEY`
 - [ ] `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
 - [ ] `TURNSTILE_SECRET_KEY`
+- [ ] `SUPABASE_AUTH_CAPTCHA_ENABLED=true`
 - [ ] `SECURITY_RATE_LIMIT_SECRET`
 - [ ] `YOUTUBE_API_KEY`
 
@@ -55,17 +56,20 @@ Do not add these to Vercel Production:
 - [ ] Add the final production domain. Do not add `localhost`.
 - [ ] Copy the site key to Vercel as `NEXT_PUBLIC_TURNSTILE_SITE_KEY`.
 - [ ] Copy the secret key to Vercel as `TURNSTILE_SECRET_KEY`.
-- [ ] Redeploy the website.
+- [ ] Use the same Turnstile secret in **Supabase > Authentication > Bot and Abuse Protection**.
+- [ ] Enable CAPTCHA protection there and select **Cloudflare Turnstile**.
+- [ ] Add `SUPABASE_AUTH_CAPTCHA_ENABLED=true` to Vercel Production and redeploy immediately.
 - [ ] Test login, registration, forgot password, and guest checkout.
 
-Local development already uses Cloudflare test keys automatically, so nothing needs to be added locally.
+Keep `SUPABASE_AUTH_CAPTCHA_ENABLED` unset locally while Supabase CAPTCHA is disabled. Once it is enabled on the shared hosted Supabase project, local password login also needs a real token from that production widget; test Turnstile tokens cannot be validated by a production secret. Prefer testing the final protected login on the deployed domain. Do not add `localhost` to the production widget unless local login against the production Supabase project is genuinely required.
 
 ## 5. Supabase
 
 - [ ] Confirm Vercel uses the correct production Supabase URL, anon key, and service-role key.
 - [ ] In **Supabase > Authentication > URL Configuration**, set Site URL to the final production domain.
 - [ ] Add `https://your-final-domain.com/auth/callback` to the allowed redirect URLs.
-- [ ] Keep Supabase CAPTCHA disabled because the website already validates Cloudflare Turnstile itself.
+- [ ] Confirm **Authentication > Bot and Abuse Protection > CAPTCHA protection** is enabled with Cloudflare Turnstile.
+- [ ] Confirm Vercel has `SUPABASE_AUTH_CAPTCHA_ENABLED=true`; this setting and the Supabase toggle must be changed together.
 - [ ] Check migrations before deployment:
 
   ```powershell
