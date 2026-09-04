@@ -335,28 +335,6 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         Note: Lessons (videos / assessments) are managed separately after creating the course.
       </div>
 
-      <div className={styles.gridTwo}>
-        <div className={styles.formGroup}>
-          <label>Course Title</label>
-          <input type="text" name="title" defaultValue={initialData.title} required placeholder="e.g. Master ZakTalks" />
-        </div>
-
-        <div className={styles.formGroup}>
-          <label>URL Slug</label>
-          <input type="text" name="slug" defaultValue={initialData.slug} required placeholder="e.g. master-zaktalks" />
-        </div>
-
-        <div className={styles.formGroup}>
-          <label>Tutor Name</label>
-          <input type="text" name="tutor_name" defaultValue={initialData.tutor_name} required placeholder="Zak" />
-        </div>
-
-        <div className={styles.formGroup}>
-          <label>Price ($)</label>
-          <input type="number" name="price" step="0.01" defaultValue={(initialData.price_cents || 0) / 100} required placeholder="49.99" />
-        </div>
-      </div>
-
       <section className={styles.formSection}>
         <div className={styles.sectionHeading}>
           <span>Hero</span>
@@ -366,6 +344,10 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
           </div>
         </div>
         <div className={styles.formGroup}>
+          <label>Course Title</label>
+          <input type="text" name="title" defaultValue={initialData.title} required placeholder="e.g. Master ZakTalks" />
+        </div>
+        <div className={styles.formGroup}>
           <label>Promise</label>
           <textarea name="promise" rows="4" defaultValue={initialData.promise ?? initialData.description ?? ''} placeholder="State the main promise of this course..."></textarea>
         </div>
@@ -373,37 +355,26 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
           <label>Short introduction</label>
           <textarea name="short_introduction" rows="3" defaultValue={initialData.short_introduction ?? initialData.subheadline ?? ''} placeholder="Add a concise introduction shown in the hero..."></textarea>
         </div>
+        <div className={styles.gridTwo}>
+          <div className={styles.formGroup}>
+            <label>Tutor Name</label>
+            <input type="text" name="tutor_name" defaultValue={initialData.tutor_name} required placeholder="Zak" />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Price ($)</label>
+            <input type="number" name="price" step="0.01" defaultValue={(initialData.price_cents || 0) / 100} required placeholder="49.99" />
+          </div>
+        </div>
         <div className={styles.formGroup}>
           <label>Primary CTA text</label>
           <input type="text" name="primary_cta_text" defaultValue={initialData.primary_cta_text || ''} placeholder="e.g. Enroll now" />
         </div>
       </section>
 
-      <section className={styles.formSection}>
-        <div className={styles.sectionHeading}>
-          <span>Introduction</span>
-          <div>
-            <h2>Course Introduction</h2>
-            <p>Longer course-page content outside the Hero.</p>
-          </div>
-        </div>
-        <fieldset className={styles.compositeField}>
-          <legend>Course subheadline</legend>
-          <p className={styles.compositeHint}>Build the subheadline with an emphasized opening followed by its supporting text.</p>
-          <div className={styles.formGroup}>
-            <label>Bold part</label>
-            <input type="text" name="bold_introduction" defaultValue={initialData.bold_introduction || ''} placeholder="Add the bold opening part" />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Supporting text</label>
-            <textarea name="subheadline" rows="3" defaultValue={initialData.subheadline || ''} placeholder="Add the normal supporting text..."></textarea>
-          </div>
-        </fieldset>
-        <div className={styles.formGroup}>
-          <label>Description</label>
-          <textarea name="description" rows="5" defaultValue={initialData.description || ''} placeholder="Add the full course description..."></textarea>
-        </div>
-      </section>
+      <div className={styles.formGroup}>
+        <label>URL Slug</label>
+        <input type="text" name="slug" defaultValue={initialData.slug} required placeholder="e.g. master-zaktalks" />
+      </div>
 
       <section className={styles.formSection}>
         <div className={styles.sectionHeading}>
@@ -422,6 +393,20 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         </div>
       </section>
 
+      <section className={styles.formSection}>
+        <div className={styles.sectionHeading}>
+          <span>Description</span>
+          <div>
+            <h2>Course Description</h2>
+            <p>The full introduction shown at the beginning of the course content.</p>
+          </div>
+        </div>
+        <div className={styles.formGroup}>
+          <label>Description</label>
+          <textarea name="description" rows="5" defaultValue={initialData.description || ''} placeholder="Add the full course description..."></textarea>
+        </div>
+      </section>
+
       <div className={`${styles.formGroup} ${styles.featuredField}`}>
         <label>Introduction Video (YouTube)</label>
         <input
@@ -431,52 +416,6 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
           defaultValue={initialData.introduction_video_url || ''}
           placeholder="https://www.youtube.com/watch?v=..."
         />
-      </div>
-
-      <div className={styles.formGroup}>
-        <label>Meet the Tutor (Description)</label>
-        <textarea name="meet_the_tutor" rows="4" defaultValue={initialData.meet_the_tutor} placeholder="Introduce the instructor..."></textarea>
-      </div>
-
-      <div className={styles.formGroup}>
-        <label>Course Logo</label>
-        {(initialData.logo_url && !logoRemoved && !logoPreview) && (
-          <div className={styles.currentImage} style={{ position: 'relative', display: 'inline-block' }}>
-             <img src={initialData.logo_url} alt="Current logo" />
-             <button 
-               type="button" 
-               onClick={removeLogo} 
-               className={styles.removeButton}
-             >&times;</button>
-          </div>
-        )}
-        {logoPreview && (
-          <div className={styles.currentImage} style={{ position: 'relative', display: 'inline-block' }}>
-             <img src={logoPreview} alt="New logo preview" />
-             <button 
-               type="button" 
-               onClick={removeLogo} 
-               className={styles.removeButton}
-             >&times;</button>
-          </div>
-        )}
-        <input 
-          type="file" 
-          name="logo" 
-          accept="image/*" 
-          className={styles.fileInput}
-          onChange={handleLogoChange}
-        />
-      </div>
-
-      <div className={styles.formGroup}>
-        <label>Certificate Template (PDF)</label>
-        {initialData.certificate_template_url && (
-          <div style={{ marginBottom: 'var(--space-sm)', padding: '0.5rem', background: 'var(--color-gray-light)', borderRadius: '0.5rem' }}>
-             <a href={initialData.certificate_template_url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-black)', fontWeight: 'bold' }}>📄 View Current Template</a>
-          </div>
-        )}
-        <input type="file" name="certificate_template" accept="application/pdf" className={styles.fileInput} />
       </div>
 
       <div className={styles.formGroup}>
@@ -572,6 +511,19 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         </div>
       </div>
 
+      <StructuredContentEditor
+        title="Details to Know"
+        description="Add practical details as a paragraph or a list. Each item has its own title."
+        titleLabel="Details"
+        items={detailsItems}
+        setItems={setDetailsItems}
+      />
+
+      <div className={`${styles.formGroup} ${styles.sectionCtaField}`}>
+        <label>Details CTA text</label>
+        <input type="text" name="details_cta_text" defaultValue={initialData.details_cta_text || ''} placeholder="e.g. Start the course" />
+      </div>
+
       <div className={styles.gridTwo}>
         <div className={`${styles.listSection} ${styles.contentListSection}`}>
           <div className={styles.formGroup}>
@@ -631,18 +583,27 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         <textarea name="audience_supporting_text" rows="3" defaultValue={initialData.audience_supporting_text || ''} placeholder="Add one supporting paragraph beneath both audience lists..." />
       </div>
 
-      <StructuredContentEditor
-        title="Details to Know"
-        description="Add practical details as a paragraph or a list. Each item has its own title."
-        titleLabel="Details"
-        items={detailsItems}
-        setItems={setDetailsItems}
-      />
-
-      <div className={`${styles.formGroup} ${styles.sectionCtaField}`}>
-        <label>Details CTA text</label>
-        <input type="text" name="details_cta_text" defaultValue={initialData.details_cta_text || ''} placeholder="e.g. Start the course" />
-      </div>
+      <section className={styles.formSection}>
+        <div className={styles.sectionHeading}>
+          <span>Perspective</span>
+          <div>
+            <h2>Course Subheadline</h2>
+            <p>The emphasized introduction shown after the audience sections.</p>
+          </div>
+        </div>
+        <fieldset className={styles.compositeField}>
+          <legend>Course subheadline</legend>
+          <p className={styles.compositeHint}>Build the subheadline with an emphasized opening followed by its supporting text.</p>
+          <div className={styles.formGroup}>
+            <label>Bold part</label>
+            <input type="text" name="bold_introduction" defaultValue={initialData.bold_introduction || ''} placeholder="Add the bold opening part" />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Supporting text</label>
+            <textarea name="subheadline" rows="3" defaultValue={initialData.subheadline || ''} placeholder="Add the normal supporting text..."></textarea>
+          </div>
+        </fieldset>
+      </section>
 
       <StructuredContentEditor
         title="What You’ll Explore"
@@ -651,7 +612,10 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         setItems={setExploreItems}
       />
 
-      <ExploreMoreEditor items={exploreMore} setItems={setExploreMore} availableCourses={availableCourses} />
+      <div className={styles.formGroup}>
+        <label>Meet the Tutor (Description)</label>
+        <textarea name="meet_the_tutor" rows="4" defaultValue={initialData.meet_the_tutor} placeholder="Introduce the instructor..."></textarea>
+      </div>
 
       {/* Course FAQs Array */}
       <div className={styles.listSection}>
@@ -685,6 +649,49 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
           ))}
           {faqs.length === 0 && <p className={styles.emptyState}>No FAQs added yet.</p>}
         </div>
+      </div>
+
+      <ExploreMoreEditor items={exploreMore} setItems={setExploreMore} availableCourses={availableCourses} />
+
+      <div className={styles.formGroup}>
+        <label>Course Logo</label>
+        {(initialData.logo_url && !logoRemoved && !logoPreview) && (
+          <div className={styles.currentImage} style={{ position: 'relative', display: 'inline-block' }}>
+             <img src={initialData.logo_url} alt="Current logo" />
+             <button
+               type="button"
+               onClick={removeLogo}
+               className={styles.removeButton}
+             >&times;</button>
+          </div>
+        )}
+        {logoPreview && (
+          <div className={styles.currentImage} style={{ position: 'relative', display: 'inline-block' }}>
+             <img src={logoPreview} alt="New logo preview" />
+             <button
+               type="button"
+               onClick={removeLogo}
+               className={styles.removeButton}
+             >&times;</button>
+          </div>
+        )}
+        <input
+          type="file"
+          name="logo"
+          accept="image/*"
+          className={styles.fileInput}
+          onChange={handleLogoChange}
+        />
+      </div>
+
+      <div className={styles.formGroup}>
+        <label>Certificate Template (PDF)</label>
+        {initialData.certificate_template_url && (
+          <div style={{ marginBottom: 'var(--space-sm)', padding: '0.5rem', background: 'var(--color-gray-light)', borderRadius: '0.5rem' }}>
+             <a href={initialData.certificate_template_url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-black)', fontWeight: 'bold' }}>📄 View Current Template</a>
+          </div>
+        )}
+        <input type="file" name="certificate_template" accept="application/pdf" className={styles.fileInput} />
       </div>
 
       {/* Toggle Switches */}
