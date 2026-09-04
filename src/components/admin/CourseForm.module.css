@@ -118,6 +118,64 @@
     min-height: 100px;
 }
 
+.formGroup input[aria-invalid="true"],
+.formGroup textarea[aria-invalid="true"],
+.formGroup select[aria-invalid="true"] {
+    border-color: var(--color-error);
+    background: rgba(199, 57, 57, 0.045);
+}
+
+.fieldError {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.45rem;
+    margin: 0.55rem 0 0;
+    color: var(--color-error);
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.fieldError svg {
+    flex: 0 0 auto;
+    margin-top: 0.15rem;
+}
+
+.fileHint {
+    margin: -0.25rem 0 0.7rem;
+    color: var(--color-gray-dark);
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.errorNotice,
+.successNotice {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    margin-bottom: var(--space-lg);
+    padding: 0.95rem 1rem;
+    border: 1px solid rgba(199, 57, 57, 0.28);
+    border-radius: 0.75rem;
+    background: rgba(199, 57, 57, 0.07);
+    color: var(--color-error);
+    font-size: 0.96rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.successNotice {
+    border-color: rgba(26, 127, 74, 0.28);
+    background: rgba(26, 127, 74, 0.08);
+    color: var(--color-success);
+}
+
+.errorNotice svg,
+.successNotice svg {
+    flex: 0 0 auto;
+    margin-top: 0.2rem;
+}
+
 .featuredField {
     margin-top: var(--space-xl);
     padding: clamp(1rem, 1.5vw, 1.35rem);
@@ -677,9 +735,95 @@
 .formActions {
     margin-top: var(--space-2xl);
     display: flex;
-    gap: var(--space-md);
+    flex-direction: column;
+    gap: var(--space-lg);
     padding-top: var(--space-xl);
     border-top: 2px solid var(--color-gray);
+}
+
+.actionButtons {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.saveProgress {
+    padding: clamp(1rem, 2vw, 1.4rem);
+    border: 1px solid rgba(33, 44, 45, 0.13);
+    border-radius: 0.9rem;
+    background: rgba(237, 246, 247, 0.82);
+}
+
+.progressHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-lg);
+}
+
+.progressHeader > div {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.progressHeader strong {
+    color: var(--color-black);
+    font-size: 1.02rem;
+}
+
+.progressHeader span {
+    color: var(--color-gray-dark);
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+.progressHeader b {
+    color: var(--color-dark-blue);
+    font-size: 1.15rem;
+}
+
+.progressTrack {
+    height: 0.65rem;
+    margin: 1rem 0;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(37, 140, 155, 0.14);
+}
+
+.progressTrack span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--color-dark-blue);
+    transition: width 280ms ease;
+}
+
+.progressSteps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+}
+
+.progressSteps > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 2.45rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.65rem;
+    background: var(--color-white);
+    color: rgba(33, 44, 45, 0.55);
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+.progressStepActive {
+    color: var(--color-dark-blue) !important;
+    box-shadow: inset 0 0 0 1px rgba(37, 140, 155, 0.24);
+}
+
+.progressStepComplete {
+    color: var(--color-success) !important;
 }
 
 .submitButton {
@@ -692,6 +836,21 @@
     font-size: 1rem;
     cursor: pointer;
     transition: all var(--transition-normal);
+}
+
+.submitButton:disabled {
+    cursor: wait;
+    opacity: 0.72;
+    transform: none;
+}
+
+.spinner {
+    margin-right: 0.55rem;
+    animation: courseFormSpin 800ms linear infinite;
+}
+
+@keyframes courseFormSpin {
+    to { transform: rotate(360deg); }
 }
 
 .submitButton:hover {
@@ -720,6 +879,11 @@
     background: var(--color-error);
     color: white;
     border-color: var(--color-error);
+}
+
+.cancelButtonDisabled {
+    pointer-events: none;
+    opacity: 0.55;
 }
 
 /* Responsive */
@@ -755,7 +919,7 @@
         gap: var(--space-md);
     }
 
-    .formActions {
+    .actionButtons {
         flex-direction: column;
     }
 
@@ -766,6 +930,14 @@
 
     .galleryGrid {
         grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+
+    .progressSteps {
+        grid-template-columns: 1fr;
+    }
+
+    .progressSteps > span {
+        justify-content: flex-start;
     }
 }
 

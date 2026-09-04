@@ -1,22 +1,69 @@
 'use client'
 
-import { useState } from 'react'
-import { useFormStatus } from 'react-dom'
+import { useRef, useState } from 'react'
+import { FaCheck, FaCloudUploadAlt, FaDatabase, FaExclamationCircle, FaSpinner } from 'react-icons/fa'
 import { PUBLIC_PAGE_OPTIONS, legacyDetailsToBlocks, normalizeContentBlocks, normalizeExploreMore } from '@/lib/course-content'
+import { createClient } from '@/lib/supabase/client'
+import { cleanupCourseAssetUploads, prepareCourseAssetUploads } from '@/app/admin/courses/actions'
 import styles from './CourseForm.module.css'
 
-function SubmitButton({ buttonText }) {
-  const { pending } = useFormStatus()
-  
+const ONE_MEGABYTE = 1024 * 1024
+const FILE_LIMITS = { logo: ONE_MEGABYTE, gallery: ONE_MEGABYTE, certificate: 10 * ONE_MEGABYTE }
+const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+
+function SubmitButton({ buttonText, pending }) {
   return (
     <button 
       type="submit" 
       className={styles.submitButton}
       disabled={pending}
-      style={{ opacity: pending ? 0.6 : 1, cursor: pending ? 'not-allowed' : 'pointer' }}
     >
-      {pending ? 'Saving...' : buttonText}
+      {pending ? <><FaSpinner className={styles.spinner} /> Saving course</> : buttonText}
     </button>
+  )
+}
+
+function FieldError({ message }) {
+  if (!message) return null
+  return <p className={styles.fieldError}><FaExclamationCircle /> {message}</p>
+}
+
+function SaveProgress({ progress }) {
+  if (!progress.visible) return null
+  const steps = [
+    { key: 'validate', label: 'Check details', icon: FaCheck },
+    { key: 'upload', label: 'Upload files', icon: FaCloudUploadAlt },
+    { key: 'save', label: 'Save course', icon: FaDatabase },
+  ]
+  const order = { validate: 0, upload: 1, save: 2, done: 3 }
+  const activeIndex = order[progress.stage] ?? 0
+
+  return (
+    <div className={styles.saveProgress} role="status" aria-live="polite">
+      <div className={styles.progressHeader}>
+        <div>
+          <strong>{progress.label}</strong>
+          <span>{progress.detail}</span>
+        </div>
+        <b>{progress.percent}%</b>
+      </div>
+      <div className={styles.progressTrack} aria-label={`${progress.percent}% complete`}>
+        <span style={{ width: `${progress.percent}%` }} />
+      </div>
+      <div className={styles.progressSteps}>
+        {steps.map((step, index) => {
+          const Icon = step.icon
+          const complete = index < activeIndex
+          const active = index === activeIndex
+          return (
+            <span key={step.key} className={`${complete ? styles.progressStepComplete : ''} ${active ? styles.progressStepActive : ''}`}>
+              {complete ? <FaCheck /> : <Icon />}
+              {step.label}
+            </span>
+          )
+        })}
+      </div>
+    </div>
   )
 }
 
@@ -29,7 +76,32 @@ function emptyContentBlock() {
   return { title: '', content_type: 'text', text: '', items: [] }
 }
 
-function StructuredContentEditor({ title, description, items, setItems, titleLabel = 'Title' }) {
+function isYouTubeUrl(value) {
+  if (!value) return true
+  try {
+    const url = new URL(value)
+    return ['youtube.com', 'www.youtube.com', 'youtu.be', 'www.youtu.be'].includes(url.hostname.toLowerCase())
+  } catch {
+    return false
+  }
+}
+
+function validateFile(file, kind) {
+  if (!file || file.size === 0) return null
+  const label = kind === 'certificate' ? 'Certificate PDF' : kind === 'logo' ? 'Course logo' : 'Gallery image'
+  if (file.size > FILE_LIMITS[kind]) return `${label} must be ${kind === 'certificate' ? '10 MB' : '1 MB'} or smaller.`
+  if (kind === 'certificate' && file.type !== 'application/pdf') return 'Certificate template must be a PDF file.'
+  if (kind !== 'certificate' && !IMAGE_TYPES.has(file.type)) return `${label} must be a JPG, PNG, WebP, or GIF file.`
+  return null
+}
+
+function assetLabel(kind) {
+  if (kind === 'logo') return 'course logo'
+  if (kind === 'certificate') return 'certificate PDF'
+  return 'gallery image'
+}
+
+function StructuredContentEditor({ title, description, items, setItems, titleLabel = 'Title', error, errorKey }) {
   const insertBlockAfter = (index) => {
     const nextItems = [...items]
     nextItems.splice(index + 1, 0, emptyContentBlock())
@@ -65,7 +137,7 @@ function StructuredContentEditor({ title, description, items, setItems, titleLab
   }
 
   return (
-    <section className={styles.builderSection}>
+    <section className={styles.builderSection} data-error-key={errorKey} tabIndex={-1}>
       <div className={styles.builderHeader}>
         <div>
           <h2>{title}</h2>
@@ -75,6 +147,7 @@ function StructuredContentEditor({ title, description, items, setItems, titleLab
       </div>
 
       <div className={styles.builderItems}>
+        <FieldError message={error} />
         {items.map((item, index) => (
           <article className={styles.builderItem} key={index}>
             <div className={styles.builderItemTopline}>
@@ -128,7 +201,7 @@ function StructuredContentEditor({ title, description, items, setItems, titleLab
   )
 }
 
-function ExploreMoreEditor({ items, setItems, availableCourses }) {
+function ExploreMoreEditor({ items, setItems, availableCourses, error }) {
   const updateItem = (index, field, value) => {
     setItems(items.map((item, itemIndex) => {
       if (itemIndex !== index) return item
@@ -166,7 +239,7 @@ function ExploreMoreEditor({ items, setItems, availableCourses }) {
   }
 
   return (
-    <section className={styles.builderSection}>
+    <section className={styles.builderSection} data-error-key="explore_more" tabIndex={-1}>
       <div className={styles.builderHeader}>
         <div>
           <h2>Explore More</h2>
@@ -175,6 +248,7 @@ function ExploreMoreEditor({ items, setItems, availableCourses }) {
         {items.length === 0 && <button type="button" onClick={addItem} className={styles.addButton}>+ Add Recommendation</button>}
       </div>
       <div className={styles.builderItems}>
+        <FieldError message={error} />
         {items.map((item, index) => (
           <article className={styles.builderItem} key={index}>
             <div className={styles.builderItemTopline}>
@@ -227,6 +301,7 @@ function ExploreMoreEditor({ items, setItems, availableCourses }) {
 }
 
 export default function CourseForm({ initialData = {}, action, buttonText = "Save Course", availableCourses = [] }) {
+  const formRef = useRef(null)
   const [learningOutcomes, setLearningOutcomes] = useState(initialData.what_youll_learn || [])
   const [skills, setSkills] = useState(initialData.skills_youll_gain || [])
   const [targetAudience, setTargetAudience] = useState(toList(initialData.target_audience))
@@ -241,6 +316,10 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
   const [imagePreviews, setImagePreviews] = useState({}) // Map of slot id to preview URL
   const [logoPreview, setLogoPreview] = useState(null)
   const [logoRemoved, setLogoRemoved] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [fieldErrors, setFieldErrors] = useState({})
+  const [saveNotice, setSaveNotice] = useState(null)
+  const [progress, setProgress] = useState({ visible: false, stage: 'validate', percent: 0, label: '', detail: '' })
 
   const addItem = (setter, list) => {
     setter([...list, ""])
@@ -325,8 +404,169 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
     setLogoPreview(null)
   }
 
+  const validateForm = (formData) => {
+    const errors = {}
+    const title = String(formData.get('title') || '').trim()
+    const tutor = String(formData.get('tutor_name') || '').trim()
+    const slug = String(formData.get('slug') || '').trim()
+    const priceValue = String(formData.get('price') || '').trim()
+    const price = Number(priceValue)
+    const videoUrl = String(formData.get('introduction_video_url') || '').trim()
+
+    if (!title) errors.title = 'Enter the course title.'
+    if (!tutor) errors.tutor_name = 'Enter the tutor name.'
+    if (!priceValue || !Number.isFinite(price) || price < 0) errors.price = 'Enter a valid course price of zero or more.'
+    if (!slug) errors.slug = 'Enter the course URL slug.'
+    if (videoUrl && !isYouTubeUrl(videoUrl)) errors.introduction_video_url = 'Enter a valid YouTube video link.'
+
+    const incompleteDetails = detailsItems.some((item) => !String(item.title || '').trim()
+      || (item.content_type === 'text' ? !String(item.text || '').trim() : !item.items.some((entry) => String(entry || '').trim())))
+    if (incompleteDetails) errors.details = 'Complete the title and information for every Details to Know item.'
+
+    const incompleteExplore = exploreItems.some((item) => !String(item.title || '').trim()
+      || (item.content_type === 'text' ? !String(item.text || '').trim() : !item.items.some((entry) => String(entry || '').trim())))
+    if (incompleteExplore) errors.explore = 'Complete the title and content for every What You’ll Explore item.'
+
+    const incompleteRecommendation = exploreMore.some((item) =>
+      !(item.target_type === 'course' ? item.course_id : item.page_path) || !String(item.description || '').trim() || !String(item.cta_text || '').trim())
+    if (incompleteRecommendation) errors.explore_more = 'Choose a destination and complete the description and CTA for every recommendation.'
+
+    const incompleteFaq = faqs.some((faq) => !String(faq.question || '').trim() || !String(faq.answer || '').trim())
+    if (incompleteFaq) errors.faqs = 'Complete both the question and answer for every FAQ, or remove the unfinished FAQ.'
+
+    const logoFile = formData.get('logo')
+    const logoError = validateFile(logoFile, 'logo')
+    if (logoError) errors.logo = logoError
+
+    const certificateFile = formData.get('certificate_template')
+    const certificateError = validateFile(certificateFile, 'certificate')
+    if (certificateError) errors.certificate_template = certificateError
+
+    const galleryFiles = formData.getAll('gallery_images').filter((file) => file?.size > 0)
+    const invalidGallery = galleryFiles.map((file) => validateFile(file, 'gallery')).find(Boolean)
+    if (invalidGallery) errors.gallery_images = invalidGallery
+
+    return errors
+  }
+
+  const focusFirstError = (errors) => {
+    const firstKey = Object.keys(errors)[0]
+    if (!firstKey) return
+    window.requestAnimationFrame(() => {
+      const target = formRef.current?.querySelector(`[name="${firstKey}"], [data-error-key="${firstKey}"]`)
+      target?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      target?.focus?.({ preventScroll: true })
+    })
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    if (isSaving) return
+
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    const errors = validateForm(formData)
+    setFieldErrors(errors)
+    setSaveNotice(null)
+
+    if (Object.keys(errors).length > 0) {
+      setSaveNotice({ type: 'error', message: `Please correct ${Object.keys(errors).length} highlighted ${Object.keys(errors).length === 1 ? 'item' : 'items'}. Everything you entered has been kept.` })
+      focusFirstError(errors)
+      return
+    }
+
+    setIsSaving(true)
+    setProgress({ visible: true, stage: 'validate', percent: 5, label: 'Checking course details', detail: 'Your entered information is ready.' })
+
+    const files = []
+    const logoFile = formData.get('logo')
+    const certificateFile = formData.get('certificate_template')
+    const galleryFiles = formData.getAll('gallery_images').filter((file) => file?.size > 0)
+    if (logoFile?.size > 0) files.push({ key: 'logo', kind: 'logo', file: logoFile })
+    if (certificateFile?.size > 0) files.push({ key: 'certificate', kind: 'certificate', file: certificateFile })
+    galleryFiles.forEach((file, index) => files.push({ key: `gallery-${index}`, kind: 'gallery', file }))
+
+    const mode = initialData?.id ? 'edit' : 'create'
+    let preparedUploads = []
+    let saveStarted = false
+    try {
+      if (files.length > 0) {
+        setProgress({ visible: true, stage: 'upload', percent: 10, label: 'Preparing secure uploads', detail: `${files.length} ${files.length === 1 ? 'file' : 'files'} selected.` })
+        const prepared = await prepareCourseAssetUploads(mode, files.map(({ key, kind, file }) => ({
+          key,
+          kind,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+        })))
+        if (prepared?.error || !prepared?.uploads) throw new Error(prepared?.error || 'The uploads could not be prepared.')
+        preparedUploads = prepared.uploads
+
+        const supabase = createClient()
+        const totalBytes = files.reduce((sum, item) => sum + item.file.size, 0)
+        let completedBytes = 0
+        let completedFiles = 0
+
+        const settledUploads = await Promise.allSettled(files.map(async (item) => {
+          const preparedFile = preparedUploads.find((upload) => upload.key === item.key)
+          if (!preparedFile) throw new Error(`The ${assetLabel(item.kind)} upload could not be prepared.`)
+          const { error } = await supabase.storage
+            .from(preparedFile.bucket)
+            .uploadToSignedUrl(preparedFile.path, preparedFile.token, item.file, {
+              contentType: item.file.type,
+              cacheControl: '3600',
+            })
+          if (error) throw new Error(`The ${assetLabel(item.kind)} could not be uploaded. Please try again.`)
+          completedBytes += item.file.size
+          completedFiles += 1
+          const uploadPercent = totalBytes > 0 ? completedBytes / totalBytes : completedFiles / files.length
+          setProgress({
+            visible: true,
+            stage: 'upload',
+            percent: Math.min(82, Math.round(12 + uploadPercent * 70)),
+            label: 'Uploading course files',
+            detail: `${completedFiles} of ${files.length} ${files.length === 1 ? 'file' : 'files'} uploaded.`,
+          })
+          return { key: preparedFile.key, kind: preparedFile.kind, bucket: preparedFile.bucket, path: preparedFile.path }
+        }))
+        const failedUpload = settledUploads.find((result) => result.status === 'rejected')
+        if (failedUpload) throw failedUpload.reason
+        const results = settledUploads.map((result) => result.value)
+
+        formData.set('uploaded_assets_json', JSON.stringify(results))
+      } else {
+        formData.set('uploaded_assets_json', '[]')
+      }
+
+      // Large files have already gone directly to Storage and must not pass through Vercel.
+      formData.delete('logo')
+      formData.delete('certificate_template')
+      formData.delete('gallery_images')
+
+      setProgress({ visible: true, stage: 'save', percent: 90, label: 'Saving course', detail: 'Writing the course details and connecting its files.' })
+      saveStarted = true
+      const result = await action(formData)
+      if (result?.error) {
+        throw new Error(result.error)
+      }
+
+      setProgress({ visible: true, stage: 'done', percent: 100, label: 'Course saved', detail: 'Everything was saved successfully.' })
+      setSaveNotice({ type: 'success', message: 'Course saved successfully.' })
+      setIsSaving(false)
+    } catch (error) {
+      if (error?.digest?.startsWith?.('NEXT_REDIRECT')) throw error
+      // Before the database save begins, cleanup is unambiguous. Once it has
+      // begun, the server action owns cleanup so a lost response cannot delete
+      // files that may already be attached to a successfully saved course.
+      if (!saveStarted && preparedUploads.length > 0) await cleanupCourseAssetUploads(mode, preparedUploads)
+      setProgress({ visible: false, stage: 'validate', percent: 0, label: '', detail: '' })
+      setSaveNotice({ type: 'error', message: error?.message || 'The course could not be saved. Everything you entered has been kept.' })
+      setIsSaving(false)
+    }
+  }
+
   return (
-    <form action={action} className={styles.form}>
+    <form ref={formRef} onSubmit={handleSubmit} className={styles.form} noValidate aria-busy={isSaving}>
       <input type="hidden" name="details_to_know_items_json" value={JSON.stringify(detailsItems)} />
       <input type="hidden" name="what_youll_explore_json" value={JSON.stringify(exploreItems)} />
       <input type="hidden" name="explore_more_json" value={JSON.stringify(exploreMore)} />
@@ -334,6 +574,13 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
       <div className={styles.note}>
         Note: Lessons (videos / assessments) are managed separately after creating the course.
       </div>
+
+      {saveNotice && (
+        <div className={saveNotice.type === 'success' ? styles.successNotice : styles.errorNotice} role={saveNotice.type === 'error' ? 'alert' : 'status'}>
+          {saveNotice.type === 'success' ? <FaCheck /> : <FaExclamationCircle />}
+          <span>{saveNotice.message}</span>
+        </div>
+      )}
 
       <section className={styles.formSection}>
         <div className={styles.sectionHeading}>
@@ -345,7 +592,8 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         </div>
         <div className={styles.formGroup}>
           <label>Course Title</label>
-          <input type="text" name="title" defaultValue={initialData.title} required placeholder="e.g. Master ZakTalks" />
+          <input type="text" name="title" defaultValue={initialData.title} required placeholder="e.g. Master ZakTalks" aria-invalid={Boolean(fieldErrors.title)} />
+          <FieldError message={fieldErrors.title} />
         </div>
         <div className={styles.formGroup}>
           <label>Promise</label>
@@ -358,11 +606,13 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         <div className={styles.gridTwo}>
           <div className={styles.formGroup}>
             <label>Tutor Name</label>
-            <input type="text" name="tutor_name" defaultValue={initialData.tutor_name} required placeholder="Zak" />
+            <input type="text" name="tutor_name" defaultValue={initialData.tutor_name} required placeholder="Zak" aria-invalid={Boolean(fieldErrors.tutor_name)} />
+            <FieldError message={fieldErrors.tutor_name} />
           </div>
           <div className={styles.formGroup}>
             <label>Price ($)</label>
-            <input type="number" name="price" step="0.01" defaultValue={(initialData.price_cents || 0) / 100} required placeholder="49.99" />
+            <input type="number" name="price" min="0" step="0.01" defaultValue={(initialData.price_cents || 0) / 100} required placeholder="49.99" aria-invalid={Boolean(fieldErrors.price)} />
+            <FieldError message={fieldErrors.price} />
           </div>
         </div>
         <div className={styles.formGroup}>
@@ -373,7 +623,8 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
 
       <div className={styles.formGroup}>
         <label>URL Slug</label>
-        <input type="text" name="slug" defaultValue={initialData.slug} required placeholder="e.g. master-zaktalks" />
+        <input type="text" name="slug" defaultValue={initialData.slug} required placeholder="e.g. master-zaktalks" aria-invalid={Boolean(fieldErrors.slug)} />
+        <FieldError message={fieldErrors.slug} />
       </div>
 
       <section className={styles.formSection}>
@@ -415,11 +666,15 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
           maxLength="500"
           defaultValue={initialData.introduction_video_url || ''}
           placeholder="https://www.youtube.com/watch?v=..."
+          aria-invalid={Boolean(fieldErrors.introduction_video_url)}
         />
+        <FieldError message={fieldErrors.introduction_video_url} />
       </div>
 
-      <div className={styles.formGroup}>
+      <div className={styles.formGroup} data-error-key="gallery_images" tabIndex={-1}>
         <label>Course Gallery Images</label>
+        <p className={styles.fileHint}>JPG, PNG, WebP, or GIF. Maximum 1 MB per image.</p>
+        <FieldError message={fieldErrors.gallery_images} />
         
         {/* Existing Gallery Images */}
         <div className={styles.galleryGrid}>
@@ -517,6 +772,8 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         titleLabel="Details"
         items={detailsItems}
         setItems={setDetailsItems}
+        error={fieldErrors.details}
+        errorKey="details"
       />
 
       <div className={`${styles.formGroup} ${styles.sectionCtaField}`}>
@@ -610,6 +867,8 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         description="Build ordered topic blocks using either a paragraph or a list."
         items={exploreItems}
         setItems={setExploreItems}
+        error={fieldErrors.explore}
+        errorKey="explore"
       />
 
       <div className={styles.formGroup}>
@@ -618,12 +877,13 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
       </div>
 
       {/* Course FAQs Array */}
-      <div className={styles.listSection}>
+      <div className={styles.listSection} data-error-key="faqs" tabIndex={-1}>
         <div className={styles.listHeader}>
           <label>Frequently Asked Questions</label>
           <button type="button" onClick={addFaq} className={styles.addButton}>+ Add FAQ</button>
         </div>
         <div className={styles.listItems}>
+          <FieldError message={fieldErrors.faqs} />
           {faqs.map((faq, index) => (
             <div key={index} className={styles.faqItem}>
               <input 
@@ -651,10 +911,12 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         </div>
       </div>
 
-      <ExploreMoreEditor items={exploreMore} setItems={setExploreMore} availableCourses={availableCourses} />
+      <ExploreMoreEditor items={exploreMore} setItems={setExploreMore} availableCourses={availableCourses} error={fieldErrors.explore_more} />
 
-      <div className={styles.formGroup}>
+      <div className={styles.formGroup} data-error-key="logo" tabIndex={-1}>
         <label>Course Logo</label>
+        <p className={styles.fileHint}>Optional. JPG, PNG, WebP, or GIF, up to 1 MB.</p>
+        <FieldError message={fieldErrors.logo} />
         {(initialData.logo_url && !logoRemoved && !logoPreview) && (
           <div className={styles.currentImage} style={{ position: 'relative', display: 'inline-block' }}>
              <img src={initialData.logo_url} alt="Current logo" />
@@ -684,8 +946,10 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         />
       </div>
 
-      <div className={styles.formGroup}>
+      <div className={styles.formGroup} data-error-key="certificate_template" tabIndex={-1}>
         <label>Certificate Template (PDF)</label>
+        <p className={styles.fileHint}>Optional. PDF only, up to 10 MB.</p>
+        <FieldError message={fieldErrors.certificate_template} />
         {initialData.certificate_template_url && (
           <div style={{ marginBottom: 'var(--space-sm)', padding: '0.5rem', background: 'var(--color-gray-light)', borderRadius: '0.5rem' }}>
              <a href={initialData.certificate_template_url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-black)', fontWeight: 'bold' }}>📄 View Current Template</a>
@@ -714,8 +978,11 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
       </div>
 
       <div className={styles.formActions}>
-        <SubmitButton buttonText={buttonText} />
-        <a href="/admin/dashboard?view=courses" className={styles.cancelButton}>Cancel</a>
+        <SaveProgress progress={progress} />
+        <div className={styles.actionButtons}>
+          <SubmitButton buttonText={buttonText} pending={isSaving} />
+          <a href="/admin/dashboard?view=courses" className={`${styles.cancelButton} ${isSaving ? styles.cancelButtonDisabled : ''}`} aria-disabled={isSaving}>Cancel</a>
+        </div>
       </div>
     </form>
   )

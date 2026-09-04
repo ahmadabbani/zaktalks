@@ -6,8 +6,141 @@ import { redirect } from 'next/navigation'
 import { requirePermission } from '@/lib/auth-utils'
 import { normalizeYouTubeVideoUrl } from '@/lib/youtube-url'
 import { PUBLIC_PAGE_PATHS } from '@/lib/course-content'
+import { randomUUID } from 'node:crypto'
 
 const LESSON_RESOURCE_BUCKET = 'lesson-resources'
+const COURSE_IMAGE_BUCKET = 'course-images'
+const CERTIFICATE_BUCKET = 'certificates'
+const ONE_MEGABYTE = 1024 * 1024
+const COURSE_ASSET_LIMITS = {
+  logo: ONE_MEGABYTE,
+  gallery: ONE_MEGABYTE,
+  certificate: 10 * ONE_MEGABYTE,
+}
+const COURSE_IMAGE_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+
+function safeAssetExtension(fileName, mimeType, kind) {
+  if (kind === 'certificate') return mimeType === 'application/pdf' ? 'pdf' : null
+  const extensions = {
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/webp': 'webp',
+    'image/gif': 'gif',
+  }
+  const fromMime = extensions[mimeType]
+  if (!fromMime) return null
+  const fromName = String(fileName || '').split('.').pop()?.toLowerCase()
+  return fromName === 'jpeg' ? 'jpg' : (fromName && ['jpg', 'png', 'webp', 'gif'].includes(fromName) ? fromName : fromMime)
+}
+
+function validateAssetDescriptor(asset) {
+  const kind = asset?.kind
+  if (!Object.hasOwn(COURSE_ASSET_LIMITS, kind)) throw new Error('An unsupported course file was selected.')
+
+  const size = Number(asset?.size)
+  const mimeType = cleanText(asset?.type, 120).toLowerCase()
+  const maxSize = COURSE_ASSET_LIMITS[kind]
+  if (!Number.isFinite(size) || size <= 0 || size > maxSize) {
+    const label = kind === 'certificate' ? 'Certificate PDF' : kind === 'logo' ? 'Course logo' : 'Gallery image'
+    throw new Error(`${label} must be ${kind === 'certificate' ? '10 MB' : '1 MB'} or smaller.`)
+  }
+  if (kind === 'certificate' ? mimeType !== 'application/pdf' : !COURSE_IMAGE_MIME_TYPES.has(mimeType)) {
+    throw new Error(kind === 'certificate' ? 'Certificate template must be a PDF file.' : 'Course images must be JPG, PNG, WebP, or GIF files.')
+  }
+
+  const extension = safeAssetExtension(asset?.name, mimeType, kind)
+  if (!extension) throw new Error('The selected file type is not supported.')
+  return { kind, size, mimeType, extension, key: cleanText(asset?.key, 100) }
+}
+
+function assetLocation(kind, userId, extension) {
+  if (kind === 'logo') return { bucket: COURSE_IMAGE_BUCKET, path: `logos/${userId}/${randomUUID()}.${extension}` }
+  if (kind === 'gallery') return { bucket: COURSE_IMAGE_BUCKET, path: `gallery/${userId}/${randomUUID()}.${extension}` }
+  return { bucket: CERTIFICATE_BUCKET, path: `templates/${userId}/${randomUUID()}.pdf` }
+}
+
+function parseUploadedAssets(formData, userId) {
+  const assets = parseJsonArray(formData.get('uploaded_assets_json'), 'Uploaded files')
+  if (assets.length > 62) throw new Error('Too many files were selected.')
+  const seenPaths = new Set()
+
+  const parsed = assets.map((asset) => {
+    const kind = asset?.kind
+    const bucket = cleanText(asset?.bucket, 80)
+    const path = cleanText(asset?.path, 500)
+    const key = cleanText(asset?.key, 100)
+    const expectedBucket = kind === 'certificate' ? CERTIFICATE_BUCKET : COURSE_IMAGE_BUCKET
+    const expectedPrefix = kind === 'logo'
+      ? `logos/${userId}/`
+      : kind === 'gallery'
+        ? `gallery/${userId}/`
+        : `templates/${userId}/`
+
+    if (!Object.hasOwn(COURSE_ASSET_LIMITS, kind) || bucket !== expectedBucket || !path.startsWith(expectedPrefix) || seenPaths.has(`${bucket}:${path}`)) {
+      throw new Error('Uploaded course file information is invalid. Please select the files again.')
+    }
+    seenPaths.add(`${bucket}:${path}`)
+    return { kind, bucket, path, key }
+  })
+
+  if (parsed.filter((asset) => asset.kind === 'logo').length > 1 || parsed.filter((asset) => asset.kind === 'certificate').length > 1) {
+    throw new Error('Only one logo and one certificate PDF can be uploaded for a course.')
+  }
+  return parsed
+}
+
+async function removeUploadedAssets(supabase, assets) {
+  const byBucket = new Map()
+  for (const asset of assets) {
+    if (!byBucket.has(asset.bucket)) byBucket.set(asset.bucket, [])
+    byBucket.get(asset.bucket).push(asset.path)
+  }
+  await Promise.all([...byBucket.entries()].map(([bucket, paths]) => supabase.storage.from(bucket).remove(paths)))
+}
+
+function publicAssetUrl(supabase, asset) {
+  return supabase.storage.from(asset.bucket).getPublicUrl(asset.path).data.publicUrl
+}
+
+export async function prepareCourseAssetUploads(mode, assets) {
+  const permission = mode === 'edit' ? 'courses.edit' : 'courses.create'
+  const access = await requirePermission(permission)
+  const supabase = await createAdminClient()
+  if (!Array.isArray(assets) || assets.length > 62) return { error: 'Too many files were selected.' }
+  if (assets.filter((asset) => asset?.kind === 'logo').length > 1 || assets.filter((asset) => asset?.kind === 'certificate').length > 1) {
+    return { error: 'Only one logo and one certificate PDF can be uploaded for a course.' }
+  }
+
+  try {
+    const prepared = []
+    for (const rawAsset of assets) {
+      const asset = validateAssetDescriptor(rawAsset)
+      const location = assetLocation(asset.kind, access.user.id, asset.extension)
+      const { data, error } = await supabase.storage
+        .from(location.bucket)
+        .createSignedUploadUrl(location.path)
+      if (error || !data?.token) throw new Error('A secure upload could not be prepared. Please try again.')
+      prepared.push({ ...location, kind: asset.kind, key: asset.key, token: data.token })
+    }
+    return { uploads: prepared }
+  } catch (error) {
+    return { error: error.message || 'The files could not be prepared for upload.' }
+  }
+}
+
+export async function cleanupCourseAssetUploads(mode, assets) {
+  const permission = mode === 'edit' ? 'courses.edit' : 'courses.create'
+  const access = await requirePermission(permission)
+  const supabase = await createAdminClient()
+  try {
+    const formData = new FormData()
+    formData.set('uploaded_assets_json', JSON.stringify(Array.isArray(assets) ? assets : []))
+    const safeAssets = parseUploadedAssets(formData, access.user.id)
+    await removeUploadedAssets(supabase, safeAssets)
+  } catch (error) {
+    console.error('Unable to clean up pending course assets:', error)
+  }
+}
 
 function cleanText(value, maxLength = 5000) {
   return String(value || '').trim().slice(0, maxLength)
@@ -139,12 +272,25 @@ async function buildCourseContent(formData, supabase, currentCourseId = null) {
 }
 
 export async function createCourse(formData) {
-  await requirePermission('courses.create')
+  const access = await requirePermission('courses.create')
   const supabase = await createAdminClient()
 
+  let uploadedAssets = []
+  try {
+    uploadedAssets = parseUploadedAssets(formData, access.user.id)
+  } catch (error) {
+    return { error: error.message }
+  }
+  const fail = async (message) => {
+    await removeUploadedAssets(supabase, uploadedAssets)
+    return { error: message }
+  }
+
   const title = cleanText(formData.get('title'), 240)
-  let slug = formData.get('slug')
-  if (!title) return { error: 'Course title is required.' }
+  const rawSlug = cleanText(formData.get('slug'), 240)
+  let slug = rawSlug
+  if (!title) return fail('Course title is required.')
+  if (!rawSlug) return fail('Course URL slug is required.')
   
   // Normalize slug
   slug = slug ? slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '') 
@@ -157,22 +303,30 @@ export async function createCourse(formData) {
   const money_back_guarantee = formData.get('money_back_guarantee') === 'on'
   const is_published = formData.get('is_published') === 'on'
 
+  if (!tutor_name) return fail('Tutor name is required.')
+
   if (introductionVideoValue && !introduction_video_url) {
-    return { error: 'Enter a valid YouTube video link for the course introduction.' }
+    return fail('Enter a valid YouTube video link for the course introduction.')
   }
 
   let courseContent
   try {
     courseContent = await buildCourseContent(formData, supabase)
   } catch (error) {
-    return { error: error.message }
+    return fail(error.message)
   }
   
   // Handle Logo Upload
   const logoFile = formData.get('logo')
-  let logo_url = null
+  const uploadedLogo = uploadedAssets.find((asset) => asset.kind === 'logo')
+  let logo_url = uploadedLogo ? publicAssetUrl(supabase, uploadedLogo) : null
 
-  if (logoFile && logoFile.size > 0) {
+  if (!uploadedLogo && logoFile && logoFile.size > 0) {
+    try {
+      validateAssetDescriptor({ kind: 'logo', name: logoFile.name, size: logoFile.size, type: logoFile.type })
+    } catch (error) {
+      return fail(error.message)
+    }
     const fileExt = logoFile.name.split('.').pop()
     const fileName = `${slug}-${Date.now()}.${fileExt}`
     const filePath = `logos/${fileName}`
@@ -183,6 +337,7 @@ export async function createCourse(formData) {
 
     if (uploadError) {
       console.error('Logo Upload Error:', uploadError)
+      return fail('The course logo could not be uploaded. Please try again.')
     } else {
       const { data } = supabase.storage
         .from('course-images')
@@ -193,9 +348,15 @@ export async function createCourse(formData) {
 
   // Handle Certificate Template Upload
   const certFile = formData.get('certificate_template')
-  let certificate_template_url = null
+  const uploadedCertificate = uploadedAssets.find((asset) => asset.kind === 'certificate')
+  let certificate_template_url = uploadedCertificate ? publicAssetUrl(supabase, uploadedCertificate) : null
 
-  if (certFile && certFile.size > 0) {
+  if (!uploadedCertificate && certFile && certFile.size > 0) {
+    try {
+      validateAssetDescriptor({ kind: 'certificate', name: certFile.name, size: certFile.size, type: certFile.type })
+    } catch (error) {
+      return fail(error.message)
+    }
     const fileExt = certFile.name.split('.').pop()
     const fileName = `${slug}-cert-${Date.now()}.${fileExt}`
     const filePath = `${fileName}`
@@ -206,6 +367,7 @@ export async function createCourse(formData) {
 
     if (uploadError) {
       console.error('Cert Upload Error:', uploadError)
+      return fail('The certificate PDF could not be uploaded. Please try again.')
     } else {
       const { data } = supabase.storage
         .from('certificates')
@@ -232,7 +394,7 @@ export async function createCourse(formData) {
     .single()
 
   if (error) {
-    return { error: error.message }
+    return fail(error.message)
   }
 
   // Handle FAQs
@@ -250,6 +412,20 @@ export async function createCourse(formData) {
   }
 
   // Handle Gallery Images
+  const uploadedGallery = uploadedAssets.filter((asset) => asset.kind === 'gallery')
+  if (uploadedGallery.length > 0) {
+    const { error: galleryInsertError } = await supabase.from('course_images').insert(uploadedGallery.map((asset, index) => ({
+      course_id: data.id,
+      image_url: publicAssetUrl(supabase, asset),
+      display_order: index,
+    })))
+    if (galleryInsertError) {
+      console.error('Gallery Insert Error:', galleryInsertError)
+      await supabase.from('courses').delete().eq('id', data.id)
+      return fail('The course gallery could not be saved. Your entries are still here; please try again.')
+    }
+  }
+
   const galleryFiles = formData.getAll('gallery_images')
   for (let i = 0; i < galleryFiles.length; i++) {
     const file = galleryFiles[i]
@@ -281,12 +457,25 @@ export async function createCourse(formData) {
 }
 
 export async function updateCourse(id, formData) {
-  await requirePermission('courses.edit')
+  const access = await requirePermission('courses.edit')
   const supabase = await createAdminClient()
 
+  let uploadedAssets = []
+  try {
+    uploadedAssets = parseUploadedAssets(formData, access.user.id)
+  } catch (error) {
+    return { error: error.message }
+  }
+  const fail = async (message) => {
+    await removeUploadedAssets(supabase, uploadedAssets)
+    return { error: message }
+  }
+
   const title = cleanText(formData.get('title'), 240)
-  let slug = formData.get('slug')
-  if (!title) return { error: 'Course title is required.' }
+  const rawSlug = cleanText(formData.get('slug'), 240)
+  let slug = rawSlug
+  if (!title) return fail('Course title is required.')
+  if (!rawSlug) return fail('Course URL slug is required.')
   
   // Normalize slug
   slug = slug ? slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '') 
@@ -299,15 +488,17 @@ export async function updateCourse(id, formData) {
   const money_back_guarantee = formData.get('money_back_guarantee') === 'on'
   const is_published = formData.get('is_published') === 'on'
 
+  if (!tutor_name) return fail('Tutor name is required.')
+
   if (introductionVideoValue && !introduction_video_url) {
-    return { error: 'Enter a valid YouTube video link for the course introduction.' }
+    return fail('Enter a valid YouTube video link for the course introduction.')
   }
 
   let courseContent
   try {
     courseContent = await buildCourseContent(formData, supabase, id)
   } catch (error) {
-    return { error: error.message }
+    return fail(error.message)
   }
   
   const updateData = {
@@ -324,7 +515,15 @@ export async function updateCourse(id, formData) {
 
   // Handle Logo Upload (only if new file provided)
   const logoFile = formData.get('logo')
-  if (logoFile && logoFile.size > 0) {
+  const uploadedLogo = uploadedAssets.find((asset) => asset.kind === 'logo')
+  if (uploadedLogo) {
+    updateData.logo_url = publicAssetUrl(supabase, uploadedLogo)
+  } else if (logoFile && logoFile.size > 0) {
+    try {
+      validateAssetDescriptor({ kind: 'logo', name: logoFile.name, size: logoFile.size, type: logoFile.type })
+    } catch (error) {
+      return fail(error.message)
+    }
     const fileExt = logoFile.name.split('.').pop()
     const fileName = `${slug}-${Date.now()}.${fileExt}`
     const filePath = `logos/${fileName}`
@@ -333,7 +532,9 @@ export async function updateCourse(id, formData) {
       .from('course-images')
       .upload(filePath, logoFile)
 
-    if (!uploadError) {
+    if (uploadError) {
+      return fail('The course logo could not be uploaded. Please try again.')
+    } else {
       const { data } = supabase.storage
         .from('course-images')
         .getPublicUrl(filePath)
@@ -346,7 +547,15 @@ export async function updateCourse(id, formData) {
 
   // Handle Certificate Template Upload
   const certFile = formData.get('certificate_template')
-  if (certFile && certFile.size > 0) {
+  const uploadedCertificate = uploadedAssets.find((asset) => asset.kind === 'certificate')
+  if (uploadedCertificate) {
+    updateData.certificate_template_url = publicAssetUrl(supabase, uploadedCertificate)
+  } else if (certFile && certFile.size > 0) {
+    try {
+      validateAssetDescriptor({ kind: 'certificate', name: certFile.name, size: certFile.size, type: certFile.type })
+    } catch (error) {
+      return fail(error.message)
+    }
     const fileExt = certFile.name.split('.').pop()
     const fileName = `${slug}-cert-${Date.now()}.${fileExt}`
     const filePath = `${fileName}`
@@ -355,11 +564,29 @@ export async function updateCourse(id, formData) {
       .from('certificates')
       .upload(filePath, certFile)
 
-    if (!uploadError) {
+    if (uploadError) {
+      return fail('The certificate PDF could not be uploaded. Please try again.')
+    } else {
       const { data } = supabase.storage
         .from('certificates')
         .getPublicUrl(filePath)
       updateData.certificate_template_url = data.publicUrl
+    }
+  }
+
+  // Attach newly uploaded gallery files before changing course metadata. If the
+  // metadata update fails, these rows and files can be removed cleanly.
+  const uploadedGallery = uploadedAssets.filter((asset) => asset.kind === 'gallery')
+  const uploadedGalleryUrls = uploadedGallery.map((asset) => publicAssetUrl(supabase, asset))
+  if (uploadedGallery.length > 0) {
+    const { error: galleryInsertError } = await supabase.from('course_images').insert(uploadedGallery.map((asset, index) => ({
+      course_id: id,
+      image_url: uploadedGalleryUrls[index],
+      display_order: 99,
+    })))
+    if (galleryInsertError) {
+      console.error('Gallery Insert Error:', galleryInsertError)
+      return fail('The new gallery images could not be saved. Your entries are still here; please try again.')
     }
   }
 
@@ -369,7 +596,10 @@ export async function updateCourse(id, formData) {
     .eq('id', id)
 
   if (error) {
-    return { error: error.message }
+    if (uploadedGalleryUrls.length > 0) {
+      await supabase.from('course_images').delete().eq('course_id', id).in('image_url', uploadedGalleryUrls)
+    }
+    return fail(error.message)
   }
 
   // Handle FAQs (Sync strategy: delete and re-insert)
@@ -401,7 +631,7 @@ export async function updateCourse(id, formData) {
       }
   }
 
-  // Handle New Gallery Images
+  // Handle New Gallery Images submitted through the legacy server-upload path.
   const galleryFiles = formData.getAll('gallery_images')
   for (let i = 0; i < galleryFiles.length; i++) {
       const file = galleryFiles[i]

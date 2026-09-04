@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   createLesson,
   createModule,
@@ -43,6 +43,8 @@ function normalizeModules(modules) {
 
 export default function LessonListUI({ courseId, initialModules = [], assessments = [] }) {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const createdToastShown = useRef(false)
   const [modules, setModules] = useState(() => normalizeModules(initialModules))
   const [moduleForm, setModuleForm] = useState(null)
   const [lessonForm, setLessonForm] = useState(null)
@@ -55,6 +57,13 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
   useEffect(() => {
     setModules(normalizeModules(initialModules))
   }, [initialModules])
+
+  useEffect(() => {
+    if (searchParams.get('created') !== 'true' || createdToastShown.current) return
+    createdToastShown.current = true
+    toast.success('Course created successfully')
+    window.history.replaceState({}, '', `/admin/courses/${courseId}/lessons`)
+  }, [courseId, searchParams])
 
   const nextModuleTitle = `Module ${String(modules.length + 1).padStart(2, '0')}`
 
