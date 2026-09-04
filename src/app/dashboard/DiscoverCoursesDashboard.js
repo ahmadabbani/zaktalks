@@ -19,7 +19,7 @@ function isNewCourse(createdAt) {
 }
 
 function CourseCard({ course }) {
-  const description = course.subheadline || course.description || 'A guided learning experience designed to support meaningful, lasting change.'
+  const description = course.short_introduction || course.promise || course.description || course.subheadline || 'A guided learning experience designed to support meaningful, lasting change.'
 
   return <article className={styles.learnerDiscoverCard}>
     <Link href={`/courses/${course.slug}`} className={styles.learnerDiscoverVisual} aria-label={`View ${course.title}`}>

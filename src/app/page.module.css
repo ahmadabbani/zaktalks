@@ -910,7 +910,7 @@
   max-width: 11ch;
   color: var(--color-white);
   font-size: var(--social-proof-heading-size);
-  font-weight: 620;
+  font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: 1.18;
   text-wrap: balance;
@@ -918,12 +918,12 @@
 
 .socialProofHighlightYellow {
   color: var(--color-yellow);
-  font-weight: var(--home-headline-weight);
+  font-weight: 900;
 }
 
 .socialProofHighlightWhite {
   color: var(--color-white);
-  font-weight: var(--home-headline-weight);
+  font-weight: 900;
 }
 
 .socialProofGrid {

@@ -6,7 +6,6 @@ import Image from 'next/image'
 import {
   FaArrowLeft,
   FaArrowRight,
-  FaAward,
   FaBookOpen,
   FaBullseye,
   FaCertificate,
@@ -15,40 +14,32 @@ import {
   FaClipboardCheck,
   FaClipboardList,
   FaExpand,
+  FaGlobe,
   FaHeadset,
   FaImages,
   FaLightbulb,
   FaPlay,
   FaQuestionCircle,
   FaRegClock,
-  FaStar,
   FaTimes,
   FaUserTie,
   FaVideo
 } from 'react-icons/fa'
 import EnrollButton from '@/components/EnrollButton'
+import { legacyDetailsToBlocks, normalizeContentBlocks } from '@/lib/course-content'
 import styles from './CourseDetails.module.css'
 
-const REVIEW_TOTAL = 220
 const COURSE_TAGS = ['PERSONAL DEVELOPMENT', 'SELF-PACED']
-const RATING_DISTRIBUTION = [
-  { stars: 5, percent: 82.35 },
-  { stars: 4, percent: 15.68 },
-  { stars: 3, percent: 0.98 },
-  { stars: 2, percent: 0 },
-  { stars: 1, percent: 0.98 }
-]
-const SAMPLE_REVIEWS = [
-  { name: 'Maya R.', rating: 5, date: 'August 2026', text: 'The course gave me language for patterns I could feel but could not explain. The lessons are clear, grounded, and easy to return to.' },
-  { name: 'Omar K.', rating: 5, date: 'July 2026', text: 'Thoughtful without being overwhelming. I appreciated the balance between reflection, practical exercises, and honest questions.' },
-  { name: 'Lea S.', rating: 4.5, date: 'July 2026', text: 'I started noticing changes in the way I communicate almost immediately. The assessments helped turn insight into something personal.' },
-  { name: 'Karim N.', rating: 5, date: 'June 2026', text: 'A well-structured experience that respects your pace. It feels human, focused, and genuinely useful.' },
-  { name: 'Sara H.', rating: 4.5, date: 'May 2026', text: 'The material helped me pause before reacting and understand what was happening underneath familiar situations.' }
-]
 
 function toList(value) {
   if (Array.isArray(value)) return value.filter(Boolean)
   return value ? [value] : []
+}
+
+function hasDistinctText(value, comparedWith) {
+  const normalizedValue = String(value || '').trim()
+  const normalizedComparison = String(comparedWith || '').trim()
+  return Boolean(normalizedValue && normalizedValue !== normalizedComparison)
 }
 
 function formatDuration(seconds) {
@@ -78,7 +69,9 @@ function useScrollReveal() {
       const revealed = entries
         .filter((entry) => entry.isIntersecting)
         .map((entry) => entry.target.dataset.courseReveal)
+
       if (!revealed.length) return
+
       setVisible((current) => {
         const next = new Set(current)
         revealed.forEach((id) => next.add(id))
@@ -165,12 +158,14 @@ function CourseGallery({ images, courseTitle }) {
 
   useEffect(() => {
     if (activeIndex === null) return undefined
+
     const originalOverflow = document.body.style.overflow
     const onKeyDown = (event) => {
       if (event.key === 'Escape') setActiveIndex(null)
       if (event.key === 'ArrowRight') setActiveIndex((current) => (current + 1) % images.length)
       if (event.key === 'ArrowLeft') setActiveIndex((current) => (current - 1 + images.length) % images.length)
     }
+
     document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', onKeyDown)
     return () => {
@@ -216,12 +211,8 @@ function CourseGallery({ images, courseTitle }) {
           <button type="button" className={styles.lightboxClose} onClick={() => setActiveIndex(null)} aria-label="Close gallery"><FaTimes /></button>
           {images.length > 1 && <button type="button" className={`${styles.lightboxNav} ${styles.lightboxPrev}`} onClick={() => setActiveIndex((activeIndex - 1 + images.length) % images.length)} aria-label="Previous image"><FaArrowLeft /></button>}
           <div className={styles.lightboxStage}>
-            {/* The gallery contains mixed source dimensions; keep the original ratio in the viewer. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={images[activeIndex].image_url}
-              alt={images[activeIndex].alt_text || `${courseTitle} gallery image ${activeIndex + 1}`}
-            />
+            <img src={images[activeIndex].image_url} alt={images[activeIndex].alt_text || `${courseTitle} gallery image ${activeIndex + 1}`} />
           </div>
           {images.length > 1 && <button type="button" className={`${styles.lightboxNav} ${styles.lightboxNext}`} onClick={() => setActiveIndex((activeIndex + 1) % images.length)} aria-label="Next image"><FaArrowRight /></button>}
           <span className={styles.lightboxCount}>{activeIndex + 1} / {images.length}</span>
@@ -231,42 +222,23 @@ function CourseGallery({ images, courseTitle }) {
   )
 }
 
-function CourseReviews() {
-  const [showAll, setShowAll] = useState(false)
-  const displayedReviews = showAll ? SAMPLE_REVIEWS : SAMPLE_REVIEWS.slice(0, 3)
-
+function StructuredContentBlocks({ items }) {
   return (
-    <div className={styles.reviewsLayout}>
-      <div className={styles.ratingSummary}>
-        <span className={styles.ratingScore}>4.8</span>
-        <span className={styles.summaryStars} aria-label="4.8 out of 5 stars"><FaStar /><FaStar /><FaStar /><FaStar /><FaStar /></span>
-        <span className={styles.ratingCount}>{REVIEW_TOTAL} learner reviews</span>
-        <div className={styles.ratingBars}>
-          {RATING_DISTRIBUTION.map((item) => (
-            <div className={styles.ratingRow} key={item.stars}>
-              <span>{item.stars} <FaStar /></span>
-              <div className={styles.ratingTrack}><i style={{ width: `${item.percent}%` }} /></div>
-              <strong>{item.percent}%</strong>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className={styles.reviewList}>
-        {displayedReviews.map((review) => (
-          <article className={styles.reviewCard} key={`${review.name}-${review.date}`}>
-            <div className={styles.reviewMeta}>
-              <span className={styles.reviewAvatar}>{review.name.charAt(0)}</span>
-              <span><strong>{review.name}</strong><small>Verified learner · {review.date}</small></span>
-              <span className={styles.reviewRating}>{review.rating} <FaStar /></span>
-            </div>
-            <p>{review.text}</p>
-          </article>
-        ))}
-        <button type="button" className={styles.moreReviewsButton} onClick={() => setShowAll((current) => !current)}>
-          {showAll ? 'Show fewer reviews' : 'View more reviews'} <FaArrowRight />
-        </button>
-      </div>
+    <div className={styles.structuredContentGrid}>
+      {items.map((item, index) => (
+        <article className={styles.structuredContentCard} key={`${item.title}-${index}`}>
+          {item.title && <h3>{item.title}</h3>}
+          {item.content_type === 'list'
+            ? (
+              <ul>
+                {item.items.map((entry, itemIndex) => (
+                  <li key={`${entry}-${itemIndex}`}><FaCheck /><span>{entry}</span></li>
+                ))}
+              </ul>
+            )
+            : item.text && <p>{item.text}</p>}
+        </article>
+      ))}
     </div>
   )
 }
@@ -295,23 +267,47 @@ function CourseFaqs({ faqs }) {
   )
 }
 
-export default function CourseDetailsExperience({ course, curriculumModules, galleryImages, faqs, relatedCourses, isLoggedIn, isEnrolled }) {
+export default function CourseDetailsExperience({ course, curriculumModules, galleryImages, faqs, exploreMoreItems, isLoggedIn, isEnrolled }) {
   const [openModule, setOpenModule] = useState(curriculumModules[0]?.id || null)
   const revealProps = useScrollReveal()
   const learningOutcomes = useMemo(() => toList(course.what_youll_learn), [course.what_youll_learn])
   const skills = useMemo(() => toList(course.skills_youll_gain), [course.skills_youll_gain])
   const targetAudience = useMemo(() => toList(course.target_audience), [course.target_audience])
   const notForAudience = useMemo(() => toList(course.who_this_is_not_for), [course.who_this_is_not_for])
+  const detailItems = useMemo(() => legacyDetailsToBlocks(course.details_to_know_items, course.details_to_know), [course.details_to_know_items, course.details_to_know])
+  const exploreItems = useMemo(() => normalizeContentBlocks(course.what_youll_explore), [course.what_youll_explore])
   const lessonCount = curriculumModules.reduce((total, module) => total + module.lessons.length, 0)
   const assessmentCount = curriculumModules.reduce((total, module) => total + module.lessons.filter((lesson) => lesson.type === 'assessment').length, 0)
   const moduleCount = curriculumModules.length
   const formattedPrice = `$${(Number(course.price_cents || 0) / 100).toFixed(2)}`
   const hasIntroductionVideo = Boolean(getYouTubeId(course.introduction_video_url))
+  const descriptionCopy = hasDistinctText(course.description, course.promise) ? course.description : ''
+  const subheadlineCopy = hasDistinctText(course.subheadline, course.short_introduction) ? course.subheadline : ''
+  const hasCourseSubheadline = Boolean(String(course.bold_introduction || '').trim() || subheadlineCopy)
+  const hasDescriptionSection = Boolean(descriptionCopy || hasIntroductionVideo || galleryImages.length)
+  const descriptionSectionTitle = descriptionCopy
+    ? 'Course description'
+    : hasIntroductionVideo
+      ? 'Course introduction'
+      : 'Inside the experience'
+  const courseInfoItems = [
+    { label: 'Modules', value: course.course_info_modules, Icon: FaBookOpen },
+    { label: 'Course level', value: course.course_level, Icon: FaBullseye },
+    { label: 'Language', value: course.course_language, Icon: FaGlobe },
+    { label: 'Flexible schedule', value: course.flexible_schedule, Icon: FaRegClock },
+    { label: 'Support', value: course.course_support, Icon: FaHeadset },
+  ].filter((item) => String(item.value || '').trim())
 
   const purchaseAction = isEnrolled ? (
     <Link href="/dashboard" className={styles.continueButton}>Continue learning <FaArrowRight /></Link>
   ) : (
-    <EnrollButton courseId={course.id} courseName={course.title} price={course.price_cents} isLoggedIn={isLoggedIn} text="Enroll Now" />
+    <EnrollButton
+      courseId={course.id}
+      courseName={course.title}
+      price={course.price_cents}
+      isLoggedIn={isLoggedIn}
+      text={course.primary_cta_text || 'Enroll Now'}
+    />
   )
 
   return (
@@ -322,10 +318,10 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
             <div className={styles.heroCopy}>
               <div className={styles.tagRow}>{COURSE_TAGS.map((tag) => <span key={tag}>{tag}</span>)}</div>
               <h1>{course.title}</h1>
-              {course.description && <p className={styles.heroDescription}>{course.description}</p>}
-              {course.subheadline && <p className={styles.heroSubheadline}>{course.subheadline}</p>}
+              {course.promise && <p className={styles.heroDescription}>{course.promise}</p>}
+              {course.short_introduction && <p className={styles.heroSubheadline}>{course.short_introduction}</p>}
               <div className={styles.instructorLine}><span><FaUserTie /></span><p><small>Instructor</small><strong>{course.tutor_name || 'Zak Dakkash'}</strong></p></div>
-              <div className={styles.heroActions}>
+              <div className={styles.heroActions} id="course-action">
                 <div className={styles.heroEnroll}>{purchaseAction}</div>
                 <a href="#curriculum" className={styles.curriculumButton}>View curriculum <FaArrowRight /></a>
               </div>
@@ -345,19 +341,39 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
             </aside>
           </div>
 
-          <div className={styles.quickFacts}>
-            <div><FaBookOpen /><span><strong>{moduleCount} {moduleCount === 1 ? 'module' : 'modules'} · {lessonCount} lessons</strong><small>Structured learning path</small></span></div>
-            <div><FaStar /><span><strong>4.8 out of 5</strong><small>{REVIEW_TOTAL} learner reviews</small></span></div>
-            <div><FaAward /><span><strong>Experienced educator</strong><small>Guided by Zak Dakkash</small></span></div>
-            <div><FaCertificate /><span><strong>Course certificate</strong><small>Included with completion</small></span></div>
-            <div><FaHeadset /><span><strong>Learning support</strong><small>Support throughout the course</small></span></div>
-          </div>
+          {courseInfoItems.length > 0 && (
+            <div className={styles.quickFacts}>
+              {courseInfoItems.map(({ label, value, Icon }) => (
+                <div key={label}><Icon /><span><strong>{value}</strong><small>{label}</small></span></div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
       <section className={styles.contentSection}>
         <div className={`container ${styles.contentGrid}`}>
           <div className={styles.primaryContent}>
+            {hasDescriptionSection && (
+              <section {...revealProps('description')}>
+                <div className={styles.sectionLabel}><FaBookOpen /> About the course</div>
+                <h2 className={styles.sectionTitle}>{descriptionSectionTitle}</h2>
+                {descriptionCopy && <p className={styles.courseDescription}>{descriptionCopy}</p>}
+                {hasIntroductionVideo && (
+                  <div className={styles.descriptionMediaBlock}>
+                    {descriptionCopy && <h3>Course introduction</h3>}
+                    <CourseIntroPlayer url={course.introduction_video_url} title={course.title} />
+                  </div>
+                )}
+                {galleryImages.length > 0 && (
+                  <div className={styles.descriptionMediaBlock}>
+                    {(descriptionCopy || hasIntroductionVideo) && <h3><FaImages /> Inside the experience</h3>}
+                    <CourseGallery images={galleryImages} courseTitle={course.title} />
+                  </div>
+                )}
+              </section>
+            )}
+
             {learningOutcomes.length > 0 && (
               <section {...revealProps('learning')}>
                 <div className={styles.sectionLabel}><FaCheck /> Course outcomes</div>
@@ -376,10 +392,47 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
               </section>
             )}
 
+            {detailItems.length > 0 && (
+              <section {...revealProps('details')}>
+                <div className={styles.sectionLabel}><FaRegClock /> Before you begin</div>
+                <h2 className={styles.sectionTitle}>Details to know</h2>
+                <StructuredContentBlocks items={detailItems} />
+                {course.details_cta_text && <a href="#course-action" className={styles.detailsCta}>{course.details_cta_text}<FaArrowRight /></a>}
+              </section>
+            )}
+
+            {(targetAudience.length > 0 || notForAudience.length > 0) && (
+              <section {...revealProps('audience')}>
+                <div className={styles.audienceGrid}>
+                  {targetAudience.length > 0 && <article className={styles.audienceCard}><span className={styles.audienceIcon}><FaBullseye /></span><h2>{course.target_audience_title || 'Who this is for'}</h2><ul>{targetAudience.map((item, index) => <li key={`${item}-${index}`}><FaCheck /> <span>{item}</span></li>)}</ul></article>}
+                  {notForAudience.length > 0 && <article className={`${styles.audienceCard} ${styles.notForCard}`}><span className={styles.audienceIcon}><FaTimes /></span><h2>{course.who_this_is_not_for_title || 'Who this is not for'}</h2><ul>{notForAudience.map((item, index) => <li key={`${item}-${index}`}><FaTimes /> <span>{item}</span></li>)}</ul></article>}
+                </div>
+                {course.audience_supporting_text && <p className={styles.audienceSupportingText}>{course.audience_supporting_text}</p>}
+              </section>
+            )}
+
+            {hasCourseSubheadline && (
+              <section {...revealProps('course-subheadline')}>
+                <div className={styles.sectionLabel}><FaLightbulb /> Course perspective</div>
+                <div className={styles.subheadlineFeature}>
+                  <h2>{course.bold_introduction || 'A closer look'}</h2>
+                  {subheadlineCopy && <p>{subheadlineCopy}</p>}
+                </div>
+              </section>
+            )}
+
+            {exploreItems.length > 0 && (
+              <section {...revealProps('what-youll-explore')}>
+                <div className={styles.sectionLabel}><FaBullseye /> Inside the learning journey</div>
+                <h2 className={styles.sectionTitle}>What you&apos;ll explore</h2>
+                <StructuredContentBlocks items={exploreItems} />
+              </section>
+            )}
+
             <section id="curriculum" {...revealProps('curriculum')}>
               <div className={styles.sectionLabel}><FaClipboardList /> Course structure</div>
               <div className={styles.sectionTitleRow}>
-                <h2 className={styles.sectionTitle}>Curriculum</h2>
+                <h2 className={styles.sectionTitle}>Course curriculum</h2>
                 <span>{moduleCount} {moduleCount === 1 ? 'module' : 'modules'} · {lessonCount} lessons</span>
               </div>
               <div className={styles.curriculumList}>
@@ -404,7 +457,7 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
                               <div className={styles.lessonRow} key={lesson.id}>
                                 <span className={styles.lessonIcon}>{isAssessment ? <FaClipboardCheck /> : <FaPlay />}</span>
                                 <span className={styles.lessonCopy}><small>Lesson {String(lesson.curriculumPosition).padStart(2, '0')}</small><strong>{lesson.title}</strong>{lesson.description && <p>{lesson.description}</p>}</span>
-                                <span className={styles.lessonType}>{isAssessment ? 'Assessment' : duration || 'Video'}</span>
+                                <span className={styles.lessonType}>{isAssessment ? 'Assessment' : duration || 'Duration unavailable'}</span>
                               </div>
                             )
                           })}
@@ -418,39 +471,6 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
               </div>
             </section>
 
-            {hasIntroductionVideo && (
-              <section {...revealProps('intro-video')}>
-                <div className={styles.sectionLabel}><FaPlay /> Start here</div>
-                <h2 className={styles.sectionTitle}>Course introduction</h2>
-                <CourseIntroPlayer url={course.introduction_video_url} title={course.title} />
-              </section>
-            )}
-
-            {course.details_to_know && (
-              <section {...revealProps('details')}>
-                <div className={styles.sectionLabel}><FaRegClock /> Before you begin</div>
-                <h2 className={styles.sectionTitle}>Details to know</h2>
-                <div className={styles.detailsCard}><p>{course.details_to_know}</p></div>
-              </section>
-            )}
-
-            {(targetAudience.length > 0 || notForAudience.length > 0) && (
-              <section {...revealProps('audience')}>
-                <div className={styles.audienceGrid}>
-                  {targetAudience.length > 0 && <article className={styles.audienceCard}><span className={styles.audienceIcon}><FaBullseye /></span><h2>Who this is for</h2><ul>{targetAudience.map((item, index) => <li key={`${item}-${index}`}><FaCheck /> <span>{item}</span></li>)}</ul></article>}
-                  {notForAudience.length > 0 && <article className={`${styles.audienceCard} ${styles.notForCard}`}><span className={styles.audienceIcon}><FaTimes /></span><h2>Who this is not for</h2><ul>{notForAudience.map((item, index) => <li key={`${item}-${index}`}><FaTimes /> <span>{item}</span></li>)}</ul></article>}
-                </div>
-              </section>
-            )}
-
-            {galleryImages.length > 0 && (
-              <section {...revealProps('gallery')}>
-                <div className={styles.sectionLabel}><FaImages /> Inside the experience</div>
-                <h2 className={styles.sectionTitle}>Course gallery</h2>
-                <CourseGallery images={galleryImages} courseTitle={course.title} />
-              </section>
-            )}
-
             {course.meet_the_tutor && (
               <section {...revealProps('tutor')}>
                 <div className={styles.tutorSection}>
@@ -460,32 +480,34 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
               </section>
             )}
 
-            {relatedCourses.length > 0 && (
-              <section {...revealProps('related')}>
-                <div className={styles.sectionLabel}><FaBookOpen /> Keep exploring</div>
-                <h2 className={styles.sectionTitle}>Explore more courses</h2>
-                <div className={styles.relatedGrid}>
-                  {relatedCourses.map((related) => (
-                    <article className={styles.relatedCard} key={related.id}>
-                      <Link href={`/courses/${related.slug}`} className={styles.relatedImage}>{related.logo_url ? <Image src={related.logo_url} alt={related.title} fill sizes="(max-width: 520px) 7.5rem, 16vw" quality={86} unoptimized /> : <span><FaBookOpen /></span>}</Link>
-                      <div><h3>{related.title}</h3><p>{related.description || related.subheadline}</p><Link href={`/courses/${related.slug}`}>View course <FaArrowRight /></Link></div>
-                    </article>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            <section {...revealProps('reviews')}>
-              <div className={styles.sectionLabel}><FaStar /> Learner feedback</div>
-              <h2 className={styles.sectionTitle}>Learner reviews</h2>
-              <CourseReviews />
-            </section>
-
             {faqs.length > 0 && (
               <section {...revealProps('faqs')}>
                 <div className={styles.sectionLabel}><FaQuestionCircle /> Course questions</div>
                 <h2 className={styles.sectionTitle}>Frequently asked questions</h2>
                 <CourseFaqs faqs={faqs} />
+              </section>
+            )}
+
+            {exploreMoreItems.length > 0 && (
+              <section {...revealProps('related')}>
+                <div className={styles.sectionLabel}><FaBookOpen /> Continue exploring</div>
+                <h2 className={styles.sectionTitle}>Explore more</h2>
+                <div className={styles.relatedGrid}>
+                  {exploreMoreItems.map((item) => (
+                    <article className={`${styles.relatedCard} ${item.target_type === 'page' ? styles.relatedPageCard : ''}`} key={item.id}>
+                      <Link href={item.target_path} className={styles.relatedImage}>
+                        {item.image_url
+                          ? <Image src={item.image_url} alt={item.title} fill sizes="(max-width: 520px) 7.5rem, 16vw" quality={86} unoptimized />
+                          : <span>{item.target_type === 'page' ? <FaGlobe /> : <FaBookOpen />}</span>}
+                      </Link>
+                      <div>
+                        <h3>{item.title}</h3>
+                        {item.description && <p>{item.description}</p>}
+                        <Link href={item.target_path} className={styles.relatedCta}>{item.cta_text || (item.target_type === 'page' ? 'Visit page' : 'View course')} <FaArrowRight /></Link>
+                      </div>
+                    </article>
+                  ))}
+                </div>
               </section>
             )}
           </div>

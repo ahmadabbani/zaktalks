@@ -4,6 +4,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaChevronLeft, FaRedo, FaCheck, FaTimes } from 'react-icons/fa';
 import ResultScreenshotButton from '@/components/ResultScreenshotButton';
+import useDelayedAnswerAdvance from './useDelayedAnswerAdvance';
 import styles from './assessment.module.css';
 
 export default function CorrectIncorrectEngine({ definition, onComplete, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture', resultDownloadFormat = 'png' }) {
@@ -11,6 +12,7 @@ export default function CorrectIncorrectEngine({ definition, onComplete, enableR
   const [answers, setAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { isAdvancing, advanceAfterFeedback } = useDelayedAnswerAdvance();
 
   const currentQuestion = definition.questions[currentIndex];
   const totalQuestions = definition.questions.length;
@@ -22,16 +24,18 @@ export default function CorrectIncorrectEngine({ definition, onComplete, enableR
   };
 
   const handleSelect = (value) => {
-    if (isSubmitting) return;
+    if (isSubmitting || isAdvancing) return;
 
     const nextAnswers = { ...answers, [currentQuestion.id]: value };
     setAnswers(nextAnswers);
 
-    if (currentIndex < totalQuestions - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      calculateResult(nextAnswers);
-    }
+    advanceAfterFeedback(() => {
+      if (currentIndex < totalQuestions - 1) {
+        setCurrentIndex((index) => index + 1);
+      } else {
+        calculateResult(nextAnswers);
+      }
+    });
   };
 
   const handlePrev = () => {
@@ -144,16 +148,17 @@ export default function CorrectIncorrectEngine({ definition, onComplete, enableR
       </div>
 
       {/* Question */}
-      <div className={styles.questionSection}>
+      <div key={`question-${currentQuestion.id}`} className={`${styles.questionSection} ${styles.questionTransition}`}>
         <h3 className={styles.questionText}>{currentQuestion.text}</h3>
       </div>
 
       {/* Options */}
-      <div className={styles.ciOptionsSection}>
+      <div key={`answers-${currentQuestion.id}`} className={`${styles.ciOptionsSection} ${styles.questionTransition} ${styles.answerTransition}`}>
         {options.map((option) => (
           <button
             key={option.value}
             onClick={() => handleSelect(option.value)}
+            disabled={isSubmitting || isAdvancing}
             className={`${styles.ciOptionBtn} ${answers[currentQuestion.id] === option.value ? styles.ciOptionBtnSelected : ''}`}
           >
             {option.label}
@@ -166,7 +171,7 @@ export default function CorrectIncorrectEngine({ definition, onComplete, enableR
         <button
           className={`${styles.navBtn} ${styles.prevBtn}`}
           onClick={handlePrev}
-          disabled={currentIndex === 0 || isSubmitting}
+          disabled={currentIndex === 0 || isSubmitting || isAdvancing}
         >
           <FaChevronLeft /> Previous
         </button>

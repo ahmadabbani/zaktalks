@@ -123,11 +123,11 @@ export default function BinaryScoredEngine({
         </div>
       </div>
 
-      <div className={styles.questionSection}>
+      <div key={`question-${currentQuestion.id}`} className={`${styles.questionSection} ${styles.questionTransition}`}>
         <h3 className={styles.questionText}>{currentQuestion.text}</h3>
       </div>
 
-      <div className={styles.binaryOptions}>
+      <div key={`answers-${currentQuestion.id}`} className={`${styles.binaryOptions} ${styles.questionTransition} ${styles.answerTransition}`}>
         {definition.options.map((option) => (
           <button
             key={option.label}

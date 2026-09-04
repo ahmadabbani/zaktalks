@@ -1,5 +1,6 @@
 import 'server-only'
 
+import { after } from 'next/server'
 import { resend, ZAKTALKS_EMAIL_FROM } from '@/lib/resend'
 import { secureActionLink } from '@/lib/email/action-link'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
@@ -8,6 +9,10 @@ import {
   maybeSendDelayedFulfillmentNotifications,
   maybeSendFulfillmentRecoveryNotifications,
 } from '@/lib/payments/fulfillment-emails'
+import {
+  CHECKOUT_CUSTOMER_EMAIL_TYPES,
+  maybeSendCheckoutCustomerEmails,
+} from '@/lib/payments/customer-emails'
 
 export class FulfillmentInProgressError extends Error {
   constructor(session) {
@@ -44,6 +49,15 @@ function fulfillmentBaseUrl(requestOrigin) {
 
   if (process.env.NODE_ENV !== 'production' && local) return origin
   return process.env.NEXT_PUBLIC_APP_URL || origin
+}
+
+function scheduleCheckoutCustomerEmails(sessionId, emailTypes, requestOrigin) {
+  try {
+    after(() => maybeSendCheckoutCustomerEmails(sessionId, emailTypes, { requestOrigin }))
+  } catch (error) {
+    // Scheduling email must never change payment or course-access behavior.
+    console.error(`Unable to schedule customer emails for ${sessionId}:`, error.message)
+  }
 }
 
 async function sendPasswordSetupEmail({ checkoutId, email, link, claimId }) {
@@ -303,6 +317,14 @@ export async function fulfillCheckoutSession(sessionId, { requestOrigin } = {}) 
       return { ...(await refundDuplicatePayment({ supabaseAdmin, checkout, session, intentId })), session }
     }
 
+    if (['paid', 'no_payment_required', 'partially_refunded'].includes(latest?.payment_state)) {
+      scheduleCheckoutCustomerEmails(
+        session.id,
+        [CHECKOUT_CUSTOMER_EMAIL_TYPES.PAYMENT_RECEIPT],
+        requestOrigin,
+      )
+    }
+
     if (latest?.fulfillment_state === 'fulfilled') {
       if (metadata.isGuest === 'true' && !latest.password_setup_email_sent_at) {
         const claimedAt = await claimGuestPasswordEmail(supabaseAdmin, checkout.id)
@@ -336,6 +358,11 @@ export async function fulfillCheckoutSession(sessionId, { requestOrigin } = {}) 
       }
 
       await maybeSendFulfillmentRecoveryNotifications(supabaseAdmin, session.id)
+      scheduleCheckoutCustomerEmails(
+        session.id,
+        [CHECKOUT_CUSTOMER_EMAIL_TYPES.COURSE_ACCESS],
+        requestOrigin,
+      )
 
       return { status: 'fulfilled', session, enrollmentId: latest.enrollment_id }
     }
@@ -362,6 +389,11 @@ export async function fulfillCheckoutSession(sessionId, { requestOrigin } = {}) 
     if (verifiedPaymentError) {
       throw new Error(`Unable to record the verified Stripe payment: ${verifiedPaymentError.message}`)
     }
+    scheduleCheckoutCustomerEmails(
+      session.id,
+      [CHECKOUT_CUSTOMER_EMAIL_TYPES.PAYMENT_RECEIPT],
+      requestOrigin,
+    )
 
     const isGuest = metadata.isGuest === 'true' || !checkout.user_id
     let userId = checkout.user_id || session.client_reference_id || null
@@ -434,6 +466,11 @@ export async function fulfillCheckoutSession(sessionId, { requestOrigin } = {}) 
     }
 
     await maybeSendFulfillmentRecoveryNotifications(supabaseAdmin, session.id)
+    scheduleCheckoutCustomerEmails(
+      session.id,
+      [CHECKOUT_CUSTOMER_EMAIL_TYPES.COURSE_ACCESS],
+      requestOrigin,
+    )
 
     return {
       status: 'fulfilled',

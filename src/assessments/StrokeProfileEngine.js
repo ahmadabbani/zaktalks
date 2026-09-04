@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaChevronLeft, FaRedo } from 'react-icons/fa';
 import ResultScreenshotButton from '@/components/ResultScreenshotButton';
+import useDelayedAnswerAdvance from './useDelayedAnswerAdvance';
 import styles from './assessment.module.css';
 
 const MAX_GROUP_SCORE = 24;
@@ -29,21 +30,50 @@ function calculateTotals(groups, answers) {
   }, {});
 }
 
-function ProfileBar({ group, score }) {
-  const isPositive = group.polarity === 'positive';
-  const height = Math.max(0, Math.min(100, (score / MAX_GROUP_SCORE) * 100));
+function ProfileScale({ side }) {
+  const positiveTicks = [24, 20, 16, 12, 8, 4];
+  const negativeTicks = [4, 8, 12, 16, 20, 24];
 
   return (
-    <div className={styles.strokeProfileColumn}>
-      <div className={styles.strokeBarFrame} aria-label={`${group.title}: ${score} out of 24`}>
-        <div
-          className={`${styles.strokeBarFill} ${isPositive ? styles.strokeBarFillPositive : styles.strokeBarFillNegative}`}
-          style={{ height: `${height}%` }}
-        ></div>
+    <div className={`${styles.strokeReferenceScale} ${side === 'right' ? styles.strokeReferenceScaleRight : ''}`} aria-hidden="true">
+      <span className={styles.strokeScaleNumberSpacer}></span>
+      <div className={styles.strokeScaleHalf}>
+        {positiveTicks.map((value) => (
+          <span key={`positive-${side}-${value}`} style={{ top: `${((24 - value) / 24) * 100}%` }}>{value}</span>
+        ))}
       </div>
-      <div className={styles.strokeColumnScore}>{score}</div>
-      <div className={styles.strokeColumnLabel}>{group.profileLabel}</div>
-      <div className={styles.strokeColumnNumber}>({group.number})</div>
+      <span className={styles.strokeScaleCenterSpacer}></span>
+      <div className={styles.strokeScaleHalf}>
+        {negativeTicks.map((value) => (
+          <span key={`negative-${side}-${value}`} style={{ top: `${(value / 24) * 100}%` }}>{value}</span>
+        ))}
+      </div>
+      <span className={styles.strokeScaleNumberSpacer}></span>
+    </div>
+  );
+}
+
+function ProfilePair({ positiveGroup, negativeGroup, positiveScore, negativeScore }) {
+  const positiveHeight = Math.max(0, Math.min(100, (positiveScore / MAX_GROUP_SCORE) * 100));
+  const negativeHeight = Math.max(0, Math.min(100, (negativeScore / MAX_GROUP_SCORE) * 100));
+
+  return (
+    <div className={styles.strokeProfilePair}>
+      <div className={styles.strokePairNumber}>({positiveGroup.number})</div>
+
+      <div className={styles.strokeReferenceTrack} aria-label={`${positiveGroup.title}: ${positiveScore} out of 24`}>
+        <div className={`${styles.strokeReferenceFill} ${styles.strokeReferenceFillPositive}`} style={{ height: `${positiveHeight}%` }}></div>
+        <span className={styles.strokePositiveScoreMarker} style={{ bottom: `${Math.min(96, Math.max(4, positiveHeight))}%` }}>{positiveScore}</span>
+      </div>
+
+      <div className={styles.strokePairLabel}>{positiveGroup.profileLabel}</div>
+
+      <div className={styles.strokeReferenceTrack} aria-label={`${negativeGroup.title}: ${negativeScore} out of 24`}>
+        <div className={`${styles.strokeReferenceFill} ${styles.strokeReferenceFillNegative}`} style={{ height: `${negativeHeight}%` }}></div>
+        <span className={styles.strokeNegativeScoreMarker} style={{ top: `${Math.min(96, Math.max(4, negativeHeight))}%` }}>{negativeScore}</span>
+      </div>
+
+      <div className={styles.strokePairNumber}>({negativeGroup.number})</div>
     </div>
   );
 }
@@ -54,32 +84,40 @@ export default function StrokeProfileEngine({ definition, onComplete, enableResu
   const [answers, setAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { isAdvancing, advanceAfterFeedback } = useDelayedAnswerAdvance();
 
   const currentQuestion = questions[currentIndex];
   const totalQuestions = questions.length;
   const progress = (currentIndex / totalQuestions) * 100;
   const scaleValues = definition.scale?.values || [0, 1, 2, 3, 4, 5, 6];
   const totalPossible = definition.groups.length * MAX_GROUP_SCORE;
+  const currentGroupTitle = currentQuestion.groupTitle.replace(/^Total\s*-\s*/i, '');
 
-  const handleSelect = async (value) => {
-    if (isSubmitting) return;
+  const handleSelect = (value) => {
+    if (isSubmitting || isAdvancing) return;
 
     const nextAnswers = { ...answers, [currentQuestion.id]: value };
     setAnswers(nextAnswers);
 
-    if (currentIndex < totalQuestions - 1) {
-      setCurrentIndex(currentIndex + 1);
-      return;
-    }
+    advanceAfterFeedback(() => {
+      if (currentIndex < totalQuestions - 1) {
+        setCurrentIndex((index) => index + 1);
+        return;
+      }
 
-    const totals = calculateTotals(definition.groups, nextAnswers);
+      calculateResult(nextAnswers);
+    });
+  };
+
+  const calculateResult = async (submittedAnswers) => {
+    const totals = calculateTotals(definition.groups, submittedAnswers);
     const scoreSum = Object.values(totals).reduce((sum, value) => sum + value, 0);
     const normalizedScore = totalPossible > 0 ? Math.round((scoreSum / totalPossible) * 100) : 0;
 
     setIsSubmitting(true);
     try {
       if (onComplete) {
-        await onComplete({ score: normalizedScore, answers: nextAnswers });
+        await onComplete({ score: normalizedScore, answers: submittedAnswers });
       }
       setShowResult(true);
     } catch {
@@ -104,6 +142,10 @@ export default function StrokeProfileEngine({ definition, onComplete, enableResu
     const totals = calculateTotals(definition.groups, answers);
     const positiveGroups = definition.groups.filter((group) => group.polarity === 'positive');
     const negativeGroups = definition.groups.filter((group) => group.polarity === 'negative');
+    const profilePairs = positiveGroups.map((positiveGroup, index) => ({
+      positiveGroup,
+      negativeGroup: negativeGroups[index]
+    })).filter((pair) => pair.negativeGroup);
 
     return (
       <div className={styles.strokeResultContainer} id={enableResultScreenshot ? resultCaptureId : undefined}>
@@ -114,29 +156,31 @@ export default function StrokeProfileEngine({ definition, onComplete, enableResu
 
         <p className={styles.strokeProfileInstructions}>{definition.profileInstructions}</p>
 
-        <div className={styles.strokeProfileChart}>
-          <div className={styles.strokeProfileScale} aria-hidden="true">
-            {[24, 20, 16, 12, 8, 4, 0].map((value) => (
-              <span key={`scale-${value}`}>{value}</span>
-            ))}
-          </div>
+        <div className={styles.strokeReferenceViewport}>
+          <div className={styles.strokeReferenceChart} role="img" aria-label="Stroke profile with positive scores above the center and negative scores below it">
+            <h3 className={styles.strokeReferenceTitle}>POSITIVE STROKES</h3>
 
-          <div className={styles.strokeProfileArea}>
-            <h3 className={styles.strokePolarityTitle}>POSITIVE STROKES</h3>
-            <div className={styles.strokeChartGrid}>
-              {positiveGroups.map((group) => (
-                <ProfileBar key={group.id} group={group} score={totals[group.id] || 0} />
-              ))}
+            <div className={styles.strokeReferenceBody}>
+              <ProfileScale side="left" />
+
+              <div className={styles.strokePairGrid}>
+                {profilePairs.map(({ positiveGroup, negativeGroup }) => (
+                  <ProfilePair
+                    key={`${positiveGroup.id}-${negativeGroup.id}`}
+                    positiveGroup={positiveGroup}
+                    negativeGroup={negativeGroup}
+                    positiveScore={totals[positiveGroup.id] || 0}
+                    negativeScore={totals[negativeGroup.id] || 0}
+                  />
+                ))}
+                <span className={`${styles.strokeAxisWord} ${styles.strokeAxisWordPositive}`} aria-hidden="true">STROKES</span>
+                <span className={`${styles.strokeAxisWord} ${styles.strokeAxisWordNegative}`} aria-hidden="true">ATTENTION</span>
+              </div>
+
+              <ProfileScale side="right" />
             </div>
 
-            <div className={styles.strokeChartDivider}>STROKES</div>
-
-            <h3 className={styles.strokePolarityTitle}>NEGATIVE STROKES</h3>
-            <div className={styles.strokeChartGrid}>
-              {negativeGroups.map((group) => (
-                <ProfileBar key={group.id} group={group} score={totals[group.id] || 0} />
-              ))}
-            </div>
+            <h3 className={styles.strokeReferenceTitle}>NEGATIVE STROKES</h3>
           </div>
         </div>
 
@@ -176,37 +220,34 @@ export default function StrokeProfileEngine({ definition, onComplete, enableResu
         </div>
       </div>
 
-      <div className={styles.strokeQuestionMeta}>
-        <span className={styles.strokeQuestionGroupNumber}>({currentQuestion.groupNumber})</span>
-        <strong>{currentQuestion.groupTitle}</strong>
+      <div key={`meta-${currentQuestion.id}`} className={`${styles.strokeQuestionMeta} ${styles.questionTransition}`}>
+        <span className={styles.strokeQuestionGroupNumber}>Section {currentQuestion.groupNumber} of {definition.groups.length}</span>
+        <strong>{currentGroupTitle}</strong>
       </div>
 
-      <div className={styles.questionSection}>
+      <div key={`question-${currentQuestion.id}`} className={`${styles.questionSection} ${styles.strokeQuestionSection} ${styles.questionTransition}`}>
         <h3 className={styles.questionText}>{currentQuestion.text}</h3>
       </div>
 
-      <div className={styles.optionsSection}>
-        <div
-          className={styles.scaleLegendGrid}
-          style={{ gridTemplateColumns: `repeat(${definition.scale.legend.length}, minmax(0, 1fr))` }}
-        >
-          {definition.scale.legend.map((item) => (
-            <span key={`legend-${item.value}`} className={styles.scaleLegendGridItem}>
-              {item.label}
-            </span>
-          ))}
-        </div>
+      <div key={`answers-${currentQuestion.id}`} className={`${styles.optionsSection} ${styles.strokeOptionsSection} ${styles.questionTransition} ${styles.answerTransition}`}>
+        <div className={`${styles.scaleButtons} ${styles.strokeScaleButtons}`}>
+          {scaleValues.map((value) => {
+            const scaleOption = definition.scale.legend.find((item) => item.value === value);
+            const label = scaleOption?.label
+              ? `${scaleOption.label.charAt(0)}${scaleOption.label.slice(1).toLowerCase()}`
+              : String(value);
 
-        <div className={styles.scaleButtons}>
-          {scaleValues.map((value) => (
-            <button
-              key={value}
-              onClick={() => handleSelect(value)}
-              className={`${styles.scaleBtn} ${answers[currentQuestion.id] === value ? styles.scaleBtnSelected : ''}`}
-            >
-              {value}
-            </button>
-          ))}
+            return (
+              <button
+                key={value}
+                onClick={() => handleSelect(value)}
+                disabled={isSubmitting || isAdvancing}
+                className={`${styles.scaleBtn} ${styles.strokeScaleBtn} ${answers[currentQuestion.id] === value ? styles.scaleBtnSelected : ''}`}
+              >
+                {value} – {label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -214,7 +255,7 @@ export default function StrokeProfileEngine({ definition, onComplete, enableResu
         <button
           className={`${styles.navBtn} ${styles.prevBtn}`}
           onClick={handlePrev}
-          disabled={currentIndex === 0 || isSubmitting}
+          disabled={currentIndex === 0 || isSubmitting || isAdvancing}
         >
           <FaChevronLeft /> Previous
         </button>

@@ -86,7 +86,7 @@ Application token store for `email_verification`, `password_reset`, or `set_pass
 
 Course catalog and long-form course-page content.
 
-- Key columns: unique `slug`; title/description/subheadline; optional public `introduction_video_url`; tutor/media fields; `price_cents`; content arrays (`what_youll_learn`, `skills_youll_gain`, `target_audience`, `who_this_is_not_for`); plain-text `details_to_know`; detail copy; publish/soft-delete flags; certificate template URL. The introduction video belongs to the course itself and is not a module lesson. The obsolete `the_problem` and `the_shift` fields were removed.
+- Key columns: unique `slug`; Hero copy (`promise`, `short_introduction`, `primary_cta_text`); long-form introduction copy (`bold_introduction`, `subheadline`, `description`); fixed Course Info Bar values; optional public `introduction_video_url`; tutor/media fields; `price_cents`; content arrays (`what_youll_learn`, `skills_youll_gain`, `target_audience`, `who_this_is_not_for`); configurable audience titles/supporting copy; structured JSON arrays for `details_to_know_items`, `what_youll_explore`, and `explore_more`; detail CTA copy; publish/soft-delete flags; certificate template URL. `explore_more` stores a course UUID or an allowlisted public page path plus description and CTA copy; application validation resolves course links from the current slug. The legacy plain-text `details_to_know` column is temporarily retained as a deployment fallback. The introduction video belongs to the course itself and is not a module lesson. The obsolete `the_problem` and `the_shift` fields were removed.
 - Constraints: nonnegative price.
 - RLS: anyone can read published, non-deleted courses; admins manage all.
 - Approximate rows: 4.

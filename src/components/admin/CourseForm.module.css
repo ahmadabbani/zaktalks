@@ -91,6 +91,7 @@
 .formGroup input[type="text"],
 .formGroup input[type="number"],
 .formGroup input[type="url"],
+.formGroup select,
 .formGroup textarea {
     width: 100%;
     padding: var(--space-md);
@@ -105,6 +106,7 @@
 .formGroup input[type="text"]:focus,
 .formGroup input[type="number"]:focus,
 .formGroup input[type="url"]:focus,
+.formGroup select:focus,
 .formGroup textarea:focus {
     outline: none;
     border-color: var(--color-yellow);
@@ -117,6 +119,7 @@
 }
 
 .featuredField {
+    margin-top: var(--space-xl);
     padding: clamp(1rem, 1.5vw, 1.35rem);
     border: 1px solid rgba(33, 44, 45, 0.12);
     border-radius: 0.85rem;
@@ -136,6 +139,207 @@
 
 .detailsField {
     margin-top: var(--space-xl);
+}
+
+.formSection,
+.builderSection {
+    margin-top: var(--space-xl);
+    padding: clamp(1.15rem, 2vw, 1.75rem);
+    border: 1px solid rgba(33, 44, 45, 0.13);
+    border-radius: 1rem;
+    background: rgba(237, 246, 247, 0.72);
+}
+
+.sectionHeading,
+.builderHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.sectionHeading > span {
+    flex: 0 0 auto;
+    padding: 0.42rem 0.72rem;
+    border-radius: 999px;
+    background: var(--color-dark-blue);
+    color: var(--color-white);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.sectionHeading > div,
+.builderHeader > div {
+    flex: 1;
+}
+
+.sectionHeading h2,
+.builderHeader h2 {
+    margin: 0;
+    color: var(--color-black);
+    font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+    line-height: 1.2;
+}
+
+.sectionHeading p,
+.builderHeader p {
+    margin: 0.35rem 0 0;
+    color: var(--color-gray-dark);
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.formSection > .formGroup:last-child,
+.infoBarGrid > .formGroup,
+.builderItem .formGroup:last-child {
+    margin-bottom: 0;
+}
+
+.compositeField {
+    margin: 0 0 var(--space-lg);
+    padding: clamp(1rem, 1.5vw, 1.3rem);
+    border: 1px solid rgba(33, 44, 45, 0.15);
+    border-radius: 0.8rem;
+    background: var(--color-white);
+}
+
+.compositeField legend {
+    padding: 0 0.45rem;
+    color: var(--color-black);
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.compositeHint {
+    margin: 0 0 var(--space-md);
+    color: var(--color-gray-dark);
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.compositeField .formGroup:last-child {
+    margin-bottom: 0;
+}
+
+.infoBarGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-md);
+}
+
+.builderItems {
+    display: grid;
+    gap: var(--space-md);
+}
+
+.builderItem {
+    padding: clamp(1rem, 1.6vw, 1.35rem);
+    border: 1px solid rgba(33, 44, 45, 0.14);
+    border-radius: 0.85rem;
+    background: var(--color-white);
+}
+
+.builderItemTopline,
+.nestedListHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.builderItemTopline strong {
+    color: var(--color-black);
+    font-size: 0.95rem;
+}
+
+.builderItemFooter {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid rgba(33, 44, 45, 0.1);
+}
+
+.removeItemButton,
+.secondaryAddButton {
+    border: 0;
+    border-radius: 999px;
+    padding: 0.5rem 0.8rem;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background-color var(--transition-normal), color var(--transition-normal), transform var(--transition-normal);
+}
+
+.removeItemButton {
+    background: rgba(199, 57, 57, 0.1);
+    color: var(--color-error);
+}
+
+.removeItemButton:hover {
+    background: var(--color-error);
+    color: var(--color-white);
+}
+
+.secondaryAddButton {
+    background: var(--color-black);
+    color: var(--color-white);
+}
+
+.secondaryAddButton:hover {
+    transform: translateY(-1px);
+    background: var(--color-dark-blue);
+}
+
+.nestedList > .listItem + .listItem {
+    margin-top: var(--space-sm);
+}
+
+.nestedList label {
+    color: var(--color-black);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.nestedList .listItem input {
+    width: 100%;
+    min-width: 0;
+    min-height: 2.9rem;
+    padding: 0.78rem 0.95rem;
+    border: 2px solid transparent;
+    border-radius: 0.5rem;
+    background: var(--color-gray-light);
+    color: var(--color-black);
+    font: inherit;
+}
+
+.nestedList .listItem input:focus {
+    outline: none;
+    border-color: var(--color-yellow);
+    background: var(--color-white);
+}
+
+.builderEmpty {
+    margin: 0;
+    padding: 1.1rem;
+    border: 1px dashed rgba(33, 44, 45, 0.22);
+    border-radius: 0.75rem;
+    color: var(--color-gray-dark);
+    text-align: center;
+}
+
+.audienceSupportField,
+.sectionCtaField {
+    margin-top: var(--space-lg);
 }
 
 /* File Inputs */
@@ -266,6 +470,18 @@
 
 .contentListSection .listHeader {
     gap: var(--space-md);
+}
+
+.contentListSection > .formGroup input[type="text"] {
+    min-height: 3rem;
+    border: 1px solid rgba(33, 44, 45, 0.2);
+    background: var(--color-white);
+    box-shadow: 0 1px 2px rgba(33, 44, 45, 0.04);
+}
+
+.contentListSection > .formGroup input[type="text"]:focus {
+    border-color: var(--color-dark-blue);
+    box-shadow: 0 0 0 3px rgba(37, 140, 155, 0.14);
 }
 
 .contentListSection .listHeader label {
@@ -520,6 +736,20 @@
         grid-template-columns: 1fr;
     }
 
+    .infoBarGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .sectionHeading,
+    .builderHeader {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .builderHeader .addButton {
+        width: 100%;
+    }
+
     .toggleGroup {
         flex-direction: column;
         gap: var(--space-md);
@@ -540,6 +770,24 @@
 }
 
 @media (max-width: 520px) {
+    .infoBarGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .builderItemTopline,
+    .nestedListHeader {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .removeItemButton,
+    .secondaryAddButton {
+        width: 100%;
+    }
+
+    .builderItemFooter .addButton {
+        width: 100%;
+    }
     .contentListSection .listHeader {
         align-items: stretch;
         flex-direction: column;

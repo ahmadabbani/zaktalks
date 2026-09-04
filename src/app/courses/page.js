@@ -63,7 +63,7 @@ export default async function CoursesPage() {
                         with {course.tutor_name || 'Expert Tutor'}
                     </p>
                     <p className={styles.description}>
-                        {course.description?.substring(0, 140)}...
+                        {(course.short_introduction || course.promise || course.description || '').substring(0, 140)}...
                     </p>
                 </div>
               </Link>

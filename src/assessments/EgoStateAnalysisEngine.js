@@ -175,7 +175,7 @@ export default function EgoStateAnalysisEngine({
         </div>
       </div>
 
-      <div className={styles.questionSection}>
+      <div key={`question-${currentQuestion.id}`} className={`${styles.questionSection} ${styles.questionTransition}`}>
         <h3 className={styles.questionText}>{currentQuestion.text}</h3>
       </div>
 
@@ -184,7 +184,7 @@ export default function EgoStateAnalysisEngine({
         <span>NEXT BEST choice = 1</span>
       </div>
 
-      <div className={styles.egoOptions}>
+      <div key={`answers-${currentQuestion.id}`} className={`${styles.egoOptions} ${styles.questionTransition} ${styles.answerTransition}`}>
         {currentQuestion.options.map((option) => (
           <div key={option.id} className={styles.egoOptionCard}>
             <p>

@@ -13,11 +13,19 @@ export default async function EditCoursePage({ params }) {
   const { id } = await params
   const supabase = await createAdminClient()
 
-  const { data: course, error } = await supabase
-    .from('courses')
-    .select('*, faqs:course_faqs(*), images:course_images(*)')
-    .eq('id', id)
-    .single()
+  const [{ data: course, error }, { data: availableCourses }] = await Promise.all([
+    supabase
+      .from('courses')
+      .select('*, faqs:course_faqs(*), images:course_images(*)')
+      .eq('id', id)
+      .single(),
+    supabase
+      .from('courses')
+      .select('id, title, slug')
+      .is('deleted_at', null)
+      .neq('id', id)
+      .order('title', { ascending: true }),
+  ])
 
   if (error || !course) {
     notFound()
@@ -46,6 +54,7 @@ export default async function EditCoursePage({ params }) {
           initialData={course} 
           action={updateCourseWithId} 
           buttonText="Update Course" 
+          availableCourses={availableCourses || []}
         />
       </div>
     </div>

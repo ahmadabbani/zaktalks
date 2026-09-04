@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaChevronLeft, FaRedo } from 'react-icons/fa';
 import ResultScreenshotButton from '@/components/ResultScreenshotButton';
+import useDelayedAnswerAdvance from './useDelayedAnswerAdvance';
 import styles from './assessment.module.css';
 
 function hexToRgba(hex, alpha) {
@@ -22,6 +23,7 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
   const [savedResult, setSavedResult] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { isAdvancing, advanceAfterFeedback } = useDelayedAnswerAdvance();
 
   const currentQuestion = definition.questions[currentIndex];
   const totalQuestions = definition.questions.length;
@@ -30,17 +32,19 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
   const maxScaleValue = Math.max(...scaleValues);
 
   const handleSelect = (value) => {
-    if (isSubmitting) return;
+    if (isSubmitting || isAdvancing) return;
 
     const nextAnswers = { ...answersRef.current, [currentQuestion.id]: value };
     answersRef.current = nextAnswers;
     setAnswers(nextAnswers);
 
-    if (currentIndex < totalQuestions - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      calculateResult();
-    }
+    advanceAfterFeedback(() => {
+      if (currentIndex < totalQuestions - 1) {
+        setCurrentIndex((index) => index + 1);
+      } else {
+        calculateResult();
+      }
+    });
   };
 
   const handlePrev = () => {
@@ -386,11 +390,11 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
         </div>
       </div>
 
-      <div className={styles.questionSection}>
+      <div key={`question-${currentQuestion.id}`} className={`${styles.questionSection} ${styles.questionTransition}`}>
         <h3 className={styles.questionText}>{currentQuestion.text}</h3>
       </div>
 
-      <div className={styles.optionsSection}>
+      <div key={`answers-${currentQuestion.id}`} className={`${styles.optionsSection} ${styles.questionTransition} ${styles.answerTransition}`}>
         {Array.isArray(definition.scale?.legend) && definition.scale.legend.length > 0 ? (
           <div
             className={styles.scaleLegendGrid}
@@ -413,6 +417,7 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
             <button
               key={val}
               onClick={() => handleSelect(val)}
+              disabled={isSubmitting || isAdvancing}
               className={`${styles.scaleBtn} ${answers[currentQuestion.id] === val ? styles.scaleBtnSelected : ''}`}
             >
               {val}
@@ -425,7 +430,7 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
         <button
           className={`${styles.navBtn} ${styles.prevBtn}`}
           onClick={handlePrev}
-          disabled={currentIndex === 0 || isSubmitting}
+          disabled={currentIndex === 0 || isSubmitting || isAdvancing}
         >
           <FaChevronLeft /> Previous
         </button>

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaChevronLeft, FaRedo } from 'react-icons/fa';
 import ResultScreenshotButton from '@/components/ResultScreenshotButton';
+import useDelayedAnswerAdvance from './useDelayedAnswerAdvance';
 import styles from './assessment.module.css';
 
 export default function LikertEngine({ definition, onComplete, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture', resultDownloadFormat = 'png' }) {
@@ -11,22 +12,25 @@ export default function LikertEngine({ definition, onComplete, enableResultScree
   const [answers, setAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { isAdvancing, advanceAfterFeedback } = useDelayedAnswerAdvance();
 
   const currentQuestion = definition.questions[currentIndex];
   const totalQuestions = definition.questions.length;
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
 
   const handleSelect = (value) => {
-    if (isSubmitting) return;
+    if (isSubmitting || isAdvancing) return;
 
     const nextAnswers = { ...answers, [currentQuestion.id]: value };
     setAnswers(nextAnswers);
 
-    if (currentIndex < totalQuestions - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      calculateResult(nextAnswers);
-    }
+    advanceAfterFeedback(() => {
+      if (currentIndex < totalQuestions - 1) {
+        setCurrentIndex((index) => index + 1);
+      } else {
+        calculateResult(nextAnswers);
+      }
+    });
   };
 
   const handlePrev = () => {
@@ -111,12 +115,12 @@ export default function LikertEngine({ definition, onComplete, enableResultScree
       </div>
 
       {/* Question */}
-      <div className={styles.questionSection}>
+      <div key={`question-${currentQuestion.id}`} className={`${styles.questionSection} ${styles.questionTransition}`}>
         <h3 className={styles.questionText}>{currentQuestion.text}</h3>
       </div>
 
       {/* Options 1-5 */}
-      <div className={styles.optionsSection}>
+      <div key={`answers-${currentQuestion.id}`} className={`${styles.optionsSection} ${styles.questionTransition} ${styles.answerTransition}`}>
         <div className={styles.scaleLabels}>
           <span>NOT AT ALL TRUE</span>
           <span>VERY TRUE</span>
@@ -126,6 +130,7 @@ export default function LikertEngine({ definition, onComplete, enableResultScree
             <button
               key={val}
               onClick={() => handleSelect(val)}
+              disabled={isSubmitting || isAdvancing}
               className={`${styles.scaleBtn} ${answers[currentQuestion.id] === val ? styles.scaleBtnSelected : ''}`}
             >
               {val}
@@ -139,7 +144,7 @@ export default function LikertEngine({ definition, onComplete, enableResultScree
         <button 
           className={`${styles.navBtn} ${styles.prevBtn}`}
           onClick={handlePrev} 
-          disabled={currentIndex === 0 || isSubmitting}
+          disabled={currentIndex === 0 || isSubmitting || isAdvancing}
         >
           <FaChevronLeft /> Previous
         </button>

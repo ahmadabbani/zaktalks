@@ -177,6 +177,12 @@
   color: var(--color-black);
 }
 
+.continueButton {
+  border-color: var(--color-dark-blue);
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+}
+
 .curriculumButton:hover,
 .continueButton:hover {
   border-color: var(--color-yellow);
@@ -417,6 +423,34 @@
   color: rgba(33, 44, 45, 0.62);
   font-size: var(--home-small-text-size, 0.78rem);
   font-weight: 700;
+}
+
+.courseDescription {
+  max-width: 62rem;
+  margin: 0;
+  color: var(--home-text-color);
+  font-size: var(--home-subheading-size);
+  font-weight: var(--home-text-weight);
+  line-height: var(--home-subheading-line-height);
+  white-space: pre-line;
+}
+
+.descriptionMediaBlock {
+  margin-top: clamp(2rem, 3.5vw, 3.25rem);
+}
+
+.descriptionMediaBlock > h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 0 1rem;
+  color: var(--color-dark-blue);
+  font-size: clamp(1.15rem, 1.6vw, 1.5rem);
+  line-height: 1.2;
+}
+
+.descriptionMediaBlock > h3 svg {
+  font-size: 0.9em;
 }
 
 .learningGrid {
@@ -824,10 +858,148 @@
   background: var(--color-blue-light-coaching);
 }
 
+.structuredContentGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.structuredContentCard {
+  min-width: 0;
+  padding: clamp(1.3rem, 2.1vw, 1.9rem);
+  border: 1px solid rgba(var(--color-dark-blue-rgb), 0.2);
+  border-radius: 1.25rem;
+  background: rgba(var(--color-dark-blue-rgb), 0.08);
+}
+
+.structuredContentCard h3 {
+  margin: 0 0 0.75rem;
+  color: var(--color-dark-blue);
+  font-size: clamp(1.1rem, 1.45vw, 1.38rem);
+  line-height: 1.25;
+}
+
+.structuredContentCard p {
+  margin: 0;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  line-height: var(--home-text-line-height);
+  white-space: pre-line;
+}
+
+.structuredContentCard ul {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.structuredContentCard li {
+  display: grid;
+  grid-template-columns: 1rem minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: start;
+  color: var(--home-text-color);
+  font-size: var(--home-text-size);
+  line-height: var(--home-text-line-height);
+}
+
+.structuredContentCard li svg {
+  margin-top: 0.35rem;
+  color: var(--color-dark-blue);
+  font-size: 0.72rem;
+}
+
+.detailsCta,
+.relatedCta {
+  display: inline-flex;
+  min-height: var(--home-cta-min-height);
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  padding: 0.82rem 1.35rem;
+  border: 1px solid var(--color-dark-blue);
+  border-radius: 999px;
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+  font-size: var(--home-cta-size);
+  font-weight: var(--home-cta-weight);
+  line-height: var(--home-cta-line-height);
+  text-align: center;
+  text-decoration: none;
+  transition: var(--home-cta-transition);
+}
+
+.detailsCta {
+  margin-top: 1.2rem;
+}
+
+.detailsCta:hover,
+.relatedCta:hover {
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  color: var(--color-white);
+  transform: var(--home-cta-hover-transform);
+}
+
+.detailsCta svg,
+.relatedCta svg {
+  flex: 0 0 auto;
+  transition: transform 0.25s ease;
+}
+
+.detailsCta:hover svg,
+.relatedCta:hover svg {
+  transform: translateX(0.2rem);
+}
+
 .detailsCard p {
   margin: 0;
   color: var(--color-dark-blue);
   white-space: pre-line;
+}
+
+.detailItem + .detailItem {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(37, 140, 155, 0.2);
+}
+
+.detailItem h3 {
+  margin: 0 0 0.55rem;
+  color: var(--color-dark-blue);
+  font-size: clamp(1.05rem, 1.3vw, 1.25rem);
+}
+
+.detailItem ul {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.detailItem li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  color: var(--home-text-color);
+  line-height: 1.55;
+}
+
+.detailItem li svg {
+  flex: 0 0 auto;
+  margin-top: 0.22rem;
+  color: var(--color-dark-blue);
+}
+
+.audienceSupportingText {
+  max-width: 58rem;
+  margin: 1.25rem auto 0;
+  color: var(--home-text-color);
+  text-align: center;
+  line-height: 1.65;
 }
 
 .audienceGrid {
@@ -895,6 +1067,43 @@
 
 .notForCard li svg {
   color: var(--color-dark-blue);
+}
+
+.subheadlineFeature {
+  position: relative;
+  padding: clamp(1.6rem, 3.2vw, 3rem);
+  border-radius: var(--course-radius);
+  overflow: hidden;
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+}
+
+.subheadlineFeature::after {
+  position: absolute;
+  right: clamp(1.3rem, 3vw, 2.75rem);
+  bottom: clamp(1.1rem, 2.5vw, 2.2rem);
+  width: clamp(2.8rem, 5vw, 4.5rem);
+  height: 0.25rem;
+  border-radius: 999px;
+  background: rgba(255, 254, 254, 0.28);
+  content: '';
+}
+
+.subheadlineFeature h2 {
+  max-width: 58rem;
+  margin: 0;
+  color: var(--color-white);
+  font-size: clamp(1.7rem, 3.2vw, 3.4rem);
+  line-height: 1.08;
+}
+
+.subheadlineFeature p {
+  max-width: 54rem;
+  margin: 1rem 0 0;
+  color: rgba(255, 254, 254, 0.84);
+  font-size: var(--home-text-size);
+  line-height: var(--home-text-line-height);
+  white-space: pre-line;
 }
 
 .galleryGrid {
@@ -1193,6 +1402,23 @@
   font-size: 0.74rem;
   font-weight: 800;
   text-decoration: none;
+}
+
+.relatedCard > div > .relatedCta {
+  width: fit-content;
+  min-height: 2.7rem;
+  margin-top: auto;
+  padding: 0.65rem 1rem;
+  color: var(--color-white);
+  font-size: clamp(0.72rem, 0.75vw, 0.84rem);
+}
+
+.relatedPageCard .relatedImage {
+  background: var(--color-dark-blue);
+}
+
+.relatedPageCard .relatedImage > span {
+  color: var(--color-white);
 }
 
 .reviewsLayout {
@@ -1835,6 +2061,10 @@
   }
 
   .audienceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .structuredContentGrid {
     grid-template-columns: 1fr;
   }
 

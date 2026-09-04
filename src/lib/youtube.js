@@ -152,6 +152,34 @@ export async function getYouTubeVideoDuration(videoUrlOrId) {
 }
 
 /**
+ * Resolves several course-video durations in one videos.list request (or one
+ * request per 50 videos). The returned object is keyed by YouTube video id so
+ * callers can enrich public metadata without exposing the private source URL.
+ */
+export async function getYouTubeVideoDurations(videoUrlsOrIds = []) {
+  const key = process.env.YOUTUBE_API_KEY
+  const videoIds = [...new Set(
+    videoUrlsOrIds
+      .map((value) => extractYouTubeVideoId(value))
+      .filter(Boolean)
+  )]
+
+  if (!key || !videoIds.length) return {}
+
+  try {
+    const details = await fetchVideoDetails(videoIds, key)
+
+    return Object.fromEntries(videoIds.map((videoId) => [
+      videoId,
+      parseIsoDuration(details.get(videoId)?.contentDetails?.duration),
+    ]))
+  } catch (error) {
+    console.error('[youtube] Failed to load course video durations:', error.message)
+    return {}
+  }
+}
+
+/**
  * Returns the playlist as view-ready episode objects, newest first.
  * Resolves to an empty array on any failure so the page still renders.
  */

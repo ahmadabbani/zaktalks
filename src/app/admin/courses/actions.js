@@ -5,37 +5,167 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { requirePermission } from '@/lib/auth-utils'
 import { normalizeYouTubeVideoUrl } from '@/lib/youtube-url'
+import { PUBLIC_PAGE_PATHS } from '@/lib/course-content'
 
 const LESSON_RESOURCE_BUCKET = 'lesson-resources'
+
+function cleanText(value, maxLength = 5000) {
+  return String(value || '').trim().slice(0, maxLength)
+}
+
+function cleanList(values, maxItems = 60, maxLength = 1000) {
+  return values
+    .slice(0, maxItems)
+    .map((value) => cleanText(value, maxLength))
+    .filter(Boolean)
+}
+
+function parseJsonArray(value, fieldName) {
+  try {
+    const parsed = JSON.parse(String(value || '[]'))
+    if (!Array.isArray(parsed)) throw new Error()
+    return parsed
+  } catch {
+    throw new Error(`${fieldName} contains invalid data. Please refresh the page and try again.`)
+  }
+}
+
+function parseContentBlocks(value, fieldName) {
+  const blocks = parseJsonArray(value, fieldName)
+    .slice(0, 30)
+    .map((item) => {
+      const title = cleanText(item?.title, 180)
+      const contentType = item?.content_type === 'list' ? 'list' : 'text'
+      const text = contentType === 'text' ? cleanText(item?.text, 8000) : ''
+      const items = contentType === 'list' ? cleanList(Array.isArray(item?.items) ? item.items : [], 60, 1200) : []
+      return { title, content_type: contentType, text, items }
+    })
+    .filter((item) => item.title || item.text || item.items.length > 0)
+
+  for (const item of blocks) {
+    if (!item.title) throw new Error(`Add a title for every ${fieldName} item.`)
+    if (item.content_type === 'text' && !item.text) throw new Error(`Add information for every ${fieldName} item.`)
+    if (item.content_type === 'list' && item.items.length === 0) throw new Error(`Add at least one list entry for every ${fieldName} list item.`)
+  }
+
+  return blocks
+}
+
+function parseExploreMore(value) {
+  return parseJsonArray(value, 'Explore More')
+    .slice(0, 30)
+    .map((item) => ({
+      target_type: item?.target_type === 'page' ? 'page' : 'course',
+      course_id: cleanText(item?.course_id, 80),
+      page_path: cleanText(item?.page_path, 120),
+      description: cleanText(item?.description, 3000),
+      cta_text: cleanText(item?.cta_text, 120),
+    }))
+    .filter((item) => item.course_id || item.page_path || item.description || item.cta_text)
+}
+
+function legacyDetailsText(items) {
+  return items.map((item) => {
+    const content = item.content_type === 'list' ? item.items.join(', ') : item.text
+    return [item.title, content].filter(Boolean).join(': ')
+  }).filter(Boolean).join('\n')
+}
+
+async function buildCourseContent(formData, supabase, currentCourseId = null) {
+  const detailsToKnowItems = parseContentBlocks(formData.get('details_to_know_items_json'), 'Details to Know')
+  const whatYoullExplore = parseContentBlocks(formData.get('what_youll_explore_json'), 'What You’ll Explore')
+  const exploreMore = parseExploreMore(formData.get('explore_more_json'))
+
+  for (const item of exploreMore) {
+    if (item.target_type === 'page' && !PUBLIC_PAGE_PATHS.has(item.page_path)) {
+      throw new Error('Choose a valid public page in Explore More.')
+    }
+    if (item.target_type === 'course' && !item.course_id) {
+      throw new Error('Choose a course for every course recommendation.')
+    }
+    if (!item.cta_text) {
+      throw new Error('Add CTA text for every Explore More recommendation.')
+    }
+    if (!item.description) {
+      throw new Error('Add a description for every Explore More recommendation.')
+    }
+  }
+
+  const referencedCourseIds = [...new Set(exploreMore.filter((item) => item.target_type === 'course').map((item) => item.course_id))]
+  if (currentCourseId && referencedCourseIds.includes(currentCourseId)) {
+    throw new Error('A course cannot recommend itself in Explore More.')
+  }
+  if (referencedCourseIds.length > 0) {
+    const { data: referencedCourses, error } = await supabase
+      .from('courses')
+      .select('id')
+      .in('id', referencedCourseIds)
+      .is('deleted_at', null)
+
+    if (error || (referencedCourses || []).length !== referencedCourseIds.length) {
+      throw new Error('One of the selected Explore More courses is no longer available.')
+    }
+  }
+
+  const price = Number.parseFloat(String(formData.get('price') || '0'))
+  if (!Number.isFinite(price) || price < 0) throw new Error('Enter a valid non-negative course price.')
+
+  return {
+    promise: cleanText(formData.get('promise'), 8000),
+    short_introduction: cleanText(formData.get('short_introduction'), 4000),
+    primary_cta_text: cleanText(formData.get('primary_cta_text'), 120),
+    bold_introduction: cleanText(formData.get('bold_introduction'), 1000),
+    subheadline: cleanText(formData.get('subheadline'), 4000),
+    description: cleanText(formData.get('description'), 12000),
+    course_info_modules: cleanText(formData.get('course_info_modules'), 240),
+    course_level: cleanText(formData.get('course_level'), 240),
+    course_language: cleanText(formData.get('course_language'), 240),
+    flexible_schedule: cleanText(formData.get('flexible_schedule'), 240),
+    course_support: cleanText(formData.get('course_support'), 240),
+    target_audience_title: cleanText(formData.get('target_audience_title'), 240) || 'Who this is for',
+    who_this_is_not_for_title: cleanText(formData.get('who_this_is_not_for_title'), 240) || 'Who this is not for',
+    audience_supporting_text: cleanText(formData.get('audience_supporting_text'), 5000),
+    details_to_know: legacyDetailsText(detailsToKnowItems),
+    details_to_know_items: detailsToKnowItems,
+    details_cta_text: cleanText(formData.get('details_cta_text'), 120),
+    what_youll_explore: whatYoullExplore,
+    explore_more: exploreMore,
+    target_audience: cleanList(formData.getAll('target_audience')),
+    who_this_is_not_for: cleanList(formData.getAll('who_this_is_not_for')),
+    what_youll_learn: cleanList(formData.getAll('what_youll_learn')),
+    skills_youll_gain: cleanList(formData.getAll('skills_youll_gain')),
+    price_cents: Math.round(price * 100),
+  }
+}
 
 export async function createCourse(formData) {
   await requirePermission('courses.create')
   const supabase = await createAdminClient()
 
-  const title = formData.get('title')
+  const title = cleanText(formData.get('title'), 240)
   let slug = formData.get('slug')
+  if (!title) return { error: 'Course title is required.' }
   
   // Normalize slug
   slug = slug ? slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '') 
               : title.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '')
 
-  const description = formData.get('description')
-  const subheadline = formData.get('subheadline')
   const introductionVideoValue = String(formData.get('introduction_video_url') || '').trim()
   const introduction_video_url = normalizeYouTubeVideoUrl(introductionVideoValue)
-  const tutor_name = formData.get('tutor_name')
-  const target_audience = formData.getAll('target_audience').filter(Boolean)
-  const who_this_is_not_for = formData.getAll('who_this_is_not_for').filter(Boolean)
-  const details_to_know = formData.get('details_to_know')
-  const meet_the_tutor = formData.get('meet_the_tutor')
+  const tutor_name = cleanText(formData.get('tutor_name'), 240)
+  const meet_the_tutor = cleanText(formData.get('meet_the_tutor'), 8000)
   const money_back_guarantee = formData.get('money_back_guarantee') === 'on'
-  const price_cents = Math.round(parseFloat(formData.get('price')) * 100)
-  const what_youll_learn = formData.getAll('what_youll_learn').filter(Boolean)
-  const skills_youll_gain = formData.getAll('skills_youll_gain').filter(Boolean)
   const is_published = formData.get('is_published') === 'on'
 
   if (introductionVideoValue && !introduction_video_url) {
     return { error: 'Enter a valid YouTube video link for the course introduction.' }
+  }
+
+  let courseContent
+  try {
+    courseContent = await buildCourseContent(formData, supabase)
+  } catch (error) {
+    return { error: error.message }
   }
   
   // Handle Logo Upload
@@ -89,21 +219,14 @@ export async function createCourse(formData) {
     .insert([{
       title,
       slug,
-      description,
-      subheadline,
+      ...courseContent,
       introduction_video_url,
-      target_audience,
-      who_this_is_not_for,
-      details_to_know,
       meet_the_tutor,
       money_back_guarantee,
       tutor_name,
-      price_cents,
       is_published,
       logo_url,
-      certificate_template_url,
-      what_youll_learn,
-      skills_youll_gain
+      certificate_template_url
     }])
     .select()
     .single()
@@ -161,48 +284,41 @@ export async function updateCourse(id, formData) {
   await requirePermission('courses.edit')
   const supabase = await createAdminClient()
 
-  const title = formData.get('title')
+  const title = cleanText(formData.get('title'), 240)
   let slug = formData.get('slug')
+  if (!title) return { error: 'Course title is required.' }
   
   // Normalize slug
   slug = slug ? slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '') 
               : title.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '')
 
-  const description = formData.get('description')
-  const subheadline = formData.get('subheadline')
   const introductionVideoValue = String(formData.get('introduction_video_url') || '').trim()
   const introduction_video_url = normalizeYouTubeVideoUrl(introductionVideoValue)
-  const tutor_name = formData.get('tutor_name')
-  const target_audience = formData.getAll('target_audience').filter(Boolean)
-  const who_this_is_not_for = formData.getAll('who_this_is_not_for').filter(Boolean)
-  const details_to_know = formData.get('details_to_know')
-  const meet_the_tutor = formData.get('meet_the_tutor')
+  const tutor_name = cleanText(formData.get('tutor_name'), 240)
+  const meet_the_tutor = cleanText(formData.get('meet_the_tutor'), 8000)
   const money_back_guarantee = formData.get('money_back_guarantee') === 'on'
-  const price_cents = Math.round(parseFloat(formData.get('price')) * 100)
   const is_published = formData.get('is_published') === 'on'
-  const what_youll_learn = formData.getAll('what_youll_learn').filter(Boolean)
-  const skills_youll_gain = formData.getAll('skills_youll_gain').filter(Boolean)
 
   if (introductionVideoValue && !introduction_video_url) {
     return { error: 'Enter a valid YouTube video link for the course introduction.' }
+  }
+
+  let courseContent
+  try {
+    courseContent = await buildCourseContent(formData, supabase, id)
+  } catch (error) {
+    return { error: error.message }
   }
   
   const updateData = {
     title,
     slug,
-    description,
-    subheadline,
+    ...courseContent,
     introduction_video_url,
-    target_audience,
-    who_this_is_not_for,
-    details_to_know,
     meet_the_tutor,
     money_back_guarantee,
     tutor_name,
-    price_cents,
     is_published,
-    what_youll_learn,
-    skills_youll_gain,
     updated_at: new Date().toISOString()
   }
 

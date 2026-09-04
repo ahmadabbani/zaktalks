@@ -91,17 +91,15 @@ In this conversation, Zak explores the deeper patterns behind the way we relate 
     watchUrl: 'https://www.youtube.com/watch?v=hJ3XoT5br70&list=PLPFgt_ywYJEM',
   },
   {
-    videoId: 'CYq9yT0uBHs',
-    title: 'Your strengths aren’t missing; they’re being ignored.',
-    hook: `What if your biggest weakness was actually your greatest strength; simply misunderstood, or suppressed by the wrong environment?
+    videoId: 'ZOPlNV-tkR0',
+    title: 'Have you truly met your Inner Child?',
+    hook: `In this episode, we take a deep dive into the concept of the Inner Child, what it means, why it matters, and how it continues to shape our adult lives.
 
-In this episode, we tackle one of the most pervasive flaws in workplace culture: the constant focus on fixing weaknesses rather than celebrating what’s already strong. We explore how early feedback or harsh environments can unintentionally cause people to bury their true strengths, and why many highly successful professionals still feel unfulfilled and disconnected from their work.
+From exploring its origins to uncovering real-life examples, this episode sheds light on how reconnecting with your Inner Child can bring awareness, healing, and growth.
 
-This episode is for anyone who’s ever felt unseen, undervalued, or stuck in a role that doesn’t truly reflect who they are. It’s also a wake-up call for leaders who want to build teams that thrive by embracing people’s authentic potential.
-
-Tune in and rethink how we define strength, success, and human potential at work!`,
-    tags: ['Work & career', 'Self-worth', 'Personal growth'],
-    watchUrl: 'https://youtu.be/CYq9yT0uBHs',
+Whether you’re new to the topic or already exploring your own journey, this episode will help you understand and connect with your Inner Child.`,
+    tags: ['Self-awareness', 'Healing', 'Childhood patterns'],
+    watchUrl: 'https://youtu.be/ZOPlNV-tkR0',
   },
 ]
 

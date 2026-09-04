@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useFormStatus } from 'react-dom'
+import { PUBLIC_PAGE_OPTIONS, legacyDetailsToBlocks, normalizeContentBlocks, normalizeExploreMore } from '@/lib/course-content'
 import styles from './CourseForm.module.css'
 
 function SubmitButton({ buttonText }) {
@@ -24,11 +25,215 @@ function toList(value) {
   return value ? [value] : []
 }
 
-export default function CourseForm({ initialData = {}, action, buttonText = "Save Course" }) {
+function emptyContentBlock() {
+  return { title: '', content_type: 'text', text: '', items: [] }
+}
+
+function StructuredContentEditor({ title, description, items, setItems, titleLabel = 'Title' }) {
+  const insertBlockAfter = (index) => {
+    const nextItems = [...items]
+    nextItems.splice(index + 1, 0, emptyContentBlock())
+    setItems(nextItems)
+  }
+
+  const updateBlock = (index, field, value) => {
+    setItems(items.map((item, itemIndex) => itemIndex === index
+      ? {
+          ...item,
+          [field]: value,
+          items: field === 'content_type' && value === 'list' && item.items.length === 0 ? [''] : item.items,
+        }
+      : item))
+  }
+
+  const updateListItem = (blockIndex, itemIndex, value) => {
+    setItems(items.map((block, currentBlockIndex) => currentBlockIndex === blockIndex
+      ? { ...block, items: block.items.map((item, currentItemIndex) => currentItemIndex === itemIndex ? value : item) }
+      : block))
+  }
+
+  const addListItem = (blockIndex) => {
+    setItems(items.map((block, currentBlockIndex) => currentBlockIndex === blockIndex
+      ? { ...block, items: [...block.items, ''] }
+      : block))
+  }
+
+  const removeListItem = (blockIndex, itemIndex) => {
+    setItems(items.map((block, currentBlockIndex) => currentBlockIndex === blockIndex
+      ? { ...block, items: block.items.length <= 1 ? [''] : block.items.filter((_, currentItemIndex) => currentItemIndex !== itemIndex) }
+      : block))
+  }
+
+  return (
+    <section className={styles.builderSection}>
+      <div className={styles.builderHeader}>
+        <div>
+          <h2>{title}</h2>
+          {description && <p>{description}</p>}
+        </div>
+        {items.length === 0 && <button type="button" onClick={() => setItems([emptyContentBlock()])} className={styles.addButton}>+ Add Item</button>}
+      </div>
+
+      <div className={styles.builderItems}>
+        {items.map((item, index) => (
+          <article className={styles.builderItem} key={index}>
+            <div className={styles.builderItemTopline}>
+              <strong>Item {index + 1}</strong>
+              <button type="button" onClick={() => setItems(items.filter((_, itemIndex) => itemIndex !== index))} className={styles.removeItemButton}>Remove</button>
+            </div>
+            <div className={styles.gridTwo}>
+              <div className={styles.formGroup}>
+                <label>{titleLabel}</label>
+                <input type="text" value={item.title} onChange={(event) => updateBlock(index, 'title', event.target.value)} placeholder="Add a clear title" required />
+              </div>
+              <div className={styles.formGroup}>
+                <label>Information format</label>
+                <select value={item.content_type} onChange={(event) => updateBlock(index, 'content_type', event.target.value)}>
+                  <option value="text">Paragraph</option>
+                  <option value="list">List of items</option>
+                </select>
+              </div>
+            </div>
+
+            {item.content_type === 'list' ? (
+              <div className={styles.nestedList}>
+                <div className={styles.nestedListHeader}>
+                  <label>Information</label>
+                  <button type="button" onClick={() => addListItem(index)} className={styles.secondaryAddButton}>+ Add List Item</button>
+                </div>
+                {item.items.map((listItem, itemIndex) => (
+                  <div className={styles.listItem} key={itemIndex}>
+                    <input type="text" value={listItem} onChange={(event) => updateListItem(index, itemIndex, event.target.value)} placeholder="Add information" required />
+                    <button type="button" onClick={() => removeListItem(index, itemIndex)} className={styles.deleteSlotButton} aria-label="Remove list item">&times;</button>
+                  </div>
+                ))}
+                {item.items.length === 0 && <p className={styles.emptyState}>Add the first list item.</p>}
+              </div>
+            ) : (
+              <div className={styles.formGroup}>
+                <label>Information</label>
+                <textarea rows="4" value={item.text} onChange={(event) => updateBlock(index, 'text', event.target.value)} placeholder="Add the supporting information..." required />
+              </div>
+            )}
+            {index === items.length - 1 && (
+              <div className={styles.builderItemFooter}>
+                <button type="button" onClick={() => insertBlockAfter(index)} className={styles.addButton}>+ Add Another Item</button>
+              </div>
+            )}
+          </article>
+        ))}
+        {items.length === 0 && <p className={styles.builderEmpty}>No items added yet.</p>}
+      </div>
+    </section>
+  )
+}
+
+function ExploreMoreEditor({ items, setItems, availableCourses }) {
+  const updateItem = (index, field, value) => {
+    setItems(items.map((item, itemIndex) => {
+      if (itemIndex !== index) return item
+      if (field === 'target_type') {
+        return {
+          ...item,
+          target_type: value,
+          course_id: value === 'course' ? (availableCourses[0]?.id || '') : '',
+          page_path: value === 'page' ? PUBLIC_PAGE_OPTIONS[0].path : '',
+        }
+      }
+      return { ...item, [field]: value }
+    }))
+  }
+
+  const newItem = () => {
+    const useCourse = availableCourses.length > 0
+    return {
+      target_type: useCourse ? 'course' : 'page',
+      course_id: useCourse ? availableCourses[0].id : '',
+      page_path: useCourse ? '' : PUBLIC_PAGE_OPTIONS[0].path,
+      description: '',
+      cta_text: '',
+    }
+  }
+
+  const addItem = () => {
+    setItems([...items, newItem()])
+  }
+
+  const insertItemAfter = (index) => {
+    const nextItems = [...items]
+    nextItems.splice(index + 1, 0, newItem())
+    setItems(nextItems)
+  }
+
+  return (
+    <section className={styles.builderSection}>
+      <div className={styles.builderHeader}>
+        <div>
+          <h2>Explore More</h2>
+          <p>Connect this course to other courses or public pages. The destination link is saved automatically.</p>
+        </div>
+        {items.length === 0 && <button type="button" onClick={addItem} className={styles.addButton}>+ Add Recommendation</button>}
+      </div>
+      <div className={styles.builderItems}>
+        {items.map((item, index) => (
+          <article className={styles.builderItem} key={index}>
+            <div className={styles.builderItemTopline}>
+              <strong>Recommendation {index + 1}</strong>
+              <button type="button" onClick={() => setItems(items.filter((_, itemIndex) => itemIndex !== index))} className={styles.removeItemButton}>Remove</button>
+            </div>
+            <div className={styles.gridTwo}>
+              <div className={styles.formGroup}>
+                <label>Destination type</label>
+                <select value={item.target_type} onChange={(event) => updateItem(index, 'target_type', event.target.value)}>
+                  <option value="course" disabled={availableCourses.length === 0}>Course</option>
+                  <option value="page">Website page</option>
+                </select>
+              </div>
+              <div className={styles.formGroup}>
+                <label>{item.target_type === 'course' ? 'Course' : 'Website page'}</label>
+                {item.target_type === 'course' ? (
+                  <select value={item.course_id} onChange={(event) => updateItem(index, 'course_id', event.target.value)} required>
+                    <option value="" disabled>Select a course</option>
+                    {availableCourses.map((course) => <option value={course.id} key={course.id}>{course.title}</option>)}
+                  </select>
+                ) : (
+                  <select value={item.page_path} onChange={(event) => updateItem(index, 'page_path', event.target.value)} required>
+                    {PUBLIC_PAGE_OPTIONS.map((page) => <option value={page.path} key={page.path}>{page.label}</option>)}
+                  </select>
+                )}
+              </div>
+            </div>
+            <div className={styles.gridTwo}>
+              <div className={styles.formGroup}>
+                <label>Description</label>
+                <textarea rows="3" value={item.description} onChange={(event) => updateItem(index, 'description', event.target.value)} placeholder="Explain why learners may want to explore this next..." required />
+              </div>
+              <div className={styles.formGroup}>
+                <label>CTA text</label>
+                <input type="text" value={item.cta_text} onChange={(event) => updateItem(index, 'cta_text', event.target.value)} placeholder="e.g. Explore this course" required />
+              </div>
+            </div>
+            {index === items.length - 1 && (
+              <div className={styles.builderItemFooter}>
+                <button type="button" onClick={() => insertItemAfter(index)} className={styles.addButton}>+ Add Another Recommendation</button>
+              </div>
+            )}
+          </article>
+        ))}
+        {items.length === 0 && <p className={styles.builderEmpty}>No recommendations added yet.</p>}
+      </div>
+    </section>
+  )
+}
+
+export default function CourseForm({ initialData = {}, action, buttonText = "Save Course", availableCourses = [] }) {
   const [learningOutcomes, setLearningOutcomes] = useState(initialData.what_youll_learn || [])
   const [skills, setSkills] = useState(initialData.skills_youll_gain || [])
   const [targetAudience, setTargetAudience] = useState(toList(initialData.target_audience))
   const [notForAudience, setNotForAudience] = useState(toList(initialData.who_this_is_not_for))
+  const [detailsItems, setDetailsItems] = useState(legacyDetailsToBlocks(initialData.details_to_know_items, initialData.details_to_know))
+  const [exploreItems, setExploreItems] = useState(normalizeContentBlocks(initialData.what_youll_explore))
+  const [exploreMore, setExploreMore] = useState(normalizeExploreMore(initialData.explore_more))
   const [faqs, setFaqs] = useState(initialData.faqs || [])
   const [existingImages, setExistingImages] = useState(initialData.images || [])
   const [deletedImageUrls, setDeletedImageUrls] = useState([])
@@ -122,6 +327,10 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
 
   return (
     <form action={action} className={styles.form}>
+      <input type="hidden" name="details_to_know_items_json" value={JSON.stringify(detailsItems)} />
+      <input type="hidden" name="what_youll_explore_json" value={JSON.stringify(exploreItems)} />
+      <input type="hidden" name="explore_more_json" value={JSON.stringify(exploreMore)} />
+
       <div className={styles.note}>
         Note: Lessons (videos / assessments) are managed separately after creating the course.
       </div>
@@ -148,15 +357,70 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         </div>
       </div>
 
-      <div className={styles.formGroup}>
-        <label>Description</label>
-        <textarea name="description" rows="4" defaultValue={initialData.description} placeholder="Describe what this course is about..."></textarea>
-      </div>
+      <section className={styles.formSection}>
+        <div className={styles.sectionHeading}>
+          <span>Hero</span>
+          <div>
+            <h2>Course Hero</h2>
+            <p>The first message learners see on the course page.</p>
+          </div>
+        </div>
+        <div className={styles.formGroup}>
+          <label>Promise</label>
+          <textarea name="promise" rows="4" defaultValue={initialData.promise ?? initialData.description ?? ''} placeholder="State the main promise of this course..."></textarea>
+        </div>
+        <div className={styles.formGroup}>
+          <label>Short introduction</label>
+          <textarea name="short_introduction" rows="3" defaultValue={initialData.short_introduction ?? initialData.subheadline ?? ''} placeholder="Add a concise introduction shown in the hero..."></textarea>
+        </div>
+        <div className={styles.formGroup}>
+          <label>Primary CTA text</label>
+          <input type="text" name="primary_cta_text" defaultValue={initialData.primary_cta_text || ''} placeholder="e.g. Enroll now" />
+        </div>
+      </section>
 
-      <div className={styles.formGroup}>
-        <label>Course Subheadline</label>
-        <textarea name="subheadline" rows="3" defaultValue={initialData.subheadline} placeholder="A short supporting line shown below the course description..."></textarea>
-      </div>
+      <section className={styles.formSection}>
+        <div className={styles.sectionHeading}>
+          <span>Introduction</span>
+          <div>
+            <h2>Course Introduction</h2>
+            <p>Longer course-page content outside the Hero.</p>
+          </div>
+        </div>
+        <fieldset className={styles.compositeField}>
+          <legend>Course subheadline</legend>
+          <p className={styles.compositeHint}>Build the subheadline with an emphasized opening followed by its supporting text.</p>
+          <div className={styles.formGroup}>
+            <label>Bold part</label>
+            <input type="text" name="bold_introduction" defaultValue={initialData.bold_introduction || ''} placeholder="Add the bold opening part" />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Supporting text</label>
+            <textarea name="subheadline" rows="3" defaultValue={initialData.subheadline || ''} placeholder="Add the normal supporting text..."></textarea>
+          </div>
+        </fieldset>
+        <div className={styles.formGroup}>
+          <label>Description</label>
+          <textarea name="description" rows="5" defaultValue={initialData.description || ''} placeholder="Add the full course description..."></textarea>
+        </div>
+      </section>
+
+      <section className={styles.formSection}>
+        <div className={styles.sectionHeading}>
+          <span>Quick facts</span>
+          <div>
+            <h2>Course Info Bar</h2>
+            <p>Use short, clear values for the course summary.</p>
+          </div>
+        </div>
+        <div className={styles.infoBarGrid}>
+          <div className={styles.formGroup}><label>Modules</label><input type="text" name="course_info_modules" defaultValue={initialData.course_info_modules || ''} placeholder="e.g. 6 guided modules" /></div>
+          <div className={styles.formGroup}><label>Course Level</label><input type="text" name="course_level" defaultValue={initialData.course_level || ''} placeholder="e.g. All levels" /></div>
+          <div className={styles.formGroup}><label>Language</label><input type="text" name="course_language" defaultValue={initialData.course_language || ''} placeholder="e.g. English" /></div>
+          <div className={styles.formGroup}><label>Flexible Schedule</label><input type="text" name="flexible_schedule" defaultValue={initialData.flexible_schedule || ''} placeholder="e.g. Learn at your pace" /></div>
+          <div className={styles.formGroup}><label>Support</label><input type="text" name="course_support" defaultValue={initialData.course_support || ''} placeholder="e.g. Guided support included" /></div>
+        </div>
+      </section>
 
       <div className={`${styles.formGroup} ${styles.featuredField}`}>
         <label>Introduction Video (YouTube)</label>
@@ -310,6 +574,10 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
 
       <div className={styles.gridTwo}>
         <div className={`${styles.listSection} ${styles.contentListSection}`}>
+          <div className={styles.formGroup}>
+            <label>Main title</label>
+            <input type="text" name="target_audience_title" defaultValue={initialData.target_audience_title || 'Who this is for'} placeholder="Who this is for" />
+          </div>
           <div className={styles.listHeader}>
             <label>Who This Is For (List)</label>
             <button type="button" onClick={() => addItem(setTargetAudience, targetAudience)} className={styles.addButton}>+ Add Item</button>
@@ -332,6 +600,10 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         </div>
 
         <div className={`${styles.listSection} ${styles.contentListSection}`}>
+          <div className={styles.formGroup}>
+            <label>Main title</label>
+            <input type="text" name="who_this_is_not_for_title" defaultValue={initialData.who_this_is_not_for_title || 'Who this is not for'} placeholder="Who this is not for" />
+          </div>
           <div className={styles.listHeader}>
             <label className={styles.notForLabel}>Who This Is Not For (List)</label>
             <button type="button" onClick={() => addItem(setNotForAudience, notForAudience)} className={styles.addButton}>+ Add Item</button>
@@ -354,15 +626,32 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         </div>
       </div>
 
-      <div className={`${styles.formGroup} ${styles.detailsField}`}>
-        <label>Details to know</label>
-        <textarea
-          name="details_to_know"
-          rows="5"
-          defaultValue={initialData.details_to_know || ''}
-          placeholder="Add practical details learners should know before enrolling..."
-        />
+      <div className={`${styles.formGroup} ${styles.audienceSupportField}`}>
+        <label>Audience supporting text</label>
+        <textarea name="audience_supporting_text" rows="3" defaultValue={initialData.audience_supporting_text || ''} placeholder="Add one supporting paragraph beneath both audience lists..." />
       </div>
+
+      <StructuredContentEditor
+        title="Details to Know"
+        description="Add practical details as a paragraph or a list. Each item has its own title."
+        titleLabel="Details"
+        items={detailsItems}
+        setItems={setDetailsItems}
+      />
+
+      <div className={`${styles.formGroup} ${styles.sectionCtaField}`}>
+        <label>Details CTA text</label>
+        <input type="text" name="details_cta_text" defaultValue={initialData.details_cta_text || ''} placeholder="e.g. Start the course" />
+      </div>
+
+      <StructuredContentEditor
+        title="What You’ll Explore"
+        description="Build ordered topic blocks using either a paragraph or a list."
+        items={exploreItems}
+        setItems={setExploreItems}
+      />
+
+      <ExploreMoreEditor items={exploreMore} setItems={setExploreMore} availableCourses={availableCourses} />
 
       {/* Course FAQs Array */}
       <div className={styles.listSection}>
