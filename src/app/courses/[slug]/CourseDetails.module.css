@@ -468,13 +468,13 @@
   padding: clamp(1rem, 1.6vw, 1.45rem);
   border: 1px solid var(--course-border);
   border-radius: 1.15rem;
-  background: var(--color-blue-light-coaching);
+  background: var(--color-gray-light);
   transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .learningGrid article:hover {
   border-color: rgba(var(--color-dark-blue-rgb), 0.45);
-  background: rgba(169, 209, 225, 0.58);
+  background: rgba(var(--color-dark-blue-rgb), 0.08);
   transform: translateY(-0.25rem);
 }
 
@@ -504,7 +504,7 @@
 
 .learningGrid p {
   margin: 0.25rem 0 0;
-  color: var(--color-dark-blue);
+  color: var(--home-text-color);
 }
 
 .skillsList {
@@ -519,16 +519,16 @@
   align-items: center;
   gap: 0.6rem;
   padding: 0.7rem 1rem;
-  border: 1px solid rgba(var(--color-dark-blue-rgb), 0.32);
+  border: 1px solid var(--course-border);
   border-radius: 999px;
-  background: rgba(169, 209, 225, 0.35);
-  color: var(--color-dark-blue);
+  background: var(--color-gray-light);
+  color: var(--color-black);
   font-size: var(--home-text-size);
   font-weight: 650;
 }
 
 .skillsList svg {
-  color: var(--color-dark-blue);
+  color: var(--color-black);
   font-size: 0.8rem;
 }
 
@@ -559,14 +559,14 @@
   align-items: center;
   padding: clamp(1rem, 1.7vw, 1.45rem);
   border: 0;
-  background: var(--color-blue-light-coaching);
-  color: var(--color-dark-blue);
+  background: var(--color-gray-light);
+  color: var(--color-black);
   text-align: left;
   cursor: pointer;
 }
 
 .moduleOpen .moduleHeader {
-  background: rgba(169, 209, 225, 0.64);
+  background: rgba(var(--color-dark-blue-rgb), 0.09);
 }
 
 .moduleNumber {
@@ -686,8 +686,8 @@
   width: 2.4rem;
   height: 2.4rem;
   border-radius: 0.7rem;
-  background: rgba(169, 209, 225, 0.42);
-  color: var(--color-dark-blue);
+  background: var(--color-gray-light);
+  color: var(--color-black);
   font-size: 0.78rem;
   place-items: center;
 }
@@ -732,8 +732,9 @@
   min-width: 4.75rem;
   padding: 0.45rem 0.7rem;
   border-radius: 999px;
-  background: var(--color-blue-light-coaching);
-  color: var(--color-dark-blue);
+  border: 1px solid var(--course-border);
+  background: var(--color-gray-light);
+  color: var(--color-black);
   font-size: 0.66rem;
   font-weight: 750;
   text-align: center;
@@ -855,7 +856,7 @@
 .detailsCard {
   padding: clamp(1.4rem, 2.6vw, 2.4rem);
   border-radius: var(--course-radius);
-  background: var(--color-blue-light-coaching);
+  background: var(--color-gray-light);
 }
 
 .structuredContentGrid {
@@ -867,14 +868,14 @@
 .structuredContentCard {
   min-width: 0;
   padding: clamp(1.3rem, 2.1vw, 1.9rem);
-  border: 1px solid rgba(var(--color-dark-blue-rgb), 0.2);
+  border: 1px solid var(--course-border);
   border-radius: 1.25rem;
-  background: rgba(var(--color-dark-blue-rgb), 0.08);
+  background: var(--color-gray-light);
 }
 
 .structuredContentCard h3 {
   margin: 0 0 0.75rem;
-  color: var(--color-dark-blue);
+  color: var(--color-black);
   font-size: clamp(1.1rem, 1.45vw, 1.38rem);
   line-height: 1.25;
 }
@@ -907,7 +908,7 @@
 
 .structuredContentCard li svg {
   margin-top: 0.35rem;
-  color: var(--color-dark-blue);
+  color: var(--color-black);
   font-size: 0.72rem;
 }
 
@@ -956,7 +957,7 @@
 
 .detailsCard p {
   margin: 0;
-  color: var(--color-dark-blue);
+  color: var(--home-text-color);
   white-space: pre-line;
 }
 
@@ -1011,7 +1012,7 @@
 .audienceCard {
   padding: clamp(1.35rem, 2.2vw, 2rem);
   border-radius: var(--course-radius);
-  background: var(--color-blue-light-coaching);
+  background: var(--color-gray-light);
 }
 
 .audienceIcon {
@@ -1027,7 +1028,7 @@
 
 .audienceCard h2 {
   margin: 0 0 1rem;
-  color: var(--color-dark-blue);
+  color: var(--color-black);
   font-size: clamp(1.35rem, 2vw, 2rem);
   line-height: 1.15;
 }
@@ -1047,12 +1048,12 @@
   align-items: start;
   padding: 0.8rem 0;
   border-top: 1px solid rgba(33, 44, 45, 0.1);
-  color: var(--color-dark-blue);
+  color: var(--home-text-color);
 }
 
 .audienceCard li svg {
   margin-top: 0.35rem;
-  color: var(--color-dark-blue);
+  color: var(--color-black);
   font-size: 0.72rem;
 }
 
@@ -1066,7 +1067,7 @@
 }
 
 .notForCard li svg {
-  color: var(--color-dark-blue);
+  color: var(--color-black);
 }
 
 .subheadlineFeature {
@@ -1220,12 +1221,13 @@
   background: rgba(20, 27, 28, 0.94);
   backdrop-filter: blur(0.8rem);
   place-items: center;
+  isolation: isolate;
 }
 
 .lightboxStage {
   display: flex;
-  width: min(90vw, 90rem);
-  height: min(84vh, 68rem);
+  width: min(84vw, 72rem);
+  height: min(78vh, 50rem);
   align-items: center;
   justify-content: center;
 }
@@ -1345,7 +1347,7 @@
   position: relative;
   min-height: 100%;
   overflow: hidden;
-  background: var(--color-blue-light-coaching);
+  background: var(--color-gray-light);
 }
 
 .relatedImage img {
@@ -1363,7 +1365,7 @@
   display: grid;
   width: 100%;
   height: 100%;
-  color: var(--color-dark-blue);
+  color: var(--color-black);
   font-size: 2rem;
   place-items: center;
 }
@@ -1433,7 +1435,7 @@
   top: 7rem;
   padding: clamp(1.4rem, 2.4vw, 2.2rem);
   border-radius: var(--course-radius);
-  background: var(--color-blue-light-coaching);
+  background: var(--color-gray-light);
 }
 
 .ratingScore {
@@ -1627,7 +1629,7 @@
 }
 
 .faqOpen > button {
-  background: var(--color-blue-light-coaching);
+  background: var(--color-gray-light);
 }
 
 .faqItem > button > span {
@@ -1646,7 +1648,9 @@
   width: 2.2rem;
   height: 2.2rem;
   border-radius: 50%;
-  background: var(--color-blue-light-coaching);
+  border: 1px solid var(--course-border);
+  background: var(--color-white);
+  color: var(--color-black);
   font-size: 0.68rem;
   place-items: center;
 }
@@ -1755,8 +1759,8 @@
   width: 2.3rem;
   height: 2.3rem;
   border-radius: 0.7rem;
-  background: rgba(169, 209, 225, 0.44);
-  color: var(--color-dark-blue);
+  background: var(--color-gray-light);
+  color: var(--color-black);
   font-size: 0.76rem;
   place-items: center;
 }
@@ -2184,6 +2188,15 @@
     top: auto;
     bottom: 1rem;
     transform: none;
+  }
+
+  .lightbox {
+    padding: 4.5rem 1rem 5.5rem;
+  }
+
+  .lightboxStage {
+    width: 100%;
+    height: min(72vh, 42rem);
   }
 
   .lightboxPrev {

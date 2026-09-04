@@ -259,11 +259,11 @@
     padding: clamp(1rem, 2vw, 1.5rem);
     border: 1px solid rgba(33, 44, 45, 0.11);
     border-radius: 1rem;
-    background: rgba(169, 209, 225, 0.34);
+    background: var(--color-gray-light);
 }
 
 .checkoutVariant .title {
-    color: var(--color-dark-blue);
+    color: var(--color-black);
     font-size: clamp(0.88rem, 1vw, 1rem);
 }
 

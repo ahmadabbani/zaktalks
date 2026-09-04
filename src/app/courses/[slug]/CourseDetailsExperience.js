@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
@@ -200,7 +201,7 @@ function CourseGallery({ images, courseTitle }) {
         ))}
       </div>
 
-      {activeIndex !== null && (
+      {activeIndex !== null && typeof document !== 'undefined' && createPortal((
         <div
           className={styles.lightbox}
           role="dialog"
@@ -217,7 +218,7 @@ function CourseGallery({ images, courseTitle }) {
           {images.length > 1 && <button type="button" className={`${styles.lightboxNav} ${styles.lightboxNext}`} onClick={() => setActiveIndex((activeIndex + 1) % images.length)} aria-label="Next image"><FaArrowRight /></button>}
           <span className={styles.lightboxCount}>{activeIndex + 1} / {images.length}</span>
         </div>
-      )}
+      ), document.body)}
     </>
   )
 }
