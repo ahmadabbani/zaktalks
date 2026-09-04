@@ -72,7 +72,7 @@
     background: transparent !important;
     color: var(--color-black) !important;
     border: 2px solid var(--color-gray) !important;
-    border-radius: 0.5rem;
+    border-radius: 999px;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
@@ -94,7 +94,7 @@
     background: var(--color-error);
     color: white;
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 999px;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import {
   createLesson,
@@ -15,6 +15,7 @@ import toast from 'react-hot-toast'
 import {
   FaChevronDown,
   FaChevronUp,
+  FaCheck,
   FaClipboardList,
   FaEdit,
   FaFileAlt,
@@ -28,6 +29,94 @@ import {
   FaTrash
 } from 'react-icons/fa'
 import styles from './admin-lessons.module.css'
+
+function CustomSelect({ id, name, value, defaultValue = '', onChange, options, ariaLabel }) {
+  const [open, setOpen] = useState(false)
+  const [internalValue, setInternalValue] = useState(defaultValue)
+  const rootRef = useRef(null)
+  const menuId = useId()
+  const currentValue = value === undefined ? internalValue : value
+  const selected = options.find((option) => option.value === currentValue)
+
+  useEffect(() => {
+    if (!open) return undefined
+    const closeMenu = (event) => {
+      if (!rootRef.current?.contains(event.target)) setOpen(false)
+    }
+    document.addEventListener('pointerdown', closeMenu)
+    return () => document.removeEventListener('pointerdown', closeMenu)
+  }, [open])
+
+  const choose = (nextValue) => {
+    if (value === undefined) setInternalValue(nextValue)
+    onChange?.(nextValue)
+    setOpen(false)
+  }
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      setOpen(false)
+      return
+    }
+    if (!['ArrowDown', 'ArrowUp'].includes(event.key) || options.length === 0) return
+    event.preventDefault()
+    const currentIndex = options.findIndex((option) => option.value === currentValue)
+    const direction = event.key === 'ArrowDown' ? 1 : -1
+    const nextIndex = currentIndex < 0
+      ? (direction === 1 ? 0 : options.length - 1)
+      : (currentIndex + direction + options.length) % options.length
+    choose(options[nextIndex].value)
+    setOpen(true)
+  }
+
+  return (
+    <div className={styles.customSelect} ref={rootRef} onKeyDown={handleKeyDown}>
+      <input type="hidden" name={name} value={currentValue || ''} />
+      <button
+        id={id}
+        type="button"
+        className={`${styles.customSelectTrigger} ${open ? styles.customSelectTriggerOpen : ''}`}
+        aria-label={ariaLabel}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={menuId}
+        onClick={() => setOpen((current) => !current)}
+      >
+        <span>{selected?.label || 'Select an option'}</span>
+        <FaChevronDown aria-hidden="true" />
+      </button>
+      {open && (
+        <div className={styles.customSelectMenu} id={menuId} role="listbox" aria-label={ariaLabel}>
+          {options.map((option) => (
+            <button
+              type="button"
+              role="option"
+              aria-selected={option.value === currentValue}
+              className={option.value === currentValue ? styles.customSelectOptionSelected : ''}
+              onClick={() => choose(option.value)}
+              key={option.value}
+            >
+              <span>{option.label}</span>
+              {option.value === currentValue && <FaCheck aria-hidden="true" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function SaveProgress({ label }) {
+  return (
+    <div className={styles.saveProgress} role="status" aria-live="polite">
+      <div className={styles.saveProgressCopy}>
+        <strong>{label}</strong>
+        <span>Please keep this page open.</span>
+      </div>
+      <div className={styles.saveProgressTrack} aria-hidden="true"><span /></div>
+    </div>
+  )
+}
 
 function normalizeModules(modules) {
   return [...modules]
@@ -51,6 +140,8 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
   const [lessonType, setLessonType] = useState('video')
   const [resourceType, setResourceType] = useState('none')
   const [isSaving, setIsSaving] = useState(false)
+  const [saveLabel, setSaveLabel] = useState('Saving changes')
+  const [saveTarget, setSaveTarget] = useState(null)
   const [deleteModal, setDeleteModal] = useState(null)
   const [isDeleting, setIsDeleting] = useState(false)
 
@@ -96,6 +187,8 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
 
   const handleModuleSubmit = async (event) => {
     event.preventDefault()
+    setSaveLabel(moduleForm.mode === 'edit' ? 'Updating module' : 'Creating module')
+    setSaveTarget('module')
     setIsSaving(true)
     const formData = new FormData(event.currentTarget)
     const result = moduleForm.mode === 'edit'
@@ -110,10 +203,13 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
       toast.error(result.error || 'Could not save module')
     }
     setIsSaving(false)
+    setSaveTarget(null)
   }
 
   const handleLessonSubmit = async (event) => {
     event.preventDefault()
+    setSaveLabel(lessonForm.mode === 'edit' ? 'Updating lesson' : 'Creating lesson')
+    setSaveTarget('lesson')
     setIsSaving(true)
     const formData = new FormData(event.currentTarget)
     const result = lessonForm.mode === 'edit'
@@ -128,6 +224,7 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
       toast.error(result.error || 'Could not save lesson')
     }
     setIsSaving(false)
+    setSaveTarget(null)
   }
 
   const moveModule = (index, direction) => {
@@ -155,6 +252,8 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
   }
 
   const saveStructure = async () => {
+    setSaveLabel('Saving course order')
+    setSaveTarget('order')
     setIsSaving(true)
     const result = await updateCourseStructure(courseId, modules)
     if (result.success) {
@@ -164,6 +263,7 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
       toast.error(result.error || 'Could not save course structure')
     }
     setIsSaving(false)
+    setSaveTarget(null)
   }
 
   const confirmDelete = async () => {
@@ -201,7 +301,7 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
         <div className={styles.headerActions}>
           {modules.length > 0 && (
             <button type="button" onClick={saveStructure} disabled={isSaving} className={styles.saveOrderButton}>
-              <FaSave /> {isSaving ? 'Saving...' : 'Save Order'}
+              <FaSave /> {isSaving && saveTarget === 'order' ? 'Saving...' : 'Save Order'}
             </button>
           )}
           <button type="button" onClick={openNewModuleForm} className={styles.addButton}>
@@ -209,6 +309,8 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
           </button>
         </div>
       </div>
+
+      {isSaving && saveTarget === 'order' && <SaveProgress label={saveLabel} />}
 
       {moduleForm && (
         <form key={`${moduleForm.mode}-${moduleForm.module?.id || 'new'}`} onSubmit={handleModuleSubmit} className={styles.formCard}>
@@ -242,10 +344,11 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
           </div>
           <div className={styles.formActions}>
             <button type="submit" disabled={isSaving} className={styles.submitButton}>
-              {isSaving ? 'Saving...' : moduleForm.mode === 'edit' ? 'Update Module' : 'Create Module'}
+              {isSaving && saveTarget === 'module' ? 'Saving...' : moduleForm.mode === 'edit' ? 'Update Module' : 'Create Module'}
             </button>
             <button type="button" onClick={() => setModuleForm(null)} className={styles.cancelButton}>Cancel</button>
           </div>
+          {isSaving && saveTarget === 'module' && <SaveProgress label={saveLabel} />}
         </form>
       )}
 
@@ -263,18 +366,27 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
               </div>
               <div className={styles.formGroup}>
                 <label htmlFor="lesson-module">Module</label>
-                <select id="lesson-module" name="module_id" defaultValue={lessonForm.lesson?.module_id || lessonForm.moduleId} required>
-                  {modules.map((module, index) => (
-                    <option key={module.id} value={module.id}>{String(index + 1).padStart(2, '0')} · {module.title}</option>
-                  ))}
-                </select>
+                <CustomSelect
+                  id="lesson-module"
+                  name="module_id"
+                  defaultValue={lessonForm.lesson?.module_id || lessonForm.moduleId}
+                  options={modules.map((module, index) => ({ value: module.id, label: `${String(index + 1).padStart(2, '0')} · ${module.title}` }))}
+                  ariaLabel="Lesson module"
+                />
               </div>
               <div className={styles.formGroup}>
                 <label htmlFor="lesson-type">Lesson Type</label>
-                <select id="lesson-type" name="type" value={lessonType} onChange={(event) => setLessonType(event.target.value)}>
-                  <option value="video">Video (YouTube)</option>
-                  <option value="assessment">Assessment</option>
-                </select>
+                <CustomSelect
+                  id="lesson-type"
+                  name="type"
+                  value={lessonType}
+                  onChange={setLessonType}
+                  options={[
+                    { value: 'video', label: 'Video (YouTube)' },
+                    { value: 'assessment', label: 'Assessment' },
+                  ]}
+                  ariaLabel="Lesson type"
+                />
               </div>
             </div>
           </div>
@@ -293,11 +405,13 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
             ) : (
               <div className={styles.formGroup}>
                 <label htmlFor="assessment-key">Select Assessment</label>
-                <select id="assessment-key" name="assessment_key" defaultValue={lessonForm.lesson?.assessment_key || assessments[0]?.id} required>
-                  {assessments.map((assessment) => (
-                    <option key={assessment.id} value={assessment.id}>{assessment.title}</option>
-                  ))}
-                </select>
+                <CustomSelect
+                  id="assessment-key"
+                  name="assessment_key"
+                  defaultValue={lessonForm.lesson?.assessment_key || assessments[0]?.id}
+                  options={assessments.map((assessment) => ({ value: assessment.id, label: assessment.title }))}
+                  ariaLabel="Assessment"
+                />
               </div>
             )}
           </div>
@@ -310,12 +424,19 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
             </div>
             <div className={styles.formGroup}>
               <label htmlFor="resource-type">Resource Type</label>
-              <select id="resource-type" name="resource_type" value={resourceType} onChange={(event) => setResourceType(event.target.value)}>
-                <option value="none">No additional resource</option>
-                <option value="text">Text</option>
-                <option value="pdf">PDF upload</option>
-                <option value="link">External link</option>
-              </select>
+              <CustomSelect
+                id="resource-type"
+                name="resource_type"
+                value={resourceType}
+                onChange={setResourceType}
+                options={[
+                  { value: 'none', label: 'No additional resource' },
+                  { value: 'text', label: 'Text' },
+                  { value: 'pdf', label: 'PDF upload' },
+                  { value: 'link', label: 'External link' },
+                ]}
+                ariaLabel="Additional resource type"
+              />
             </div>
 
             {resourceType === 'text' && (
@@ -370,10 +491,11 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
           </div>
           <div className={styles.formActions}>
             <button type="submit" disabled={isSaving} className={styles.submitButton}>
-              {isSaving ? 'Saving...' : lessonForm.mode === 'edit' ? 'Update Lesson' : 'Create Lesson'}
+              {isSaving && saveTarget === 'lesson' ? 'Saving...' : lessonForm.mode === 'edit' ? 'Update Lesson' : 'Create Lesson'}
             </button>
             <button type="button" onClick={() => setLessonForm(null)} className={styles.cancelButton}>Cancel</button>
           </div>
+          {isSaving && saveTarget === 'lesson' && <SaveProgress label={saveLabel} />}
         </form>
       )}
 

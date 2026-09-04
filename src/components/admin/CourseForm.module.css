@@ -118,6 +118,114 @@
     min-height: 100px;
 }
 
+.form > .formSection + .formGroup,
+.form > .builderSection + .formGroup {
+    margin-top: var(--space-xl);
+}
+
+.customSelect {
+    position: relative;
+    width: 100%;
+}
+
+.customSelectTrigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    min-height: 3.25rem;
+    padding: var(--space-md);
+    border: 2px solid transparent;
+    border-radius: 0.6rem;
+    background: var(--color-gray-light);
+    color: var(--color-black);
+    font: inherit;
+    font-size: 1rem;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color var(--transition-normal), background-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.customSelectTrigger:hover,
+.customSelectTriggerOpen {
+    border-color: rgba(37, 140, 155, 0.5);
+    background: var(--color-white);
+}
+
+.customSelectTriggerOpen {
+    box-shadow: 0 0 0 3px rgba(37, 140, 155, 0.12);
+}
+
+.customSelectTrigger svg {
+    flex: 0 0 auto;
+    color: var(--color-dark-blue);
+    transition: transform var(--transition-normal);
+}
+
+.customSelectTrigger > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.customSelectTriggerOpen svg {
+    transform: rotate(180deg);
+}
+
+.customSelectPlaceholder {
+    color: rgba(33, 44, 45, 0.48);
+}
+
+.customSelectMenu {
+    position: absolute;
+    z-index: 50;
+    top: calc(100% + 0.45rem);
+    left: 0;
+    right: 0;
+    display: grid;
+    gap: 0.3rem;
+    max-height: 18rem;
+    padding: 0.45rem;
+    overflow-y: auto;
+    border: 1px solid rgba(33, 44, 45, 0.14);
+    border-radius: 0.8rem;
+    background: var(--color-white);
+    box-shadow: 0 16px 38px rgba(33, 44, 45, 0.16);
+}
+
+.customSelectMenu button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    min-height: 2.8rem;
+    padding: 0.7rem 0.85rem;
+    border: 0;
+    border-radius: 0.55rem;
+    background: transparent;
+    color: var(--color-black);
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 650;
+    text-align: left;
+    cursor: pointer;
+    transition: color var(--transition-normal), background-color var(--transition-normal);
+}
+
+.customSelectMenu button:hover,
+.customSelectOptionSelected {
+    background: rgba(37, 140, 155, 0.1) !important;
+    color: var(--color-dark-blue) !important;
+}
+
+.customSelectMenu button:disabled {
+    cursor: not-allowed;
+    opacity: 0.42;
+}
+
 .formGroup input[aria-invalid="true"],
 .formGroup textarea[aria-invalid="true"],
 .formGroup select[aria-invalid="true"] {
@@ -402,6 +510,8 @@
 
 /* File Inputs */
 .fileInput {
+    width: 100%;
+    box-sizing: border-box;
     padding: var(--space-md);
     border-radius: 0.5rem;
     border: 2px dashed var(--color-gray);
@@ -649,7 +759,19 @@
 .faqItem textarea {
     width: 100%;
     margin-bottom: var(--space-sm);
-    padding: 10px;
+    padding: 0.85rem 0.95rem;
+    border: 1px solid rgba(33, 44, 45, 0.16);
+    border-radius: 0.6rem;
+    background: var(--color-white);
+    color: var(--color-black);
+    font: inherit;
+}
+
+.faqItem input:focus,
+.faqItem textarea:focus {
+    outline: none;
+    border-color: var(--color-dark-blue);
+    box-shadow: 0 0 0 3px rgba(37, 140, 155, 0.12);
 }
 
 .faqItem textarea {
@@ -748,9 +870,10 @@
 
 .saveProgress {
     padding: clamp(1rem, 2vw, 1.4rem);
-    border: 1px solid rgba(33, 44, 45, 0.13);
+    border: 1px solid rgba(255, 202, 40, 0.5);
     border-radius: 0.9rem;
-    background: rgba(237, 246, 247, 0.82);
+    background: rgba(255, 202, 40, 0.12);
+    box-shadow: 0 12px 28px rgba(33, 44, 45, 0.07);
 }
 
 .progressHeader {
@@ -777,7 +900,7 @@
 }
 
 .progressHeader b {
-    color: var(--color-dark-blue);
+    color: var(--color-black);
     font-size: 1.15rem;
 }
 
@@ -786,14 +909,15 @@
     margin: 1rem 0;
     overflow: hidden;
     border-radius: 999px;
-    background: rgba(37, 140, 155, 0.14);
+    background: rgba(33, 44, 45, 0.12);
 }
 
 .progressTrack span {
     display: block;
     height: 100%;
     border-radius: inherit;
-    background: var(--color-dark-blue);
+    background: var(--color-yellow);
+    box-shadow: 0 0 14px rgba(255, 202, 40, 0.42);
     transition: width 280ms ease;
 }
 
@@ -818,8 +942,9 @@
 }
 
 .progressStepActive {
-    color: var(--color-dark-blue) !important;
-    box-shadow: inset 0 0 0 1px rgba(37, 140, 155, 0.24);
+    color: var(--color-black) !important;
+    background: rgba(255, 202, 40, 0.2) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 202, 40, 0.5);
 }
 
 .progressStepComplete {
@@ -827,11 +952,15 @@
 }
 
 .submitButton {
-    padding: 15px 35px;
-    background: var(--color-black);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.2rem;
+    padding: 0.8rem 1.65rem;
+    background: var(--color-dark-blue);
     color: var(--color-white);
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 999px;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
@@ -844,27 +973,19 @@
     transform: none;
 }
 
-.spinner {
-    margin-right: 0.55rem;
-    animation: courseFormSpin 800ms linear infinite;
-}
-
-@keyframes courseFormSpin {
-    to { transform: rotate(360deg); }
-}
-
 .submitButton:hover {
     background: var(--color-yellow);
-    color: var(--color-black);
+    color: var(--color-white);
     transform: translateY(-2px);
 }
 
 .cancelButton {
-    padding: 15px 35px;
-    background: transparent;
-    color: var(--color-black);
-    border: 2px solid var(--color-gray);
-    border-radius: 0.5rem;
+    min-height: 3.2rem;
+    padding: 0.8rem 1.65rem;
+    background: var(--color-white);
+    color: var(--color-dark-blue);
+    border: 2px solid var(--color-dark-blue);
+    border-radius: 999px;
     font-weight: 700;
     font-size: 1rem;
     text-decoration: none;
@@ -876,9 +997,16 @@
 }
 
 .cancelButton:hover {
-    background: var(--color-error);
-    color: white;
-    border-color: var(--color-error);
+    background: var(--color-yellow);
+    color: var(--color-white);
+    border-color: var(--color-yellow);
+    transform: translateY(-2px);
+}
+
+.submitButton:disabled:hover {
+    background: var(--color-dark-blue);
+    color: var(--color-white);
+    transform: none;
 }
 
 .cancelButtonDisabled {

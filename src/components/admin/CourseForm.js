@@ -1,7 +1,7 @@
 'use client'
 
-import { useRef, useState } from 'react'
-import { FaCheck, FaCloudUploadAlt, FaDatabase, FaExclamationCircle, FaSpinner } from 'react-icons/fa'
+import { useEffect, useId, useRef, useState } from 'react'
+import { FaCheck, FaChevronDown, FaCloudUploadAlt, FaDatabase, FaExclamationCircle } from 'react-icons/fa'
 import { PUBLIC_PAGE_OPTIONS, legacyDetailsToBlocks, normalizeContentBlocks, normalizeExploreMore } from '@/lib/course-content'
 import { createClient } from '@/lib/supabase/client'
 import { cleanupCourseAssetUploads, prepareCourseAssetUploads } from '@/app/admin/courses/actions'
@@ -10,6 +10,11 @@ import styles from './CourseForm.module.css'
 const ONE_MEGABYTE = 1024 * 1024
 const FILE_LIMITS = { logo: ONE_MEGABYTE, gallery: ONE_MEGABYTE, certificate: 10 * ONE_MEGABYTE }
 const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+const COURSE_LEVEL_OPTIONS = [
+  { value: 'Beginner', label: 'Beginner' },
+  { value: 'Intermediate', label: 'Intermediate' },
+  { value: 'Advanced', label: 'Advanced' },
+]
 
 function SubmitButton({ buttonText, pending }) {
   return (
@@ -18,8 +23,85 @@ function SubmitButton({ buttonText, pending }) {
       className={styles.submitButton}
       disabled={pending}
     >
-      {pending ? <><FaSpinner className={styles.spinner} /> Saving course</> : buttonText}
+      {pending ? 'Saving course' : buttonText}
     </button>
+  )
+}
+
+function CustomSelect({ name, value, onChange, options, placeholder = 'Select an option', ariaLabel }) {
+  const [open, setOpen] = useState(false)
+  const rootRef = useRef(null)
+  const menuId = useId()
+  const selectedIndex = options.findIndex((option) => option.value === value)
+  const selected = selectedIndex >= 0 ? options[selectedIndex] : null
+
+  useEffect(() => {
+    if (!open) return undefined
+    const close = (event) => {
+      if (!rootRef.current?.contains(event.target)) setOpen(false)
+    }
+    document.addEventListener('pointerdown', close)
+    return () => document.removeEventListener('pointerdown', close)
+  }, [open])
+
+  const choose = (option) => {
+    if (option.disabled) return
+    onChange(option.value)
+    setOpen(false)
+  }
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      setOpen(false)
+      return
+    }
+    if (!['ArrowDown', 'ArrowUp'].includes(event.key)) return
+    event.preventDefault()
+    const available = options.filter((option) => !option.disabled)
+    if (!available.length) return
+    const currentIndex = available.findIndex((option) => option.value === value)
+    const direction = event.key === 'ArrowDown' ? 1 : -1
+    const nextIndex = currentIndex < 0
+      ? (direction === 1 ? 0 : available.length - 1)
+      : (currentIndex + direction + available.length) % available.length
+    onChange(available[nextIndex].value)
+    setOpen(true)
+  }
+
+  return (
+    <div className={styles.customSelect} ref={rootRef} onKeyDown={handleKeyDown}>
+      {name && <input type="hidden" name={name} value={value || ''} />}
+      <button
+        type="button"
+        className={`${styles.customSelectTrigger} ${open ? styles.customSelectTriggerOpen : ''}`}
+        aria-label={ariaLabel}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={menuId}
+        onClick={() => setOpen((current) => !current)}
+      >
+        <span className={selected ? '' : styles.customSelectPlaceholder}>{selected?.label || placeholder}</span>
+        <FaChevronDown aria-hidden="true" />
+      </button>
+      {open && (
+        <div className={styles.customSelectMenu} id={menuId} role="listbox" aria-label={ariaLabel}>
+          {options.map((option) => (
+            <button
+              type="button"
+              role="option"
+              aria-selected={option.value === value}
+              disabled={option.disabled}
+              className={option.value === value ? styles.customSelectOptionSelected : ''}
+              onClick={() => choose(option)}
+              key={option.value}
+            >
+              <span>{option.label}</span>
+              {option.value === value && <FaCheck aria-hidden="true" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -161,10 +243,15 @@ function StructuredContentEditor({ title, description, items, setItems, titleLab
               </div>
               <div className={styles.formGroup}>
                 <label>Information format</label>
-                <select value={item.content_type} onChange={(event) => updateBlock(index, 'content_type', event.target.value)}>
-                  <option value="text">Paragraph</option>
-                  <option value="list">List of items</option>
-                </select>
+                <CustomSelect
+                  value={item.content_type}
+                  onChange={(value) => updateBlock(index, 'content_type', value)}
+                  options={[
+                    { value: 'text', label: 'Paragraph' },
+                    { value: 'list', label: 'List of items' },
+                  ]}
+                  ariaLabel={`Information format for ${title} item ${index + 1}`}
+                />
               </div>
             </div>
 
@@ -258,22 +345,34 @@ function ExploreMoreEditor({ items, setItems, availableCourses, error }) {
             <div className={styles.gridTwo}>
               <div className={styles.formGroup}>
                 <label>Destination type</label>
-                <select value={item.target_type} onChange={(event) => updateItem(index, 'target_type', event.target.value)}>
-                  <option value="course" disabled={availableCourses.length === 0}>Course</option>
-                  <option value="page">Website page</option>
-                </select>
+                <CustomSelect
+                  value={item.target_type}
+                  onChange={(value) => updateItem(index, 'target_type', value)}
+                  options={[
+                    { value: 'course', label: 'Course', disabled: availableCourses.length === 0 },
+                    { value: 'page', label: 'Website page' },
+                  ]}
+                  ariaLabel={`Destination type for recommendation ${index + 1}`}
+                />
               </div>
               <div className={styles.formGroup}>
                 <label>{item.target_type === 'course' ? 'Course' : 'Website page'}</label>
                 {item.target_type === 'course' ? (
-                  <select value={item.course_id} onChange={(event) => updateItem(index, 'course_id', event.target.value)} required>
-                    <option value="" disabled>Select a course</option>
-                    {availableCourses.map((course) => <option value={course.id} key={course.id}>{course.title}</option>)}
-                  </select>
+                  <CustomSelect
+                    value={item.course_id}
+                    onChange={(value) => updateItem(index, 'course_id', value)}
+                    options={availableCourses.map((course) => ({ value: course.id, label: course.title }))}
+                    placeholder="Select a course"
+                    ariaLabel={`Course for recommendation ${index + 1}`}
+                  />
                 ) : (
-                  <select value={item.page_path} onChange={(event) => updateItem(index, 'page_path', event.target.value)} required>
-                    {PUBLIC_PAGE_OPTIONS.map((page) => <option value={page.path} key={page.path}>{page.label}</option>)}
-                  </select>
+                  <CustomSelect
+                    value={item.page_path}
+                    onChange={(value) => updateItem(index, 'page_path', value)}
+                    options={PUBLIC_PAGE_OPTIONS.map((page) => ({ value: page.path, label: page.label }))}
+                    placeholder="Select a website page"
+                    ariaLabel={`Website page for recommendation ${index + 1}`}
+                  />
                 )}
               </div>
             </div>
@@ -316,6 +415,7 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
   const [imagePreviews, setImagePreviews] = useState({}) // Map of slot id to preview URL
   const [logoPreview, setLogoPreview] = useState(null)
   const [logoRemoved, setLogoRemoved] = useState(false)
+  const [courseLevel, setCourseLevel] = useState(initialData.course_level || '')
   const [isSaving, setIsSaving] = useState(false)
   const [fieldErrors, setFieldErrors] = useState({})
   const [saveNotice, setSaveNotice] = useState(null)
@@ -565,6 +665,10 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
     }
   }
 
+  const courseLevelOptions = courseLevel && !COURSE_LEVEL_OPTIONS.some((option) => option.value === courseLevel)
+    ? [{ value: courseLevel, label: `${courseLevel} (current)` }, ...COURSE_LEVEL_OPTIONS]
+    : COURSE_LEVEL_OPTIONS
+
   return (
     <form ref={formRef} onSubmit={handleSubmit} className={styles.form} noValidate aria-busy={isSaving}>
       <input type="hidden" name="details_to_know_items_json" value={JSON.stringify(detailsItems)} />
@@ -637,7 +741,17 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         </div>
         <div className={styles.infoBarGrid}>
           <div className={styles.formGroup}><label>Modules</label><input type="text" name="course_info_modules" defaultValue={initialData.course_info_modules || ''} placeholder="e.g. 6 guided modules" /></div>
-          <div className={styles.formGroup}><label>Course Level</label><input type="text" name="course_level" defaultValue={initialData.course_level || ''} placeholder="e.g. All levels" /></div>
+          <div className={styles.formGroup}>
+            <label>Course Level</label>
+            <CustomSelect
+              name="course_level"
+              value={courseLevel}
+              onChange={setCourseLevel}
+              options={courseLevelOptions}
+              placeholder="Select course level"
+              ariaLabel="Course level"
+            />
+          </div>
           <div className={styles.formGroup}><label>Language</label><input type="text" name="course_language" defaultValue={initialData.course_language || ''} placeholder="e.g. English" /></div>
           <div className={styles.formGroup}><label>Flexible Schedule</label><input type="text" name="flexible_schedule" defaultValue={initialData.flexible_schedule || ''} placeholder="e.g. Learn at your pace" /></div>
           <div className={styles.formGroup}><label>Support</label><input type="text" name="course_support" defaultValue={initialData.course_support || ''} placeholder="e.g. Guided support included" /></div>
@@ -657,19 +771,6 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
           <textarea name="description" rows="5" defaultValue={initialData.description || ''} placeholder="Add the full course description..."></textarea>
         </div>
       </section>
-
-      <div className={`${styles.formGroup} ${styles.featuredField}`}>
-        <label>Introduction Video (YouTube)</label>
-        <input
-          type="url"
-          name="introduction_video_url"
-          maxLength="500"
-          defaultValue={initialData.introduction_video_url || ''}
-          placeholder="https://www.youtube.com/watch?v=..."
-          aria-invalid={Boolean(fieldErrors.introduction_video_url)}
-        />
-        <FieldError message={fieldErrors.introduction_video_url} />
-      </div>
 
       <div className={styles.formGroup} data-error-key="gallery_images" tabIndex={-1}>
         <label>Course Gallery Images</label>
@@ -861,6 +962,19 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
           </div>
         </fieldset>
       </section>
+
+      <div className={`${styles.formGroup} ${styles.featuredField}`}>
+        <label>Introduction Video (YouTube)</label>
+        <input
+          type="url"
+          name="introduction_video_url"
+          maxLength="500"
+          defaultValue={initialData.introduction_video_url || ''}
+          placeholder="https://www.youtube.com/watch?v=..."
+          aria-invalid={Boolean(fieldErrors.introduction_video_url)}
+        />
+        <FieldError message={fieldErrors.introduction_video_url} />
+      </div>
 
       <StructuredContentEditor
         title="What You’ll Explore"

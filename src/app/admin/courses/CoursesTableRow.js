@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { FaBook, FaUsers } from 'react-icons/fa'
+import { FaBook, FaEdit, FaUsers } from 'react-icons/fa'
 import DeleteCourseBtn from '@/components/admin/DeleteCourseBtn'
 import styles from './admin-courses.module.css'
 
@@ -36,14 +36,14 @@ export default function CoursesTableRow({ course, canEdit = true, canManageConte
       </td>
       <td>
         <div className={styles.actions}>
-          {canManageContent && <Link href={`/admin/courses/${course.id}/lessons`} className={styles.actionButton}>
+          {canManageContent && <Link href={`/admin/courses/${course.id}/lessons`} className={`${styles.actionButton} ${styles.modulesButton}`}>
             Modules
           </Link>}
-          {canEdit && <Link href={`/admin/courses/${course.id}/edit`} className={styles.actionButton}>
-            Edit
+          {canEdit && <Link href={`/admin/courses/${course.id}/edit`} className={`${styles.actionButton} ${styles.iconActionButton} ${styles.editButton}`} aria-label={`Edit ${course.title}`} title="Edit course">
+            <FaEdit aria-hidden="true" />
           </Link>}
           {canEdit && <div className={styles.deleteButtonWrapper}>
-            <DeleteCourseBtn courseId={course.id} courseName={course.title} />
+            <DeleteCourseBtn courseId={course.id} courseName={course.title} iconOnly />
           </div>}
         </div>
       </td>

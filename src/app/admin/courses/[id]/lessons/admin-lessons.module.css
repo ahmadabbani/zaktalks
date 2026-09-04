@@ -67,10 +67,10 @@
 
 .saveOrderButton {
     padding: var(--space-sm) var(--space-lg);
-    background: var(--color-black);
+    background: var(--color-dark-blue);
     color: var(--color-white);
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 999px;
     font-weight: 700;
     font-size: 0.875rem;
     cursor: pointer;
@@ -89,10 +89,10 @@
 
 .addButton {
     padding: var(--space-sm) var(--space-lg);
-    background: var(--color-yellow);
-    color: var(--color-black);
+    background: var(--color-dark-blue);
+    color: var(--color-white);
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 999px;
     font-weight: 700;
     font-size: 0.875rem;
     cursor: pointer;
@@ -113,7 +113,7 @@
     padding: var(--space-2xl);
     border-radius: 1rem;
     margin-bottom: var(--space-xl);
-    border: 2px solid var(--color-yellow);
+    border: 1px solid rgba(37, 140, 155, 0.3);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
@@ -164,8 +164,8 @@
 .formGroup textarea:focus,
 .formGroup select:focus {
     outline: none;
-    border-color: var(--color-yellow);
-    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+    border-color: var(--color-dark-blue);
+    box-shadow: 0 0 0 3px rgba(37, 140, 155, 0.12);
 }
 
 /* Custom Select Dropdown */
@@ -180,7 +180,7 @@
 }
 
 .formGroup select:hover {
-    border-color: var(--color-yellow);
+    border-color: var(--color-dark-blue);
 }
 
 .formGroup select option {
@@ -188,6 +188,158 @@
     color: var(--color-black);
     padding: 12px;
     line-height: 1.5;
+}
+
+.customSelect {
+    position: relative;
+    width: 100%;
+}
+
+.customSelectTrigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    min-height: 3.15rem;
+    padding: var(--space-sm) var(--space-md);
+    border: 2px solid var(--color-gray);
+    border-radius: 0.65rem;
+    background: var(--color-white);
+    color: var(--color-black);
+    font: inherit;
+    font-size: 1rem;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color var(--transition-normal), box-shadow var(--transition-normal), background-color var(--transition-normal);
+}
+
+.customSelectTrigger:hover,
+.customSelectTriggerOpen {
+    border-color: var(--color-dark-blue);
+}
+
+.customSelectTriggerOpen {
+    box-shadow: 0 0 0 3px rgba(37, 140, 155, 0.12);
+}
+
+.customSelectTrigger > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.customSelectTrigger svg {
+    flex: 0 0 auto;
+    color: var(--color-dark-blue);
+    transition: transform var(--transition-normal);
+}
+
+.customSelectTriggerOpen svg {
+    transform: rotate(180deg);
+}
+
+.customSelectMenu {
+    position: absolute;
+    z-index: 40;
+    top: calc(100% + 0.45rem);
+    left: 0;
+    right: 0;
+    display: grid;
+    gap: 0.3rem;
+    max-height: 18rem;
+    padding: 0.45rem;
+    overflow-y: auto;
+    border: 1px solid rgba(33, 44, 45, 0.14);
+    border-radius: 0.8rem;
+    background: var(--color-white);
+    box-shadow: 0 16px 38px rgba(33, 44, 45, 0.16);
+}
+
+.customSelectMenu button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    min-height: 2.8rem;
+    padding: 0.7rem 0.85rem;
+    border: 0;
+    border-radius: 0.6rem;
+    background: transparent;
+    color: var(--color-black);
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 650;
+    text-align: left;
+    cursor: pointer;
+    transition: color var(--transition-normal), background-color var(--transition-normal);
+}
+
+.customSelectMenu button:hover,
+.customSelectOptionSelected {
+    background: rgba(37, 140, 155, 0.1) !important;
+    color: var(--color-dark-blue) !important;
+}
+
+.saveProgress {
+    margin: 0 0 var(--space-xl);
+    padding: 1rem 1.15rem;
+    border: 1px solid rgba(37, 140, 155, 0.22);
+    border-radius: 1rem;
+    background: var(--color-white);
+    box-shadow: 0 10px 24px rgba(33, 44, 45, 0.07);
+}
+
+.formCard > .saveProgress {
+    margin: var(--space-md) 0 0;
+}
+
+.saveProgressCopy {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.saveProgressCopy strong {
+    color: var(--color-dark-blue);
+    font-size: 1rem;
+}
+
+.saveProgressCopy span {
+    color: var(--color-gray-dark);
+    font-size: 0.82rem;
+}
+
+.saveProgressTrack {
+    height: 0.48rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(37, 140, 155, 0.13);
+}
+
+.saveProgressTrack span {
+    display: block;
+    width: 42%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--color-dark-blue), var(--color-yellow));
+    animation: lessonSaveProgress 1.1s ease-in-out infinite;
+}
+
+@keyframes lessonSaveProgress {
+    from { transform: translateX(-115%); }
+    to { transform: translateX(245%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .saveProgressTrack span {
+        width: 100%;
+        animation: none;
+    }
 }
 
 .formGroup textarea {
@@ -257,10 +409,10 @@
 
 .submitButton {
     padding: var(--space-sm) var(--space-xl);
-    background: var(--color-yellow);
-    color: var(--color-black);
+    background: var(--color-dark-blue);
+    color: var(--color-white);
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 999px;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
@@ -279,10 +431,10 @@
 
 .cancelButton {
     padding: var(--space-sm) var(--space-xl);
-    background: transparent;
-    color: var(--color-black);
-    border: 2px solid var(--color-gray);
-    border-radius: 0.5rem;
+    background: var(--color-white);
+    color: var(--color-dark-blue);
+    border: 2px solid var(--color-dark-blue);
+    border-radius: 999px;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
@@ -290,7 +442,7 @@
 }
 
 .cancelButton:hover {
-    background: var(--color-gray-light);
+    background: rgba(37, 140, 155, 0.08);
 }
 
 /* Lesson List */
@@ -315,7 +467,7 @@
 
 .lessonItem:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-color: var(--color-yellow);
+    border-color: var(--color-dark-blue);
 }
 
 .lessonItem.dragging {
@@ -347,9 +499,9 @@
     justify-content: center;
     width: 40px;
     height: 40px;
-    background: rgba(255, 215, 0, 0.1);
-    border-radius: 0.5rem;
-    color: var(--color-yellow);
+    background: rgba(37, 140, 155, 0.1);
+    border-radius: 999px;
+    color: var(--color-dark-blue);
     font-size: 1.25rem;
 }
 
@@ -388,13 +540,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 0.5rem;
+    border-radius: 999px;
     transition: all var(--transition-normal);
     color: var(--color-gray-dark);
 }
 
 .iconButton.edit {
-    color: var(--color-yellow);
+    color: var(--color-dark-blue);
 }
 
 .iconButton.edit:hover {
@@ -487,7 +639,7 @@
     background: transparent;
     color: var(--color-black);
     border: 2px solid var(--color-gray);
-    border-radius: 0.5rem;
+    border-radius: 999px;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
@@ -509,7 +661,7 @@
     background: var(--color-error);
     color: white;
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 999px;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
@@ -593,7 +745,7 @@
     align-items: center;
     gap: var(--space-sm);
     margin-bottom: var(--space-lg);
-    color: var(--color-yellow);
+    color: var(--color-dark-blue);
 }
 
 .formHeadingRow .formTitle {
@@ -635,7 +787,7 @@
     justify-content: space-between;
     gap: var(--space-lg);
     padding: var(--space-lg);
-    background: var(--color-black);
+    background: var(--color-dark-blue);
     color: white;
 }
 
@@ -648,7 +800,7 @@
 
 .moduleNumber {
     flex-shrink: 0;
-    color: var(--color-yellow);
+    color: var(--color-white);
     font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 0.12em;
@@ -693,7 +845,7 @@
 }
 
 .moduleHeader .iconButton.edit {
-    color: var(--color-yellow);
+    color: var(--color-white);
 }
 
 .moduleHeader .iconButton.delete {
@@ -708,13 +860,21 @@
     margin-left: 0.25rem;
     padding: 0.65rem 0.9rem;
     border: 0;
-    border-radius: 0.6rem;
-    background: var(--color-yellow);
-    color: var(--color-black);
+    border-radius: 999px;
+    background: var(--color-white);
+    color: var(--color-dark-blue);
     font: inherit;
     font-size: 0.8rem;
     font-weight: 800;
     cursor: pointer;
+    transition: background-color var(--transition-normal), color var(--transition-normal), transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.moduleAddButton:hover {
+    background: var(--color-yellow);
+    color: var(--color-white);
+    box-shadow: 0 8px 18px rgba(33, 44, 45, 0.15);
+    transform: translateY(-2px);
 }
 
 .moduleEmpty {
@@ -722,7 +882,7 @@
     margin: 1rem;
     padding: 1.2rem;
     border: 1px dashed rgba(33, 44, 45, 0.25);
-    border-radius: 0.75rem;
+    border-radius: 1rem;
     background: var(--color-gray-light);
     color: var(--color-gray-dark);
     font: inherit;
@@ -731,8 +891,8 @@
 }
 
 .moduleEmpty:hover {
-    border-color: var(--color-yellow);
-    color: var(--color-black);
+    border-color: var(--color-dark-blue);
+    color: var(--color-dark-blue);
 }
 
 .moduleCard .lessonList {
@@ -749,6 +909,7 @@
 
 .moduleCard .lessonItem:hover {
     box-shadow: none;
+    border-color: var(--color-dark-blue) var(--color-dark-blue) transparent;
 }
 
 .lessonOrderActions {
@@ -767,8 +928,14 @@
     padding: 0;
     border: 0;
     background: transparent;
+    border-radius: 999px;
     color: inherit;
     cursor: pointer;
+}
+
+.lessonOrderActions button:hover:not(:disabled) {
+    background: rgba(37, 140, 155, 0.1);
+    color: var(--color-dark-blue);
 }
 
 .lessonOrderActions button:disabled,
@@ -784,7 +951,7 @@
 
 .emptyState > svg {
     margin-bottom: var(--space-md);
-    color: var(--color-yellow);
+    color: var(--color-dark-blue);
     font-size: 2.4rem;
 }
 

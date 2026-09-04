@@ -3,9 +3,10 @@
 import { useState } from 'react'
 import { deleteCourse } from '@/app/admin/courses/actions'
 import toast from 'react-hot-toast'
+import { FaTrash } from 'react-icons/fa'
 import styles from './DeleteCourseBtn.module.css'
 
-export default function DeleteCourseBtn({ courseId, courseName }) {
+export default function DeleteCourseBtn({ courseId, courseName, iconOnly = false }) {
   const [showModal, setShowModal] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
 
@@ -27,10 +28,11 @@ export default function DeleteCourseBtn({ courseId, courseName }) {
       <button 
         type="button"
         onClick={() => setShowModal(true)}
-       className={styles.deleteButton}
-       
+        className={styles.deleteButton}
+        aria-label={iconOnly ? `Delete ${courseName || 'course'}` : undefined}
+        title={iconOnly ? 'Delete course' : undefined}
       >
-        Delete Course
+        {iconOnly ? <FaTrash aria-hidden="true" /> : 'Delete Course'}
       </button>
 
       {showModal && (
