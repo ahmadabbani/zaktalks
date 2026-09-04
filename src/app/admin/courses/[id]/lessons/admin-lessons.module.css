@@ -909,7 +909,8 @@
 
 .moduleCard .lessonItem:hover {
     box-shadow: none;
-    border-color: var(--color-dark-blue) var(--color-dark-blue) transparent;
+    border-color: transparent;
+    background: rgba(37, 140, 155, 0.055);
 }
 
 .lessonOrderActions {
