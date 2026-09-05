@@ -1,0 +1,118 @@
+.wrapper {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(33, 44, 45, 0.18);
+  border-radius: 0.72rem;
+  background: var(--color-white);
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.wrapper:focus-within {
+  border-color: var(--color-dark-blue);
+  box-shadow: 0 0 0 3px rgba(37, 140, 155, 0.12);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 2.55rem;
+  padding: 0.35rem 0.48rem 0.35rem 0.75rem;
+  border-bottom: 1px solid rgba(33, 44, 45, 0.1);
+  background: rgba(237, 246, 247, 0.74);
+}
+
+.toolbar > span {
+  color: var(--color-gray-dark);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.toolbar > div {
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+}
+
+.toolbar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  min-height: 1.9rem;
+  padding: 0.28rem 0.5rem;
+  border: 0;
+  border-radius: 0.42rem;
+  background: transparent;
+  color: var(--color-black);
+  font: inherit;
+  font-size: 0.82rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color var(--transition-normal), background-color var(--transition-normal);
+}
+
+.toolbar button:hover,
+.toolbar button.active {
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+}
+
+.editor {
+  min-height: 7.4rem;
+  padding: 0.9rem 1rem;
+  outline: none;
+  color: var(--color-black);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.editor:empty::before {
+  color: rgba(33, 44, 45, 0.48);
+  content: attr(data-placeholder);
+  pointer-events: none;
+}
+
+.editor strong {
+  font-weight: 800;
+}
+
+.editor em {
+  font-style: italic;
+}
+
+.formatHint {
+  display: block;
+  padding: 0 1rem 0.65rem;
+  color: var(--color-gray-dark);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.singleLine .editor {
+  min-height: 2.85rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  line-height: 1.4;
+}
+
+.singleLine .formatHint {
+  display: none;
+}
+
+@media (max-width: 360px) {
+  .toolbar > span {
+    display: none;
+  }
+
+  .toolbar > div {
+    margin-left: auto;
+  }
+}

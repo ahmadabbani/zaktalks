@@ -4,6 +4,7 @@ import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { requirePermission } from '@/lib/auth-utils'
 import { randomUUID } from 'node:crypto'
+import { sanitizeDescriptionRichContent } from '@/lib/rich-text'
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 const LESSON_RESOURCE_BUCKET = 'lesson-resources'
@@ -183,6 +184,13 @@ export async function createModule(courseId, formData) {
     return { error: 'Please enter a valid module title.' }
   }
 
+  let richContent
+  try {
+    richContent = sanitizeDescriptionRichContent(formData.get('rich_content_json'), description || '', 500)
+  } catch (error) {
+    return { error: error.message }
+  }
+
   const { data: lastModule } = await supabase
     .from('course_modules')
     .select('display_order')
@@ -195,6 +203,7 @@ export async function createModule(courseId, formData) {
     course_id: courseId,
     title,
     description,
+    rich_content: richContent,
     display_order: (lastModule?.display_order || 0) + 1
   })
 
@@ -214,9 +223,16 @@ export async function updateModule(courseId, moduleId, formData) {
     return { error: 'Module not found or the title is invalid.' }
   }
 
+  let richContent
+  try {
+    richContent = sanitizeDescriptionRichContent(formData.get('rich_content_json'), description || '', 500)
+  } catch (error) {
+    return { error: error.message }
+  }
+
   const { error } = await supabase
     .from('course_modules')
-    .update({ title, description, updated_at: new Date().toISOString() })
+    .update({ title, description, rich_content: richContent, updated_at: new Date().toISOString() })
     .eq('id', moduleId)
     .eq('course_id', courseId)
 
@@ -357,11 +373,19 @@ export async function createLesson(courseId, formData) {
     return { error: 'Please enter valid lesson details.' }
   }
 
+  let richContent
+  try {
+    richContent = sanitizeDescriptionRichContent(formData.get('rich_content_json'), description || '', 2000)
+  } catch (error) {
+    return { error: error.message }
+  }
+
   const lessonData = {
     course_id: courseId,
     module_id: moduleId,
     title,
     description,
+    rich_content: richContent,
     type,
     display_order: await getNextLessonOrder(supabase, moduleId)
   }
@@ -448,10 +472,18 @@ export async function updateLesson(courseId, lessonId, formData) {
     return { error: 'Please enter valid lesson details.' }
   }
 
+  let richContent
+  try {
+    richContent = sanitizeDescriptionRichContent(formData.get('rich_content_json'), description || '', 2000)
+  } catch (error) {
+    return { error: error.message }
+  }
+
   const lessonData = {
     module_id: moduleId,
     title,
     description,
+    rich_content: richContent,
     type,
     updated_at: new Date().toISOString()
   }

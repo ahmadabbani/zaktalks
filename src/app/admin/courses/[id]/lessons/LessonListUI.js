@@ -12,6 +12,8 @@ import {
   updateModule
 } from '../../lessons.actions'
 import toast from 'react-hot-toast'
+import RichTextEditor from '@/components/admin/RichTextEditor'
+import { createRichText, richTextForPlain } from '@/lib/rich-text'
 import {
   FaChevronDown,
   FaChevronUp,
@@ -139,6 +141,8 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
   const [lessonForm, setLessonForm] = useState(null)
   const [lessonType, setLessonType] = useState('video')
   const [resourceType, setResourceType] = useState('none')
+  const [moduleDescriptionRich, setModuleDescriptionRich] = useState(() => createRichText())
+  const [lessonDescriptionRich, setLessonDescriptionRich] = useState(() => createRichText())
   const [isSaving, setIsSaving] = useState(false)
   const [saveLabel, setSaveLabel] = useState('Saving changes')
   const [saveTarget, setSaveTarget] = useState(null)
@@ -160,11 +164,13 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
 
   const openNewModuleForm = () => {
     setLessonForm(null)
+    setModuleDescriptionRich(createRichText())
     setModuleForm({ mode: 'create', module: null })
   }
 
   const openEditModuleForm = (module) => {
     setLessonForm(null)
+    setModuleDescriptionRich(richTextForPlain(module.rich_content?.description, module.description || '', 500))
     setModuleForm({ mode: 'edit', module })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -173,6 +179,7 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
     setModuleForm(null)
     setLessonType('video')
     setResourceType('none')
+    setLessonDescriptionRich(createRichText())
     setLessonForm({ mode: 'create', moduleId, lesson: null })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -181,6 +188,7 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
     setModuleForm(null)
     setLessonType(lesson.type)
     setResourceType(lesson.additional_resource?.resource_type || 'none')
+    setLessonDescriptionRich(richTextForPlain(lesson.rich_content?.description, lesson.description || '', 2000))
     setLessonForm({ mode: 'edit', moduleId: lesson.module_id, lesson })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -314,6 +322,7 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
 
       {moduleForm && (
         <form key={`${moduleForm.mode}-${moduleForm.module?.id || 'new'}`} onSubmit={handleModuleSubmit} className={styles.formCard}>
+          <input type="hidden" name="rich_content_json" value={JSON.stringify({ version: 1, description: moduleDescriptionRich })} />
           <div className={styles.formHeadingRow}>
             <FaLayerGroup />
             <h3 className={styles.formTitle}>{moduleForm.mode === 'edit' ? 'Edit Module' : 'New Module'}</h3>
@@ -332,12 +341,14 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
             </div>
             <div className={styles.formGroup}>
               <label htmlFor="module-description">Short Description <span>(optional)</span></label>
-              <input
+              <RichTextEditor
                 id="module-description"
-                type="text"
                 name="description"
-                maxLength="500"
-                defaultValue={moduleForm.module?.description || ''}
+                value={moduleDescriptionRich}
+                onChange={setModuleDescriptionRich}
+                ariaLabel="Module short description"
+                singleLine
+                maxLength={500}
                 placeholder="What this module covers"
               />
             </div>
@@ -354,6 +365,7 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
 
       {lessonForm && (
         <form key={`${lessonForm.mode}-${lessonForm.lesson?.id || lessonForm.moduleId}`} onSubmit={handleLessonSubmit} className={styles.formCard}>
+          <input type="hidden" name="rich_content_json" value={JSON.stringify({ version: 1, description: lessonDescriptionRich })} />
           <div className={styles.formHeadingRow}>
             <FaFolderOpen />
             <h3 className={styles.formTitle}>{lessonForm.mode === 'edit' ? 'Edit Lesson' : 'New Lesson'}</h3>
@@ -393,7 +405,15 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
           <div className={styles.formSection}>
             <div className={styles.formGroup}>
               <label htmlFor="lesson-description">Short Description</label>
-              <textarea id="lesson-description" name="description" maxLength="2000" rows="2" defaultValue={lessonForm.lesson?.description || ''} />
+              <RichTextEditor
+                id="lesson-description"
+                name="description"
+                value={lessonDescriptionRich}
+                onChange={setLessonDescriptionRich}
+                ariaLabel="Lesson short description"
+                maxLength={2000}
+                placeholder="Add a short lesson description..."
+              />
             </div>
           </div>
           <div className={styles.formSection}>

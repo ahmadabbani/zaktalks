@@ -15,6 +15,9 @@ import {
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const CHECKOUT_LIFETIME_SECONDS = 30 * 60
+const CHECKOUT_IMAGE_FALLBACKS = {
+  'interpersonal-communication-dynamics': 'https://www.zaktalks.com/course-preview/interpersonal-communication-dynamics.jpg',
+}
 
 class CheckoutError extends Error {
   constructor(message, status = 400) {
@@ -36,6 +39,27 @@ function pointsValue(value) {
   const parsed = Number(value)
   if (!Number.isSafeInteger(parsed) || parsed < 0) throw new CheckoutError('Invalid points amount.')
   return parsed
+}
+
+function formatUsd(cents) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(Number(cents || 0) / 100)
+}
+
+function stripeProductImage(value) {
+  const candidate = cleanText(value, 2048)
+  if (!candidate) return null
+
+  try {
+    const url = new URL(candidate)
+    return url.protocol === 'https:' ? url.toString() : null
+  } catch {
+    return null
+  }
 }
 
 async function closePreviousCheckout({ supabaseAdmin, userId, email, requestOrigin }) {
@@ -90,12 +114,17 @@ async function closePreviousCheckout({ supabaseAdmin, userId, email, requestOrig
 
 function stripeDescription(course, discounts) {
   if (discounts.totalDiscountCents <= 0) return undefined
-  const lines = [`Original Price: $${(course.price_cents / 100).toFixed(2)}`]
-  if (discounts.firstPurchase.eligible) lines.push(`First Purchase (${discounts.firstPurchase.discountPercent}%): -$${(discounts.firstPurchase.discountCents / 100).toFixed(2)}`)
-  if (discounts.points.discountCents > 0) lines.push(`Points (${discounts.points.discountPercent}%): -$${(discounts.points.discountCents / 100).toFixed(2)}`)
-  if (discounts.coupon.valid) lines.push(`Coupon ${discounts.coupon.couponCode}: -$${(discounts.coupon.discountCents / 100).toFixed(2)}`)
-  lines.push(`Final Price: $${(discounts.finalPriceCents / 100).toFixed(2)}`)
-  return lines.join(' | ').slice(0, 500)
+  const details = [`Original ${formatUsd(course.price_cents)}`]
+  if (discounts.firstPurchase.eligible) {
+    details.push(`${discounts.firstPurchase.discountPercent}% first-purchase discount: -${formatUsd(discounts.firstPurchase.discountCents)}`)
+  }
+  if (discounts.points.discountCents > 0) {
+    details.push(`Points discount: -${formatUsd(discounts.points.discountCents)}`)
+  }
+  if (discounts.coupon.valid) {
+    details.push(`Coupon ${discounts.coupon.couponCode}: -${formatUsd(discounts.coupon.discountCents)}`)
+  }
+  return details.join(' • ').slice(0, 500)
 }
 
 export async function POST(req) {
@@ -139,7 +168,7 @@ export async function POST(req) {
 
     const { data: course, error: courseError } = await supabaseAdmin
       .from('courses')
-      .select('id, title, slug, price_cents')
+      .select('id, title, slug, price_cents, logo_url')
       .eq('id', courseId)
       .is('deleted_at', null)
       .single()
@@ -194,11 +223,18 @@ export async function POST(req) {
       pointsUsed: String(discounts.points.pointsToUse),
       couponId: discounts.coupon.couponId || '', couponCode: discounts.coupon.couponCode || '',
     }
+    const productDescription = stripeDescription(course, discounts)
+    const productImage = stripeProductImage(course.logo_url)
+      || stripeProductImage(CHECKOUT_IMAGE_FALLBACKS[course.slug])
     stripeSession = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [{ price_data: {
         currency: 'usd',
-        product_data: { name: course.title, description: stripeDescription(course, discounts) },
+        product_data: {
+          name: cleanText(course.title, 250) || 'Okayness course',
+          ...(productDescription && { description: productDescription }),
+          ...(productImage && { images: [productImage] }),
+        },
         unit_amount: discounts.finalPriceCents,
       }, quantity: 1 }],
       mode: 'payment',

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { FaArrowRight, FaLock, FaTimes } from 'react-icons/fa'
 import DiscountSection from './DiscountSection'
 import styles from './CheckoutModal.module.css'
@@ -74,7 +75,9 @@ export default function CheckoutModal({
     }
   }
 
-  return (
+  if (typeof document === 'undefined') return null
+
+  return createPortal(
     <div className={styles.overlay} onMouseDown={(event) => {
       if (event.target === event.currentTarget && !loading) onClose()
     }}>
@@ -132,6 +135,7 @@ export default function CheckoutModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

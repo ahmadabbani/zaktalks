@@ -5,7 +5,7 @@ import { FaArrowRight } from 'react-icons/fa'
 import styles from './EnrollButton.module.css'
 import CheckoutModal from './CheckoutModal'
 
-export default function EnrollButton({ courseId, courseName, price, isLoggedIn, text = "Enroll Now" }) {
+export default function EnrollButton({ courseId, courseName, price, isLoggedIn, text = "Enroll Now", showPrice = true }) {
   const [loading, setLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
 
@@ -28,7 +28,7 @@ export default function EnrollButton({ courseId, courseName, price, isLoggedIn, 
         className={styles.enrollBtn}
       >
         <span className={styles.btnText}>
-          {loading ? 'Processing...' : `${text}. $${(price / 100).toFixed(2)}`}
+          {loading ? 'Processing...' : showPrice ? `${text}. $${(price / 100).toFixed(2)}` : text}
         </span>
         {!loading && <FaArrowRight aria-hidden="true" />}
       </button>

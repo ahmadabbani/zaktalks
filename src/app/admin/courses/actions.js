@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation'
 import { requirePermission } from '@/lib/auth-utils'
 import { normalizeYouTubeVideoUrl } from '@/lib/youtube-url'
 import { PUBLIC_PAGE_PATHS } from '@/lib/course-content'
+import { sanitizeCourseRichContent } from '@/lib/course-rich-content'
 import { randomUUID } from 'node:crypto'
 
 const LESSON_RESOURCE_BUCKET = 'lesson-resources'
@@ -243,7 +244,7 @@ async function buildCourseContent(formData, supabase, currentCourseId = null) {
   const price = Number.parseFloat(String(formData.get('price') || '0'))
   if (!Number.isFinite(price) || price < 0) throw new Error('Enter a valid non-negative course price.')
 
-  return {
+  const courseContent = {
     promise: cleanText(formData.get('promise'), 8000),
     short_introduction: cleanText(formData.get('short_introduction'), 4000),
     primary_cta_text: cleanText(formData.get('primary_cta_text'), 120),
@@ -269,6 +270,13 @@ async function buildCourseContent(formData, supabase, currentCourseId = null) {
     skills_youll_gain: cleanList(formData.getAll('skills_youll_gain')),
     price_cents: Math.round(price * 100),
   }
+
+  courseContent.rich_content = sanitizeCourseRichContent(formData.get('course_rich_content_json'), {
+    ...courseContent,
+    meet_the_tutor: cleanText(formData.get('meet_the_tutor'), 8000),
+  })
+
+  return courseContent
 }
 
 export async function createCourse(formData) {

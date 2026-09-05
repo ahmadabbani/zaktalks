@@ -3,8 +3,11 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { FaCheck, FaChevronDown, FaCloudUploadAlt, FaDatabase, FaExclamationCircle } from 'react-icons/fa'
 import { PUBLIC_PAGE_OPTIONS, legacyDetailsToBlocks, normalizeContentBlocks, normalizeExploreMore } from '@/lib/course-content'
+import { enrichContentBlocks, enrichExploreMore, enrichRichList, sanitizeCourseRichContent } from '@/lib/course-rich-content'
+import { createRichText, richTextToPlainText } from '@/lib/rich-text'
 import { createClient } from '@/lib/supabase/client'
 import { cleanupCourseAssetUploads, prepareCourseAssetUploads } from '@/app/admin/courses/actions'
+import RichTextEditor from './RichTextEditor'
 import styles from './CourseForm.module.css'
 
 const ONE_MEGABYTE = 1024 * 1024
@@ -155,7 +158,14 @@ function toList(value) {
 }
 
 function emptyContentBlock() {
-  return { title: '', content_type: 'text', text: '', items: [] }
+  return {
+    title: '',
+    content_type: 'text',
+    text: '',
+    items: [],
+    rich_text: createRichText(),
+    rich_items: [],
+  }
 }
 
 function isYouTubeUrl(value) {
@@ -185,36 +195,53 @@ function assetLabel(kind) {
 
 function StructuredContentEditor({ title, description, items, setItems, titleLabel = 'Title', error, errorKey }) {
   const insertBlockAfter = (index) => {
-    const nextItems = [...items]
-    nextItems.splice(index + 1, 0, emptyContentBlock())
-    setItems(nextItems)
+    setItems((current) => {
+      const nextItems = [...current]
+      nextItems.splice(index + 1, 0, emptyContentBlock())
+      return nextItems
+    })
   }
 
   const updateBlock = (index, field, value) => {
-    setItems(items.map((item, itemIndex) => itemIndex === index
+    setItems((current) => current.map((item, itemIndex) => itemIndex === index
       ? {
           ...item,
           [field]: value,
           items: field === 'content_type' && value === 'list' && item.items.length === 0 ? [''] : item.items,
+          rich_items: field === 'content_type' && value === 'list' && item.items.length === 0 ? [createRichText()] : item.rich_items,
         }
       : item))
   }
 
+  const updateBlockRichText = (index, value) => {
+    setItems((current) => current.map((item, itemIndex) => itemIndex === index
+      ? { ...item, text: richTextToPlainText(value, 8000), rich_text: value }
+      : item))
+  }
+
   const updateListItem = (blockIndex, itemIndex, value) => {
-    setItems(items.map((block, currentBlockIndex) => currentBlockIndex === blockIndex
-      ? { ...block, items: block.items.map((item, currentItemIndex) => currentItemIndex === itemIndex ? value : item) }
+    setItems((current) => current.map((block, currentBlockIndex) => currentBlockIndex === blockIndex
+      ? {
+          ...block,
+          items: block.items.map((item, currentItemIndex) => currentItemIndex === itemIndex ? richTextToPlainText(value, 1200) : item),
+          rich_items: (block.rich_items || []).map((item, currentItemIndex) => currentItemIndex === itemIndex ? value : item),
+        }
       : block))
   }
 
   const addListItem = (blockIndex) => {
-    setItems(items.map((block, currentBlockIndex) => currentBlockIndex === blockIndex
-      ? { ...block, items: [...block.items, ''] }
+    setItems((current) => current.map((block, currentBlockIndex) => currentBlockIndex === blockIndex
+      ? { ...block, items: [...block.items, ''], rich_items: [...(block.rich_items || []), createRichText()] }
       : block))
   }
 
   const removeListItem = (blockIndex, itemIndex) => {
-    setItems(items.map((block, currentBlockIndex) => currentBlockIndex === blockIndex
-      ? { ...block, items: block.items.length <= 1 ? [''] : block.items.filter((_, currentItemIndex) => currentItemIndex !== itemIndex) }
+    setItems((current) => current.map((block, currentBlockIndex) => currentBlockIndex === blockIndex
+      ? {
+          ...block,
+          items: block.items.length <= 1 ? [''] : block.items.filter((_, currentItemIndex) => currentItemIndex !== itemIndex),
+          rich_items: block.items.length <= 1 ? [createRichText()] : (block.rich_items || []).filter((_, currentItemIndex) => currentItemIndex !== itemIndex),
+        }
       : block))
   }
 
@@ -234,7 +261,7 @@ function StructuredContentEditor({ title, description, items, setItems, titleLab
           <article className={styles.builderItem} key={index}>
             <div className={styles.builderItemTopline}>
               <strong>Item {index + 1}</strong>
-              <button type="button" onClick={() => setItems(items.filter((_, itemIndex) => itemIndex !== index))} className={styles.removeItemButton}>Remove</button>
+              <button type="button" onClick={() => setItems((current) => current.filter((_, itemIndex) => itemIndex !== index))} className={styles.removeItemButton}>Remove</button>
             </div>
             <div className={styles.gridTwo}>
               <div className={styles.formGroup}>
@@ -263,7 +290,14 @@ function StructuredContentEditor({ title, description, items, setItems, titleLab
                 </div>
                 {item.items.map((listItem, itemIndex) => (
                   <div className={styles.listItem} key={itemIndex}>
-                    <input type="text" value={listItem} onChange={(event) => updateListItem(index, itemIndex, event.target.value)} placeholder="Add information" required />
+                    <RichTextEditor
+                      value={item.rich_items[itemIndex] || createRichText(listItem, 1200)}
+                      onChange={(value) => updateListItem(index, itemIndex, value)}
+                      placeholder="Add information"
+                      ariaLabel={`${title} item ${index + 1}, list entry ${itemIndex + 1}`}
+                      maxLength={1200}
+                      singleLine
+                    />
                     <button type="button" onClick={() => removeListItem(index, itemIndex)} className={styles.deleteSlotButton} aria-label="Remove list item">&times;</button>
                   </div>
                 ))}
@@ -272,7 +306,13 @@ function StructuredContentEditor({ title, description, items, setItems, titleLab
             ) : (
               <div className={styles.formGroup}>
                 <label>Information</label>
-                <textarea rows="4" value={item.text} onChange={(event) => updateBlock(index, 'text', event.target.value)} placeholder="Add the supporting information..." required />
+                <RichTextEditor
+                  value={item.rich_text || createRichText(item.text, 8000)}
+                  onChange={(value) => updateBlockRichText(index, value)}
+                  placeholder="Add the supporting information..."
+                  ariaLabel={`${title} item ${index + 1} information`}
+                  maxLength={8000}
+                />
               </div>
             )}
             {index === items.length - 1 && (
@@ -290,7 +330,7 @@ function StructuredContentEditor({ title, description, items, setItems, titleLab
 
 function ExploreMoreEditor({ items, setItems, availableCourses, error }) {
   const updateItem = (index, field, value) => {
-    setItems(items.map((item, itemIndex) => {
+    setItems((current) => current.map((item, itemIndex) => {
       if (itemIndex !== index) return item
       if (field === 'target_type') {
         return {
@@ -304,6 +344,12 @@ function ExploreMoreEditor({ items, setItems, availableCourses, error }) {
     }))
   }
 
+  const updateDescription = (index, value) => {
+    setItems((current) => current.map((item, itemIndex) => itemIndex === index
+      ? { ...item, description: richTextToPlainText(value, 3000), description_rich: value }
+      : item))
+  }
+
   const newItem = () => {
     const useCourse = availableCourses.length > 0
     return {
@@ -311,18 +357,21 @@ function ExploreMoreEditor({ items, setItems, availableCourses, error }) {
       course_id: useCourse ? availableCourses[0].id : '',
       page_path: useCourse ? '' : PUBLIC_PAGE_OPTIONS[0].path,
       description: '',
+      description_rich: createRichText(),
       cta_text: '',
     }
   }
 
   const addItem = () => {
-    setItems([...items, newItem()])
+    setItems((current) => [...current, newItem()])
   }
 
   const insertItemAfter = (index) => {
-    const nextItems = [...items]
-    nextItems.splice(index + 1, 0, newItem())
-    setItems(nextItems)
+    setItems((current) => {
+      const nextItems = [...current]
+      nextItems.splice(index + 1, 0, newItem())
+      return nextItems
+    })
   }
 
   return (
@@ -340,7 +389,7 @@ function ExploreMoreEditor({ items, setItems, availableCourses, error }) {
           <article className={styles.builderItem} key={index}>
             <div className={styles.builderItemTopline}>
               <strong>Recommendation {index + 1}</strong>
-              <button type="button" onClick={() => setItems(items.filter((_, itemIndex) => itemIndex !== index))} className={styles.removeItemButton}>Remove</button>
+              <button type="button" onClick={() => setItems((current) => current.filter((_, itemIndex) => itemIndex !== index))} className={styles.removeItemButton}>Remove</button>
             </div>
             <div className={styles.gridTwo}>
               <div className={styles.formGroup}>
@@ -379,7 +428,13 @@ function ExploreMoreEditor({ items, setItems, availableCourses, error }) {
             <div className={styles.gridTwo}>
               <div className={styles.formGroup}>
                 <label>Description</label>
-                <textarea rows="3" value={item.description} onChange={(event) => updateItem(index, 'description', event.target.value)} placeholder="Explain why learners may want to explore this next..." required />
+                <RichTextEditor
+                  value={item.description_rich || createRichText(item.description, 3000)}
+                  onChange={(value) => updateDescription(index, value)}
+                  placeholder="Explain why learners may want to explore this next..."
+                  ariaLabel={`Description for recommendation ${index + 1}`}
+                  maxLength={3000}
+                />
               </div>
               <div className={styles.formGroup}>
                 <label>CTA text</label>
@@ -401,13 +456,38 @@ function ExploreMoreEditor({ items, setItems, availableCourses, error }) {
 
 export default function CourseForm({ initialData = {}, action, buttonText = "Save Course", availableCourses = [] }) {
   const formRef = useRef(null)
-  const [learningOutcomes, setLearningOutcomes] = useState(initialData.what_youll_learn || [])
+  const initialDetailsItems = legacyDetailsToBlocks(initialData.details_to_know_items, initialData.details_to_know)
+  const initialExploreItems = normalizeContentBlocks(initialData.what_youll_explore)
+  const initialExploreMore = normalizeExploreMore(initialData.explore_more)
+  const [initialRichContent] = useState(() => sanitizeCourseRichContent(initialData.rich_content, {
+    promise: initialData.promise ?? initialData.description ?? '',
+    short_introduction: initialData.short_introduction ?? initialData.subheadline ?? '',
+    description: initialData.description || '',
+    what_youll_learn: initialData.what_youll_learn || [],
+    details_to_know_items: initialDetailsItems,
+    target_audience: toList(initialData.target_audience),
+    who_this_is_not_for: toList(initialData.who_this_is_not_for),
+    audience_supporting_text: initialData.audience_supporting_text || '',
+    subheadline: initialData.subheadline || '',
+    what_youll_explore: initialExploreItems,
+    meet_the_tutor: initialData.meet_the_tutor || '',
+    explore_more: initialExploreMore,
+  }))
+  const [richFields, setRichFields] = useState(() => ({
+    promise: initialRichContent.promise,
+    short_introduction: initialRichContent.short_introduction,
+    description: initialRichContent.description,
+    audience_supporting_text: initialRichContent.audience_supporting_text,
+    subheadline: initialRichContent.subheadline,
+    meet_the_tutor: initialRichContent.meet_the_tutor,
+  }))
+  const [learningOutcomes, setLearningOutcomes] = useState(() => enrichRichList(initialData.what_youll_learn || [], initialRichContent.what_youll_learn, 1000))
   const [skills, setSkills] = useState(initialData.skills_youll_gain || [])
-  const [targetAudience, setTargetAudience] = useState(toList(initialData.target_audience))
-  const [notForAudience, setNotForAudience] = useState(toList(initialData.who_this_is_not_for))
-  const [detailsItems, setDetailsItems] = useState(legacyDetailsToBlocks(initialData.details_to_know_items, initialData.details_to_know))
-  const [exploreItems, setExploreItems] = useState(normalizeContentBlocks(initialData.what_youll_explore))
-  const [exploreMore, setExploreMore] = useState(normalizeExploreMore(initialData.explore_more))
+  const [targetAudience, setTargetAudience] = useState(() => enrichRichList(toList(initialData.target_audience), initialRichContent.target_audience, 1000))
+  const [notForAudience, setNotForAudience] = useState(() => enrichRichList(toList(initialData.who_this_is_not_for), initialRichContent.who_this_is_not_for, 1000))
+  const [detailsItems, setDetailsItems] = useState(() => enrichContentBlocks(initialDetailsItems, initialRichContent.details_to_know_items))
+  const [exploreItems, setExploreItems] = useState(() => enrichContentBlocks(initialExploreItems, initialRichContent.what_youll_explore))
+  const [exploreMore, setExploreMore] = useState(() => enrichExploreMore(initialExploreMore, initialRichContent.explore_more))
   const [faqs, setFaqs] = useState(initialData.faqs || [])
   const [existingImages, setExistingImages] = useState(initialData.images || [])
   const [deletedImageUrls, setDeletedImageUrls] = useState([])
@@ -435,6 +515,24 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
     const newList = [...list]
     newList[index] = value
     setter(newList)
+  }
+
+  const addRichItem = (setter) => {
+    setter((current) => [...current, { text: '', rich: createRichText() }])
+  }
+
+  const removeRichItem = (setter, index) => {
+    setter((current) => current.filter((_, itemIndex) => itemIndex !== index))
+  }
+
+  const updateRichItem = (setter, index, value, maxLength = 1000) => {
+    setter((current) => current.map((item, itemIndex) => itemIndex === index
+      ? { text: richTextToPlainText(value, maxLength), rich: value }
+      : item))
+  }
+
+  const updateRichField = (field, value) => {
+    setRichFields((current) => ({ ...current, [field]: value }))
   }
 
   const addFaq = () => {
@@ -669,11 +767,31 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
     ? [{ value: courseLevel, label: `${courseLevel} (current)` }, ...COURSE_LEVEL_OPTIONS]
     : COURSE_LEVEL_OPTIONS
 
+  const plainDetailsItems = detailsItems.map(({ title, content_type, text, items }) => ({ title, content_type, text, items }))
+  const plainExploreItems = exploreItems.map(({ title, content_type, text, items }) => ({ title, content_type, text, items }))
+  const plainExploreMore = exploreMore.map(({ target_type, course_id, page_path, description, cta_text }) => ({ target_type, course_id, page_path, description, cta_text }))
+  const courseRichContent = {
+    version: 1,
+    ...richFields,
+    what_youll_learn: learningOutcomes.map((item) => item.rich),
+    details_to_know_items: detailsItems.map((item) => ({ title: item.title, text: item.rich_text, items: item.rich_items })),
+    target_audience: targetAudience.map((item) => item.rich),
+    who_this_is_not_for: notForAudience.map((item) => item.rich),
+    what_youll_explore: exploreItems.map((item) => ({ title: item.title, text: item.rich_text, items: item.rich_items })),
+    explore_more: exploreMore.map((item) => ({
+      target_type: item.target_type,
+      course_id: item.course_id,
+      page_path: item.page_path,
+      description: item.description_rich,
+    })),
+  }
+
   return (
     <form ref={formRef} onSubmit={handleSubmit} className={styles.form} noValidate aria-busy={isSaving}>
-      <input type="hidden" name="details_to_know_items_json" value={JSON.stringify(detailsItems)} />
-      <input type="hidden" name="what_youll_explore_json" value={JSON.stringify(exploreItems)} />
-      <input type="hidden" name="explore_more_json" value={JSON.stringify(exploreMore)} />
+      <input type="hidden" name="details_to_know_items_json" value={JSON.stringify(plainDetailsItems)} />
+      <input type="hidden" name="what_youll_explore_json" value={JSON.stringify(plainExploreItems)} />
+      <input type="hidden" name="explore_more_json" value={JSON.stringify(plainExploreMore)} />
+      <input type="hidden" name="course_rich_content_json" value={JSON.stringify(courseRichContent)} />
 
       <div className={styles.note}>
         Note: Lessons (videos / assessments) are managed separately after creating the course.
@@ -701,11 +819,25 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         </div>
         <div className={styles.formGroup}>
           <label>Promise</label>
-          <textarea name="promise" rows="4" defaultValue={initialData.promise ?? initialData.description ?? ''} placeholder="State the main promise of this course..."></textarea>
+          <RichTextEditor
+            name="promise"
+            value={richFields.promise}
+            onChange={(value) => updateRichField('promise', value)}
+            placeholder="State the main promise of this course..."
+            ariaLabel="Course promise"
+            maxLength={8000}
+          />
         </div>
         <div className={styles.formGroup}>
           <label>Short introduction</label>
-          <textarea name="short_introduction" rows="3" defaultValue={initialData.short_introduction ?? initialData.subheadline ?? ''} placeholder="Add a concise introduction shown in the hero..."></textarea>
+          <RichTextEditor
+            name="short_introduction"
+            value={richFields.short_introduction}
+            onChange={(value) => updateRichField('short_introduction', value)}
+            placeholder="Add a concise introduction shown in the hero..."
+            ariaLabel="Course hero short introduction"
+            maxLength={4000}
+          />
         </div>
         <div className={styles.gridTwo}>
           <div className={styles.formGroup}>
@@ -768,7 +900,14 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
         </div>
         <div className={styles.formGroup}>
           <label>Description</label>
-          <textarea name="description" rows="5" defaultValue={initialData.description || ''} placeholder="Add the full course description..."></textarea>
+          <RichTextEditor
+            name="description"
+            value={richFields.description}
+            onChange={(value) => updateRichField('description', value)}
+            placeholder="Add the full course description..."
+            ariaLabel="Course description"
+            maxLength={12000}
+          />
         </div>
       </section>
 
@@ -825,19 +964,21 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
       <div className={`${styles.listSection} ${styles.contentListSection}`}>
         <div className={styles.listHeader}>
           <label>What you&apos;ll learn</label>
-          <button type="button" onClick={() => addItem(setLearningOutcomes, learningOutcomes)} className={styles.addButton}>+ Add Item</button>
+          <button type="button" onClick={() => addRichItem(setLearningOutcomes)} className={styles.addButton}>+ Add Item</button>
         </div>
         <div className={styles.listItems}>
           {learningOutcomes.map((item, index) => (
             <div key={index} className={styles.listItem}>
-              <input 
-                type="text" 
+              <RichTextEditor
                 name="what_youll_learn"
-                value={item} 
-                onChange={(e) => updateItem(setLearningOutcomes, learningOutcomes, index, e.target.value)}
+                value={item.rich}
+                onChange={(value) => updateRichItem(setLearningOutcomes, index, value)}
                 placeholder="e.g. Recognize the patterns shaping your choices"
+                ariaLabel={`Learning outcome ${index + 1}`}
+                maxLength={1000}
+                singleLine
               />
-              <button type="button" onClick={() => removeItem(setLearningOutcomes, learningOutcomes, index)} className={styles.deleteSlotButton}>&times;</button>
+              <button type="button" onClick={() => removeRichItem(setLearningOutcomes, index)} className={styles.deleteSlotButton}>&times;</button>
             </div>
           ))}
           {learningOutcomes.length === 0 && <p className={styles.emptyState}>No learning outcomes added yet.</p>}
@@ -890,19 +1031,21 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
           </div>
           <div className={styles.listHeader}>
             <label>Who This Is For (List)</label>
-            <button type="button" onClick={() => addItem(setTargetAudience, targetAudience)} className={styles.addButton}>+ Add Item</button>
+            <button type="button" onClick={() => addRichItem(setTargetAudience)} className={styles.addButton}>+ Add Item</button>
           </div>
           <div className={styles.listItems}>
             {targetAudience.map((item, index) => (
               <div key={index} className={styles.listItem}>
-                <input
-                  type="text"
+                <RichTextEditor
                   name="target_audience"
-                  value={item}
-                  onChange={(e) => updateItem(setTargetAudience, targetAudience, index, e.target.value)}
+                  value={item.rich}
+                  onChange={(value) => updateRichItem(setTargetAudience, index, value)}
                   placeholder="e.g. Professionals ready to improve..."
+                  ariaLabel={`Who this is for item ${index + 1}`}
+                  maxLength={1000}
+                  singleLine
                 />
-                <button type="button" onClick={() => removeItem(setTargetAudience, targetAudience, index)} className={styles.deleteSlotButton}>&times;</button>
+                <button type="button" onClick={() => removeRichItem(setTargetAudience, index)} className={styles.deleteSlotButton}>&times;</button>
               </div>
             ))}
             {targetAudience.length === 0 && <p className={styles.emptyState}>No audience items added yet.</p>}
@@ -916,19 +1059,21 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
           </div>
           <div className={styles.listHeader}>
             <label className={styles.notForLabel}>Who This Is Not For (List)</label>
-            <button type="button" onClick={() => addItem(setNotForAudience, notForAudience)} className={styles.addButton}>+ Add Item</button>
+            <button type="button" onClick={() => addRichItem(setNotForAudience)} className={styles.addButton}>+ Add Item</button>
           </div>
           <div className={styles.listItems}>
             {notForAudience.map((item, index) => (
               <div key={index} className={styles.listItem}>
-                <input
-                  type="text"
+                <RichTextEditor
                   name="who_this_is_not_for"
-                  value={item}
-                  onChange={(e) => updateItem(setNotForAudience, notForAudience, index, e.target.value)}
+                  value={item.rich}
+                  onChange={(value) => updateRichItem(setNotForAudience, index, value)}
                   placeholder="e.g. Anyone looking for a quick fix..."
+                  ariaLabel={`Who this is not for item ${index + 1}`}
+                  maxLength={1000}
+                  singleLine
                 />
-                <button type="button" onClick={() => removeItem(setNotForAudience, notForAudience, index)} className={styles.deleteSlotButton}>&times;</button>
+                <button type="button" onClick={() => removeRichItem(setNotForAudience, index)} className={styles.deleteSlotButton}>&times;</button>
               </div>
             ))}
             {notForAudience.length === 0 && <p className={styles.emptyState}>No not-for items added yet.</p>}
@@ -938,7 +1083,14 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
 
       <div className={`${styles.formGroup} ${styles.audienceSupportField}`}>
         <label>Audience supporting text</label>
-        <textarea name="audience_supporting_text" rows="3" defaultValue={initialData.audience_supporting_text || ''} placeholder="Add one supporting paragraph beneath both audience lists..." />
+        <RichTextEditor
+          name="audience_supporting_text"
+          value={richFields.audience_supporting_text}
+          onChange={(value) => updateRichField('audience_supporting_text', value)}
+          placeholder="Add one supporting paragraph beneath both audience lists..."
+          ariaLabel="Audience supporting text"
+          maxLength={5000}
+        />
       </div>
 
       <section className={styles.formSection}>
@@ -958,7 +1110,14 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
           </div>
           <div className={styles.formGroup}>
             <label>Supporting text</label>
-            <textarea name="subheadline" rows="3" defaultValue={initialData.subheadline || ''} placeholder="Add the normal supporting text..."></textarea>
+            <RichTextEditor
+              name="subheadline"
+              value={richFields.subheadline}
+              onChange={(value) => updateRichField('subheadline', value)}
+              placeholder="Add the supporting text..."
+              ariaLabel="Course subheadline supporting text"
+              maxLength={4000}
+            />
           </div>
         </fieldset>
       </section>
@@ -987,7 +1146,14 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
 
       <div className={styles.formGroup}>
         <label>Meet the Tutor (Description)</label>
-        <textarea name="meet_the_tutor" rows="4" defaultValue={initialData.meet_the_tutor} placeholder="Introduce the instructor..."></textarea>
+        <RichTextEditor
+          name="meet_the_tutor"
+          value={richFields.meet_the_tutor}
+          onChange={(value) => updateRichField('meet_the_tutor', value)}
+          placeholder="Introduce the instructor..."
+          ariaLabel="Meet the tutor description"
+          maxLength={8000}
+        />
       </div>
 
       {/* Course FAQs Array */}

@@ -27,7 +27,9 @@ import {
   FaVideo
 } from 'react-icons/fa'
 import EnrollButton from '@/components/EnrollButton'
+import RichText from '@/components/RichText'
 import { legacyDetailsToBlocks, normalizeContentBlocks } from '@/lib/course-content'
+import { sanitizeCourseRichContent } from '@/lib/course-rich-content'
 import styles from './CourseDetails.module.css'
 
 const COURSE_TAGS = ['PERSONAL DEVELOPMENT', 'SELF-PACED']
@@ -223,23 +225,26 @@ function CourseGallery({ images, courseTitle }) {
   )
 }
 
-function StructuredContentBlocks({ items }) {
+function StructuredContentBlocks({ items, richItems = [] }) {
   return (
     <div className={styles.structuredContentGrid}>
-      {items.map((item, index) => (
-        <article className={styles.structuredContentCard} key={`${item.title}-${index}`}>
-          {item.title && <h3>{item.title}</h3>}
-          {item.content_type === 'list'
-            ? (
-              <ul>
-                {item.items.map((entry, itemIndex) => (
-                  <li key={`${entry}-${itemIndex}`}><FaCheck /><span>{entry}</span></li>
-                ))}
-              </ul>
-            )
-            : item.text && <p>{item.text}</p>}
-        </article>
-      ))}
+      {items.map((item, index) => {
+        const richItem = richItems[index] || {}
+        return (
+          <article className={styles.structuredContentCard} key={`${item.title}-${index}`}>
+            {item.title && <h3>{item.title}</h3>}
+            {item.content_type === 'list'
+              ? (
+                <ul>
+                  {item.items.map((entry, itemIndex) => (
+                    <li key={`${entry}-${itemIndex}`}><FaCheck /><span><RichText value={richItem.items?.[itemIndex]} fallback={entry} maxLength={1200} /></span></li>
+                  ))}
+                </ul>
+              )
+              : item.text && <p><RichText value={richItem.text} fallback={item.text} maxLength={8000} /></p>}
+          </article>
+        )
+      })}
     </div>
   )
 }
@@ -256,9 +261,8 @@ function CourseFaqs({ faqs }) {
         return (
           <article className={`${styles.faqItem} ${isOpen ? styles.faqOpen : ''}`} key={id}>
             <button type="button" onClick={() => setOpenId(isOpen ? null : id)} aria-expanded={isOpen}>
-              <span>{String(index + 1).padStart(2, '0')}</span>
               <strong>{faq.question}</strong>
-              <i><FaChevronDown /></i>
+              <i aria-hidden="true"><span className={styles.faqToggleLineV} /><span className={styles.faqToggleLineH} /></i>
             </button>
             <div className={styles.faqAnswer}><div><p>{faq.answer}</p></div></div>
           </article>
@@ -277,6 +281,20 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
   const notForAudience = useMemo(() => toList(course.who_this_is_not_for), [course.who_this_is_not_for])
   const detailItems = useMemo(() => legacyDetailsToBlocks(course.details_to_know_items, course.details_to_know), [course.details_to_know_items, course.details_to_know])
   const exploreItems = useMemo(() => normalizeContentBlocks(course.what_youll_explore), [course.what_youll_explore])
+  const richContent = useMemo(() => sanitizeCourseRichContent(course.rich_content, {
+    promise: course.promise || '',
+    short_introduction: course.short_introduction || '',
+    description: course.description || '',
+    what_youll_learn: learningOutcomes,
+    details_to_know_items: detailItems,
+    target_audience: targetAudience,
+    who_this_is_not_for: notForAudience,
+    audience_supporting_text: course.audience_supporting_text || '',
+    subheadline: course.subheadline || '',
+    what_youll_explore: exploreItems,
+    meet_the_tutor: course.meet_the_tutor || '',
+    explore_more: exploreMoreItems,
+  }), [course, detailItems, exploreItems, exploreMoreItems, learningOutcomes, notForAudience, targetAudience])
   const lessonCount = curriculumModules.reduce((total, module) => total + module.lessons.length, 0)
   const assessmentCount = curriculumModules.reduce((total, module) => total + module.lessons.filter((lesson) => lesson.type === 'assessment').length, 0)
   const moduleCount = curriculumModules.length
@@ -299,7 +317,7 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
     { label: 'Support', value: course.course_support, Icon: FaHeadset },
   ].filter((item) => String(item.value || '').trim())
 
-  const purchaseAction = isEnrolled ? (
+  const renderPurchaseAction = (showPrice = true) => isEnrolled ? (
     <Link href="/dashboard" className={styles.continueButton}>Continue learning <FaArrowRight /></Link>
   ) : (
     <EnrollButton
@@ -308,6 +326,7 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
       price={course.price_cents}
       isLoggedIn={isLoggedIn}
       text={course.primary_cta_text || 'Enroll Now'}
+      showPrice={showPrice}
     />
   )
 
@@ -319,11 +338,11 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
             <div className={styles.heroCopy}>
               <div className={styles.tagRow}>{COURSE_TAGS.map((tag) => <span key={tag}>{tag}</span>)}</div>
               <h1>{course.title}</h1>
-              {course.promise && <p className={styles.heroDescription}>{course.promise}</p>}
-              {course.short_introduction && <p className={styles.heroSubheadline}>{course.short_introduction}</p>}
+              {course.promise && <p className={styles.heroDescription}><RichText value={richContent.promise} fallback={course.promise} maxLength={8000} /></p>}
+              {course.short_introduction && <p className={styles.heroSubheadline}><RichText value={richContent.short_introduction} fallback={course.short_introduction} maxLength={4000} /></p>}
               <div className={styles.instructorLine}><span><FaUserTie /></span><p><small>Instructor</small><strong>{course.tutor_name || 'Zak Dakkash'}</strong></p></div>
               <div className={styles.heroActions} id="course-action">
-                <div className={styles.heroEnroll}>{purchaseAction}</div>
+                <div className={styles.heroEnroll}>{renderPurchaseAction()}</div>
                 <a href="#curriculum" className={styles.curriculumButton}>View curriculum <FaArrowRight /></a>
               </div>
             </div>
@@ -359,7 +378,7 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
               <section {...revealProps('description')}>
                 <div className={styles.sectionLabel}><FaBookOpen /> About the course</div>
                 <h2 className={styles.sectionTitle}>{descriptionSectionTitle}</h2>
-                {descriptionCopy && <p className={styles.courseDescription}>{descriptionCopy}</p>}
+                {descriptionCopy && <p className={styles.courseDescription}><RichText value={richContent.description} fallback={descriptionCopy} maxLength={12000} /></p>}
                 {hasIntroductionVideo && (
                   <div className={styles.descriptionMediaBlock}>
                     {descriptionCopy && <h3>Course introduction</h3>}
@@ -380,7 +399,7 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
                 <div className={styles.sectionLabel}><FaCheck /> Course outcomes</div>
                 <h2 className={styles.sectionTitle}>What you&apos;ll learn</h2>
                 <div className={styles.learningGrid}>
-                  {learningOutcomes.map((outcome, index) => <article key={`${outcome}-${index}`}><span>{String(index + 1).padStart(2, '0')}</span><p>{outcome}</p></article>)}
+                  {learningOutcomes.map((outcome, index) => <article key={`${outcome}-${index}`}><span>{String(index + 1).padStart(2, '0')}</span><p><RichText value={richContent.what_youll_learn[index]} fallback={outcome} maxLength={1000} /></p></article>)}
                 </div>
               </section>
             )}
@@ -397,7 +416,7 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
               <section {...revealProps('details')}>
                 <div className={styles.sectionLabel}><FaRegClock /> Before you begin</div>
                 <h2 className={styles.sectionTitle}>Details to know</h2>
-                <StructuredContentBlocks items={detailItems} />
+                <StructuredContentBlocks items={detailItems} richItems={richContent.details_to_know_items} />
                 {course.details_cta_text && <a href="#course-action" className={styles.detailsCta}>{course.details_cta_text}<FaArrowRight /></a>}
               </section>
             )}
@@ -405,10 +424,10 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
             {(targetAudience.length > 0 || notForAudience.length > 0) && (
               <section {...revealProps('audience')}>
                 <div className={styles.audienceGrid}>
-                  {targetAudience.length > 0 && <article className={styles.audienceCard}><span className={styles.audienceIcon}><FaBullseye /></span><h2>{course.target_audience_title || 'Who this is for'}</h2><ul>{targetAudience.map((item, index) => <li key={`${item}-${index}`}><FaCheck /> <span>{item}</span></li>)}</ul></article>}
-                  {notForAudience.length > 0 && <article className={`${styles.audienceCard} ${styles.notForCard}`}><span className={styles.audienceIcon}><FaTimes /></span><h2>{course.who_this_is_not_for_title || 'Who this is not for'}</h2><ul>{notForAudience.map((item, index) => <li key={`${item}-${index}`}><FaTimes /> <span>{item}</span></li>)}</ul></article>}
+                  {targetAudience.length > 0 && <article className={styles.audienceCard}><span className={styles.audienceIcon}><FaBullseye /></span><h2>{course.target_audience_title || 'Who this is for'}</h2><ul>{targetAudience.map((item, index) => <li key={`${item}-${index}`}><FaCheck /> <span><RichText value={richContent.target_audience[index]} fallback={item} maxLength={1000} /></span></li>)}</ul></article>}
+                  {notForAudience.length > 0 && <article className={`${styles.audienceCard} ${styles.notForCard}`}><span className={styles.audienceIcon}><FaTimes /></span><h2>{course.who_this_is_not_for_title || 'Who this is not for'}</h2><ul>{notForAudience.map((item, index) => <li key={`${item}-${index}`}><FaTimes /> <span><RichText value={richContent.who_this_is_not_for[index]} fallback={item} maxLength={1000} /></span></li>)}</ul></article>}
                 </div>
-                {course.audience_supporting_text && <p className={styles.audienceSupportingText}>{course.audience_supporting_text}</p>}
+                {course.audience_supporting_text && <p className={styles.audienceSupportingText}><RichText value={richContent.audience_supporting_text} fallback={course.audience_supporting_text} maxLength={5000} /></p>}
               </section>
             )}
 
@@ -417,7 +436,7 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
                 <div className={styles.sectionLabel}><FaLightbulb /> Course perspective</div>
                 <div className={styles.subheadlineFeature}>
                   <h2>{course.bold_introduction || 'A closer look'}</h2>
-                  {subheadlineCopy && <p>{subheadlineCopy}</p>}
+                  {subheadlineCopy && <p><RichText value={richContent.subheadline} fallback={subheadlineCopy} maxLength={4000} /></p>}
                 </div>
               </section>
             )}
@@ -426,7 +445,7 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
               <section {...revealProps('what-youll-explore')}>
                 <div className={styles.sectionLabel}><FaBullseye /> Inside the learning journey</div>
                 <h2 className={styles.sectionTitle}>What you&apos;ll explore</h2>
-                <StructuredContentBlocks items={exploreItems} />
+                <StructuredContentBlocks items={exploreItems} richItems={richContent.what_youll_explore} />
               </section>
             )}
 
@@ -449,7 +468,7 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
                         <i><FaChevronDown /></i>
                       </button>
                       <div className={styles.moduleBody}><div>
-                        {module.description && <p className={styles.moduleObjective}><strong>Module objective</strong>{module.description}</p>}
+                        {module.description && <p className={styles.moduleObjective}><strong>Module objective</strong><RichText value={module.rich_content?.description} fallback={module.description} maxLength={500} /></p>}
                         <div className={styles.lessonList}>
                           {module.lessons.map((lesson) => {
                             const duration = formatDuration(lesson.duration_seconds)
@@ -457,7 +476,7 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
                             return (
                               <div className={styles.lessonRow} key={lesson.id}>
                                 <span className={styles.lessonIcon}>{isAssessment ? <FaClipboardCheck /> : <FaPlay />}</span>
-                                <span className={styles.lessonCopy}><small>Lesson {String(lesson.curriculumPosition).padStart(2, '0')}</small><strong>{lesson.title}</strong>{lesson.description && <p>{lesson.description}</p>}</span>
+                                <span className={styles.lessonCopy}><small>Lesson {String(lesson.curriculumPosition).padStart(2, '0')}</small><strong>{lesson.title}</strong>{lesson.description && <p><RichText value={lesson.rich_content?.description} fallback={lesson.description} maxLength={2000} /></p>}</span>
                                 <span className={styles.lessonType}>{isAssessment ? 'Assessment' : duration || 'Duration unavailable'}</span>
                               </div>
                             )
@@ -476,7 +495,7 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
               <section {...revealProps('tutor')}>
                 <div className={styles.tutorSection}>
                   <span className={styles.tutorMark}><FaUserTie /></span>
-                  <div><div className={styles.sectionLabel}>Your instructor</div><h2>Meet {course.tutor_name || 'Zak Dakkash'}</h2><p>{course.meet_the_tutor}</p></div>
+                  <div><div className={styles.sectionLabel}>Your instructor</div><h2>Meet {course.tutor_name || 'Zak Dakkash'}</h2><p><RichText value={richContent.meet_the_tutor} fallback={course.meet_the_tutor} maxLength={8000} /></p></div>
                 </div>
               </section>
             )}
@@ -503,7 +522,7 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
                       </Link>
                       <div>
                         <h3>{item.title}</h3>
-                        {item.description && <p>{item.description}</p>}
+                        {item.description && <p><RichText value={item.rich_description} fallback={item.description} maxLength={3000} /></p>}
                         <Link href={item.target_path} className={styles.relatedCta}>{item.cta_text || (item.target_type === 'page' ? 'Visit page' : 'View course')} <FaArrowRight /></Link>
                       </div>
                     </article>
@@ -520,7 +539,7 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
                 <h2>{isEnrolled ? 'Continue where you left off' : 'Learn at your pace'}</h2>
                 <p>Your progress is counted through completed lessons and activities, not just opening a page.</p>
                 {!isEnrolled && <strong className={styles.sidebarPrice}>{formattedPrice}</strong>}
-                <div className={styles.purchaseAction}>{purchaseAction}</div>
+                <div className={styles.purchaseAction}>{renderPurchaseAction(false)}</div>
                 <div className={styles.completionRules}>
                   <h3>Completion rules</h3>
                   <div><span><FaVideo /></span><p><strong>Video lessons</strong><small>Watch at least 97% to complete the lesson and unlock what comes next.</small></p></div>

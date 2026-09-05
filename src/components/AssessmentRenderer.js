@@ -9,6 +9,7 @@ import FillableWorksheetEngine from '@/assessments/FillableWorksheetEngine';
 import StrokeProfileEngine from '@/assessments/StrokeProfileEngine';
 import { updateLessonProgress } from '@/app/courses/actions';
 import { useCourseProgress } from '@/app/courses/[slug]/player/CourseProgressContext';
+import RichText from '@/components/RichText';
 
 import styles from '@/assessments/assessment.module.css';
 
@@ -17,7 +18,8 @@ export default function AssessmentRenderer({
   lessonId,
   isCompleted,
   showIntro = false,
-  lessonDescription = ''
+  lessonDescription = '',
+  lessonDescriptionRich = null
 }) {
   const [hasStarted, setHasStarted] = useState(!showIntro);
   const [attemptId] = useState(() => crypto.randomUUID());
@@ -71,7 +73,9 @@ export default function AssessmentRenderer({
         <h2 className={styles.introTitle}>{definition.title}</h2>
         {(lessonDescription || definition.intro || definition.description) && (
           <p className={styles.introDescription}>
-            {lessonDescription || definition.intro || definition.description}
+            {lessonDescription
+              ? <RichText value={lessonDescriptionRich} fallback={lessonDescription} maxLength={2000} />
+              : definition.intro || definition.description}
           </p>
         )}
         <button

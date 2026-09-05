@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { FaTag, FaGift, FaCoins, FaSpinner } from 'react-icons/fa'
+import { FaTag, FaGift, FaCoins } from 'react-icons/fa'
 import styles from './DiscountSection.module.css'
 
 /**
@@ -121,8 +121,12 @@ export default function DiscountSection({
 
   if (loading && !discountData) {
     return (
-      <div className={styles.loadingContainer}>
-        <FaSpinner className={styles.spin} /> Loading pricing...
+      <div
+        className={`${styles.loadingContainer} ${variant === 'checkout' ? styles.checkoutLoading : ''}`}
+        role="status"
+        aria-label="Loading pricing"
+      >
+        <span className={styles.pricingLoader} aria-hidden="true" />
       </div>
     )
   }
@@ -138,7 +142,6 @@ export default function DiscountSection({
       <h3 className={styles.title}>
         <FaTag className={styles.icon} />
         Price Breakdown
-        {loading && <FaSpinner className={styles.spin} style={{ fontSize: '0.8em', marginLeft: 'auto' }} />}
       </h3>
 
       {/* Price Breakdown */}
@@ -257,9 +260,10 @@ export default function DiscountSection({
               type="button"
               onClick={handleApplyCoupon}
               disabled={disabled || loading || !couponCode.trim()}
-              className={styles.applyButton}
+              className={`${styles.applyButton} ${loading ? styles.applyButtonLoading : ''}`}
+              aria-label={loading ? 'Checking coupon' : 'Apply coupon'}
             >
-              {loading ? '...' : 'Apply'}
+              {loading ? <span className={styles.couponLoader} aria-hidden="true" /> : 'Apply'}
             </button>
           )}
         </div>

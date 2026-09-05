@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound, redirect } from 'next/navigation'
 import YouTubePlayer from '@/components/YouTubePlayer'
 import AssessmentRenderer from '@/components/AssessmentRenderer'
+import RichText from '@/components/RichText'
 import { FaBookOpen, FaLayerGroup } from 'react-icons/fa'
 import { buildLessonAccessMap, getFirstAvailableLesson } from '@/lib/course-progression'
 import { CourseCompletionNotice, LessonCompletionBadge, LessonNavigation } from './LessonStatus'
@@ -46,7 +47,7 @@ export default async function LessonPage({ params }) {
       .eq('course_id', lesson.course_id),
     supabase
       .from('course_modules')
-      .select('id, title, description, display_order')
+      .select('id, title, description, rich_content, display_order')
       .eq('course_id', lesson.course_id),
     resourceQuery
   ])
@@ -96,7 +97,9 @@ export default async function LessonPage({ params }) {
           <span>Module {String(currentModuleIndex + 1).padStart(2, '0')}</span>
         </div>
         <h2>{currentModule.title}</h2>
-        {currentModule.description && <p>{currentModule.description}</p>}
+        {currentModule.description && (
+          <p><RichText value={currentModule.rich_content?.description} fallback={currentModule.description} maxLength={500} /></p>
+        )}
       </article>
 
       <article className={`${styles.contextItem} ${styles.contextLesson}`}>
@@ -105,7 +108,9 @@ export default async function LessonPage({ params }) {
           <span>Current lesson / {String(currentIndex + 1).padStart(2, '0')}</span>
         </div>
         <h2>{lesson.title}</h2>
-        {lesson.description && <p>{lesson.description}</p>}
+        {lesson.description && (
+          <p><RichText value={lesson.rich_content?.description} fallback={lesson.description} maxLength={2000} /></p>
+        )}
       </article>
     </section>
   ) : null
@@ -143,6 +148,7 @@ export default async function LessonPage({ params }) {
               isCompleted={progress?.is_completed}
               showIntro={true}
               lessonDescription={lesson.description}
+              lessonDescriptionRich={lesson.rich_content?.description}
             />
           </div>
         </div>

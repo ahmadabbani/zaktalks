@@ -58,7 +58,8 @@ export default async function CourseDetailPage({ params }) {
         introduction_video_url,
         tutor_name,
         meet_the_tutor,
-        explore_more
+        explore_more,
+        rich_content
       `)
       .eq('slug', slug)
       .is('deleted_at', null)
@@ -88,14 +89,14 @@ export default async function CourseDetailPage({ params }) {
   ] = await Promise.all([
     supabase
       .from('course_modules')
-      .select('id, title, description, display_order')
+      .select('id, title, description, rich_content, display_order')
       .eq('course_id', course.id)
       .order('display_order', { ascending: true }),
     // This server-only query deliberately exposes curriculum metadata without
     // granting anonymous clients access to protected lesson records.
     publicCurriculumClient
       .from('lessons')
-      .select('id, module_id, title, description, type, duration_seconds, youtube_url, display_order')
+      .select('id, module_id, title, description, rich_content, type, duration_seconds, youtube_url, display_order')
       .eq('course_id', course.id)
       .order('display_order', { ascending: true }),
     supabase
@@ -156,6 +157,7 @@ export default async function CourseDetailPage({ params }) {
         title: page.label,
         target_path: page.path,
         description: item.description,
+        rich_description: course.rich_content?.explore_more?.[index]?.description,
         cta_text: item.cta_text,
         image_url: null,
       }]
@@ -170,6 +172,7 @@ export default async function CourseDetailPage({ params }) {
       title: recommendedCourse.title,
       target_path: `/courses/${recommendedCourse.slug}`,
       description: item.description,
+      rich_description: course.rich_content?.explore_more?.[index]?.description,
       cta_text: item.cta_text,
       image_url: recommendedCourse.logo_url,
     }]
