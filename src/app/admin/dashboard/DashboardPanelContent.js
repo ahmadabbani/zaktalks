@@ -45,7 +45,7 @@ async function OverviewPanel() {
     const [users, enrollments, progress] = await Promise.all([
       fetchAllRows(supabase, 'users', 'id, email, first_name, last_name, role, points, email_verified, password_set, first_purchase_discount_used, avatar_url, created_at, updated_at', 'created_at'),
       fetchAllRows(supabase, 'user_enrollments', 'id, user_id, course_id, payment_status, completed_at, certificate_url, created_at, course:courses(title)', 'created_at'),
-      fetchAllRows(supabase, 'lesson_progress', 'id, user_id, lesson_id, enrollment_id, is_completed, score, attempts, started_at, completed_at, updated_at, last_accessed_at, playback_status, watch_time_seconds, max_position_reached_seconds, lesson:lessons(title, type, course_id, duration_seconds)', 'last_accessed_at'),
+      fetchAllRows(supabase, 'lesson_progress', 'id, user_id, lesson_id, enrollment_id, is_completed, score, attempts, started_at, completed_at, updated_at, last_accessed_at, playback_status, watch_time_seconds, max_position_reached_seconds, lesson:lessons(title, type, course_id, duration_seconds, is_course_introduction)', 'last_accessed_at'),
     ])
     overviewData = { users, enrollments, progress }
   } catch (error) {
@@ -60,13 +60,13 @@ async function CoursesPanel({ access }) {
   const can = (permission) => access.role === 'admin' || access.permissions.includes(permission)
   const { data: courses, error } = await supabase
     .from('courses')
-    .select('*, lessons:lessons(count), enrollments:user_enrollments(id, payment_status, user:users(email_verified))')
+    .select('*, lessons:lessons(id, type, is_course_introduction), enrollments:user_enrollments(id, payment_status, user:users(email_verified))')
     .is('deleted_at', null)
     .order('created_at', { ascending: false })
 
   const coursesWithStats = (courses || []).map((course) => ({
     ...course,
-    lessonCount: course.lessons?.[0]?.count || 0,
+    lessonCount: (course.lessons || []).filter((lesson) => lesson.type === 'video' && !lesson.is_course_introduction).length,
     enrolledUsersCount: (course.enrollments || []).filter((enrollment) => enrollment.payment_status === 'completed' && enrollment.user?.email_verified === true).length,
   }))
 

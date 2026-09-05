@@ -46,6 +46,68 @@
     white-space: pre-line;
 }
 
+.introInstructions {
+    max-width: 680px;
+    margin: 0 auto var(--space-xl);
+    padding: 1rem 1.15rem;
+    border-radius: 0.85rem;
+    background: color-mix(in srgb, var(--color-dark-blue) 7%, white);
+    color: var(--color-black);
+    text-align: left;
+}
+
+.introInstructions > strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--color-dark-blue);
+    font-size: 1rem;
+}
+
+.introInstructions p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
+.introMeta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.65rem;
+    margin: 0 auto var(--space-lg);
+}
+
+.introMeta span {
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px;
+    background: var(--color-gray-light);
+    color: var(--color-black);
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.introCompletion {
+    max-width: 680px;
+    margin: 0 auto var(--space-xl);
+    text-align: left;
+}
+
+.introCompletion strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--color-dark-blue);
+    font-size: 1rem;
+}
+
+.introCompletion p {
+    margin: 0;
+    color: var(--color-black);
+    font-size: 1rem;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
 .introStartBtn {
     display: inline-flex;
     align-items: center;
@@ -60,15 +122,16 @@
     font-weight: 800;
     font-size: 1rem;
     cursor: pointer;
-    transition: all var(--transition-normal);
+    box-shadow: none;
+    transition: background-color var(--transition-normal), border-color var(--transition-normal), color var(--transition-normal), transform var(--transition-normal), opacity var(--transition-normal);
 }
 
 .introStartBtn:hover {
     border-color: var(--color-yellow);
     background: var(--color-yellow);
     color: var(--color-white);
-    transform: var(--home-cta-hover-transform);
-    box-shadow: 0 12px 28px rgba(48, 48, 48, 0.2);
+    transform: translateY(-1px);
+    box-shadow: none;
 }
 
 @keyframes fadeIn {
@@ -102,6 +165,7 @@
 }
 
 .progressPercentage {
+    margin-left: auto;
     font-size: 0.875rem;
     font-weight: 800;
     color: var(--color-black);
@@ -2737,6 +2801,178 @@
     line-height: 1.7;
     font-size: 1.0625rem;
     margin: 0;
+}
+
+/* Shared branded assessment introduction */
+.introContainer {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 0.95rem;
+    background: transparent;
+    box-shadow: none;
+    text-align: left;
+}
+
+.introHero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    width: 100%;
+    padding: clamp(1.3rem, 3vw, 2.25rem);
+    border-radius: 0.95rem;
+    background: var(--color-dark-blue);
+    color: var(--color-white);
+}
+
+.introHeroCopy {
+    min-width: 0;
+}
+
+.introHeroCopy h2 {
+    max-width: none;
+    margin: 0;
+    color: var(--color-white);
+    font-size: clamp(1.55rem, 3vw, 2.45rem);
+    font-weight: 900;
+    line-height: 1.12;
+}
+
+.introHeroMeta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem 0.75rem;
+    margin-top: 0.8rem;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: clamp(0.85rem, 1vw, 0.98rem);
+    font-weight: 650;
+}
+
+.introHeroMeta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.introHeroMeta span + span::before {
+    margin-right: 0.3rem;
+    color: rgba(255, 255, 255, 0.62);
+    content: '\00B7';
+}
+
+.introHeroIcon {
+    flex: 0 0 auto;
+    color: var(--color-white);
+    font-size: clamp(2.5rem, 5vw, 4.6rem);
+    opacity: 0.94;
+}
+
+.introCompleted {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 0.9rem;
+    padding: 0.42rem 0.75rem;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 0.85rem;
+    font-weight: 850;
+}
+
+.introBody {
+    width: 100%;
+    padding: clamp(1.5rem, 3.5vw, 2.8rem) clamp(0.15rem, 1vw, 0.75rem) 0;
+}
+
+.introEyebrow {
+    display: block;
+    margin-bottom: 0.65rem;
+    color: var(--color-dark-blue);
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    font-weight: 850;
+}
+
+.introBody .introDescription {
+    width: 100%;
+    max-width: none;
+    margin: 0 0 clamp(1.4rem, 3vw, 2.1rem);
+    color: var(--color-black);
+    font-size: clamp(1rem, 1.25vw, 1.12rem);
+    line-height: 1.75;
+    text-align: left;
+}
+
+.introPreparation h3 {
+    margin: 0 0 0.7rem;
+    color: var(--color-black);
+    font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+    font-weight: 900;
+    line-height: 1.25;
+}
+
+.introCompletionText {
+    max-width: 900px;
+    margin: 0 0 1.35rem;
+    color: var(--color-black);
+    font-size: clamp(1rem, 1.2vw, 1.1rem);
+    line-height: 1.75;
+    white-space: pre-line;
+}
+
+.introBody .introInstructions {
+    width: 100%;
+    max-width: none;
+    margin: 0 0 1.5rem;
+    padding: clamp(1rem, 2vw, 1.3rem);
+    border: 0;
+    border-radius: 0.85rem;
+    background: color-mix(in srgb, var(--color-dark-blue) 8%, white);
+}
+
+.introBody .introStartBtn {
+    gap: 0.65rem;
+    margin: 0;
+    background: var(--color-dark-blue);
+    border-color: var(--color-dark-blue);
+    color: var(--color-white);
+}
+
+.introBody .introStartBtn:hover {
+    background: var(--color-yellow);
+    border-color: var(--color-yellow);
+    color: var(--color-black);
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    .introContainer {
+        padding: 0;
+    }
+
+    .introHero {
+        align-items: flex-start;
+    }
+
+    .introHeroIcon {
+        font-size: 2.35rem;
+    }
+
+    .introHeroMeta {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .introHeroMeta span + span::before {
+        display: none;
+    }
+
+    .introBody {
+        padding-top: 1.4rem;
+    }
 }
 
 .cathScoreOnlyList {

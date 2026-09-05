@@ -5,6 +5,7 @@ import { FaChevronLeft } from 'react-icons/fa'
 import LessonList from './LessonList'
 import SidebarWrapper from './SidebarWrapper'
 import { CourseProgressProvider } from './CourseProgressContext'
+import { isStaffRole } from '@/lib/auth-utils'
 import styles from './player-layout.module.css'
 
 export default async function PlayerLayout({ children, params }) {
@@ -14,10 +15,17 @@ export default async function PlayerLayout({ children, params }) {
 
   if (!user) redirect('/login')
 
+  const { data: profile } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+  const unlockAll = isStaffRole(profile?.role)
+
   // 1. Fetch Course & Lessons
   const { data: course, error: courseError } = await supabase
     .from('courses')
-    .select('id, title, slug')
+    .select('id, title, slug, lesson_numbering_style')
     .eq('slug', slug)
     .is('deleted_at', null)
     .single()
@@ -30,7 +38,7 @@ export default async function PlayerLayout({ children, params }) {
     .select('id, payment_status')
     .eq('user_id', user.id)
     .eq('course_id', course.id)
-    .eq('payment_status', 'completed')
+    .in('payment_status', ['completed', 'staff'])
     .single()
 
   if (!enrollment) redirect(`/courses/${slug}`)
@@ -44,7 +52,7 @@ export default async function PlayerLayout({ children, params }) {
       .order('display_order', { ascending: true }),
     supabase
       .from('lessons')
-      .select('id, module_id, title, type, duration_seconds, display_order')
+      .select('id, module_id, title, type, duration_seconds, display_order, is_course_introduction')
       .eq('course_id', course.id)
       .order('display_order', { ascending: true }),
     supabase
@@ -53,9 +61,10 @@ export default async function PlayerLayout({ children, params }) {
       .eq('user_id', user.id)
   ])
 
+  const introductionLesson = (lessons || []).find((lesson) => lesson.is_course_introduction) || null
   const courseModules = (modules || []).map((module) => ({
     ...module,
-    lessons: (lessons || []).filter((lesson) => lesson.module_id === module.id)
+    lessons: (lessons || []).filter((lesson) => !lesson.is_course_introduction && lesson.module_id === module.id)
   }))
 
   const completedMap = progress?.reduce((acc, curr) => {
@@ -86,8 +95,10 @@ export default async function PlayerLayout({ children, params }) {
   return (
     <CourseProgressProvider
       modules={courseModules}
+      introductionLesson={introductionLesson}
       initialCompletedMap={completedMap}
       initialWatchedMap={watchedMap}
+      unlockAll={unlockAll}
     >
       <div className={styles.playerContainer}>
       {/* Sidebar */}
@@ -101,7 +112,12 @@ export default async function PlayerLayout({ children, params }) {
         </div>
 
         {/* Lesson List */}
-        <LessonList modules={courseModules} slug={slug} />
+        <LessonList
+          modules={courseModules}
+          introductionLesson={introductionLesson}
+          numberingStyle={course.lesson_numbering_style}
+          slug={slug}
+        />
       </SidebarWrapper>
 
       {/* Content Area */}

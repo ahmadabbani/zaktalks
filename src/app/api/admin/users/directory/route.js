@@ -85,7 +85,31 @@ export async function GET(request) {
     })
 
     if (error) throw error
-    const rows = sortRows(Array.isArray(data?.rows) ? data.rows : [], sort)
+    let rows = sortRows(Array.isArray(data?.rows) ? data.rows : [], sort)
+    const userIds = rows.map((row) => row.id)
+
+    if (userIds.length) {
+      const { data: videoProgress, error: videoProgressError } = await supabase
+        .from('lesson_progress')
+        .select('user_id, is_completed, lesson:lessons!inner(type, is_course_introduction)')
+        .in('user_id', userIds)
+        .eq('lesson.type', 'video')
+        .eq('lesson.is_course_introduction', false)
+      if (videoProgressError) throw videoProgressError
+
+      const countsByUser = new Map()
+      for (const progress of videoProgress || []) {
+        const counts = countsByUser.get(progress.user_id) || { started: 0, completed: 0 }
+        counts.started += 1
+        if (progress.is_completed) counts.completed += 1
+        countsByUser.set(progress.user_id, counts)
+      }
+      rows = rows.map((row) => ({
+        ...row,
+        started_lessons: countsByUser.get(row.id)?.started || 0,
+        completed_lessons: countsByUser.get(row.id)?.completed || 0,
+      }))
+    }
 
     return NextResponse.json({
       rows,

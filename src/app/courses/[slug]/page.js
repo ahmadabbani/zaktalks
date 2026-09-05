@@ -4,6 +4,7 @@ import { normalizeExploreMore, PUBLIC_PAGE_OPTIONS } from '@/lib/course-content'
 import { extractYouTubeVideoId, getYouTubeVideoDurations } from '@/lib/youtube'
 import { notFound } from 'next/navigation'
 import CourseDetailsExperience from './CourseDetailsExperience'
+import { isStaffRole } from '@/lib/auth-utils'
 
 export async function generateMetadata({ params }) {
   const { slug } = await params
@@ -44,6 +45,7 @@ export default async function CourseDetailPage({ params }) {
         course_language,
         flexible_schedule,
         course_support,
+        lesson_numbering_style,
         what_youll_learn,
         skills_youll_gain,
         details_to_know,
@@ -70,13 +72,21 @@ export default async function CourseDetailPage({ params }) {
   if (courseError || !course) notFound()
 
   const user = authData?.user || null
+  const { data: profile } = user
+    ? await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+    : { data: null }
+  const hasStaffAccess = isStaffRole(profile?.role)
   const enrollmentRequest = user
     ? supabase
         .from('user_enrollments')
         .select('id, payment_status')
         .eq('user_id', user.id)
         .eq('course_id', course.id)
-        .eq('payment_status', 'completed')
+        .in('payment_status', ['completed', 'staff'])
         .maybeSingle()
     : Promise.resolve({ data: null })
 
@@ -96,7 +106,7 @@ export default async function CourseDetailPage({ params }) {
     // granting anonymous clients access to protected lesson records.
     publicCurriculumClient
       .from('lessons')
-      .select('id, module_id, title, description, rich_content, type, duration_seconds, youtube_url, display_order')
+      .select('id, module_id, title, description, rich_content, type, duration_seconds, youtube_url, display_order, is_course_introduction')
       .eq('course_id', course.id)
       .order('display_order', { ascending: true }),
     supabase
@@ -178,23 +188,23 @@ export default async function CourseDetailPage({ params }) {
     }]
   })
 
-  let curriculumPosition = 0
+  const courseIntroductionLesson = safeLessons.find((lesson) => lesson.is_course_introduction) || null
   const curriculumModules = (modules || []).map((module) => ({
     ...module,
     lessons: safeLessons
-      .filter((lesson) => lesson.module_id === module.id)
-      .map((lesson) => ({ ...lesson, curriculumPosition: ++curriculumPosition }))
+      .filter((lesson) => !lesson.is_course_introduction && lesson.module_id === module.id)
   }))
 
   return (
     <CourseDetailsExperience
       course={course}
+      courseIntroductionLesson={courseIntroductionLesson}
       curriculumModules={curriculumModules}
       galleryImages={galleryImages || []}
       faqs={faqs || []}
       exploreMoreItems={exploreMoreItems}
       isLoggedIn={Boolean(user)}
-      isEnrolled={Boolean(enrollment)}
+      isEnrolled={hasStaffAccess || Boolean(enrollment)}
     />
   )
 }

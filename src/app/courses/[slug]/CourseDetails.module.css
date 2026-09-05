@@ -547,6 +547,85 @@
   gap: 0.85rem;
 }
 
+.curriculumIntroduction {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: clamp(1rem, 1.7vw, 1.45rem);
+  border: 1px solid rgba(33, 44, 45, 0.13);
+  border-radius: 1.2rem;
+  background: rgba(var(--color-dark-blue-rgb), 0.08);
+}
+
+.curriculumIntroductionIcon {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+  font-size: 0.82rem;
+  place-items: center;
+}
+
+.curriculumIntroductionCopy {
+  min-width: 0;
+}
+
+.curriculumIntroductionCopy > small,
+.curriculumIntroductionCopy > strong,
+.curriculumIntroductionCopy > p {
+  display: block;
+}
+
+.curriculumIntroductionCopy > small {
+  color: rgba(33, 44, 45, 0.58);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.curriculumIntroductionCopy > strong {
+  margin-top: 0.2rem;
+  color: var(--color-black);
+  font-size: clamp(0.95rem, 1vw, 1.1rem);
+  line-height: 1.35;
+}
+
+.curriculumIntroductionCopy > p {
+  margin: 0.35rem 0 0;
+  color: rgba(33, 44, 45, 0.7);
+  font-size: clamp(0.72rem, 0.7vw, 0.82rem);
+  line-height: 1.5;
+}
+
+.curriculumIntroductionMeta {
+  display: grid;
+  justify-items: end;
+  gap: 0.4rem;
+  text-align: right;
+}
+
+.curriculumIntroductionMeta > strong {
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--course-border);
+  border-radius: 999px;
+  background: var(--color-white);
+  color: var(--color-black);
+  font-size: 0.7rem;
+}
+
+.curriculumIntroductionMeta > small {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(33, 44, 45, 0.62);
+  font-size: 0.66rem;
+  font-weight: 700;
+}
+
 .moduleCard {
   border: 1px solid var(--course-border);
   border-radius: 1.2rem;
@@ -2103,6 +2182,22 @@
   .lessonType {
     grid-column: 2;
     justify-self: start;
+  }
+
+  .curriculumIntroduction {
+    grid-template-columns: 2.65rem minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .curriculumIntroductionIcon {
+    width: 2.65rem;
+    height: 2.65rem;
+  }
+
+  .curriculumIntroductionMeta {
+    grid-column: 2;
+    justify-items: start;
+    text-align: left;
   }
 
   .audienceGrid {

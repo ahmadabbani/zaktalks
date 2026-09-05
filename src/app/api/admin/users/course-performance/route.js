@@ -85,14 +85,25 @@ export async function GET(request) {
     if (moduleSignalResult.error) throw moduleSignalResult.error
 
     const data = dashboardResult.data
+    const rawCourses = Array.isArray(data?.courses) ? data.courses : []
+    const courseIds = rawCourses.map((course) => course.course_id)
+    const { data: videoLessons, error: videoLessonsError } = courseIds.length
+      ? await supabase.from('lessons').select('course_id').in('course_id', courseIds).eq('type', 'video').eq('is_course_introduction', false)
+      : { data: [], error: null }
+    if (videoLessonsError) throw videoLessonsError
+    const lessonTotals = new Map()
+    for (const lesson of videoLessons || []) {
+      lessonTotals.set(lesson.course_id, (lessonTotals.get(lesson.course_id) || 0) + 1)
+    }
     const signalByCourse = new Map(
       (Array.isArray(moduleSignalResult.data) ? moduleSignalResult.data : [])
         .map((signal) => [signal.course_id, signal])
     )
-    const courses = (Array.isArray(data?.courses) ? data.courses : [])
+    const courses = rawCourses
       .map((course) => {
         const enrichedCourse = {
           ...course,
+          total_lessons: lessonTotals.get(course.course_id) || 0,
           module_signal: signalByCourse.get(course.course_id) || null,
         }
         return { ...enrichedCourse, health_status: healthStatus(enrichedCourse) }

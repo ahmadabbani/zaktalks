@@ -10,6 +10,7 @@ import { dramaTriangleAssessment } from './definitions/drama-triangle-assessment
 import { codependencyAssessment } from './definitions/codependency-assessment';
 import { driverQuestionnaire } from './definitions/driver-questionnaire';
 import { egoStateAnalysis } from './definitions/ego-state-analysis';
+import { getAssessmentStatementCount } from '@/lib/assessment-lesson-metadata';
 
 export const ASSESSMENTS = {
   [exampleLikert.id]: exampleLikert,
@@ -32,7 +33,8 @@ export const getAssessmentList = () => {
     .map(a => ({
       id: a.id,
       title: a.title,
-      description: a.description
+      description: a.description,
+      questionCount: getAssessmentStatementCount(a)
     }));
 };
 

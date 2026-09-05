@@ -11,6 +11,10 @@ export class AccessDeniedError extends Error {
   }
 }
 
+export function isStaffRole(role) {
+  return role === 'admin' || role === 'creator'
+}
+
 export async function getAccessContext() {
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -65,7 +69,7 @@ export async function requireAdmin() {
 
 export async function requireStaff() {
   const access = await getAccessContext()
-  if (access.role !== 'admin' && access.role !== 'creator') throw new AccessDeniedError('Staff access is required.')
+  if (!isStaffRole(access.role)) throw new AccessDeniedError('Staff access is required.')
   return access
 }
 

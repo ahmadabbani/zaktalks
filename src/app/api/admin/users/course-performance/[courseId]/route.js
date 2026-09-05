@@ -53,15 +53,50 @@ export async function GET(request, { params }) {
     if (error) throw error
     if (!data) return NextResponse.json({ error: 'Course not found.' }, { status: 404 })
 
+    const learners = Array.isArray(data.learners) ? data.learners : []
+    const enrollmentIds = learners.map((learner) => learner.enrollment_id)
+    const [videoLessonsResult, videoProgressResult] = await Promise.all([
+      supabase.from('lessons').select('id, module_id').eq('course_id', courseId).eq('type', 'video').eq('is_course_introduction', false),
+      enrollmentIds.length
+        ? supabase.from('lesson_progress').select('enrollment_id, is_completed, lesson:lessons!inner(type, is_course_introduction)').in('enrollment_id', enrollmentIds).eq('lesson.type', 'video').eq('lesson.is_course_introduction', false)
+        : Promise.resolve({ data: [], error: null }),
+    ])
+    if (videoLessonsResult.error) throw videoLessonsResult.error
+    if (videoProgressResult.error) throw videoProgressResult.error
+
+    const videoLessons = videoLessonsResult.data || []
+    const moduleTotals = new Map()
+    for (const lesson of videoLessons) {
+      moduleTotals.set(lesson.module_id, (moduleTotals.get(lesson.module_id) || 0) + 1)
+    }
+    const progressByEnrollment = new Map()
+    for (const progress of videoProgressResult.data || []) {
+      const counts = progressByEnrollment.get(progress.enrollment_id) || { started: 0, completed: 0 }
+      counts.started += 1
+      if (progress.is_completed) counts.completed += 1
+      progressByEnrollment.set(progress.enrollment_id, counts)
+    }
+
+    const modules = (Array.isArray(data.modules) ? data.modules : []).map((module) => ({
+      ...module,
+      total_lessons: moduleTotals.get(module.module_id) || 0,
+    }))
+    const enrichedLearners = learners.map((learner) => ({
+      ...learner,
+      total_lessons: videoLessons.length,
+      started_lessons: progressByEnrollment.get(learner.enrollment_id)?.started || 0,
+      completed_lessons: progressByEnrollment.get(learner.enrollment_id)?.completed || 0,
+    }))
+
     const totalCount = Number(data?.learner_total || 0)
     return NextResponse.json({
       course: data.course || {},
       summary: data.summary || {},
-      curriculum: data.curriculum || {},
-      modules: Array.isArray(data.modules) ? data.modules : [],
+      curriculum: { ...(data.curriculum || {}), lessons: videoLessons.length },
+      modules,
       activityCalendar: Array.isArray(data.activity_calendar) ? data.activity_calendar : [],
       completionTrend: Array.isArray(data.completion_trend) ? data.completion_trend : [],
-      learners: sortLearners(Array.isArray(data.learners) ? data.learners : [], sort),
+      learners: sortLearners(enrichedLearners, sort),
       totalCount,
       page,
       pageSize,

@@ -172,16 +172,20 @@ export default function OverviewDashboard({ data }) {
     const enrollmentRate = enrollmentEligibleUsers.length
       ? Math.round((enrolledEligibleCount / enrollmentEligibleUsers.length) * 100)
       : 0
-    const completedProgress = progressInRange.filter((item) => item.is_completed).length
-    const completionRate = progressInRange.length ? Math.round((completedProgress / progressInRange.length) * 100) : 0
-    const averageProgress = progressInRange.length
-      ? Math.round(progressInRange.reduce((total, item) => {
+    const videoProgressInRange = progressInRange.filter((item) => {
+      const lesson = relationValue(item.lesson)
+      return lesson?.type === 'video' && !lesson.is_course_introduction
+    })
+    const completedProgress = videoProgressInRange.filter((item) => item.is_completed).length
+    const completionRate = videoProgressInRange.length ? Math.round((completedProgress / videoProgressInRange.length) * 100) : 0
+    const averageProgress = videoProgressInRange.length
+      ? Math.round(videoProgressInRange.reduce((total, item) => {
           if (item.is_completed) return total + 100
           const position = Number(item.max_position_reached_seconds) || 0
           const lesson = relationValue(item.lesson)
           const duration = Number(lesson?.duration_seconds) || 0
           return total + (lesson?.type === 'assessment' || duration <= 0 ? 0 : Math.min(96, Math.round((position / duration) * 100)))
-        }, 0) / progressInRange.length)
+        }, 0) / videoProgressInRange.length)
       : 0
 
     const trend = buildTrend(segmentUsers, selectedRange.days, now)
@@ -205,7 +209,10 @@ export default function OverviewDashboard({ data }) {
         detail: relationValue(item.course)?.title || 'Course enrollment',
         at: item.completed_at || item.created_at,
       })),
-      ...scopedProgress.filter((item) => item.is_completed).map((item) => ({
+      ...scopedProgress.filter((item) => {
+        const lesson = relationValue(item.lesson)
+        return item.is_completed && lesson?.type === 'video' && !lesson.is_course_introduction
+      }).map((item) => ({
         id: `progress-${item.id}`,
         type: 'completion',
         title: `${getUserName(users.find((user) => user.id === item.user_id) || {})} completed a lesson`,

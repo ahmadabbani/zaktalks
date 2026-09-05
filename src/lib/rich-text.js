@@ -129,7 +129,15 @@ export function sanitizeDescriptionRichContent(value, description, maxLength = D
   }
 }
 
+export function sanitizeLessonRichContent(value, { description = '', instructions = '' } = {}) {
+  const parsed = parseRichTextObject(value)
+  return {
+    version: 1,
+    description: richTextForPlain(parsed.description, description, 2000),
+    instructions: richTextForPlain(parsed.instructions, instructions, 5000),
+  }
+}
+
 export function getRichContentObject(value) {
   return value && typeof value === 'object' && !Array.isArray(value) ? value : {}
 }
-

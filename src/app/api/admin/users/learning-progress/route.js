@@ -63,9 +63,41 @@ export async function GET(request) {
 
     if (error) throw error
 
+    let rows = Array.isArray(data?.rows) ? data.rows : []
+    const enrollmentIds = rows.map((row) => row.enrollment_id)
+    const courseIds = [...new Set(rows.map((row) => row.course_id))]
+    const [videoLessonsResult, videoProgressResult] = await Promise.all([
+      courseIds.length
+        ? supabase.from('lessons').select('id, course_id').in('course_id', courseIds).eq('type', 'video').eq('is_course_introduction', false)
+        : Promise.resolve({ data: [], error: null }),
+      enrollmentIds.length
+        ? supabase.from('lesson_progress').select('enrollment_id, is_completed, lesson:lessons!inner(type, is_course_introduction)').in('enrollment_id', enrollmentIds).eq('lesson.type', 'video').eq('lesson.is_course_introduction', false)
+        : Promise.resolve({ data: [], error: null }),
+    ])
+    if (videoLessonsResult.error) throw videoLessonsResult.error
+    if (videoProgressResult.error) throw videoProgressResult.error
+
+    const totalsByCourse = new Map()
+    for (const lesson of videoLessonsResult.data || []) {
+      totalsByCourse.set(lesson.course_id, (totalsByCourse.get(lesson.course_id) || 0) + 1)
+    }
+    const progressByEnrollment = new Map()
+    for (const progress of videoProgressResult.data || []) {
+      const counts = progressByEnrollment.get(progress.enrollment_id) || { started: 0, completed: 0 }
+      counts.started += 1
+      if (progress.is_completed) counts.completed += 1
+      progressByEnrollment.set(progress.enrollment_id, counts)
+    }
+    rows = rows.map((row) => ({
+      ...row,
+      total_lessons: totalsByCourse.get(row.course_id) || 0,
+      started_lessons: progressByEnrollment.get(row.enrollment_id)?.started || 0,
+      completed_lessons: progressByEnrollment.get(row.enrollment_id)?.completed || 0,
+    }))
+
     const totalCount = Number(data?.total_count || 0)
     return NextResponse.json({
-      rows: sortRows(Array.isArray(data?.rows) ? data.rows : [], sort),
+      rows: sortRows(rows, sort),
       summary: data?.summary || {},
       trend: Array.isArray(data?.trend) ? data.trend : [],
       courseHealth: Array.isArray(data?.course_health) ? data.course_health : [],

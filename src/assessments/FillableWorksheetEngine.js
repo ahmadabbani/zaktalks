@@ -190,7 +190,7 @@ export default function FillableWorksheetEngine({ definition, lessonId, onComple
 
         <div className={styles.worksheetToolbar}>
           <div className={styles.worksheetProgress}>
-            <span>{completedFields.percentage}% complete</span>
+            <span>{completedFields.complete} / {completedFields.total} statements</span>
             <div className={styles.worksheetProgressTrack}>
               <div
                 className={styles.worksheetProgressFill}

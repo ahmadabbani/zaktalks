@@ -289,7 +289,10 @@ export default function AssessmentResultsDashboard({ courses = [], attempts = []
     return courses.map((course) => {
       const completedMap = Object.fromEntries(course.modules.flatMap((module) =>
         module.lessons.map((lesson) => [lesson.id, Boolean(lesson.progress?.is_completed)])))
-      const accessMap = buildLessonAccessMap(course.modules, completedMap)
+      if (course.introductionLesson) {
+        completedMap[course.introductionLesson.id] = Boolean(course.introductionLesson.progress?.is_completed)
+      }
+      const accessMap = buildLessonAccessMap(course.modules, completedMap, course.introductionLesson, course.unlockAll)
       const assessments = course.modules.flatMap((module) => module.lessons
         .filter((lesson) => lesson.type === 'assessment' || lesson.assessment_key)
         .map((lesson) => {

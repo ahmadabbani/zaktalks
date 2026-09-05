@@ -6,6 +6,7 @@ import {
   getCompletedLessonResource,
   getCompletedLessonResourceDownloadUrl
 } from '@/app/courses/resource.actions'
+import RichText from '@/components/RichText'
 import { useCourseProgress } from '../CourseProgressContext'
 import styles from './lesson-player.module.css'
 
@@ -90,7 +91,9 @@ export default function LessonResource({ lessonId, initialResource = null, initi
       </div>
 
       {resource.resource_type === 'text' && (
-        <p className={styles.lessonResourceText}>{resource.text_content}</p>
+        <p className={styles.lessonResourceText}>
+          <RichText value={resource.rich_content?.description} fallback={resource.text_content} maxLength={20000} />
+        </p>
       )}
 
       {resource.resource_type === 'pdf' && (

@@ -16,6 +16,7 @@ import {
   FaPlayCircle,
 } from 'react-icons/fa'
 import { buildLessonAccessMap, getFirstAvailableLesson } from '@/lib/course-progression'
+import { getLessonDisplayNumber } from '@/lib/lesson-numbering'
 import styles from './dashboard.module.css'
 
 function formatDate(value, includeTime = false) {
@@ -36,23 +37,31 @@ function percentage(completed, total) {
   return total > 0 ? Math.round((completed / total) * 100) : 0
 }
 
-function flattenModules(modules = []) {
-  return modules.flatMap((module) => module.lessons || [])
+function flattenModules(modules = [], introductionLesson = null) {
+  return [
+    ...(introductionLesson ? [introductionLesson] : []),
+    ...modules.flatMap((module) => module.lessons || [])
+  ]
 }
 
 function getCourseMetrics(course) {
-  const lessons = flattenModules(course.modules)
+  const lessons = flattenModules(course.modules, course.introductionLesson)
   const completed = lessons.filter((lesson) => lesson.progress?.is_completed).length
+  const videoLessons = course.modules.flatMap((module) => module.lessons || [])
+    .filter((lesson) => lesson.type === 'video')
+  const completedVideoLessons = videoLessons.filter((lesson) => lesson.progress?.is_completed).length
   const started = lessons.some((lesson) => lesson.progress)
   const completedMap = Object.fromEntries(
     lessons.map((lesson) => [lesson.id, Boolean(lesson.progress?.is_completed)])
   )
-  const nextLesson = getFirstAvailableLesson(course.modules, completedMap)
+  const nextLesson = getFirstAvailableLesson(course.modules, completedMap, course.introductionLesson, course.unlockAll)
 
   return {
     lessons,
     completed,
     total: lessons.length,
+    videoTotal: videoLessons.length,
+    completedVideoLessons,
     percent: percentage(completed, lessons.length),
     started,
     nextLesson,
@@ -91,7 +100,7 @@ function CourseCard({ course }) {
           </div>
 
           <div className={styles.learnerCourseProgressHeading}>
-            <span>{metrics.completed} of {metrics.total} lessons</span>
+            <span>{metrics.completedVideoLessons} of {metrics.videoTotal} lessons</span>
             <strong>{metrics.percent}%</strong>
           </div>
           <div
@@ -184,7 +193,7 @@ function CourseSwitcher({ courses, selectedCourseId, onSelect }) {
                 </span>
                 <span>
                   <strong>{course.title}</strong>
-                  <small>{metrics.completed} of {metrics.total} lessons completed</small>
+                  <small>{metrics.completedVideoLessons} of {metrics.videoTotal} lessons completed</small>
                 </span>
                 <b>{metrics.percent}%</b>
               </button>
@@ -230,7 +239,11 @@ function LessonRow({ lesson, number, isUnlocked }) {
   const rowContent = (
     <>
       <span className={`${styles.learnerLessonNumber} ${statusClass}`}>
-        {isCompleted ? <FaCheck /> : !isUnlocked ? <FaLock /> : number}
+        {isCompleted
+          ? <FaCheck />
+          : !isUnlocked
+            ? <FaLock />
+            : number || (lesson.type === 'assessment' ? <FaClipboardList /> : <FaPlayCircle />)}
       </span>
       <span className={styles.learnerLessonIdentity}>
         <strong>{lesson.title}</strong>
@@ -269,13 +282,13 @@ function LessonRow({ lesson, number, isUnlocked }) {
 
 function CourseDetails({ course }) {
   const [openModuleId, setOpenModuleId] = useState(course.modules[0]?.id || null)
-  const lessons = flattenModules(course.modules)
+  const lessons = flattenModules(course.modules, course.introductionLesson)
   const completedMap = useMemo(() => Object.fromEntries(
     lessons.map((lesson) => [lesson.id, Boolean(lesson.progress?.is_completed)])
   ), [lessons])
   const accessMap = useMemo(
-    () => buildLessonAccessMap(course.modules, completedMap),
-    [course.modules, completedMap]
+    () => buildLessonAccessMap(course.modules, completedMap, course.introductionLesson, course.unlockAll),
+    [course.introductionLesson, course.modules, course.unlockAll, completedMap]
   )
 
   const metrics = getCourseMetrics(course)
@@ -295,16 +308,29 @@ function CourseDetails({ course }) {
       </header>
 
       <div className={styles.learnerModuleList}>
+        {course.introductionLesson && (
+          <article className={styles.learnerIntroductionLesson}>
+            <div className={styles.learnerIntroductionHeading}>
+              <span><FaPlayCircle /></span>
+              <div>
+                <small>Course introduction</small>
+              </div>
+            </div>
+            <LessonRow
+              lesson={{ ...course.introductionLesson, course_slug: course.slug }}
+              number={<FaPlay />}
+              isUnlocked={Boolean(accessMap[course.introductionLesson.id])}
+            />
+          </article>
+        )}
         {course.modules.map((module, moduleIndex) => {
           const moduleCompleted = module.lessons.filter((lesson) => lesson.progress?.is_completed).length
+          const moduleVideoLessons = module.lessons.filter((lesson) => lesson.type === 'video')
+          const moduleVideosCompleted = moduleVideoLessons.filter((lesson) => lesson.progress?.is_completed).length
           const modulePercent = percentage(moduleCompleted, module.lessons.length)
           const isOpen = openModuleId === module.id
           const isModuleLocked = module.lessons.length > 0 && !accessMap[module.lessons[0].id]
           const panelId = `learner-module-${module.id}`
-          const moduleStartNumber = course.modules
-            .slice(0, moduleIndex)
-            .reduce((total, item) => total + item.lessons.length, 0)
-
           return (
             <article className={styles.learnerModule} key={module.id}>
               <button
@@ -323,7 +349,7 @@ function CourseDetails({ course }) {
                 <span className={styles.learnerModuleProgress}>
                   <span><i style={{ width: `${modulePercent}%` }} /></span>
                   <strong>{modulePercent}%</strong>
-                  <small>{moduleCompleted}/{module.lessons.length} lessons</small>
+                  <small>{moduleVideosCompleted}/{moduleVideoLessons.length} lessons</small>
                 </span>
                 <FaChevronDown className={`${styles.learnerModuleChevron} ${isOpen ? styles.learnerModuleChevronOpen : ''}`} />
               </button>
@@ -331,14 +357,23 @@ function CourseDetails({ course }) {
               <div id={panelId} className={`${styles.learnerModulePanel} ${isOpen ? styles.learnerModulePanelOpen : ''}`} aria-hidden={!isOpen}>
                 <div className={styles.learnerModulePanelInner}>
                   <div className={styles.learnerLessonList}>
-                    {module.lessons.map((lesson, lessonIndex) => (
-                      <LessonRow
-                        key={lesson.id}
-                        lesson={{ ...lesson, course_slug: course.slug }}
-                        number={moduleStartNumber + lessonIndex + 1}
-                        isUnlocked={Boolean(accessMap[lesson.id])}
-                      />
-                    ))}
+                    {module.lessons.map((lesson, lessonIndex) => {
+                      const displayNumber = getLessonDisplayNumber(
+                        course.lesson_numbering_style,
+                        moduleIndex,
+                        module.lessons,
+                        lessonIndex
+                      )
+
+                      return (
+                        <LessonRow
+                          key={lesson.id}
+                          lesson={{ ...lesson, course_slug: course.slug }}
+                          number={displayNumber}
+                          isUnlocked={Boolean(accessMap[lesson.id])}
+                        />
+                      )
+                    })}
                     {module.lessons.length === 0 && (
                       <p className={styles.learnerModuleEmpty}>Lessons will appear here when this module is ready.</p>
                     )}

@@ -4,7 +4,10 @@ import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { requirePermission } from '@/lib/auth-utils'
 import { randomUUID } from 'node:crypto'
-import { sanitizeDescriptionRichContent } from '@/lib/rich-text'
+import { sanitizeDescriptionRichContent, sanitizeLessonRichContent } from '@/lib/rich-text'
+import { normalizeYouTubeVideoUrl } from '@/lib/youtube-url'
+import { LESSON_NUMBERING_STYLES } from '@/lib/lesson-numbering'
+import { isAssessmentTimeOption } from '@/lib/assessment-lesson-metadata'
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 const LESSON_RESOURCE_BUCKET = 'lesson-resources'
@@ -42,7 +45,7 @@ function cleanExternalUrl(value) {
 async function getLessonResource(supabase, lessonId) {
   const { data, error } = await supabase
     .from('lesson_resources')
-    .select('id, lesson_id, resource_type, text_content, external_url, storage_path, original_file_name, file_size_bytes')
+    .select('id, lesson_id, resource_type, text_content, rich_content, external_url, storage_path, original_file_name, file_size_bytes')
     .eq('lesson_id', lessonId)
     .maybeSingle()
 
@@ -95,11 +98,16 @@ async function saveLessonResource(supabase, courseId, lessonId, formData) {
   if (resourceType === 'text') {
     const textContent = cleanText(formData.get('resource_text'), 20000)
     if (!textContent) throw new Error('Enter the additional resource text.')
-    resourceData = { resource_type: 'text', text_content: textContent, external_url: null, storage_path: null, original_file_name: null, file_size_bytes: null }
+    const richContent = sanitizeDescriptionRichContent(
+      formData.get('resource_rich_content_json'),
+      textContent,
+      20000
+    )
+    resourceData = { resource_type: 'text', text_content: textContent, rich_content: richContent, external_url: null, storage_path: null, original_file_name: null, file_size_bytes: null }
   } else if (resourceType === 'link') {
     const externalUrl = cleanExternalUrl(formData.get('resource_url'))
     if (!externalUrl) throw new Error('Enter a valid http or https resource link.')
-    resourceData = { resource_type: 'link', text_content: null, external_url: externalUrl, storage_path: null, original_file_name: null, file_size_bytes: null }
+    resourceData = { resource_type: 'link', text_content: null, rich_content: {}, external_url: externalUrl, storage_path: null, original_file_name: null, file_size_bytes: null }
   } else {
     const pdfFile = formData.get('resource_pdf')
     if (isUploadedFile(pdfFile)) {
@@ -108,6 +116,7 @@ async function saveLessonResource(supabase, courseId, lessonId, formData) {
       resourceData = {
         resource_type: 'pdf',
         text_content: null,
+        rich_content: {},
         external_url: null,
         storage_path: uploaded.storagePath,
         original_file_name: uploaded.originalFileName,
@@ -117,6 +126,7 @@ async function saveLessonResource(supabase, courseId, lessonId, formData) {
       resourceData = {
         resource_type: 'pdf',
         text_content: null,
+        rich_content: {},
         external_url: null,
         storage_path: currentResource.storage_path,
         original_file_name: currentResource.original_file_name,
@@ -147,6 +157,28 @@ function revalidateCourseStructure(courseId) {
   revalidatePath(`/admin/courses/${courseId}/lessons`)
   revalidatePath('/courses', 'layout')
   revalidatePath('/dashboard')
+}
+
+export async function updateCourseLessonNumbering(courseId, numberingStyle) {
+  await requirePermission('courses.content')
+
+  if (!isUuid(courseId) || !Object.values(LESSON_NUMBERING_STYLES).includes(numberingStyle)) {
+    return { error: 'Choose a valid lesson numbering style.' }
+  }
+
+  const supabase = await createAdminClient()
+  const { data, error } = await supabase
+    .from('courses')
+    .update({ lesson_numbering_style: numberingStyle, updated_at: new Date().toISOString() })
+    .eq('id', courseId)
+    .select('id')
+    .maybeSingle()
+
+  if (error) return { error: error.message }
+  if (!data) return { error: 'Course not found.' }
+
+  revalidateCourseStructure(courseId)
+  return { success: true }
 }
 
 async function getCourseModule(supabase, courseId, moduleId) {
@@ -242,6 +274,133 @@ export async function updateModule(courseId, moduleId, formData) {
   return { success: true }
 }
 
+function courseIntroductionFields(formData) {
+  const title = cleanText(formData.get('title'), 200)
+  const description = cleanText(formData.get('description'), 2000) || null
+  const submittedUrl = cleanText(formData.get('youtube_url'), 1000)
+  const youtubeUrl = normalizeYouTubeVideoUrl(submittedUrl)
+
+  if (!title) throw new Error('Enter a title for the course introduction.')
+  if (!youtubeUrl) throw new Error('Enter a valid secure YouTube link for the course introduction.')
+
+  return { title, description, youtubeUrl }
+}
+
+export async function createCourseIntroduction(courseId, formData) {
+  await requirePermission('courses.content')
+  if (!isUuid(courseId)) return { error: 'Course not found.' }
+
+  const supabase = await createAdminClient()
+
+  try {
+    const { title, description, youtubeUrl } = courseIntroductionFields(formData)
+    const richContent = sanitizeDescriptionRichContent(
+      formData.get('rich_content_json'),
+      description || '',
+      2000
+    )
+    const { data: existing, error: existingError } = await supabase
+      .from('lessons')
+      .select('id')
+      .eq('course_id', courseId)
+      .eq('is_course_introduction', true)
+      .maybeSingle()
+
+    if (existingError) return { error: existingError.message }
+    if (existing) return { error: 'This course already has an introduction video.' }
+
+    const { error } = await supabase.from('lessons').insert({
+      course_id: courseId,
+      module_id: null,
+      title,
+      description,
+      rich_content: richContent,
+      type: 'video',
+      youtube_url: youtubeUrl,
+      duration_seconds: null,
+      assessment_key: null,
+      passing_score: null,
+      display_order: 1,
+      is_course_introduction: true
+    })
+
+    if (error) {
+      if (error.code === '23505') return { error: 'This course already has an introduction video.' }
+      return { error: error.message }
+    }
+
+    revalidateCourseStructure(courseId)
+    return { success: true }
+  } catch (error) {
+    return { error: error.message || 'Could not create the course introduction.' }
+  }
+}
+
+export async function updateCourseIntroduction(courseId, lessonId, formData) {
+  await requirePermission('courses.content')
+  if (!isUuid(courseId) || !isUuid(lessonId)) return { error: 'Course introduction not found.' }
+
+  const supabase = await createAdminClient()
+
+  try {
+    const { title, description, youtubeUrl } = courseIntroductionFields(formData)
+    const richContent = sanitizeDescriptionRichContent(
+      formData.get('rich_content_json'),
+      description || '',
+      2000
+    )
+    const { data: current, error: currentError } = await supabase
+      .from('lessons')
+      .select('id, youtube_url, duration_seconds')
+      .eq('id', lessonId)
+      .eq('course_id', courseId)
+      .eq('is_course_introduction', true)
+      .maybeSingle()
+
+    if (currentError) return { error: currentError.message }
+    if (!current) return { error: 'Course introduction not found.' }
+
+    const { error } = await supabase
+      .from('lessons')
+      .update({
+        title,
+        description,
+        rich_content: richContent,
+        youtube_url: youtubeUrl,
+        duration_seconds: current.youtube_url === youtubeUrl ? current.duration_seconds : null,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', lessonId)
+      .eq('course_id', courseId)
+      .eq('is_course_introduction', true)
+
+    if (error) return { error: error.message }
+
+    revalidateCourseStructure(courseId)
+    return { success: true }
+  } catch (error) {
+    return { error: error.message || 'Could not update the course introduction.' }
+  }
+}
+
+export async function deleteCourseIntroduction(courseId, lessonId) {
+  await requirePermission('courses.content')
+  if (!isUuid(courseId) || !isUuid(lessonId)) return { error: 'Course introduction not found.' }
+
+  const supabase = await createAdminClient()
+  const { error } = await supabase
+    .from('lessons')
+    .delete()
+    .eq('id', lessonId)
+    .eq('course_id', courseId)
+    .eq('is_course_introduction', true)
+
+  if (error) return { error: error.message }
+
+  revalidateCourseStructure(courseId)
+  return { success: true }
+}
+
 export async function deleteModule(courseId, moduleId) {
   await requirePermission('courses.content')
   const supabase = await createAdminClient()
@@ -313,6 +472,7 @@ export async function updateCourseStructure(courseId, structure) {
       .from('lessons')
       .select('id')
       .eq('course_id', courseId)
+      .eq('is_course_introduction', false)
       .in('id', lessonIds)
 
     if (lessonsError || ownedLessons?.length !== lessonIds.length) {
@@ -346,6 +506,7 @@ export async function updateCourseStructure(courseId, structure) {
         })
         .eq('id', lesson.id)
         .eq('course_id', courseId)
+        .eq('is_course_introduction', false)
     )
   )
 
@@ -368,14 +529,32 @@ export async function createLesson(courseId, formData) {
   const title = cleanText(formData.get('title'), 200)
   const description = cleanText(formData.get('description'), 2000) || null
   const type = formData.get('type')
+  const instructions = type === 'assessment'
+    ? cleanText(formData.get('instructions'), 5000) || null
+    : null
+  const assessmentTimeEstimate = type === 'assessment'
+    ? cleanText(formData.get('assessment_time_estimate'), 40)
+    : null
+  const assessmentCompletionGuidance = type === 'assessment'
+    ? cleanText(formData.get('assessment_completion_guidance'), 2000)
+    : null
 
   if (!title || !['video', 'assessment'].includes(type)) {
     return { error: 'Please enter valid lesson details.' }
   }
+  if (type === 'assessment' && !isAssessmentTimeOption(assessmentTimeEstimate)) {
+    return { error: 'Choose an assessment time estimate.' }
+  }
+  if (type === 'assessment' && !assessmentCompletionGuidance) {
+    return { error: 'Explain how learners should complete this assessment.' }
+  }
 
   let richContent
   try {
-    richContent = sanitizeDescriptionRichContent(formData.get('rich_content_json'), description || '', 2000)
+    richContent = sanitizeLessonRichContent(formData.get('rich_content_json'), {
+      description: description || '',
+      instructions: instructions || '',
+    })
   } catch (error) {
     return { error: error.message }
   }
@@ -385,9 +564,13 @@ export async function createLesson(courseId, formData) {
     module_id: moduleId,
     title,
     description,
+    instructions,
+    assessment_time_estimate: assessmentTimeEstimate,
+    assessment_completion_guidance: assessmentCompletionGuidance,
     rich_content: richContent,
     type,
-    display_order: await getNextLessonOrder(supabase, moduleId)
+    display_order: await getNextLessonOrder(supabase, moduleId),
+    is_course_introduction: false
   }
 
   if (type === 'video') {
@@ -435,6 +618,7 @@ export async function deleteLesson(courseId, lessonId) {
     .delete()
     .eq('id', lessonId)
     .eq('course_id', courseId)
+    .eq('is_course_introduction', false)
 
   if (error) return { error: error.message }
 
@@ -460,6 +644,7 @@ export async function updateLesson(courseId, lessonId, formData) {
     .select('module_id, display_order')
     .eq('id', lessonId)
     .eq('course_id', courseId)
+    .eq('is_course_introduction', false)
     .maybeSingle()
 
   if (!currentLesson) return { error: 'Lesson not found.' }
@@ -467,14 +652,32 @@ export async function updateLesson(courseId, lessonId, formData) {
   const title = cleanText(formData.get('title'), 200)
   const description = cleanText(formData.get('description'), 2000) || null
   const type = formData.get('type')
+  const instructions = type === 'assessment'
+    ? cleanText(formData.get('instructions'), 5000) || null
+    : null
+  const assessmentTimeEstimate = type === 'assessment'
+    ? cleanText(formData.get('assessment_time_estimate'), 40)
+    : null
+  const assessmentCompletionGuidance = type === 'assessment'
+    ? cleanText(formData.get('assessment_completion_guidance'), 2000)
+    : null
 
   if (!title || !['video', 'assessment'].includes(type)) {
     return { error: 'Please enter valid lesson details.' }
   }
+  if (type === 'assessment' && !isAssessmentTimeOption(assessmentTimeEstimate)) {
+    return { error: 'Choose an assessment time estimate.' }
+  }
+  if (type === 'assessment' && !assessmentCompletionGuidance) {
+    return { error: 'Explain how learners should complete this assessment.' }
+  }
 
   let richContent
   try {
-    richContent = sanitizeDescriptionRichContent(formData.get('rich_content_json'), description || '', 2000)
+    richContent = sanitizeLessonRichContent(formData.get('rich_content_json'), {
+      description: description || '',
+      instructions: instructions || '',
+    })
   } catch (error) {
     return { error: error.message }
   }
@@ -483,6 +686,9 @@ export async function updateLesson(courseId, lessonId, formData) {
     module_id: moduleId,
     title,
     description,
+    instructions,
+    assessment_time_estimate: assessmentTimeEstimate,
+    assessment_completion_guidance: assessmentCompletionGuidance,
     rich_content: richContent,
     type,
     updated_at: new Date().toISOString()
@@ -510,6 +716,7 @@ export async function updateLesson(courseId, lessonId, formData) {
     .update(lessonData)
     .eq('id', lessonId)
     .eq('course_id', courseId)
+    .eq('is_course_introduction', false)
 
   if (error) return { error: error.message }
 

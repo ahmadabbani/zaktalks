@@ -3,10 +3,14 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import {
+  createCourseIntroduction,
   createLesson,
   createModule,
+  deleteCourseIntroduction,
   deleteLesson,
   deleteModule,
+  updateCourseIntroduction,
+  updateCourseLessonNumbering,
   updateCourseStructure,
   updateLesson,
   updateModule
@@ -14,6 +18,8 @@ import {
 import toast from 'react-hot-toast'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 import { createRichText, richTextForPlain } from '@/lib/rich-text'
+import { getLessonDisplayNumber, normalizeLessonNumberingStyle } from '@/lib/lesson-numbering'
+import { ASSESSMENT_TIME_OPTIONS } from '@/lib/assessment-lesson-metadata'
 import {
   FaChevronDown,
   FaChevronUp,
@@ -25,10 +31,12 @@ import {
   FaFolderOpen,
   FaLayerGroup,
   FaLink,
+  FaListOl,
   FaPlay,
   FaPlus,
   FaSave,
-  FaTrash
+  FaTrash,
+  FaVideo
 } from 'react-icons/fa'
 import styles from './admin-lessons.module.css'
 
@@ -132,17 +140,23 @@ function normalizeModules(modules) {
     }))
 }
 
-export default function LessonListUI({ courseId, initialModules = [], assessments = [] }) {
+export default function LessonListUI({ courseId, initialNumberingStyle = 'module', initialIntroductionLesson = null, initialModules = [], assessments = [] }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const createdToastShown = useRef(false)
   const [modules, setModules] = useState(() => normalizeModules(initialModules))
+  const [numberingStyle, setNumberingStyle] = useState(() => normalizeLessonNumberingStyle(initialNumberingStyle))
+  const [introductionForm, setIntroductionForm] = useState(null)
   const [moduleForm, setModuleForm] = useState(null)
   const [lessonForm, setLessonForm] = useState(null)
   const [lessonType, setLessonType] = useState('video')
+  const [assessmentKey, setAssessmentKey] = useState(() => assessments[0]?.id || '')
   const [resourceType, setResourceType] = useState('none')
   const [moduleDescriptionRich, setModuleDescriptionRich] = useState(() => createRichText())
   const [lessonDescriptionRich, setLessonDescriptionRich] = useState(() => createRichText())
+  const [lessonInstructionsRich, setLessonInstructionsRich] = useState(() => createRichText())
+  const [resourceTextRich, setResourceTextRich] = useState(() => createRichText())
+  const [introductionDescriptionRich, setIntroductionDescriptionRich] = useState(() => createRichText())
   const [isSaving, setIsSaving] = useState(false)
   const [saveLabel, setSaveLabel] = useState('Saving changes')
   const [saveTarget, setSaveTarget] = useState(null)
@@ -154,6 +168,10 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
   }, [initialModules])
 
   useEffect(() => {
+    setNumberingStyle(normalizeLessonNumberingStyle(initialNumberingStyle))
+  }, [initialNumberingStyle])
+
+  useEffect(() => {
     if (searchParams.get('created') !== 'true' || createdToastShown.current) return
     createdToastShown.current = true
     toast.success('Course created successfully')
@@ -161,14 +179,18 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
   }, [courseId, searchParams])
 
   const nextModuleTitle = `Module ${String(modules.length + 1).padStart(2, '0')}`
+  const selectedAssessment = assessments.find((assessment) => assessment.id === assessmentKey)
+  const selectedAssessmentQuestionCount = Number(selectedAssessment?.questionCount) || 0
 
   const openNewModuleForm = () => {
+    setIntroductionForm(null)
     setLessonForm(null)
     setModuleDescriptionRich(createRichText())
     setModuleForm({ mode: 'create', module: null })
   }
 
   const openEditModuleForm = (module) => {
+    setIntroductionForm(null)
     setLessonForm(null)
     setModuleDescriptionRich(richTextForPlain(module.rich_content?.description, module.description || '', 500))
     setModuleForm({ mode: 'edit', module })
@@ -176,21 +198,66 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
   }
 
   const openNewLessonForm = (moduleId) => {
+    setIntroductionForm(null)
     setModuleForm(null)
     setLessonType('video')
+    setAssessmentKey(assessments[0]?.id || '')
     setResourceType('none')
     setLessonDescriptionRich(createRichText())
+    setLessonInstructionsRich(createRichText())
+    setResourceTextRich(createRichText())
     setLessonForm({ mode: 'create', moduleId, lesson: null })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const openEditLessonForm = (lesson) => {
+    setIntroductionForm(null)
     setModuleForm(null)
     setLessonType(lesson.type)
+    setAssessmentKey(lesson.assessment_key || assessments[0]?.id || '')
     setResourceType(lesson.additional_resource?.resource_type || 'none')
     setLessonDescriptionRich(richTextForPlain(lesson.rich_content?.description, lesson.description || '', 2000))
+    setLessonInstructionsRich(richTextForPlain(lesson.rich_content?.instructions, lesson.instructions || '', 5000))
+    setResourceTextRich(richTextForPlain(
+      lesson.additional_resource?.rich_content?.description,
+      lesson.additional_resource?.text_content || '',
+      20000
+    ))
     setLessonForm({ mode: 'edit', moduleId: lesson.module_id, lesson })
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const openIntroductionForm = () => {
+    setModuleForm(null)
+    setLessonForm(null)
+    setIntroductionDescriptionRich(richTextForPlain(
+      initialIntroductionLesson?.rich_content?.description,
+      initialIntroductionLesson?.description || '',
+      2000
+    ))
+    setIntroductionForm({ mode: initialIntroductionLesson ? 'edit' : 'create' })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleIntroductionSubmit = async (event) => {
+    event.preventDefault()
+    setSaveLabel(introductionForm.mode === 'edit' ? 'Updating introduction' : 'Creating introduction')
+    setSaveTarget('introduction')
+    setIsSaving(true)
+    const formData = new FormData(event.currentTarget)
+    const result = introductionForm.mode === 'edit'
+      ? await updateCourseIntroduction(courseId, initialIntroductionLesson.id, formData)
+      : await createCourseIntroduction(courseId, formData)
+
+    if (result.success) {
+      toast.success(introductionForm.mode === 'edit' ? 'Course introduction updated' : 'Course introduction created')
+      setIntroductionForm(null)
+      router.refresh()
+    } else {
+      toast.error(result.error || 'Could not save the course introduction')
+    }
+    setIsSaving(false)
+    setSaveTarget(null)
   }
 
   const handleModuleSubmit = async (event) => {
@@ -274,18 +341,41 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
     setSaveTarget(null)
   }
 
+  const saveNumberingStyle = async () => {
+    setSaveLabel('Saving lesson numbering')
+    setSaveTarget('numbering')
+    setIsSaving(true)
+    const result = await updateCourseLessonNumbering(courseId, numberingStyle)
+
+    if (result.success) {
+      toast.success('Lesson numbering updated')
+      router.refresh()
+    } else {
+      toast.error(result.error || 'Could not update lesson numbering')
+    }
+
+    setIsSaving(false)
+    setSaveTarget(null)
+  }
+
   const confirmDelete = async () => {
     if (!deleteModal) return
     setIsDeleting(true)
     const result = deleteModal.type === 'module'
       ? await deleteModule(courseId, deleteModal.id)
-      : await deleteLesson(courseId, deleteModal.id)
+      : deleteModal.type === 'introduction'
+        ? await deleteCourseIntroduction(courseId, deleteModal.id)
+        : await deleteLesson(courseId, deleteModal.id)
 
     if (result.success) {
-      toast.success(deleteModal.type === 'module' ? 'Module deleted' : 'Lesson deleted')
+      toast.success(deleteModal.type === 'module'
+        ? 'Module deleted'
+        : deleteModal.type === 'introduction'
+          ? 'Course introduction removed'
+          : 'Lesson deleted')
       if (deleteModal.type === 'module') {
         setModules((current) => normalizeModules(current.filter((module) => module.id !== deleteModal.id)))
-      } else {
+      } else if (deleteModal.type === 'lesson') {
         setModules((current) => current.map((module) => ({
           ...module,
           lessons: module.lessons.filter((lesson) => lesson.id !== deleteModal.id)
@@ -319,6 +409,131 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
       </div>
 
       {isSaving && saveTarget === 'order' && <SaveProgress label={saveLabel} />}
+
+      <section className={styles.numberingCard}>
+        <span className={styles.numberingIcon}><FaListOl /></span>
+        <div className={styles.numberingCopy}>
+          <span>Lesson numbering</span>
+          <h3>Choose how lesson numbers appear</h3>
+        </div>
+        <div className={styles.numberingControl}>
+          <CustomSelect
+            id="lesson-numbering-style"
+            name="lesson_numbering_style"
+            value={numberingStyle}
+            onChange={setNumberingStyle}
+            options={[
+              { value: 'module', label: 'Number by module (1.1, 1.2, 2.1)' },
+              { value: 'none', label: 'No automatic numbering' },
+            ]}
+            ariaLabel="Lesson numbering style"
+          />
+          <button
+            type="button"
+            className={styles.numberingSaveButton}
+            onClick={saveNumberingStyle}
+            disabled={isSaving}
+          >
+            {isSaving && saveTarget === 'numbering' ? 'Saving...' : 'Save preference'}
+          </button>
+        </div>
+        {isSaving && saveTarget === 'numbering' && <SaveProgress label={saveLabel} />}
+      </section>
+
+      <section className={`${styles.introductionCard} ${initialIntroductionLesson ? styles.introductionCardReady : ''}`}>
+        <div className={styles.introductionIcon}><FaVideo /></div>
+        <div className={styles.introductionCopy}>
+          <div className={styles.introductionEyebrow}>
+            <span>Optional</span>
+          </div>
+          <h3>{initialIntroductionLesson?.title || 'Course Introduction Video'}</h3>
+          {initialIntroductionLesson ? (
+            <>
+              <p>{initialIntroductionLesson.description || 'The opening video for this course.'}</p>
+              <div className={styles.introductionStatus}><FaCheck /> Added to the learning journey</div>
+            </>
+          ) : (
+            <p>Add an optional opening video for learners.</p>
+          )}
+        </div>
+        <div className={styles.introductionActions}>
+          {initialIntroductionLesson ? (
+            <>
+              <button type="button" className={styles.introductionPrimaryButton} onClick={openIntroductionForm}><FaEdit /> Edit</button>
+              <button
+                type="button"
+                className={styles.introductionDeleteButton}
+                onClick={() => setDeleteModal({ type: 'introduction', id: initialIntroductionLesson.id, title: initialIntroductionLesson.title })}
+                title="Remove course introduction"
+                aria-label="Remove course introduction"
+              ><FaTrash /></button>
+            </>
+          ) : (
+            <button type="button" className={styles.introductionPrimaryButton} onClick={openIntroductionForm}><FaPlus /> Add introduction</button>
+          )}
+        </div>
+      </section>
+
+      {introductionForm && (
+        <form key={`introduction-${introductionForm.mode}`} onSubmit={handleIntroductionSubmit} className={`${styles.formCard} ${styles.introductionForm}`}>
+          <input type="hidden" name="rich_content_json" value={JSON.stringify({ version: 1, description: introductionDescriptionRich })} />
+          <div className={styles.formHeadingRow}>
+            <FaVideo />
+            <div>
+              <h3 className={styles.formTitle}>{introductionForm.mode === 'edit' ? 'Edit Course Introduction Video' : 'Add Course Introduction Video'}</h3>
+              <p className={styles.formIntro}>Learners complete this video before continuing to the course.</p>
+            </div>
+          </div>
+          <div className={styles.formSection}>
+            <div className={styles.formGroup}>
+              <label htmlFor="introduction-title">Introduction Title</label>
+              <input
+                id="introduction-title"
+                type="text"
+                name="title"
+                maxLength="200"
+                defaultValue={initialIntroductionLesson?.title || 'Course Introduction'}
+                required
+              />
+            </div>
+          </div>
+          <div className={styles.formSection}>
+            <div className={styles.formGroup}>
+              <label htmlFor="introduction-description">Short Description <span>(optional)</span></label>
+              <RichTextEditor
+                id="introduction-description"
+                name="description"
+                value={introductionDescriptionRich}
+                onChange={setIntroductionDescriptionRich}
+                ariaLabel="Course introduction short description"
+                maxLength={2000}
+                placeholder="Explain what learners will begin with..."
+              />
+            </div>
+          </div>
+          <div className={styles.formSection}>
+            <div className={styles.formGroup}>
+              <label htmlFor="introduction-youtube-url">YouTube URL</label>
+              <input
+                id="introduction-youtube-url"
+                type="url"
+                name="youtube_url"
+                maxLength="1000"
+                defaultValue={initialIntroductionLesson?.youtube_url || ''}
+                placeholder="https://www.youtube.com/watch?v=..."
+                required
+              />
+            </div>
+          </div>
+          <div className={styles.formActions}>
+            <button type="submit" disabled={isSaving} className={styles.submitButton}>
+              {isSaving && saveTarget === 'introduction' ? 'Saving...' : introductionForm.mode === 'edit' ? 'Update Introduction' : 'Add Introduction'}
+            </button>
+            <button type="button" onClick={() => setIntroductionForm(null)} className={styles.cancelButton}>Cancel</button>
+          </div>
+          {isSaving && saveTarget === 'introduction' && <SaveProgress label={saveLabel} />}
+        </form>
+      )}
 
       {moduleForm && (
         <form key={`${moduleForm.mode}-${moduleForm.module?.id || 'new'}`} onSubmit={handleModuleSubmit} className={styles.formCard}>
@@ -365,7 +580,12 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
 
       {lessonForm && (
         <form key={`${lessonForm.mode}-${lessonForm.lesson?.id || lessonForm.moduleId}`} onSubmit={handleLessonSubmit} className={styles.formCard}>
-          <input type="hidden" name="rich_content_json" value={JSON.stringify({ version: 1, description: lessonDescriptionRich })} />
+          <input type="hidden" name="rich_content_json" value={JSON.stringify({
+            version: 1,
+            description: lessonDescriptionRich,
+            instructions: lessonType === 'assessment' ? lessonInstructionsRich : createRichText(),
+          })} />
+          <input type="hidden" name="resource_rich_content_json" value={JSON.stringify({ version: 1, description: resourceTextRich })} />
           <div className={styles.formHeadingRow}>
             <FaFolderOpen />
             <h3 className={styles.formTitle}>{lessonForm.mode === 'edit' ? 'Edit Lesson' : 'New Lesson'}</h3>
@@ -402,6 +622,40 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
               </div>
             </div>
           </div>
+          {lessonType === 'assessment' && (
+            <div className={styles.formSection}>
+              <div className={styles.formGrid}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="assessment-key">Select Assessment</label>
+                  <CustomSelect
+                    id="assessment-key"
+                    name="assessment_key"
+                    value={assessmentKey}
+                    onChange={setAssessmentKey}
+                    options={assessments.map((assessment) => ({ value: assessment.id, label: assessment.title }))}
+                    ariaLabel="Assessment"
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <div className={styles.assessmentTimeLabelRow}>
+                    <label htmlFor="assessment-time-estimate">Estimated Time</label>
+                    {selectedAssessmentQuestionCount > 0 && (
+                      <span className={styles.assessmentQuestionCount}>
+                        {selectedAssessmentQuestionCount} question{selectedAssessmentQuestionCount === 1 ? '' : 's'}
+                      </span>
+                    )}
+                  </div>
+                  <CustomSelect
+                    id="assessment-time-estimate"
+                    name="assessment_time_estimate"
+                    defaultValue={lessonForm.lesson?.assessment_time_estimate || ASSESSMENT_TIME_OPTIONS[0]}
+                    options={ASSESSMENT_TIME_OPTIONS.map((option) => ({ value: option, label: option }))}
+                    ariaLabel="Estimated assessment time"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
           <div className={styles.formSection}>
             <div className={styles.formGroup}>
               <label htmlFor="lesson-description">Short Description</label>
@@ -423,15 +677,30 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
                 <input id="youtube-url" type="url" name="youtube_url" defaultValue={lessonForm.lesson?.youtube_url || ''} required />
               </div>
             ) : (
-              <div className={styles.formGroup}>
-                <label htmlFor="assessment-key">Select Assessment</label>
-                <CustomSelect
-                  id="assessment-key"
-                  name="assessment_key"
-                  defaultValue={lessonForm.lesson?.assessment_key || assessments[0]?.id}
-                  options={assessments.map((assessment) => ({ value: assessment.id, label: assessment.title }))}
-                  ariaLabel="Assessment"
-                />
+              <div className={styles.assessmentTextFields}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="assessment-instructions">Instructions <span>(optional)</span></label>
+                  <RichTextEditor
+                    id="assessment-instructions"
+                    name="instructions"
+                    value={lessonInstructionsRich}
+                    onChange={setLessonInstructionsRich}
+                    ariaLabel="Assessment instructions"
+                    maxLength={5000}
+                    placeholder="Add instructions learners should read before starting..."
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="assessment-completion-guidance">How to Complete This Assessment</label>
+                  <textarea
+                    id="assessment-completion-guidance"
+                    name="assessment_completion_guidance"
+                    rows="4"
+                    maxLength="2000"
+                    defaultValue={lessonForm.lesson?.assessment_completion_guidance || ''}
+                    placeholder="Explain what learners should do to complete the assessment..."
+                  />
+                </div>
               </div>
             )}
           </div>
@@ -462,14 +731,14 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
             {resourceType === 'text' && (
               <div className={styles.formGroup}>
                 <label htmlFor="resource-text">Resource Text</label>
-                <textarea
+                <RichTextEditor
                   id="resource-text"
                   name="resource_text"
-                  rows="5"
-                  maxLength="20000"
-                  defaultValue={lessonForm.lesson?.additional_resource?.text_content || ''}
+                  value={resourceTextRich}
+                  onChange={setResourceTextRich}
+                  ariaLabel="Additional resource text"
+                  maxLength={20000}
                   placeholder="Add the supporting text for this lesson..."
-                  required
                 />
               </div>
             )}
@@ -527,7 +796,7 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
           <button type="button" onClick={openNewModuleForm} className={styles.addButton}><FaPlus /> Create Module 01</button>
         </div>
       ) : (
-        <div className={styles.moduleList}>
+        <div className={styles.moduleList} id="course-modules">
           {modules.map((module, moduleIndex) => (
             <section key={module.id} className={styles.moduleCard}>
               <div className={styles.moduleHeader}>
@@ -539,7 +808,10 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
                   </div>
                 </div>
                 <div className={styles.moduleActions}>
-                  <span className={styles.lessonCount}>{module.lessons.length} {module.lessons.length === 1 ? 'lesson' : 'lessons'}</span>
+                  {(() => {
+                    const lessonCount = module.lessons.filter((lesson) => lesson.type === 'video').length
+                    return <span className={styles.lessonCount}>{lessonCount} {lessonCount === 1 ? 'lesson' : 'lessons'}</span>
+                  })()}
                   <button type="button" className={styles.iconButton} onClick={() => moveModule(moduleIndex, -1)} disabled={moduleIndex === 0} title="Move module up"><FaChevronUp /></button>
                   <button type="button" className={styles.iconButton} onClick={() => moveModule(moduleIndex, 1)} disabled={moduleIndex === modules.length - 1} title="Move module down"><FaChevronDown /></button>
                   <button type="button" className={`${styles.iconButton} ${styles.edit}`} onClick={() => openEditModuleForm(module)} title="Edit module"><FaEdit /></button>
@@ -558,7 +830,10 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
                     <div key={lesson.id} className={styles.lessonItem}>
                       <div className={styles.lessonOrderActions}>
                         <button type="button" onClick={() => moveLesson(module.id, lessonIndex, -1)} disabled={lessonIndex === 0} aria-label={`Move ${lesson.title} up`}><FaChevronUp /></button>
-                        <span>{String(lessonIndex + 1).padStart(2, '0')}</span>
+                        <span>
+                          {getLessonDisplayNumber(numberingStyle, moduleIndex, module.lessons, lessonIndex)
+                            || (lesson.type === 'assessment' ? <FaClipboardList /> : <FaPlay />)}
+                        </span>
                         <button type="button" onClick={() => moveLesson(module.id, lessonIndex, 1)} disabled={lessonIndex === module.lessons.length - 1} aria-label={`Move ${lesson.title} down`}><FaChevronDown /></button>
                       </div>
                       <div className={styles.lessonIcon}>{lesson.type === 'video' ? <FaPlay /> : <FaClipboardList />}</div>
@@ -592,10 +867,12 @@ export default function LessonListUI({ courseId, initialModules = [], assessment
       {deleteModal && (
         <div className={styles.lessonDeleteModalOverlay} onClick={() => !isDeleting && setDeleteModal(null)}>
           <div className={styles.lessonDeleteModalContent} onClick={(event) => event.stopPropagation()}>
-            <h2 className={styles.lessonDeleteModalTitle}>Delete {deleteModal.type === 'module' ? 'Module' : 'Lesson'}?</h2>
+            <h2 className={styles.lessonDeleteModalTitle}>Delete {deleteModal.type === 'module' ? 'Module' : deleteModal.type === 'introduction' ? 'Course Introduction' : 'Lesson'}?</h2>
             <p className={styles.lessonDeleteModalMessage}>You are about to delete <strong>{deleteModal.title}</strong>.</p>
             {deleteModal.type === 'module' && deleteModal.lessonCount > 0 ? (
               <p className={styles.lessonDeleteModalWarning}>This module still contains lessons. Move or delete them first.</p>
+            ) : deleteModal.type === 'introduction' ? (
+              <p className={styles.lessonDeleteModalWarning}>Module 1, Lesson 1 will become the first available lesson. Existing learner progress for this introduction will also be removed.</p>
             ) : (
               <p className={styles.lessonDeleteModalWarning}>This action cannot be undone.</p>
             )}

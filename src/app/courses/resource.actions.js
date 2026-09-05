@@ -19,7 +19,7 @@ export async function getCompletedLessonResource(lessonId) {
   const supabase = await getAuthenticatedClient()
   const { data, error } = await supabase
     .from('lesson_resources')
-    .select('resource_type, text_content, external_url, original_file_name')
+    .select('resource_type, text_content, rich_content, external_url, original_file_name')
     .eq('lesson_id', lessonId)
     .maybeSingle()
 

@@ -19,6 +19,7 @@ import {
   FaHeadset,
   FaImages,
   FaLightbulb,
+  FaLock,
   FaPlay,
   FaQuestionCircle,
   FaRegClock,
@@ -30,6 +31,7 @@ import EnrollButton from '@/components/EnrollButton'
 import RichText from '@/components/RichText'
 import { legacyDetailsToBlocks, normalizeContentBlocks } from '@/lib/course-content'
 import { sanitizeCourseRichContent } from '@/lib/course-rich-content'
+import { getLessonDisplayNumber } from '@/lib/lesson-numbering'
 import styles from './CourseDetails.module.css'
 
 const COURSE_TAGS = ['PERSONAL DEVELOPMENT', 'SELF-PACED']
@@ -272,7 +274,7 @@ function CourseFaqs({ faqs }) {
   )
 }
 
-export default function CourseDetailsExperience({ course, curriculumModules, galleryImages, faqs, exploreMoreItems, isLoggedIn, isEnrolled }) {
+export default function CourseDetailsExperience({ course, courseIntroductionLesson, curriculumModules, galleryImages, faqs, exploreMoreItems, isLoggedIn, isEnrolled }) {
   const [openModule, setOpenModule] = useState(curriculumModules[0]?.id || null)
   const revealProps = useScrollReveal()
   const learningOutcomes = useMemo(() => toList(course.what_youll_learn), [course.what_youll_learn])
@@ -295,7 +297,10 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
     meet_the_tutor: course.meet_the_tutor || '',
     explore_more: exploreMoreItems,
   }), [course, detailItems, exploreItems, exploreMoreItems, learningOutcomes, notForAudience, targetAudience])
-  const lessonCount = curriculumModules.reduce((total, module) => total + module.lessons.length, 0)
+  const lessonCount = curriculumModules.reduce(
+    (total, module) => total + module.lessons.filter((lesson) => lesson.type === 'video').length,
+    0
+  )
   const assessmentCount = curriculumModules.reduce((total, module) => total + module.lessons.filter((lesson) => lesson.type === 'assessment').length, 0)
   const moduleCount = curriculumModules.length
   const formattedPrice = `$${(Number(course.price_cents || 0) / 100).toFixed(2)}`
@@ -456,27 +461,50 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
                 <span>{moduleCount} {moduleCount === 1 ? 'module' : 'modules'} · {lessonCount} lessons</span>
               </div>
               <div className={styles.curriculumList}>
+                {courseIntroductionLesson && (
+                  <article className={styles.curriculumIntroduction}>
+                    <span className={styles.curriculumIntroductionIcon}><FaPlay /></span>
+                    <span className={styles.curriculumIntroductionCopy}>
+                      <small>Course introduction</small>
+                      <strong>{courseIntroductionLesson.title}</strong>
+                      {courseIntroductionLesson.description && (
+                        <p><RichText value={courseIntroductionLesson.rich_content?.description} fallback={courseIntroductionLesson.description} maxLength={2000} /></p>
+                      )}
+                    </span>
+                    <span className={styles.curriculumIntroductionMeta}>
+                      <strong>{formatDuration(courseIntroductionLesson.duration_seconds) || 'Video'}</strong>
+                      <small><FaLock /> Available after enrollment</small>
+                    </span>
+                  </article>
+                )}
                 {curriculumModules.map((module, moduleIndex) => {
                   const isOpen = openModule === module.id
+                  const moduleLessonCount = module.lessons.filter((lesson) => lesson.type === 'video').length
                   const moduleAssessments = module.lessons.filter((lesson) => lesson.type === 'assessment').length
                   return (
                     <article className={`${styles.moduleCard} ${isOpen ? styles.moduleOpen : ''}`} key={module.id}>
                       <button type="button" className={styles.moduleHeader} onClick={() => setOpenModule(isOpen ? null : module.id)} aria-expanded={isOpen}>
                         <span className={styles.moduleNumber}>{String(moduleIndex + 1).padStart(2, '0')}</span>
                         <span className={styles.moduleIdentity}><small>Module {String(moduleIndex + 1).padStart(2, '0')}</small><strong>{module.title}</strong></span>
-                        <span className={styles.moduleMeta}>{module.lessons.length} lessons{moduleAssessments ? ` · ${moduleAssessments} assessments` : ''}</span>
+                        <span className={styles.moduleMeta}>{moduleLessonCount} lessons{moduleAssessments ? ` · ${moduleAssessments} assessments` : ''}</span>
                         <i><FaChevronDown /></i>
                       </button>
                       <div className={styles.moduleBody}><div>
                         {module.description && <p className={styles.moduleObjective}><strong>Module objective</strong><RichText value={module.rich_content?.description} fallback={module.description} maxLength={500} /></p>}
                         <div className={styles.lessonList}>
-                          {module.lessons.map((lesson) => {
+                          {module.lessons.map((lesson, lessonIndex) => {
                             const duration = formatDuration(lesson.duration_seconds)
                             const isAssessment = lesson.type === 'assessment'
+                            const displayNumber = getLessonDisplayNumber(
+                              course.lesson_numbering_style,
+                              moduleIndex,
+                              module.lessons,
+                              lessonIndex
+                            )
                             return (
                               <div className={styles.lessonRow} key={lesson.id}>
                                 <span className={styles.lessonIcon}>{isAssessment ? <FaClipboardCheck /> : <FaPlay />}</span>
-                                <span className={styles.lessonCopy}><small>Lesson {String(lesson.curriculumPosition).padStart(2, '0')}</small><strong>{lesson.title}</strong>{lesson.description && <p><RichText value={lesson.rich_content?.description} fallback={lesson.description} maxLength={2000} /></p>}</span>
+                                <span className={styles.lessonCopy}><small>{displayNumber ? `Lesson ${displayNumber}` : isAssessment ? 'Assessment' : 'Video lesson'}</small><strong>{lesson.title}</strong>{lesson.description && <p><RichText value={lesson.rich_content?.description} fallback={lesson.description} maxLength={2000} /></p>}</span>
                                 <span className={styles.lessonType}>{isAssessment ? 'Assessment' : duration || 'Duration unavailable'}</span>
                               </div>
                             )
@@ -487,7 +515,7 @@ export default function CourseDetailsExperience({ course, curriculumModules, gal
                     </article>
                   )
                 })}
-                {!curriculumModules.length && <p className={styles.emptyCurriculum}>The curriculum will be available soon.</p>}
+                {!courseIntroductionLesson && !curriculumModules.length && <p className={styles.emptyCurriculum}>The curriculum will be available soon.</p>}
               </div>
             </section>
 

@@ -5,7 +5,7 @@ import { buildLessonAccessMap } from '@/lib/course-progression'
 
 const CourseProgressContext = createContext(null)
 
-export function CourseProgressProvider({ modules, initialCompletedMap, initialWatchedMap, children }) {
+export function CourseProgressProvider({ modules, introductionLesson, initialCompletedMap, initialWatchedMap, unlockAll = false, children }) {
   const [completedMap, setCompletedMap] = useState(initialCompletedMap || {})
   const [watchedMap, setWatchedMap] = useState(initialWatchedMap || {})
 
@@ -28,10 +28,10 @@ export function CourseProgressProvider({ modules, initialCompletedMap, initialWa
   const value = useMemo(() => ({
     completedMap,
     watchedMap,
-    accessMap: buildLessonAccessMap(modules, completedMap),
+    accessMap: buildLessonAccessMap(modules, completedMap, introductionLesson, unlockAll),
     markLessonCompleted,
     updateLessonWatchedProgress
-  }), [completedMap, markLessonCompleted, modules, updateLessonWatchedProgress, watchedMap])
+  }), [completedMap, introductionLesson, markLessonCompleted, modules, unlockAll, updateLessonWatchedProgress, watchedMap])
 
   return (
     <CourseProgressContext.Provider value={value}>

@@ -8,6 +8,7 @@ import DiscoverCoursesDashboard from './DiscoverCoursesDashboard'
 import PurchaseHistoryDashboard from './PurchaseHistoryDashboard'
 import ProfileSecurityDashboard from './ProfileSecurityDashboard'
 import styles from './dashboard.module.css'
+import { isStaffRole } from '@/lib/auth-utils'
 
 export const metadata = {
   title: 'Dashboard | ZakTalks',
@@ -29,6 +30,7 @@ export default async function DashboardPage() {
     .select('*')
     .eq('id', user.id)
     .single()
+  const unlockAll = isStaffRole(profile?.role)
 
   const [
     { data: enrollments },
@@ -49,6 +51,7 @@ export default async function DashboardPage() {
           description,
           promise,
           short_introduction,
+          lesson_numbering_style,
           logo_url,
           deleted_at,
           modules:course_modules (
@@ -64,12 +67,13 @@ export default async function DashboardPage() {
             type,
             assessment_key,
             duration_seconds,
-            display_order
+            display_order,
+            is_course_introduction
           )
         )
       `)
       .eq('user_id', user.id)
-      .eq('payment_status', 'completed')
+      .in('payment_status', ['completed', 'staff'])
       .is('course.deleted_at', null)
       .order('created_at', { ascending: false }),
     supabase
@@ -103,7 +107,7 @@ export default async function DashboardPage() {
         price_cents,
         created_at,
         modules:course_modules (id),
-        lessons:lessons (id)
+        lessons:lessons (id, type, is_course_introduction)
       `)
       .eq('is_published', true)
       .is('deleted_at', null)
@@ -115,39 +119,42 @@ export default async function DashboardPage() {
     .filter((enrollment) => enrollment.course && !enrollment.course.deleted_at)
     .map((enrollment) => {
       const course = enrollment.course
+      const lessonsWithProgress = (course.lessons || []).map((lesson) => {
+        const progress = progressByLesson.get(lesson.id)
+        const duration = Number(lesson.duration_seconds) || 0
+        const verifiedPosition = Math.max(
+          Number(progress?.max_position_reached_seconds) || 0,
+          Number(progress?.watch_time_seconds) || 0
+        )
+
+        return {
+          ...lesson,
+          progress: progress ? {
+            is_completed: progress.is_completed,
+            started_at: progress.started_at,
+            completed_at: progress.completed_at,
+            last_accessed_at: progress.last_accessed_at,
+            watched_percent: progress.is_completed
+              ? 100
+              : duration > 0
+                ? Math.min(95, Math.floor(((verifiedPosition / duration) * 100) / 5) * 5)
+                : 0,
+          } : null,
+        }
+      })
+      const introductionLesson = lessonsWithProgress.find((lesson) => lesson.is_course_introduction) || null
       const modules = [...(course.modules || [])]
         .sort((a, b) => a.display_order - b.display_order)
         .map((module) => ({
           ...module,
-          lessons: (course.lessons || [])
-            .filter((lesson) => lesson.module_id === module.id)
+          lessons: lessonsWithProgress
+            .filter((lesson) => !lesson.is_course_introduction && lesson.module_id === module.id)
             .sort((a, b) => a.display_order - b.display_order)
-            .map((lesson) => {
-              const progress = progressByLesson.get(lesson.id)
-              const duration = Number(lesson.duration_seconds) || 0
-              const verifiedPosition = Math.max(
-                Number(progress?.max_position_reached_seconds) || 0,
-                Number(progress?.watch_time_seconds) || 0
-              )
-
-              return {
-                ...lesson,
-                progress: progress ? {
-                  is_completed: progress.is_completed,
-                  started_at: progress.started_at,
-                  completed_at: progress.completed_at,
-                  last_accessed_at: progress.last_accessed_at,
-                  watched_percent: progress.is_completed
-                    ? 100
-                    : duration > 0
-                      ? Math.min(95, Math.floor(((verifiedPosition / duration) * 100) / 5) * 5)
-                      : 0,
-                } : null,
-              }
-            }),
         }))
-      const activityDates = modules
-        .flatMap((module) => module.lessons)
+      const activityDates = [
+        ...(introductionLesson ? [introductionLesson] : []),
+        ...modules.flatMap((module) => module.lessons)
+      ]
         .map((lesson) => lesson.progress?.last_accessed_at)
         .filter(Boolean)
         .sort((a, b) => new Date(b) - new Date(a))
@@ -157,9 +164,12 @@ export default async function DashboardPage() {
         title: course.title,
         slug: course.slug,
         description: course.short_introduction || course.promise || course.description,
+        lesson_numbering_style: course.lesson_numbering_style,
         logo_url: course.logo_url,
         enrolled_at: enrollment.created_at,
         last_activity_at: activityDates[0] || null,
+        unlockAll,
+        introductionLesson,
         modules,
       }
     })
@@ -179,7 +189,9 @@ export default async function DashboardPage() {
       price_cents: course.price_cents,
       created_at: course.created_at,
       module_count: course.modules?.length || 0,
-      lesson_count: course.lessons?.length || 0,
+      lesson_count: (course.lessons || []).filter((lesson) => (
+        lesson.type === 'video' && !lesson.is_course_introduction
+      )).length,
     }))
 
   return (

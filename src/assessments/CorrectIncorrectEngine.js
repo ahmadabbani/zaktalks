@@ -136,13 +136,12 @@ export default function CorrectIncorrectEngine({ definition, onComplete, enableR
       {/* Header / Progress */}
       <div className={styles.header}>
         <div className={styles.progressInfo}>
-          <span className={styles.questionCount}>Question {currentIndex + 1} of {totalQuestions}</span>
-          <span className={styles.progressPercentage}>{Math.round(progress)}%</span>
+          <span className={styles.progressPercentage}>{currentIndex + 1} / {totalQuestions}</span>
         </div>
         <div className={styles.progressBarContainer}>
           <div
             className={styles.progressBarFill}
-            style={{ width: `${progress}%`, backgroundColor: definition.themeColor || 'var(--color-yellow)' }}
+            style={{ width: `${progress}%`, backgroundColor: 'var(--color-dark-blue)' }}
           ></div>
         </div>
       </div>

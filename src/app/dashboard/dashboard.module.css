@@ -786,6 +786,51 @@
   display: grid;
 }
 
+.learnerIntroductionLesson {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.1rem clamp(1.1rem, 2vw, 1.8rem) 1.25rem;
+  border-bottom: 1px solid rgba(33, 44, 45, 0.09);
+  background: rgba(var(--color-dark-blue-rgb), 0.045);
+}
+
+.learnerIntroductionHeading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.learnerIntroductionHeading > span {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 auto;
+  border-radius: 0.75rem;
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+  place-items: center;
+}
+
+.learnerIntroductionHeading > div {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.learnerIntroductionHeading small {
+  color: var(--color-dark-blue);
+  font-size: 0.74rem;
+  font-weight: 820;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.learnerIntroductionHeading strong {
+  color: var(--color-black);
+  font-size: clamp(1rem, 1.05vw, 1.16rem);
+  line-height: 1.35;
+}
+
 .learnerModule + .learnerModule {
   border-top: 1px solid rgba(33, 44, 45, 0.09);
 }

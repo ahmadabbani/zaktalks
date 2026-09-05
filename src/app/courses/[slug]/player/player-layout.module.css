@@ -167,6 +167,46 @@
     padding-bottom: var(--space-lg);
 }
 
+.courseIntroductionBlock {
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-gray);
+    background: rgba(37, 140, 155, 0.06);
+}
+
+.courseIntroductionHeading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: 0 0.25rem 0.65rem;
+}
+
+.courseIntroductionHeading span,
+.courseIntroductionHeading small {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.courseIntroductionHeading span {
+    color: var(--color-dark-blue);
+}
+
+.courseIntroductionHeading small {
+    color: var(--color-gray-dark);
+    letter-spacing: 0.04em;
+}
+
+.courseIntroductionComplete .courseIntroductionHeading small {
+    color: #168247;
+}
+
+.courseIntroductionItem {
+    margin-bottom: 0;
+    border-color: rgba(37, 140, 155, 0.18);
+}
+
 .lessonModule + .lessonModule {
     border-top: 1px solid var(--color-gray);
 }

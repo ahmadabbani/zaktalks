@@ -5,9 +5,10 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { FaPlayCircle, FaClipboardList, FaCheckCircle, FaChevronDown, FaLock } from 'react-icons/fa'
 import { useCourseProgress } from './CourseProgressContext'
+import { getLessonDisplayNumber } from '@/lib/lesson-numbering'
 import styles from './player-layout.module.css'
 
-export default function LessonList({ modules, slug }) {
+export default function LessonList({ modules, introductionLesson, numberingStyle, slug }) {
   const pathname = usePathname()
   const { completedMap, watchedMap, accessMap } = useCourseProgress()
   const activeModuleId = modules?.find((module) =>
@@ -17,12 +18,52 @@ export default function LessonList({ modules, slug }) {
   const openModuleId = moduleSelection?.pathname === pathname
     ? moduleSelection.moduleId
     : activeModuleId
-  let lessonNumber = 0
   
   return (
     <div className={styles.moduleLessonList}>
+      {introductionLesson && (() => {
+        const isCompleted = Boolean(completedMap[introductionLesson.id])
+        const isActive = pathname.includes(`/player/${introductionLesson.id}`)
+
+        return (
+          <section className={`${styles.courseIntroductionBlock} ${isCompleted ? styles.courseIntroductionComplete : ''}`}>
+            <div className={styles.courseIntroductionHeading}>
+              <span>COURSE INTRODUCTION</span>
+              <small>{isCompleted ? 'Completed' : 'Start here'}</small>
+            </div>
+            <Link
+              href={`/courses/${slug}/player/${introductionLesson.id}`}
+              className={`${styles.lessonItem} ${styles.courseIntroductionItem} ${isActive ? styles.lessonItemActive : ''} ${isCompleted ? styles.lessonItemComplete : ''}`}
+            >
+              <div className={`${styles.lessonNumber} ${isCompleted ? styles.lessonNumberComplete : styles.lessonNumberIncomplete}`}>
+                {isCompleted ? <FaCheckCircle /> : <FaPlayCircle />}
+              </div>
+              <div className={styles.lessonContent}>
+                <div className={styles.lessonTitle}>{introductionLesson.title}</div>
+                <div className={styles.lessonMeta}>
+                  <FaPlayCircle /> Video introduction
+                  {isCompleted ? (
+                    <span className={`${styles.lessonAccessLabel} ${styles.lessonCompletedLabel}`}>
+                      <FaCheckCircle /> Completed
+                    </span>
+                  ) : (
+                    <span className={styles.lessonVideoProgress} aria-label={`${watchedMap[introductionLesson.id] || 0}% watched`}>
+                      <span className={styles.lessonVideoProgressTrack} aria-hidden="true">
+                        <span style={{ width: `${watchedMap[introductionLesson.id] || 0}%` }} />
+                      </span>
+                      <strong>{watchedMap[introductionLesson.id] || 0}%</strong>
+                    </span>
+                  )}
+                </div>
+              </div>
+            </Link>
+          </section>
+        )
+      })()}
       {modules?.map((module, moduleIndex) => {
         const completedInModule = module.lessons.filter((lesson) => completedMap[lesson.id]).length
+        const videoLessonsInModule = module.lessons.filter((lesson) => lesson.type === 'video')
+        const completedVideosInModule = videoLessonsInModule.filter((lesson) => completedMap[lesson.id]).length
         const moduleIsComplete = module.lessons.length > 0 && completedInModule === module.lessons.length
         const moduleProgress = module.lessons.length > 0
           ? Math.round((completedInModule / module.lessons.length) * 100)
@@ -45,7 +86,7 @@ export default function LessonList({ modules, slug }) {
             <div className={styles.lessonModuleHeadingCopy}>
               <div className={styles.lessonModuleEyebrow}>
                 <span>MODULE {String(moduleIndex + 1).padStart(2, '0')}</span>
-                <small>{completedInModule}/{module.lessons.length}</small>
+                <small>{completedVideosInModule}/{videoLessonsInModule.length}</small>
               </div>
               <h3>{module.title}</h3>
               <div className={styles.lessonModuleProgressRow}>
@@ -74,9 +115,8 @@ export default function LessonList({ modules, slug }) {
           >
             <div className={styles.lessonModulePanelInner}>
               <div className={styles.lessonList}>
-            {module.lessons.map((lesson) => {
-              lessonNumber += 1
-              const currentNumber = lessonNumber
+            {module.lessons.map((lesson, lessonIndex) => {
+              const displayNumber = getLessonDisplayNumber(numberingStyle, moduleIndex, module.lessons, lessonIndex)
               const isCompleted = completedMap[lesson.id]
               const isUnlocked = accessMap[lesson.id]
               const isActive = pathname.includes(`/player/${lesson.id}`)
@@ -88,7 +128,9 @@ export default function LessonList({ modules, slug }) {
                   className={`${styles.lessonItem} ${isActive ? styles.lessonItemActive : ''} ${isCompleted ? styles.lessonItemComplete : ''}`}
                 >
                   <div className={`${styles.lessonNumber} ${isCompleted ? styles.lessonNumberComplete : styles.lessonNumberIncomplete}`}>
-                    {isCompleted ? <FaCheckCircle /> : currentNumber}
+                    {isCompleted
+                      ? <FaCheckCircle />
+                      : displayNumber || (lesson.type === 'assessment' ? <FaClipboardList /> : <FaPlayCircle />)}
                   </div>
                   <div className={styles.lessonContent}>
                     <div className={styles.lessonTitle}>{lesson.title}</div>
