@@ -75,7 +75,7 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
             </div>
           ) : (
             <div className={`${styles.introBody} ${styles.introPreparation}`}>
-              <h3>How to complete this assessment</h3>
+              <h3>Instructions</h3>
               {definition.intro && (
                 <p className={styles.introCompletionText}>{definition.intro}</p>
               )}

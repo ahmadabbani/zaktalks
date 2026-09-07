@@ -568,10 +568,8 @@
 
 .externalAssessmentPage {
     min-height: 100vh;
-    padding: calc(var(--space-3xl) + 28px) var(--container-padding) var(--space-3xl);
-    background:
-        radial-gradient(circle at top left, rgba(255, 215, 0, 0.16), transparent 34%),
-        linear-gradient(135deg, #f8fafc 0%, #eef6ff 100%);
+    padding: clamp(8rem, 9vw, 9.5rem) var(--container-padding) var(--space-3xl);
+    background: color-mix(in srgb, var(--color-dark-blue) 6%, var(--color-white));
 }
 
 .externalAssessmentShell {
@@ -2914,6 +2912,43 @@
     box-shadow: none;
 }
 
+.externalSharedAssessment .resultContainer,
+.externalSharedAssessment .cathResultContainer,
+.externalSharedAssessment .strokeResultContainer,
+.externalSharedAssessment .driverResultContainer,
+.externalSharedAssessment .binaryResultContainer,
+.externalSharedAssessment .egoResultContainer {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.externalSharedAssessment .screenshotBtn {
+    display: flex;
+    width: fit-content;
+    border-color: var(--color-dark-blue);
+    background: var(--color-dark-blue);
+    color: var(--color-white);
+}
+
+.externalSharedAssessment .screenshotBtn:hover:not(:disabled) {
+    border-color: var(--color-yellow);
+    background: var(--color-yellow);
+    color: var(--color-black);
+    box-shadow: none;
+}
+
+.externalSharedAssessment .retakeBtn:hover:not(:disabled) {
+    background: var(--color-yellow);
+    color: var(--color-black);
+    box-shadow: none;
+}
+
 .externalSharedAssessment .scaleButtons,
 .externalSharedAssessment .binaryOptions,
 .externalSharedAssessment .driverOptions,
@@ -3143,7 +3178,7 @@
     }
 
     .externalAssessmentPage {
-        padding: calc(var(--space-xl) + 72px) var(--container-padding) var(--space-xl);
+        padding: 6.75rem var(--container-padding) var(--space-xl);
     }
 
     .externalAssessmentLogoBar {
@@ -3400,7 +3435,7 @@
     }
 
     .externalAssessmentPage {
-        padding: calc(var(--space-lg) + 76px) var(--container-padding) var(--space-lg);
+        padding: 6.25rem var(--container-padding) var(--space-lg);
     }
 
     .externalAssessmentLogoBar img {
