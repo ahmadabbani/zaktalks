@@ -2872,6 +2872,113 @@
     }
 }
 
+/* External assessments use the same shared player presentation without
+   changing their standalone scoring or result behavior. */
+.externalAssessmentShell.externalSharedAssessment {
+    padding: clamp(1rem, 2.5vw, 2rem);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 1.15rem;
+    background: var(--color-white);
+    box-shadow: 0 16px 42px rgba(15, 23, 42, 0.08);
+}
+
+.introContainer.externalSharedIntro {
+    margin-top: 0;
+}
+
+.externalIntroHeroLogo {
+    display: grid;
+    flex: 0 0 auto;
+    width: clamp(64px, 8vw, 96px);
+    aspect-ratio: 1;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 50%;
+    background: var(--color-white);
+}
+
+.externalIntroHeroLogo img {
+    display: block;
+    width: 82%;
+    height: 82%;
+    object-fit: contain;
+}
+
+.externalSharedAssessment .externalQuestionContainer {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.externalSharedAssessment .scaleButtons,
+.externalSharedAssessment .binaryOptions,
+.externalSharedAssessment .driverOptions,
+.externalSharedAssessment .egoOptions,
+.externalSharedAssessment .ciOptionsSection {
+    display: grid;
+    width: 100%;
+    grid-auto-rows: 1fr;
+    gap: clamp(0.5rem, 1vw, 0.75rem);
+}
+
+.externalSharedAssessment .scaleButtons {
+    grid-template-columns: repeat(auto-fit, minmax(min(112px, 100%), 1fr));
+}
+
+.externalSharedAssessment .binaryOptions {
+    grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+}
+
+.externalSharedAssessment .driverOptions,
+.externalSharedAssessment .ciOptionsSection {
+    grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+}
+
+.externalSharedAssessment .egoOptions {
+    grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
+}
+
+.externalSharedAssessment .scaleBtn,
+.externalSharedAssessment .binaryOptionBtn,
+.externalSharedAssessment .driverOptionBtn,
+.externalSharedAssessment .ciOptionBtn,
+.externalSharedAssessment .egoOptionCard {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.externalSharedAssessment .scaleBtn,
+.externalSharedAssessment .binaryOptionBtn,
+.externalSharedAssessment .driverOptionBtn,
+.externalSharedAssessment .ciOptionBtn {
+    padding: clamp(0.6rem, 1vw, 0.8rem) clamp(0.55rem, 1.2vw, 1rem);
+    font-size: clamp(0.84rem, 1vw, 1rem);
+}
+
+@media (max-width: 768px) {
+    .externalAssessmentShell.externalSharedAssessment {
+        padding: var(--space-md);
+    }
+
+    .introContainer.externalSharedIntro {
+        margin-top: 0;
+        padding: 0;
+    }
+
+    .externalIntroHeroLogo {
+        width: 58px;
+    }
+
+    .externalSharedAssessment .egoOptions {
+        grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+    }
+}
+
 @media (max-width: 480px) {
     .strokeResultHero {
         padding: 1.15rem;

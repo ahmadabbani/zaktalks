@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { getAssessmentById } from '@/assessments/registry'
 import LikertEngine from '@/assessments/LikertEngine'
 import CorrectIncorrectEngine from '@/assessments/CorrectIncorrectEngine'
@@ -10,10 +11,12 @@ import BinaryScoredEngine from '@/assessments/BinaryScoredEngine'
 import DriverQuestionnaireEngine from '@/assessments/DriverQuestionnaireEngine'
 import EgoStateAnalysisEngine from '@/assessments/EgoStateAnalysisEngine'
 import ExternalFillableWorksheetEngine from '@/assessments/ExternalFillableWorksheetEngine'
+import { getAssessmentStatementCount } from '@/lib/assessment-lesson-metadata'
+import { FaArrowRight, FaClipboardCheck, FaShieldAlt } from 'react-icons/fa'
 import styles from '@/assessments/assessment.module.css'
 
 export default function ExternalAssessmentRunner({ assessmentKey }) {
-  const [hasStarted, setHasStarted] = useState(false)
+  const [stage, setStage] = useState('overview')
   const definition = getAssessmentById(assessmentKey)
   const resultCaptureId = `external-assessment-result-${assessmentKey}`
 
@@ -26,39 +29,72 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
     )
   }
 
-  if (!hasStarted) {
+  if (stage !== 'assessment') {
+    const statementCount = getAssessmentStatementCount(definition)
+
     return (
-      <div className={`${styles.introContainer} ${styles.externalIntroContainer} ${styles.externalIntroWithTopSpace} ${definition.introVariant === 'driver' ? styles.driverIntroContainer : ''}`}>
-        {definition.logo && (
-          <img
-            src={definition.logo}
-            alt={`${definition.title} logo`}
-            className={styles.externalIntroLogo}
-          />
-        )}
-        <h2 className={styles.introTitle}>{definition.title}</h2>
-        {definition.description && (
-          <p className={`${styles.introDescription} ${styles.externalIntroDescriptionBlock}`}>
-            {definition.description}
-          </p>
-        )}
-        {definition.intro && (
-          <p className={`${styles.externalIntroInstructions} ${definition.introVariant === 'driver' ? styles.driverIntroBlock : ''}`}>
-            {definition.intro}
-          </p>
-        )}
-        {definition.scoring?.instructions && (
-          <p className={`${styles.externalIntroScoring} ${definition.introVariant === 'driver' ? styles.driverScoringBlock : ''}`}>
-            {definition.scoring.instructions}
-          </p>
-        )}
-        <button
-          type="button"
-          className={styles.introStartBtn}
-          onClick={() => setHasStarted(true)}
-        >
-          Start Assessment
-        </button>
+      <div className={`${styles.externalAssessmentShell} ${styles.externalSharedAssessment}`}>
+        <div className={`${styles.introContainer} ${styles.externalSharedIntro}`}>
+          <header className={styles.introHero}>
+            <div className={styles.introHeroCopy}>
+              <h2>{definition.title}</h2>
+              <div className={styles.introHeroMeta}>
+                {statementCount > 0 && <span>{statementCount} statements</span>}
+                <span><FaShieldAlt /> Private by default</span>
+              </div>
+            </div>
+            {definition.logo ? (
+              <span className={styles.externalIntroHeroLogo}>
+                <Image
+                  src={definition.logo}
+                  alt=""
+                  aria-hidden="true"
+                  width={96}
+                  height={96}
+                  quality={86}
+                />
+              </span>
+            ) : (
+              <FaClipboardCheck className={styles.introHeroIcon} aria-hidden="true" />
+            )}
+          </header>
+
+          {stage === 'overview' ? (
+            <div className={styles.introBody}>
+              <span className={styles.introEyebrow}>What this assessment explores</span>
+              {definition.description && (
+                <p className={styles.introDescription}>{definition.description}</p>
+              )}
+              <button
+                type="button"
+                className={styles.introStartBtn}
+                onClick={() => setStage('instructions')}
+              >
+                Start Assessment <FaArrowRight />
+              </button>
+            </div>
+          ) : (
+            <div className={`${styles.introBody} ${styles.introPreparation}`}>
+              <h3>How to complete this assessment</h3>
+              {definition.intro && (
+                <p className={styles.introCompletionText}>{definition.intro}</p>
+              )}
+              {definition.scoring?.instructions && (
+                <div className={styles.introInstructions}>
+                  <strong>Scoring</strong>
+                  <p>{definition.scoring.instructions}</p>
+                </div>
+              )}
+              <button
+                type="button"
+                className={styles.introStartBtn}
+                onClick={() => setStage('assessment')}
+              >
+                I&apos;m ready to begin <FaArrowRight />
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     )
   }
@@ -102,13 +138,7 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
   }
 
   return (
-    <div className={styles.externalAssessmentShell}>
-      {definition.logo && (
-        <div className={styles.externalAssessmentLogoBar}>
-          <img src={definition.logo} alt={`${definition.title} logo`} />
-        </div>
-      )}
-
+    <div className={`${styles.externalAssessmentShell} ${styles.externalSharedAssessment}`}>
       {renderEngine()}
     </div>
   )

@@ -4,6 +4,7 @@ import {
   buildCourseAccessEmail,
   buildPaymentReceiptEmail,
 } from '@/lib/email/templates/purchase'
+import DownloadPdfButton from './DownloadPdfButton'
 import styles from './email-previews.module.css'
 
 export const dynamic = 'force-dynamic'
@@ -67,7 +68,10 @@ export default function EmailPreviewsPage() {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <span>Development preview</span>
+        <div className={styles.headerTopline}>
+          <span>Development preview</span>
+          <DownloadPdfButton />
+        </div>
         <h1>Email designs</h1>
         <p>This local-only gallery uses the same templates sent through Resend. Sample names and links are used for previewing.</p>
       </header>

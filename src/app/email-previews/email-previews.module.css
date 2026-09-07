@@ -11,7 +11,14 @@
   margin-inline: auto;
 }
 
-.header > span {
+.headerTopline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.headerTopline > span {
   display: inline-flex;
   padding: 0.48rem 0.76rem;
   border-radius: 999px;
@@ -21,6 +28,36 @@
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.downloadButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  min-height: 3rem;
+  padding: 0.72rem 1.1rem;
+  border: 0;
+  border-radius: 999px;
+  background: #258c9b;
+  color: #fffefe;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 750;
+  cursor: pointer;
+  box-shadow: 0 0.7rem 1.5rem rgb(37 140 155 / 18%);
+  transition: background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.downloadButton:hover {
+  background: #212c2d;
+  transform: translateY(-2px);
+  box-shadow: 0 0.9rem 1.8rem rgb(33 44 45 / 16%);
+}
+
+.downloadButton:focus-visible {
+  outline: 3px solid rgb(37 140 155 / 25%);
+  outline-offset: 3px;
 }
 
 .header h1 {
@@ -115,6 +152,11 @@
 }
 
 @media (max-width: 760px) {
+  .headerTopline {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .previewHeader {
     grid-template-columns: 1fr;
   }
@@ -126,5 +168,44 @@
 
   .emailFrame {
     height: 900px;
+  }
+}
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  .page {
+    padding: 0;
+    background: #ffffff;
+  }
+
+  .downloadButton {
+    display: none;
+  }
+
+  .previewList {
+    gap: 12mm;
+    margin-top: 12mm;
+  }
+
+  .previewCard {
+    border-radius: 0;
+    box-shadow: none;
+    break-after: page;
+  }
+
+  .previewCard:last-child {
+    break-after: auto;
+  }
+
+  .emailCanvas {
+    padding: 0;
+    background: #ffffff;
+  }
+
+  .emailFrame {
+    border-radius: 0;
   }
 }
