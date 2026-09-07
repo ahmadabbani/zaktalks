@@ -94,5 +94,5 @@ export async function verifyLessonProgressAccess(supabase, userId, lessonId, exp
     if (!accessMap[lessonId]) throw new Error('Complete the previous lesson to unlock this lesson.')
   }
 
-  return { lesson, enrollment, existingProgress }
+  return { lesson, enrollment, existingProgress, hasStaffAccess }
 }

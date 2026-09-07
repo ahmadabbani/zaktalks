@@ -9,6 +9,7 @@ import {
   FaLock,
   FaPause,
   FaPlay,
+  FaUnlock,
   FaVolumeMute,
   FaVolumeUp
 } from 'react-icons/fa'
@@ -58,7 +59,13 @@ function initialProgressPercent(progress, duration) {
   return Math.min(95, Math.floor(((verified / duration) * 100) / 5) * 5)
 }
 
-export default function YouTubePlayer({ videoId, lessonId, durationSeconds, initialProgress }) {
+export default function YouTubePlayer({
+  videoId,
+  lessonId,
+  durationSeconds,
+  initialProgress,
+  allowUnrestrictedSeeking = false
+}) {
   const cleanVideoId = extractVideoId(videoId)
   const initiallyCompleted = Boolean(initialProgress?.is_completed)
   const { markLessonCompleted, updateLessonWatchedProgress } = useCourseProgress()
@@ -124,15 +131,15 @@ export default function YouTubePlayer({ videoId, lessonId, durationSeconds, init
     }
 
     const player = playerRef.current
-    if (!result.isCompleted && player?.getCurrentTime) {
+    if (!allowUnrestrictedSeeking && !result.isCompleted && player?.getCurrentTime) {
       const currentPosition = player.getCurrentTime()
       if (currentPosition > Number(result.acceptedPosition) + 4) {
         player.seekTo(Number(result.acceptedPosition), true)
       }
     }
-  }, [lessonId, markLessonCompleted, updateLessonWatchedProgress])
+  }, [allowUnrestrictedSeeking, lessonId, markLessonCompleted, updateLessonWatchedProgress])
 
-  const queueCheckpoint = useCallback((event) => {
+  const queueCheckpoint = useCallback((event, positionOverride = null) => {
     // Completion is final. Replays are intentionally local-only so seeking,
     // pausing, or rewatching cannot rewrite resume/activity analytics.
     if (completedRef.current) {
@@ -142,7 +149,12 @@ export default function YouTubePlayer({ videoId, lessonId, durationSeconds, init
     const player = playerRef.current
     if (!player?.getCurrentTime || !player?.getDuration) return Promise.resolve(null)
 
-    const positionSeconds = player.getCurrentTime()
+    const hasPositionOverride = positionOverride !== null
+      && positionOverride !== undefined
+      && Number.isFinite(Number(positionOverride))
+    const positionSeconds = hasPositionOverride
+      ? Math.max(0, Number(positionOverride))
+      : player.getCurrentTime()
 
     // Rewatching an already verified section must not move the learner's saved
     // resume point backwards. Saving resumes automatically at the frontier.
@@ -319,13 +331,17 @@ export default function YouTubePlayer({ videoId, lessonId, durationSeconds, init
 
   const handleSeek = (event) => {
     const requestedPosition = Number(event.target.value)
-    const position = isCompleted
+    const position = isCompleted || allowUnrestrictedSeeking
       ? requestedPosition
       : Math.min(requestedPosition, verifiedMaxRef.current)
 
     event.target.value = String(Math.max(0, Math.floor(position)))
     playerRef.current?.seekTo?.(position, true)
     updateTimeDisplay(position, duration)
+
+    if (allowUnrestrictedSeeking && !completedRef.current) {
+      queueCheckpoint('seek', position)
+    }
   }
 
   const toggleFullscreen = async () => {
@@ -354,7 +370,11 @@ export default function YouTubePlayer({ videoId, lessonId, durationSeconds, init
           <strong>{progressPercent}% watched</strong>
         </div>
         <span className={`${styles.progressState} ${isCompleted ? styles.progressStateComplete : ''}`}>
-          {isCompleted ? <><FaCheck /> Complete</> : <><FaLock /> Seeking unlocks at 97%</>}
+          {isCompleted
+            ? <><FaCheck /> Complete</>
+            : allowUnrestrictedSeeking
+              ? <><FaUnlock /> Seeking enabled</>
+              : <><FaLock /> Seeking unlocks at 97%</>}
         </span>
       </div>
       <div
@@ -395,14 +415,14 @@ export default function YouTubePlayer({ videoId, lessonId, durationSeconds, init
 
         <input
           ref={seekRef}
-          className={`${styles.seek} ${!isCompleted ? styles.seekRestricted : ''}`}
+          className={`${styles.seek} ${!isCompleted && !allowUnrestrictedSeeking ? styles.seekRestricted : ''}`}
           type="range"
           min="0"
           max={Math.max(1, Math.floor(duration || 1))}
           defaultValue="0"
           onChange={handleSeek}
           disabled={!isPlayerReady || Boolean(error)}
-          aria-label={isCompleted ? 'Seek through video' : 'Seek within watched video'}
+          aria-label={isCompleted || allowUnrestrictedSeeking ? 'Seek through video' : 'Seek within watched video'}
         />
 
         <button type="button" className={styles.iconControl} onClick={toggleMute} aria-label={isMuted ? 'Unmute' : 'Mute'}>

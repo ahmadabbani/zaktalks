@@ -13,7 +13,7 @@ const HEARTBEAT_GRACE_SECONDS = 2
 const MAX_CREDITABLE_GAP_SECONDS = 20
 const REVIEW_TOLERANCE_SECONDS = 2
 const MAX_VIDEO_DURATION_SECONDS = 12 * 60 * 60
-const VALID_VIDEO_EVENTS = new Set(['start', 'heartbeat', 'pause', 'ended'])
+const VALID_VIDEO_EVENTS = new Set(['start', 'heartbeat', 'pause', 'ended', 'seek'])
 
 function playbackStatusForEvent(event) {
   if (event === 'pause') return 'paused'
@@ -68,7 +68,7 @@ export async function saveVideoProgress({ lessonId, positionSeconds, durationSec
 
   const user = await getAuthenticatedUser()
   const adminSupabase = await createAdminClient()
-  const { lesson, enrollment, existingProgress } = await verifyLessonProgressAccess(
+  const { lesson, enrollment, existingProgress, hasStaffAccess } = await verifyLessonProgressAccess(
     adminSupabase,
     user.id,
     lessonId,
@@ -131,9 +131,11 @@ export async function saveVideoProgress({ lessonId, positionSeconds, durationSec
     ? 0
     : elapsedSeconds + (elapsedSeconds >= 5 ? HEARTBEAT_GRACE_SECONDS : 0)
   const furthestAllowedPosition = Math.min(duration, previousMax + creditableAdvance)
-  const acceptedPosition = reportedPosition <= previousMax
+  const acceptedPosition = hasStaffAccess
     ? reportedPosition
-    : Math.min(reportedPosition, furthestAllowedPosition)
+    : reportedPosition <= previousMax
+      ? reportedPosition
+      : Math.min(reportedPosition, furthestAllowedPosition)
   const verifiedMax = Math.max(previousMax, acceptedPosition)
   const verifiedWatchTime = Math.max(
     finiteInteger(existingProgress?.watch_time_seconds),

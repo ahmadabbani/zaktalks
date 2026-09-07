@@ -184,6 +184,7 @@ export default async function LessonPage({ params }) {
             lessonId={lesson.id}
             durationSeconds={lesson.duration_seconds}
             initialProgress={progress}
+            allowUnrestrictedSeeking={unlockAll}
           />
         </div>
       ) : (
