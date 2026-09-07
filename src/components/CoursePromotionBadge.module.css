@@ -1,0 +1,17 @@
+.badge {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 1.9rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.42rem 0.72rem;
+  border: 1px solid rgba(33, 44, 45, 0.1);
+  border-radius: 999px;
+  color: var(--color-white);
+  background: var(--color-dark-blue);
+  box-shadow: 0 0.35rem 0.9rem rgba(33, 44, 45, 0.12);
+  font-size: clamp(0.68rem, 0.72vw, 0.78rem);
+  font-weight: 850;
+  line-height: 1;
+  white-space: nowrap;
+}

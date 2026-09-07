@@ -5,6 +5,7 @@ import Link from 'next/link'
 import {
   FaArrowLeft,
   FaBookOpen,
+  FaBolt,
   FaCertificate,
   FaChartBar,
   FaChartLine,
@@ -41,6 +42,7 @@ function DashboardIcon({ name }) {
     case 'activity': return <FaHistory aria-hidden="true" />
     case 'discounts': return <FaCog aria-hidden="true" />
     case 'coupons': return <FaTag aria-hidden="true" />
+    case 'promotions': return <FaBolt aria-hidden="true" />
     case 'roles': return <FaUserShield aria-hidden="true" />
     default: return <FaChartBar aria-hidden="true" />
   }

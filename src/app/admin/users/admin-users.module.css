@@ -2035,6 +2035,8 @@
 .paymentCustomer>span,.paymentCourse,.paymentStatusCell,.paymentAmountCell,.paymentDateCell { display: grid; min-width: 0; gap: .14rem; }
 .paymentCustomer strong,.paymentCourse strong,.paymentAmountCell strong,.paymentDateCell strong { overflow: hidden; color: var(--color-black); font-size: 0.9rem; text-overflow: ellipsis; white-space: nowrap; }
 .paymentCustomer small,.paymentCourse small,.paymentStatusCell small,.paymentAmountCell small,.paymentDateCell small { overflow: hidden; color: var(--color-gray-dark); font-size: 0.8rem; line-height: 1.38; text-overflow: ellipsis; white-space: nowrap; }
+.paymentAmountCell .paymentPromotionLine { display: flex; align-items: center; gap: .25rem; color: var(--color-dark-blue); font-weight: 800; }
+.paymentPromotionLine svg { flex: 0 0 auto; font-size: .58rem; }
 .paymentCustomer em { justify-self: start; color: var(--color-dark-blue); font-size: 0.8rem; font-style: normal; font-weight: 790; }
 .paymentPill,.paymentSourcePill { display: inline-flex; align-items: center; justify-content: center; justify-self: start; min-height: 1.7rem; padding: .35rem .55rem; border-radius: 999px; font-size: 0.8rem; font-weight: 830; white-space: nowrap; }
 .paymentPillsuccess { color: var(--color-white); background: var(--color-dark-blue); }

@@ -34,6 +34,10 @@ export async function GET(_request, { params }) {
       points_to_spend,
       first_purchase_discount_applied,
       coupon_id,
+      promotion_id,
+      promotion_name,
+      promotion_discount_percent,
+      promotion_discount_cents,
       refunded_at,
       account:users (
         first_name,
@@ -81,6 +85,7 @@ export async function GET(_request, { params }) {
       order_reference: `ZT-${order.id.replaceAll('-', '').slice(0, 10).toUpperCase()}`,
       purchaser_name: [order.first_name || account?.first_name, order.last_name || account?.last_name].filter(Boolean).join(' ') || null,
       coupon_applied: Boolean(order.coupon_id),
+      promotion_applied: Number(order.promotion_discount_cents) > 0,
       coupon,
     },
   }, { headers: { 'Cache-Control': 'private, no-store' } })

@@ -11,6 +11,100 @@ import { createClient as createAdminClient } from '@/lib/supabase/admin'
 const POINTS_PER_PURCHASE = 1000
 
 /**
+ * Resolve the currently applicable scheduled promotion for a course.
+ * The database chooses the highest-value eligible promotion so preview and
+ * checkout always use the same deterministic rule.
+ */
+function emptyCoursePromotion(basePriceCents) {
+  return {
+    applied: false,
+    promotionId: null,
+    name: '',
+    discountPercent: 0,
+    discountCents: 0,
+    priceAfterPromotionCents: basePriceCents,
+  }
+}
+
+async function resolveActiveCoursePromotion(supabase, courseId, basePriceCents) {
+  const emptyPromotion = {
+    ...emptyCoursePromotion(basePriceCents),
+  }
+
+  if (!courseId || basePriceCents <= 0) return emptyPromotion
+
+  const { data, error } = await supabase.rpc('get_active_course_promotion', {
+    p_course_id: courseId,
+  })
+
+  if (error) {
+    throw new Error(`Unable to resolve course promotion: ${error.message}`)
+  }
+
+  const promotion = Array.isArray(data) ? data[0] : data
+  if (!promotion?.promotion_id) return emptyPromotion
+
+  const discountCents = Math.min(
+    Math.max(Number(promotion.discount_amount_cents) || 0, 0),
+    basePriceCents
+  )
+
+  if (discountCents <= 0) return emptyPromotion
+
+  const discountPercent = Number(promotion.discount_percent)
+  if (!Number.isFinite(discountPercent) || discountPercent <= 0 || discountPercent > 100) {
+    return emptyPromotion
+  }
+
+  return {
+    applied: true,
+    promotionId: promotion.promotion_id,
+    name: promotion.promotion_name || 'Course promotion',
+    discountPercent,
+    discountCents,
+    priceAfterPromotionCents: Math.max(0, basePriceCents - discountCents),
+    startsAt: promotion.starts_at,
+    endsAt: promotion.ends_at,
+  }
+}
+
+export async function getActiveCoursePromotion(courseId, basePriceCents) {
+  const supabase = await createAdminClient()
+  return resolveActiveCoursePromotion(supabase, courseId, basePriceCents)
+}
+
+/**
+ * Resolve live promotion badges for course-card and course-page presentation.
+ * Failures deliberately omit badges rather than blocking a public page; the
+ * checkout path still performs its own strict promotion validation.
+ */
+export async function getActiveCoursePromotionMap(courses = []) {
+  const uniqueCourses = [...new Map(
+    courses
+      .filter((course) => course?.id)
+      .map((course) => [course.id, {
+        id: course.id,
+        price_cents: Math.max(0, Number(course.price_cents) || 0),
+      }])
+  ).values()]
+
+  if (uniqueCourses.length === 0) return {}
+
+  try {
+    const supabase = await createAdminClient()
+    const resolved = await Promise.all(uniqueCourses.map(async (course) => [
+      course.id,
+      await resolveActiveCoursePromotion(supabase, course.id, course.price_cents),
+    ]))
+
+    return Object.fromEntries(resolved.filter(([, promotion]) => promotion.applied))
+  } catch (error) {
+    console.error('Unable to load course promotion badges:', error)
+    return {}
+  }
+}
+
+/**
  * Get an admin setting value from the database
  */
 export async function getAdminSetting(key) {
@@ -304,17 +398,32 @@ export async function calculateAllDiscounts({
   let remainingPrice = basePriceCents
   const breakdown = {
     basePriceCents,
+    promotion: {
+      applied: false,
+      promotionId: null,
+      name: '',
+      discountPercent: 0,
+      discountCents: 0,
+      priceAfterPromotionCents: basePriceCents,
+    },
     firstPurchase: { eligible: false, discountCents: 0 },
     points: { eligible: false, discountCents: 0, pointsToUse: 0 },
     coupon: { valid: false, discountCents: 0, couponId: null },
     totalDiscountCents: 0,
     finalPriceCents: basePriceCents
   }
+
+  // 1. Scheduled Course Promotion (applied before account-based discounts)
+  const promotion = await getActiveCoursePromotion(courseId, basePriceCents)
+  if (promotion.applied) {
+    breakdown.promotion = promotion
+    remainingPrice -= promotion.discountCents
+  }
   
-  // 1. First Purchase Discount (applied first)
+  // 2. First Purchase Discount
   // For new guests (no userId), they ARE eligible for first-purchase
   // For existing users, check if they've used it before
-  if (userId) {
+  if (remainingPrice > 0 && userId) {
     const fpDiscount = await calculateFirstPurchaseDiscount(userId, remainingPrice)
     if (fpDiscount.eligible) {
       breakdown.firstPurchase = {
@@ -324,7 +433,7 @@ export async function calculateAllDiscounts({
       }
       remainingPrice -= fpDiscount.discountCents
     }
-  } else {
+  } else if (remainingPrice > 0) {
     // New guest - always eligible for first purchase discount
     const discountPercentStr = await getAdminSetting('first_purchase_discount_percent')
     const discountPercent = parseInt(discountPercentStr) || 0
@@ -339,8 +448,8 @@ export async function calculateAllDiscounts({
     }
   }
   
-  // 2. Points Discount (applied second)
-  if (userId && pointsToUse > 0) {
+  // 3. Points Discount
+  if (remainingPrice > 0 && userId && pointsToUse > 0) {
     const pointsDiscount = await calculatePointsDiscount(userId, remainingPrice, pointsToUse)
     if (pointsDiscount.eligible) {
       breakdown.points = {
@@ -353,8 +462,8 @@ export async function calculateAllDiscounts({
     }
   }
   
-  // 3. Coupon Discount (applied last)
-  if (couponCode) {
+  // 4. Coupon Discount (applied last)
+  if (remainingPrice > 0 && couponCode) {
     const couponResult = await validateCoupon(couponCode, userId, courseId, remainingPrice)
     if (couponResult.valid) {
       breakdown.coupon = {
@@ -376,6 +485,7 @@ export async function calculateAllDiscounts({
   
   // Calculate totals
   breakdown.totalDiscountCents = 
+    breakdown.promotion.discountCents +
     breakdown.firstPurchase.discountCents + 
     breakdown.points.discountCents + 
     breakdown.coupon.discountCents

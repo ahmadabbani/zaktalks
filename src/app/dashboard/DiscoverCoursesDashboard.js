@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { FaBookOpen, FaCompass, FaLayerGroup, FaPlayCircle } from 'react-icons/fa'
+import CoursePromotionBadge from '@/components/CoursePromotionBadge'
 import styles from './dashboard.module.css'
 
 function formatPrice(priceCents) {
@@ -26,7 +27,10 @@ function CourseCard({ course }) {
       {course.logo_url
         ? <img src={course.logo_url} alt={course.title} />
         : <span><FaBookOpen /></span>}
-      {isNewCourse(course.created_at) && <small>New</small>}
+      {(isNewCourse(course.created_at) || course.promotion) && <div className={styles.learnerDiscoverBadges}>
+        {isNewCourse(course.created_at) && <small>New</small>}
+        <CoursePromotionBadge promotion={course.promotion} />
+      </div>}
     </Link>
 
     <div className={styles.learnerDiscoverCardBody}>

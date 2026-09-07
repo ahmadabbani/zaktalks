@@ -20,6 +20,14 @@ function firstName(value) {
   return String(value || '').trim().split(/\s+/)[0] || 'there'
 }
 
+function formatPercent(value) {
+  const parsed = Number(value)
+  if (!Number.isFinite(parsed) || parsed <= 0) return ''
+  return Number.isInteger(parsed)
+    ? String(parsed)
+    : parsed.toFixed(2).replace(/0+$/, '').replace(/\.$/, '')
+}
+
 function brandMark(logoUrl) {
   const safeLogoUrl = normalizedUrl(logoUrl)
   if (safeLogoUrl) {
@@ -104,6 +112,9 @@ export function buildPaymentReceiptEmail({
   courseName,
   amountPaid,
   originalAmount,
+  promotionName = '',
+  promotionDiscountPercent = null,
+  promotionDiscountAmount = '',
   paymentDate,
   invoiceNumber,
   receiptUrl,
@@ -115,6 +126,9 @@ export function buildPaymentReceiptEmail({
   const safeCourseName = escapeHtml(courseName || 'your course')
   const safeAmountPaid = escapeHtml(amountPaid)
   const safeOriginalAmount = escapeHtml(originalAmount)
+  const promotionPercent = formatPercent(promotionDiscountPercent)
+  const safePromotionName = escapeHtml(`${promotionName || 'Course promotion'}${promotionPercent ? ` (${promotionPercent}%)` : ''}`)
+  const safePromotionDiscountAmount = escapeHtml(promotionDiscountAmount)
   const safePaymentDate = escapeHtml(paymentDate)
   const safeInvoiceNumber = escapeHtml(invoiceNumber)
   const discounted = originalAmount && originalAmount !== amountPaid
@@ -124,6 +138,10 @@ export function buildPaymentReceiptEmail({
   const pricingRows = `${discounted ? `<tr>
       <td style="padding:8px 0;color:#687273;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;">Original price</td>
       <td align="right" style="padding:8px 0;color:${BRAND_BLACK};font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;line-height:1.5;">${safeOriginalAmount}</td>
+    </tr>` : ''}
+    ${promotionDiscountAmount ? `<tr>
+      <td style="padding:8px 0;color:#687273;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;">${safePromotionName}</td>
+      <td align="right" style="padding:8px 0;color:${BRAND_TEAL};font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:800;line-height:1.5;">-${safePromotionDiscountAmount}</td>
     </tr>` : ''}
     <tr>
       <td style="padding:8px 0;color:#687273;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;">Amount paid</td>
@@ -163,7 +181,9 @@ export function buildPaymentReceiptEmail({
   })
 
   const originalLine = discounted ? `\nOriginal price: ${originalAmount}` : ''
-  const text = `Hi ${firstName(recipientFirstName)},\n\nWe have received your payment for ${courseName || 'your course'}.\n\nPayment details:${originalLine}\nAmount paid: ${amountPaid}\nPayment date: ${paymentDate}\nInvoice number: ${invoiceNumber}\n\nView your receipt: ${receiptUrl}\n\nWe are now preparing your course access. You will receive a separate email shortly confirming that your account and course are ready.\n\nIf you did not make this purchase, or if anything does not look right, please contact us at ${supportEmail}.\n\nThank you for choosing to invest in yourself.\n\nThe Okayness Team\n\nThis is a transactional email related to your purchase. For billing or payment support, contact ${supportEmail}.`
+  const promotionLabel = `${promotionName || 'Course promotion'}${promotionPercent ? ` (${promotionPercent}%)` : ''}`
+  const promotionLine = promotionDiscountAmount ? `\n${promotionLabel}: -${promotionDiscountAmount}` : ''
+  const text = `Hi ${firstName(recipientFirstName)},\n\nWe have received your payment for ${courseName || 'your course'}.\n\nPayment details:${originalLine}${promotionLine}\nAmount paid: ${amountPaid}\nPayment date: ${paymentDate}\nInvoice number: ${invoiceNumber}\n\nView your receipt: ${receiptUrl}\n\nWe are now preparing your course access. You will receive a separate email shortly confirming that your account and course are ready.\n\nIf you did not make this purchase, or if anything does not look right, please contact us at ${supportEmail}.\n\nThank you for choosing to invest in yourself.\n\nThe Okayness Team\n\nThis is a transactional email related to your purchase. For billing or payment support, contact ${supportEmail}.`
 
   return { subject, previewText, html, text }
 }

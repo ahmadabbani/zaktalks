@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   FaBookOpen,
+  FaBolt,
   FaCalendarAlt,
   FaCheckCircle,
   FaChevronDown,
@@ -101,6 +102,7 @@ const fulfillmentDetails = {
 }
 
 const discountLabels = {
+  course_promotion: 'Course promotion',
   first_purchase: 'First-purchase offer',
   points: 'Points',
   coupon: 'Coupon',
@@ -116,6 +118,19 @@ function number(value) {
 function money(value, fallback = 'Not recorded') {
   if (value === null || value === undefined || !Number.isFinite(Number(value))) return fallback
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(value) / 100)
+}
+
+function formatPercent(value) {
+  const parsed = Number(value)
+  if (!Number.isFinite(parsed) || parsed <= 0) return ''
+  return Number.isInteger(parsed)
+    ? String(parsed)
+    : parsed.toFixed(2).replace(/0+$/, '').replace(/\.$/, '')
+}
+
+function promotionLabel(order) {
+  const percent = formatPercent(order?.promotion_discount_percent)
+  return `${order?.promotion_name || 'Course promotion'}${percent ? ` · ${percent}%` : ''}`
 }
 
 function formatDate(value, withTime = false) {
@@ -367,6 +382,7 @@ function PaymentDrawer({ payment, onClose }) {
                 <header><span><FaTags /></span><div><small>Pricing</small><h4>Discounts and rewards</h4></div></header>
                 <div className={styles.paymentDiscountCards}>
                   <article><span><FaWallet /></span><div><small>Total savings</small><strong>{money(order.discount_cents, '$0.00')}</strong></div></article>
+                  <article className={number(order.promotion_discount_cents) > 0 ? styles.paymentDiscountActive : ''}><span><FaBolt /></span><div><small>Course promotion</small><strong>{number(order.promotion_discount_cents) > 0 ? `${promotionLabel(order)} · -${money(order.promotion_discount_cents, '$0.00')}` : 'Not used'}</strong></div></article>
                   <article className={order.first_purchase_discount_applied ? styles.paymentDiscountActive : ''}><span><FaShoppingBag /></span><div><small>First-purchase offer</small><strong>{order.first_purchase_discount_applied ? 'Applied' : 'Not used'}</strong></div></article>
                   <article className={order.points_to_spend ? styles.paymentDiscountActive : ''}><span><FaCoins /></span><div><small>Points spent</small><strong>{number(order.points_to_spend).toLocaleString()}</strong></div></article>
                   <article className={order.coupon_id ? styles.paymentDiscountActive : ''}><span><FaTags /></span><div><small>Coupon</small><strong>{order.coupon_code || 'Not used'}</strong></div></article>
@@ -568,7 +584,7 @@ export default function PaymentsDashboard() {
             <span className={styles.paymentCustomer}><i>{initials(row)}</i><span><strong>{row.customer_name}</strong><small>{row.email}</small><em>{row.customer_source === 'guest' ? 'Guest checkout' : 'Account checkout'}</em></span></span>
             <span className={styles.paymentCourse}><strong>{row.course_title}</strong><small>/{row.course_slug}</small></span>
             <span className={styles.paymentStatusCell}><StatusPill group={row.payment_group} /><small>{row.payment_state.replaceAll('_', ' ')}</small></span>
-            <span className={styles.paymentAmountCell}><strong>{money(row.expected_amount_cents)}</strong><small>{number(row.discount_cents) > 0 ? `${money(row.discount_cents)} saved` : row.expected_amount_cents === null ? 'Legacy total unavailable' : 'Full price'}</small></span>
+            <span className={styles.paymentAmountCell}><strong>{money(row.expected_amount_cents)}</strong><small>{number(row.discount_cents) > 0 ? `${money(row.discount_cents)} saved` : row.expected_amount_cents === null ? 'Legacy total unavailable' : 'Full price'}</small>{number(row.promotion_discount_cents) > 0 && <small className={styles.paymentPromotionLine}><FaBolt />{promotionLabel(row)} · -{money(row.promotion_discount_cents)}</small>}</span>
             <span className={styles.paymentStatusCell}><StatusPill group={row.fulfillment_group} type="fulfillment" /><small>{row.enrollment_id ? 'Enrollment linked' : 'No linked enrollment'}</small></span>
             <span className={styles.paymentDateCell}><strong>{formatDate(row.created_at)}</strong><small>{row.completed_at ? `Paid ${formatDate(row.completed_at)}` : 'Not completed'}</small></span>
             <button type="button" className={styles.paymentOpenButton} onClick={() => setSelectedPayment(row)} aria-label={`Open payment for ${row.customer_name}`}><FaEye /></button>

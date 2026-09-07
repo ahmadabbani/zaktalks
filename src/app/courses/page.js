@@ -2,6 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import { PUBLIC_COURSE_CATALOG_ENABLED } from '@/lib/publicFeatureFlags'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import CoursePromotionBadge from '@/components/CoursePromotionBadge'
+import { getActiveCoursePromotionMap } from '@/lib/discount-utils'
 import styles from './page.module.css'
 
 export const metadata = {
@@ -22,6 +24,7 @@ export default async function CoursesPage() {
     .eq('is_published', true)
     .is('deleted_at', null)
     .order('created_at', { ascending: false })
+  const promotionByCourse = await getActiveCoursePromotionMap(courses || [])
 
   const isNew = (date) => {
     const now = new Date()
@@ -43,9 +46,10 @@ export default async function CoursesPage() {
         <div className={styles.grid}>
           {courses?.map((course) => (
             <div key={course.id} className={styles.courseCard}>
-              {isNew(course.created_at) && (
-                <div className={styles.badge}>NEW</div>
-              )}
+              {(isNew(course.created_at) || promotionByCourse[course.id]) && <div className={styles.badgeStack}>
+                {isNew(course.created_at) && <div className={styles.badge}>NEW</div>}
+                <CoursePromotionBadge promotion={promotionByCourse[course.id]} />
+              </div>}
               
               <Link href={`/courses/${course.slug}`} className={styles.linkWrapper}>
                 {course.logo_url && (
@@ -71,7 +75,7 @@ export default async function CoursesPage() {
               <div className={styles.cardFooter}>
                 <div className={styles.footerInner}>
                     <Link href={`/courses/${course.slug}`} className={styles.viewBtn}>
-                        Enroll Now - ${(course.price_cents / 100).toFixed(2)}
+                        Enroll Now
                     </Link>
                 </div>
               </div>

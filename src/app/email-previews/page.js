@@ -25,6 +25,9 @@ export default function EmailPreviewsPage() {
     courseName: 'Interpersonal Communication Dynamics',
     amountPaid: '96.00 USD',
     originalAmount: '120.00 USD',
+    promotionName: 'September course offer',
+    promotionDiscountPercent: 12.5,
+    promotionDiscountAmount: '15.00 USD',
     paymentDate: 'September 3, 2026',
     invoiceNumber: 'ZT-81A32FDC29',
     receiptUrl: `${SAMPLE_APP_URL}/dashboard?section=purchases`,
@@ -62,7 +65,7 @@ export default function EmailPreviewsPage() {
     {
       id: 'payment-receipt',
       name: 'Successful payment email',
-      description: 'Sent after Stripe payment is verified. It contains learner-safe payment details and no discount source.',
+      description: 'Sent after Stripe payment is verified. It includes the saved course promotion when one was applied.',
       from: 'Okayness Team <noreply@zaktalks.com>',
       height: 1390,
       ...paymentEmail,

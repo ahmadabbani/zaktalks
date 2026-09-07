@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
+import { getActiveCoursePromotionMap } from '@/lib/discount-utils'
 import { redirect } from 'next/navigation'
 import UserDashboardShell from './UserDashboardShell'
 import MyCoursesDashboard from './MyCoursesDashboard'
@@ -174,6 +175,8 @@ export default async function DashboardPage() {
       }
     })
   const enrolledCourseIds = new Set(courses.map((course) => course.id))
+  const availablePublishedCourses = (publishedCourses || []).filter((course) => !enrolledCourseIds.has(course.id))
+  const promotionByCourse = await getActiveCoursePromotionMap(availablePublishedCourses)
   const discoverCourses = (publishedCourses || [])
     .filter((course) => !enrolledCourseIds.has(course.id))
     .map((course) => ({
@@ -192,6 +195,7 @@ export default async function DashboardPage() {
       lesson_count: (course.lessons || []).filter((lesson) => (
         lesson.type === 'video' && !lesson.is_course_introduction
       )).length,
+      promotion: promotionByCourse[course.id] || null,
     }))
 
   return (

@@ -3250,10 +3250,17 @@
   font-size: 3rem;
 }
 
-.learnerDiscoverVisual > small {
+.learnerDiscoverBadges {
   position: absolute;
   top: 0.85rem;
   left: 0.85rem;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.learnerDiscoverBadges > small {
   padding: 0.42rem 0.62rem;
   border-radius: 999px;
   color: var(--color-white);

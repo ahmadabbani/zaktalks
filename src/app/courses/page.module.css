@@ -56,17 +56,24 @@
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-.badge {
+.badgeStack {
     position: absolute;
     top: 1rem;
     right: 1rem;
+    z-index: 10;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.badge {
     background-color: var(--color-yellow);
     color: var(--color-black);
     padding: 0.25rem 1rem;
     border-radius: 50px;
     font-size: 0.75rem;
     font-weight: 800;
-    z-index: 10;
     box-shadow: var(--shadow-md);
 }
 

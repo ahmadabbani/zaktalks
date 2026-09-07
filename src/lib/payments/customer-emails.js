@@ -111,6 +111,13 @@ function buildMessage(emailType, checkout, requestOrigin) {
       courseName,
       amountPaid: formatAmount(checkout.expected_amount_cents),
       originalAmount: formatAmount(checkout.original_price_cents ?? checkout.expected_amount_cents),
+      promotionName: checkout.promotion_name || '',
+      promotionDiscountPercent: checkout.promotion_discount_percent === null
+        ? null
+        : Number(checkout.promotion_discount_percent),
+      promotionDiscountAmount: checkout.promotion_discount_cents > 0
+        ? formatAmount(checkout.promotion_discount_cents)
+        : '',
       // Checkout creation happens immediately before the Stripe Session is
       // opened and stays immutable across retries, keeping the email payload
       // compatible with Resend's idempotency key.
@@ -152,6 +159,7 @@ async function attemptCustomerEmail(supabaseAdmin, sessionId, emailType, request
         .select(`
           id, stripe_session_id, email, first_name, last_name, user_id,
           enrollment_id, original_price_cents, expected_amount_cents,
+          promotion_name, promotion_discount_percent, promotion_discount_cents,
           payment_state, fulfillment_state, duplicate_payment,
           created_at, updated_at, completed_at,
           account:users(first_name, last_name),

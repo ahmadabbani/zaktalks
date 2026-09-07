@@ -70,6 +70,7 @@ export async function POST(req) {
       },
       userPoints,
       discounts: {
+        promotion: discounts.promotion,
         firstPurchase: discounts.firstPurchase,
         points: discounts.points,
         coupon: discounts.coupon,

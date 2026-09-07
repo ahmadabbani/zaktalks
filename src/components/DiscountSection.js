@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { FaTag, FaGift, FaCoins } from 'react-icons/fa'
+import { FaTag, FaGift, FaCoins, FaBolt } from 'react-icons/fa'
 import styles from './DiscountSection.module.css'
 
 /**
@@ -151,6 +151,16 @@ export default function DiscountSection({
           <span>Original Price</span>
           <span>{formatPrice(course.originalPrice)}</span>
         </div>
+
+        {/* Scheduled Course Promotion */}
+        {discounts.promotion?.applied && (
+          <div className={`${styles.row} ${styles.rowDiscount}`}>
+            <span className={styles.discountLabel}>
+              <FaBolt /> {discounts.promotion.name} ({discounts.promotion.discountPercent}%)
+            </span>
+            <span>-{formatPrice(discounts.promotion.discountCents)}</span>
+          </div>
+        )}
 
         {/* First Purchase Discount */}
         {discounts.firstPurchase.eligible && (

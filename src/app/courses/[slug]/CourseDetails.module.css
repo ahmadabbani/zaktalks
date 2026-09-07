@@ -76,6 +76,15 @@
   color: var(--color-white);
 }
 
+.tagRow .heroPromotionBadge {
+  border-color: var(--color-dark-blue);
+  color: var(--color-white);
+  background: var(--color-dark-blue);
+  box-shadow: 0 0.35rem 0.9rem rgba(33, 44, 45, 0.12);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 .heroCopy h1 {
   max-width: 100%;
   margin: 0;
@@ -1512,6 +1521,7 @@
 }
 
 .relatedCard {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(7rem, 0.7fr) minmax(0, 1.3fr);
   min-height: 13rem;
@@ -1519,6 +1529,13 @@
   border-radius: 1.15rem;
   overflow: hidden;
   background: var(--color-white);
+}
+
+.relatedPromotionBadge {
+  position: absolute;
+  z-index: 3;
+  top: 0.8rem;
+  left: 0.8rem;
 }
 
 .relatedImage {

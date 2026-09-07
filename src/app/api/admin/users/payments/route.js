@@ -41,6 +41,54 @@ function encodeCursor(cursor) {
   })).toString('base64url')
 }
 
+async function addPromotionSnapshots(supabase, rows) {
+  const checkoutIds = [...new Set(rows.map((row) => row.checkout_id).filter((id) => UUID_PATTERN.test(id || '')))]
+  if (checkoutIds.length === 0) return rows
+
+  const { data: snapshots, error } = await supabase
+    .from('checkout_sessions')
+    .select('id, promotion_id, promotion_name, promotion_discount_percent, promotion_discount_cents')
+    .in('id', checkoutIds)
+
+  if (error) throw error
+  const byCheckout = new Map((snapshots || []).map((snapshot) => [snapshot.id, snapshot]))
+
+  return rows.map((row) => {
+    const snapshot = byCheckout.get(row.checkout_id)
+    const promotionApplied = Number(snapshot?.promotion_discount_cents) > 0
+    let discountMethods = Array.isArray(row.discount_methods) ? row.discount_methods : []
+    if (promotionApplied) {
+      discountMethods = discountMethods.filter((method) => method !== 'recorded_discount')
+      if (!discountMethods.includes('course_promotion')) discountMethods = [...discountMethods, 'course_promotion']
+    }
+    return {
+      ...row,
+      promotion_id: snapshot?.promotion_id || null,
+      promotion_name: snapshot?.promotion_name || null,
+      promotion_discount_percent: snapshot?.promotion_discount_percent === null || snapshot?.promotion_discount_percent === undefined
+        ? null
+        : Number(snapshot.promotion_discount_percent),
+      promotion_discount_cents: Number(snapshot?.promotion_discount_cents || 0),
+      discount_methods: discountMethods,
+    }
+  })
+}
+
+function addPromotionToDiscountMix(discountMix, stats) {
+  const promotionRecords = Number(stats?.promotion_records || 0)
+  const promotionOnlyRecords = Number(stats?.promotion_only_records || 0)
+  const adjusted = discountMix
+    .map((entry) => entry.method === 'recorded_discount'
+      ? { ...entry, records: Math.max(0, Number(entry.records || 0) - promotionOnlyRecords) }
+      : entry)
+    .filter((entry) => Number(entry.records || 0) > 0)
+
+  if (promotionRecords > 0) {
+    adjusted.push({ method: 'course_promotion', records: promotionRecords })
+  }
+  return adjusted
+}
+
 export async function GET(request) {
   try {
     await requirePermission('users.purchases')
@@ -62,28 +110,44 @@ export async function GET(request) {
   const supabase = await createAdminClient()
 
   try {
-    const { data, error } = await supabase.rpc('admin_payments_dashboard', {
-      p_course_id: courseId,
-      p_range: range,
-      p_payment: payment,
-      p_fulfillment: fulfillment,
-      p_discount: discount,
-      p_sort: sort,
-      p_page_size: pageSize,
-      p_cursor_created_at: cursor?.createdAt || null,
-      p_cursor_id: cursor?.id || null,
-      p_cursor_amount: cursor?.amount ?? null,
-    })
+    const [{ data, error }, { data: promotionStatsRows, error: promotionStatsError }] = await Promise.all([
+      supabase.rpc('admin_payments_dashboard', {
+        p_course_id: courseId,
+        p_range: range,
+        p_payment: payment,
+        p_fulfillment: fulfillment,
+        p_discount: discount,
+        p_sort: sort,
+        p_page_size: pageSize,
+        p_cursor_created_at: cursor?.createdAt || null,
+        p_cursor_id: cursor?.id || null,
+        p_cursor_amount: cursor?.amount ?? null,
+      }),
+      supabase.rpc('admin_course_promotion_payment_stats', {
+        p_course_id: courseId,
+        p_range: range,
+        p_payment: payment,
+        p_fulfillment: fulfillment,
+        p_discount: discount,
+      }),
+    ])
 
     if (error) throw error
+    if (promotionStatsError) throw promotionStatsError
+
+    const rows = await addPromotionSnapshots(supabase, Array.isArray(data?.rows) ? data.rows : [])
+    const discountMix = addPromotionToDiscountMix(
+      Array.isArray(data?.discount_mix) ? data.discount_mix : [],
+      promotionStatsRows?.[0]
+    )
 
     return NextResponse.json({
-      rows: Array.isArray(data?.rows) ? data.rows : [],
+      rows,
       summary: data?.summary || {},
       trend: Array.isArray(data?.trend) ? data.trend : [],
       statusMix: Array.isArray(data?.status_mix) ? data.status_mix : [],
       sourceMix: Array.isArray(data?.source_mix) ? data.source_mix : [],
-      discountMix: Array.isArray(data?.discount_mix) ? data.discount_mix : [],
+      discountMix,
       courses: Array.isArray(data?.courses) ? data.courses : [],
       totalCount: Number(data?.total_count || 0),
       hasMore: Boolean(data?.has_more),

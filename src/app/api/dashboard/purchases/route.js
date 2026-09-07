@@ -47,6 +47,10 @@ export async function GET(request) {
         points_to_spend,
         first_purchase_discount_applied,
         coupon_id,
+        promotion_id,
+        promotion_name,
+        promotion_discount_percent,
+        promotion_discount_cents,
         refunded_at,
         course:courses (
           title,
@@ -79,6 +83,7 @@ export async function GET(request) {
     const visibleRows = (rows || []).slice(0, PAGE_SIZE).map(({ coupon_id: couponId, ...row }) => ({
       ...row,
       coupon_applied: Boolean(couponId),
+      promotion_applied: Number(row.promotion_discount_cents) > 0,
     }))
     const hasMore = (rows || []).length > PAGE_SIZE
 

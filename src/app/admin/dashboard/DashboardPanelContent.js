@@ -15,10 +15,12 @@ import CoursesTableRow from '../courses/CoursesTableRow'
 import CourseSuccessToast from '../courses/CourseSuccessToast'
 import SettingsForm from '../settings/SettingsForm'
 import CouponsTable from '../coupons/CouponsTable'
+import CoursePromotionsPanel from '../promotions/CoursePromotionsPanel'
 import ExternalAssessmentLinks from './ExternalAssessmentLinks'
 import CreationActivityDashboard from './CreationActivityDashboard'
 import { getAdminSettings } from '../settings/settings.actions'
 import { getAllCourses, getCoupons } from '../coupons/coupons.actions'
+import { getCoursePromotions } from '../promotions/promotions.actions'
 import userStyles from '../users/admin-users.module.css'
 import courseStyles from '../courses/admin-courses.module.css'
 
@@ -128,6 +130,11 @@ async function CouponsPanel() {
   return <div className={userStyles.embeddedAdminPanel}><CouponsTable coupons={coupons} courses={courses} /></div>
 }
 
+async function PromotionsPanel() {
+  const [promotions, courses] = await Promise.all([getCoursePromotions(), getAllCourses()])
+  return <div className={userStyles.embeddedAdminPanel}><CoursePromotionsPanel initialPromotions={promotions} courses={courses} /></div>
+}
+
 async function RolesPanel() {
   const supabase = await createAdminClient()
   const [{ data: accounts, error: accountsError }, { data: permissions, error: permissionsError }] = await Promise.all([
@@ -159,6 +166,7 @@ export default async function DashboardPanelContent({ viewId, access }) {
     case 'creation-activity': return <CreationActivityPanel />
     case 'discounts': return <DiscountSettingsPanel />
     case 'coupons': return <CouponsPanel />
+    case 'course-promotions': return <PromotionsPanel />
     case 'roles': return access.role === 'admin' ? <RolesPanel /> : null
     default: return null
   }

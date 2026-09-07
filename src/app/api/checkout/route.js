@@ -115,6 +115,9 @@ async function closePreviousCheckout({ supabaseAdmin, userId, email, requestOrig
 function stripeDescription(course, discounts) {
   if (discounts.totalDiscountCents <= 0) return undefined
   const details = [`Original ${formatUsd(course.price_cents)}`]
+  if (discounts.promotion.applied) {
+    details.push(`${discounts.promotion.name} (${discounts.promotion.discountPercent}%): -${formatUsd(discounts.promotion.discountCents)}`)
+  }
   if (discounts.firstPurchase.eligible) {
     details.push(`${discounts.firstPurchase.discountPercent}% first-purchase discount: -${formatUsd(discounts.firstPurchase.discountCents)}`)
   }
@@ -215,6 +218,24 @@ export async function POST(req) {
     }
     checkoutId = orderId
 
+    if (discounts.promotion.applied) {
+      const { error: promotionAttachError } = await supabaseAdmin.rpc('attach_checkout_promotion', {
+        p_checkout_id: checkoutId,
+        p_promotion_id: discounts.promotion.promotionId,
+        p_discount_percent: discounts.promotion.discountPercent,
+        p_discount_cents: discounts.promotion.discountCents,
+      })
+      if (promotionAttachError) {
+        const noLongerAvailable = /no longer available/i.test(promotionAttachError.message || '')
+        throw new CheckoutError(
+          noLongerAvailable
+            ? 'This promotion has just changed. Please review the updated price and try again.'
+            : 'Unable to reserve this promotion. Please try again.',
+          noLongerAvailable ? 409 : 500
+        )
+      }
+    }
+
     const metadata = {
       checkoutId, courseId, isGuest: String(!user), firstName: user ? '' : firstName,
       lastName: user ? '' : lastName, originalPriceCents: String(course.price_cents),
@@ -222,6 +243,10 @@ export async function POST(req) {
       firstPurchaseApplied: String(discounts.firstPurchase.eligible),
       pointsUsed: String(discounts.points.pointsToUse),
       couponId: discounts.coupon.couponId || '', couponCode: discounts.coupon.couponCode || '',
+      promotionId: discounts.promotion.promotionId || '',
+      promotionName: cleanText(discounts.promotion.name, 100),
+      promotionDiscountPercent: String(discounts.promotion.discountPercent || 0),
+      promotionDiscountCents: String(discounts.promotion.discountCents || 0),
     }
     const productDescription = stripeDescription(course, discounts)
     const productImage = stripeProductImage(course.logo_url)
@@ -257,7 +282,8 @@ export async function POST(req) {
     return NextResponse.json({
       url: stripeSession.url,
       discounts: {
-        originalPrice: course.price_cents, firstPurchase: discounts.firstPurchase,
+        originalPrice: course.price_cents, promotion: discounts.promotion,
+        firstPurchase: discounts.firstPurchase,
         points: discounts.points, coupon: discounts.coupon,
         totalDiscount: discounts.totalDiscountCents, finalPrice: discounts.finalPriceCents,
       },

@@ -29,6 +29,7 @@ import {
 import EnrollButton from '@/components/EnrollButton'
 import RichText from '@/components/RichText'
 import TestimonialsSection from '@/components/TestimonialsSection'
+import CoursePromotionBadge from '@/components/CoursePromotionBadge'
 import { legacyDetailsToBlocks, normalizeContentBlocks } from '@/lib/course-content'
 import { sanitizeCourseRichContent } from '@/lib/course-rich-content'
 import { getLessonDisplayNumber } from '@/lib/lesson-numbering'
@@ -292,6 +293,7 @@ function ExploreMoreCarousel({ items }) {
       <div className={styles.relatedTrack} ref={trackRef}>
         {items.map((item) => (
           <article className={`${styles.relatedCard} ${item.target_type === 'page' ? styles.relatedPageCard : ''}`} key={item.id}>
+            {item.target_type === 'course' && <CoursePromotionBadge promotion={item.promotion} className={styles.relatedPromotionBadge} />}
             <Link href={item.target_path} className={styles.relatedImage}>
               {item.image_url
                 ? <Image src={item.image_url} alt={item.title} fill sizes="(max-width: 520px) 7.5rem, 16vw" quality={86} unoptimized />
@@ -394,7 +396,7 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
     }
   }, [course.logo_url])
 
-  const renderPurchaseAction = (showPrice = true) => isEnrolled ? (
+  const renderPurchaseAction = () => isEnrolled ? (
     <Link href="/dashboard" className={styles.continueButton}>Continue learning <FaArrowRight /></Link>
   ) : (
     <EnrollButton
@@ -403,7 +405,6 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
       price={course.price_cents}
       isLoggedIn={isLoggedIn}
       text={course.primary_cta_text || 'Enroll Now'}
-      showPrice={showPrice}
     />
   )
 
@@ -413,7 +414,10 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
         <div className={`container ${styles.heroContainer}`}>
           <div className={styles.heroGrid}>
             <div className={styles.heroCopy}>
-              <div className={styles.tagRow}>{COURSE_TAGS.map((tag) => <span key={tag}>{tag}</span>)}</div>
+              <div className={styles.tagRow}>
+                {COURSE_TAGS.map((tag) => <span key={tag}>{tag}</span>)}
+                <CoursePromotionBadge promotion={course.promotion} className={styles.heroPromotionBadge} />
+              </div>
               <h1>{course.title}</h1>
               {course.promise && <p className={styles.heroDescription}><RichText value={richContent.promise} fallback={course.promise} maxLength={8000} /></p>}
               {course.short_introduction && <p className={styles.heroSubheadline}><RichText value={richContent.short_introduction} fallback={course.short_introduction} maxLength={4000} /></p>}
@@ -643,7 +647,7 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
                 <h2>{isEnrolled ? 'Continue where you left off' : 'Learn at your pace'}</h2>
                 <p>Your progress is counted through completed lessons and activities, not just opening a page.</p>
                 {!isEnrolled && <strong className={styles.sidebarPrice}>{formattedPrice}</strong>}
-                <div className={styles.purchaseAction}>{renderPurchaseAction(false)}</div>
+                <div className={styles.purchaseAction}>{renderPurchaseAction()}</div>
                 <div className={styles.completionRules}>
                   <h3>Completion rules</h3>
                   <div><span><FaVideo /></span><p><strong>Video lessons</strong><small>Watch at least 97% to complete the lesson and unlock what comes next.</small></p></div>

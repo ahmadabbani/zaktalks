@@ -47,6 +47,7 @@ export const ADMIN_DASHBOARD_GROUPS = [
     items: [
       { id: 'discounts', permission: 'settings.manage', label: 'Discount Settings', description: 'Configure first-purchase and points discounts.', icon: 'discounts' },
       { id: 'coupons', permission: 'coupons.manage', label: 'Coupons', description: 'Create and manage promotional coupon codes.', icon: 'coupons' },
+      { id: 'course-promotions', permission: 'coupons.manage', label: 'Course Promotions', description: 'Schedule automatic discounts for all or selected courses.', icon: 'promotions' },
     ],
   },
   {

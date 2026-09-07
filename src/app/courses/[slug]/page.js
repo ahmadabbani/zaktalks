@@ -5,6 +5,7 @@ import { extractYouTubeVideoId, getYouTubeVideoDurations } from '@/lib/youtube'
 import { notFound } from 'next/navigation'
 import CourseDetailsExperience from './CourseDetailsExperience'
 import { isStaffRole } from '@/lib/auth-utils'
+import { getActiveCoursePromotionMap } from '@/lib/discount-utils'
 
 export async function generateMetadata({ params }) {
   const { slug } = await params
@@ -142,7 +143,7 @@ export default async function CourseDetailPage({ params }) {
     configuredCourseIds.length
       ? supabase
           .from('courses')
-          .select('id, slug, title, logo_url')
+          .select('id, slug, title, logo_url, price_cents')
           .in('id', configuredCourseIds)
           .eq('is_published', true)
           .is('deleted_at', null)
@@ -160,6 +161,10 @@ export default async function CourseDetailPage({ params }) {
   })
 
   const exploreCoursesById = new Map((exploreCourseResult.data || []).map((item) => [item.id, item]))
+  const promotionByCourse = await getActiveCoursePromotionMap([
+    course,
+    ...(exploreCourseResult.data || []),
+  ])
   const publicPagesByPath = new Map(PUBLIC_PAGE_OPTIONS.map((item) => [item.path, item]))
   const exploreMoreItems = configuredExploreMore.flatMap((item, index) => {
     if (item.target_type === 'page') {
@@ -190,6 +195,7 @@ export default async function CourseDetailPage({ params }) {
       rich_description: course.rich_content?.explore_more?.[index]?.description,
       cta_text: item.cta_text,
       image_url: recommendedCourse.logo_url,
+      promotion: promotionByCourse[recommendedCourse.id] || null,
     }]
   })
 
@@ -202,7 +208,7 @@ export default async function CourseDetailPage({ params }) {
 
   return (
     <CourseDetailsExperience
-      course={course}
+      course={{ ...course, promotion: promotionByCourse[course.id] || null }}
       courseIntroductionLesson={courseIntroductionLesson}
       curriculumModules={curriculumModules}
       galleryImages={galleryImages || []}

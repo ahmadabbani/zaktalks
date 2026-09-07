@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import {
   FaBookOpen,
+  FaBolt,
   FaCheckCircle,
   FaClock,
   FaCoins,
@@ -33,6 +34,19 @@ function formatMoney(value) {
     currency: 'USD',
     minimumFractionDigits: Number(value) % 100 === 0 ? 0 : 2,
   }).format(Number(value) / 100)
+}
+
+function formatPercent(value) {
+  const parsed = Number(value)
+  if (!Number.isFinite(parsed) || parsed <= 0) return ''
+  return Number.isInteger(parsed)
+    ? String(parsed)
+    : parsed.toFixed(2).replace(/0+$/, '').replace(/\.$/, '')
+}
+
+function promotionLabel(order) {
+  const percent = formatPercent(order?.promotion_discount_percent)
+  return `${order?.promotion_name || 'Course promotion'}${percent ? ` (${percent}%)` : ''}`
 }
 
 function formatDate(value) {
@@ -174,6 +188,7 @@ function OrderReceiptModal({ summary, order, loading, error, onClose }) {
     : 0
   const purchaserName = order?.purchaser_name || 'ZakTalks learner'
   const discountRows = [
+    order?.promotion_applied && { icon: FaBolt, label: promotionLabel(order), value: `-${formatMoney(order.promotion_discount_cents)}` },
     order?.first_purchase_discount_applied && { icon: FaPercent, label: 'First-purchase offer', value: 'Applied' },
     number(order?.points_to_spend) > 0 && { icon: FaCoins, label: 'Points redeemed', value: `${number(order.points_to_spend).toLocaleString()} points` },
     order?.coupon_applied && { icon: FaTags, label: 'Coupon', value: couponDescription(order) },
@@ -257,6 +272,7 @@ function PurchaseCard({ order, index, onOpen }) {
     ? Math.max(0, number(originalPrice) - number(paidPrice))
     : 0
   const benefits = [
+    order.promotion_applied && `${promotionLabel(order)} · ${formatMoney(order.promotion_discount_cents)} off`,
     order.first_purchase_discount_applied && 'First-purchase offer',
     number(order.points_to_spend) > 0 && `${number(order.points_to_spend).toLocaleString()} points used`,
     order.coupon_applied && 'Coupon applied',
