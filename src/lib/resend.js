@@ -5,3 +5,4 @@ export const ZAKTALKS_EMAIL_FROM = 'ZakTalks <noreply@zaktalks.com>';
 export const ZAKTALKS_ADMIN_EMAIL = process.env.ZAKTALKS_ADMIN_EMAIL || 'hello@zaktalks.com';
 export const OKAYNESS_EMAIL_FROM = 'Okayness Team <noreply@zaktalks.com>';
 export const OKAYNESS_SUPPORT_EMAIL = 'hello@okayness.com';
+export const COURSE_REMINDER_EMAIL_FROM = 'Zak from Okayness <noreply@zaktalks.com>';

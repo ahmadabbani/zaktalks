@@ -152,7 +152,7 @@ function CountUp({ value, suffix, active }) {
   )
 }
 
-export default function PodcastPageContent({ episodes = [] }) {
+export default function PodcastPageContent({ episodes = [], seasonTwoEpisodes = [] }) {
   const stageRef = useRef(null)
   const pinRef = useRef(null)
   const [heroReady, setHeroReady] = useState(false)
@@ -405,7 +405,10 @@ export default function PodcastPageContent({ episodes = [] }) {
         </section>
 
         {/* -------------------------------------------------- SEASON ARCHIVE */}
-        <PodcastArchiveSection episodes={episodes} />
+        <PodcastArchiveSection
+          episodes={episodes}
+          seasonTwoEpisodes={seasonTwoEpisodes}
+        />
 
         {/* ------------------------------------------------------- NEWSLETTER */}
         <PodcastNewsletterSection />

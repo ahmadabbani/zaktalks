@@ -1,5 +1,9 @@
 import PodcastPageContent from './PodcastPageContent'
-import { getPodcastEpisodes } from '@/lib/youtube'
+import {
+  getPodcastEpisodes,
+  SEASON_ONE_PLAYLIST_ID,
+  SEASON_TWO_PLAYLIST_ID,
+} from '@/lib/youtube'
 
 export const metadata = {
   title: 'ZakTalks Podcast | Season 2 Launch',
@@ -13,7 +17,15 @@ export const revalidate = 3600
 
 export default async function PodcastPage() {
   // Server-side on purpose: YOUTUBE_API_KEY must never reach the browser.
-  const episodes = await getPodcastEpisodes()
+  const [episodes, seasonTwoEpisodes] = await Promise.all([
+    getPodcastEpisodes(SEASON_ONE_PLAYLIST_ID),
+    getPodcastEpisodes(SEASON_TWO_PLAYLIST_ID),
+  ])
 
-  return <PodcastPageContent episodes={episodes} />
+  return (
+    <PodcastPageContent
+      episodes={episodes}
+      seasonTwoEpisodes={seasonTwoEpisodes}
+    />
+  )
 }

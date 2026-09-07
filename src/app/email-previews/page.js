@@ -4,6 +4,7 @@ import {
   buildCourseAccessEmail,
   buildPaymentReceiptEmail,
 } from '@/lib/email/templates/purchase'
+import { buildCourseInactivityEmail } from '@/lib/email/templates/course-inactivity'
 import DownloadPdfButton from './DownloadPdfButton'
 import styles from './email-previews.module.css'
 
@@ -37,6 +38,17 @@ export default function EmailPreviewsPage() {
     appUrl: SAMPLE_APP_URL,
     supportEmail: 'hello@okayness.com',
   })
+  const courseInactivityEmail = buildCourseInactivityEmail({
+    firstName: 'Maya',
+    courseName: 'Interpersonal Communication Dynamics',
+    lastLessonName: 'Listening Beyond the Words',
+    nextLessonName: 'Recognising Communication Patterns',
+    progressPercentage: 42,
+    resumeUrl: `${SAMPLE_APP_URL}/courses/interpersonal-communication-dynamics/player/00000000-0000-4000-8000-000000000000`,
+    preferencesUrl: `${SAMPLE_APP_URL}/dashboard?section=profile`,
+    appUrl: SAMPLE_APP_URL,
+    supportEmail: 'hello@okayness.com',
+  })
 
   const previews = [
     {
@@ -62,6 +74,14 @@ export default function EmailPreviewsPage() {
       from: 'Okayness Team <noreply@zaktalks.com>',
       height: 1660,
       ...courseAccessEmail,
+    },
+    {
+      id: 'course-inactivity',
+      name: 'Course inactivity reminder',
+      description: 'Sent once for an inactivity period while an enrolled course remains incomplete.',
+      from: 'Zak from Okayness <noreply@zaktalks.com>',
+      height: 1770,
+      ...courseInactivityEmail,
     },
   ]
 

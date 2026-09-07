@@ -4749,6 +4749,10 @@
   animation-delay: 280ms;
 }
 
+.profileReminderCard {
+  grid-column: 1 / -1;
+}
+
 .profileActionCard > span {
   display: grid;
   place-items: center;

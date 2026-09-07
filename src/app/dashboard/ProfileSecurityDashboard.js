@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'
 import {
+  FaBell,
   FaCalendarAlt,
   FaCheckCircle,
   FaClock,
@@ -19,7 +20,7 @@ import {
   FaUser,
 } from 'react-icons/fa'
 import { createClient } from '@/lib/supabase/client'
-import { updateLearnerProfile } from './profile.actions'
+import { updateCourseReminderPreference, updateLearnerProfile } from './profile.actions'
 import styles from './dashboard.module.css'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -84,6 +85,8 @@ export default function ProfileSecurityDashboard({ profile }) {
   const [pendingEmail, setPendingEmail] = useState(profile.pending_email || '')
   const [emailNotice, setEmailNotice] = useState('')
   const [endingSessions, setEndingSessions] = useState(false)
+  const [courseRemindersEnabled, setCourseRemindersEnabled] = useState(profile.course_reminders_enabled !== false)
+  const [savingReminders, setSavingReminders] = useState(false)
 
   const displayName = useMemo(
     () => [profile.first_name, profile.last_name].filter(Boolean).join(' ') || 'ZakTalks learner',
@@ -94,7 +97,8 @@ export default function ProfileSecurityDashboard({ profile }) {
     setFirstName(profile.first_name || '')
     setLastName(profile.last_name || '')
     setPendingEmail(profile.pending_email || '')
-  }, [profile.first_name, profile.last_name, profile.pending_email])
+    setCourseRemindersEnabled(profile.course_reminders_enabled !== false)
+  }, [profile.course_reminders_enabled, profile.first_name, profile.last_name, profile.pending_email])
 
   useEffect(() => {
     if (searchParams.get('email') !== 'confirmed') return
@@ -212,6 +216,30 @@ export default function ProfileSecurityDashboard({ profile }) {
       toast.error('Other sessions could not be signed out. Please try again.')
     } finally {
       setEndingSessions(false)
+    }
+  }
+
+  const toggleCourseReminders = async () => {
+    if (savingReminders) return
+
+    const nextValue = !courseRemindersEnabled
+    setSavingReminders(true)
+
+    try {
+      const result = await updateCourseReminderPreference(nextValue)
+      if (!result?.success) {
+        toast.error(result?.error || 'Your reminder preference could not be updated.')
+        return
+      }
+
+      setCourseRemindersEnabled(result.profile.course_reminders_enabled)
+      toast.success(result.message)
+      router.refresh()
+    } catch (error) {
+      console.error('Course reminder preference request failed:', error)
+      toast.error('Your reminder preference could not be updated.')
+    } finally {
+      setSavingReminders(false)
     }
   }
 
@@ -354,6 +382,28 @@ export default function ProfileSecurityDashboard({ profile }) {
       </div>
 
       <div className={styles.profileSecurityActions}>
+        <article className={`${styles.profileActionCard} ${styles.profileReminderCard}`}>
+          <span><FaBell /></span>
+          <div>
+            <small>Learning reminders</small>
+            <h2>Course check-ins are {courseRemindersEnabled ? 'on' : 'off'}</h2>
+            <p>Choose whether Okayness may email you after an extended period without course activity.</p>
+          </div>
+          <button
+            type="button"
+            onClick={toggleCourseReminders}
+            disabled={savingReminders}
+            aria-pressed={courseRemindersEnabled}
+          >
+            <FaBell />
+            {savingReminders
+              ? 'Saving...'
+              : courseRemindersEnabled
+                ? 'Turn off reminders'
+                : 'Turn on reminders'}
+          </button>
+        </article>
+
         <article className={styles.profileActionCard}>
           <span><FaShieldAlt /></span>
           <div><small>Password security</small><h2>Change your password</h2><p>Use the tested secure-link flow to choose a new password. Your course access and learning history stay unchanged.</p></div>

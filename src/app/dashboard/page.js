@@ -246,6 +246,7 @@ export default async function DashboardPage() {
                 created_at: profile?.created_at || user.created_at || null,
                 updated_at: profile?.updated_at || null,
                 last_sign_in_at: user.last_sign_in_at || null,
+                course_reminders_enabled: profile?.course_reminders_enabled !== false,
               }}
             />
           </div>

@@ -14,6 +14,9 @@ const API_BASE = 'https://www.googleapis.com/youtube/v3'
 /** Season 1 playlist ("Season 1" on the ZakTalks channel). */
 export const SEASON_ONE_PLAYLIST_ID = 'PLPFgt_ywYJEM'
 
+/** Season 2 playlist ("Season 2" on the ZakTalks channel). */
+export const SEASON_TWO_PLAYLIST_ID = 'PLCNXKD99o3GM'
+
 /** Podcast ships biweekly, so an hour is plenty fresh and keeps quota near zero. */
 const REVALIDATE_SECONDS = 3600
 

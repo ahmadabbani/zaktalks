@@ -54,3 +54,39 @@ export async function updateLearnerProfile(formData) {
     profile,
   }
 }
+
+export async function updateCourseReminderPreference(enabled) {
+  if (typeof enabled !== 'boolean') {
+    return { success: false, error: 'Choose a valid reminder preference.' }
+  }
+
+  const supabase = await createClient()
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+  if (authError || !user) {
+    return { success: false, error: 'Your session has expired. Please sign in again.' }
+  }
+
+  const { data: profile, error } = await supabase
+    .from('users')
+    .update({
+      course_reminders_enabled: enabled,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', user.id)
+    .select('course_reminders_enabled, updated_at')
+    .single()
+
+  if (error || !profile) {
+    console.error('Course reminder preference update failed:', error?.message)
+    return { success: false, error: 'Your reminder preference could not be updated.' }
+  }
+
+  revalidatePath('/dashboard')
+
+  return {
+    success: true,
+    message: enabled ? 'Course reminders are on.' : 'Course reminders are off.',
+    profile,
+  }
+}

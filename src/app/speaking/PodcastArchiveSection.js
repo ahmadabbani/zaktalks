@@ -56,12 +56,8 @@ const episodeThemeMap = {
   Eh8YHTW2gSg: ['AI', 'Education', 'Values'],
 }
 
-const themeOptions = Array.from(new Set(Object.values(episodeThemeMap).flat())).sort((a, b) =>
-  a.localeCompare(b)
-)
-
-function getEpisodeThemes(episodeId) {
-  return episodeThemeMap[episodeId] || []
+function getEpisodeThemes(episode) {
+  return episodeThemeMap[episode.id] || episode.tags?.slice(0, 3) || []
 }
 
 /* No per-episode links yet, so these read as informational chips rather than
@@ -115,8 +111,8 @@ const seasons = [
     id: 'season-2',
     label: 'Season 2',
     image: '/podcast-s2.jpg',
-    alt: 'ZakTalks Season 2 cover, coming soon',
-    available: false,
+    alt: 'ZakTalks Season 2 cover',
+    available: true,
   },
 ]
 
@@ -347,7 +343,7 @@ function FeaturedEpisodeCard({ item, details, index, register, cx }) {
   )
 }
 
-export default function PodcastArchiveSection({ episodes = [] }) {
+export default function PodcastArchiveSection({ episodes = [], seasonTwoEpisodes = [] }) {
   const [openSeason, setOpenSeason] = useState(null)
   const [sortId, setSortId] = useState('latest')
   const [selectedTheme, setSelectedTheme] = useState('all')
@@ -419,12 +415,19 @@ export default function PodcastArchiveSection({ episodes = [] }) {
     [revealed]
   )
 
+  const activeEpisodes = openSeason === 'season-2' ? seasonTwoEpisodes : episodes
+  const themeOptions = useMemo(
+    () => Array.from(
+      new Set(activeEpisodes.flatMap((episode) => getEpisodeThemes(episode)))
+    ).sort((a, b) => a.localeCompare(b)),
+    [activeEpisodes]
+  )
   const filteredEpisodes = useMemo(
     () =>
       selectedTheme === 'all'
-        ? episodes
-        : episodes.filter((episode) => getEpisodeThemes(episode.id).includes(selectedTheme)),
-    [episodes, selectedTheme]
+        ? activeEpisodes
+        : activeEpisodes.filter((episode) => getEpisodeThemes(episode).includes(selectedTheme)),
+    [activeEpisodes, selectedTheme]
   )
   const sortedEpisodes = useMemo(
     () => sortEpisodes(filteredEpisodes, sortId),
@@ -432,7 +435,7 @@ export default function PodcastArchiveSection({ episodes = [] }) {
   )
   const visibleEpisodes = sortedEpisodes.slice(0, visibleCount)
   const remaining = sortedEpisodes.length - visibleEpisodes.length
-  const isArchiveOpen = openSeason === 'season-1'
+  const isArchiveOpen = Boolean(openSeason)
 
   useEffect(() => {
     if (!isArchiveOpen || !archiveRef.current) return undefined
@@ -448,6 +451,8 @@ export default function PodcastArchiveSection({ episodes = [] }) {
     if (!season.available) return
 
     setOpenSeason((current) => (current === season.id ? null : season.id))
+    setSelectedTheme('all')
+    setIsThemeMenuOpen(false)
     setVisibleCount(INITIAL_VISIBLE)
   }
 
@@ -490,7 +495,7 @@ export default function PodcastArchiveSection({ episodes = [] }) {
         {seasons.map((season) => {
           const isOpen = openSeason === season.id
 
-          return season.available ? (
+          return (
             <button
               key={season.id}
               type="button"
@@ -509,40 +514,25 @@ export default function PodcastArchiveSection({ episodes = [] }) {
                 className={styles.seasonImage}
               />
 
-              <span className={styles.seasonCenterLabel}><span>Season 1</span></span>
+              {season.id === 'season-1' ? (
+                <span className={styles.seasonCenterLabel}><span>Season 1</span></span>
+              ) : (
+                <span className={styles.seasonComingSoon}>
+                  <span className={styles.seasonComingSoonText}>
+                    <strong className={styles.seasonComingSoonHeadline}>Season 2 is now on air.</strong>
+                    <span>
+                      New episodes every <strong>Friday</strong> on <strong>Shift TV/Cablevision+</strong>{' '}
+                      and every <strong>Sunday</strong> on <strong>ZakTalks YouTube channel</strong>.
+                    </span>
+                  </span>
+                </span>
+              )}
 
               <span className={styles.seasonHint}>
-                <span>{isOpen ? 'Hide Season 1' : 'Watch Season 1'}</span>
+                <span>{isOpen ? `Hide ${season.label}` : `Watch ${season.label}`}</span>
                 <FiChevronDown aria-hidden="true" />
               </span>
             </button>
-          ) : (
-            <div key={season.id} className={`${styles.seasonTile} ${styles.seasonTileLocked}`}>
-              <Image
-                src={season.image}
-                alt={season.alt}
-                width={1100}
-                height={1100}
-                sizes="50vw"
-                quality={86}
-                className={styles.seasonImage}
-              />
-
-              <span className={styles.seasonComingSoon}>
-                <span className={styles.seasonComingSoonText}>
-                  <strong className={styles.seasonComingSoonHeadline}>Season 2 is now on air.</strong>
-                  <span>
-                    New episodes every <strong>Friday</strong> on <strong>Shift TV/Cablevision+</strong>{' '}
-                    and every <strong>Sunday</strong> on <strong>ZakTalks YouTube channel</strong>.
-                  </span>
-                </span>
-              </span>
-
-              <span className={`${styles.seasonHint} ${styles.seasonHintStatic}`}>
-                <span>Watch Season 2</span>
-                <FiChevronDown aria-hidden="true" />
-              </span>
-            </div>
           )
         })}
       </div>
@@ -636,7 +626,7 @@ export default function PodcastArchiveSection({ episodes = [] }) {
               <p className={styles.archiveEmpty}>
                 {selectedTheme === 'all'
                   ? 'Episodes are loading from YouTube. Please check back shortly.'
-                  : 'No Season 1 episodes match this theme.'}
+                  : `No ${openSeason === 'season-2' ? 'Season 2' : 'Season 1'} episodes match this theme.`}
               </p>
             ) : (
               <>
@@ -646,7 +636,7 @@ export default function PodcastArchiveSection({ episodes = [] }) {
                       key={episode.id}
                       episode={episode}
                       index={index % INITIAL_VISIBLE}
-                      themes={getEpisodeThemes(episode.id)}
+                      themes={getEpisodeThemes(episode)}
                     />
                   ))}
                 </div>

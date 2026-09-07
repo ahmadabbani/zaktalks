@@ -9,6 +9,7 @@ import { buildLessonAccessMap, getFirstAvailableLesson } from '@/lib/course-prog
 import { getLessonDisplayNumber } from '@/lib/lesson-numbering'
 import { CourseCompletionNotice, LessonCompletionBadge, LessonNavigation } from './LessonStatus'
 import LessonResource from './LessonResource'
+import CourseActivityTracker from '@/components/CourseActivityTracker'
 import styles from './lesson-player.module.css'
 
 export default async function LessonPage({ params }) {
@@ -164,6 +165,7 @@ export default async function LessonPage({ params }) {
 
   return (
     <div className={styles.lessonPage}>
+      <CourseActivityTracker lessonId={lesson.id} />
       <div className={styles.lessonStage}>
       {/* Lesson Header */}
       {lesson.type === 'video' && <div className={styles.lessonHeader}>
