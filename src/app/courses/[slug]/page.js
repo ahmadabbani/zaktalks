@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
-import { normalizeExploreMore, PUBLIC_PAGE_OPTIONS } from '@/lib/course-content'
+import { normalizeCourseTestimonials, normalizeExploreMore, PUBLIC_PAGE_OPTIONS } from '@/lib/course-content'
 import { extractYouTubeVideoId, getYouTubeVideoDurations } from '@/lib/youtube'
 import { notFound } from 'next/navigation'
 import CourseDetailsExperience from './CourseDetailsExperience'
@@ -33,6 +33,7 @@ export default async function CourseDetailPage({ params }) {
       .select(`
         id,
         title,
+        logo_url,
         price_cents,
         promise,
         short_introduction,
@@ -60,6 +61,9 @@ export default async function CourseDetailPage({ params }) {
         introduction_video_url,
         tutor_name,
         meet_the_tutor,
+        testimonials_heading,
+        testimonials_subheading,
+        testimonials,
         explore_more,
         rich_content
       `)
@@ -123,6 +127,7 @@ export default async function CourseDetailPage({ params }) {
   ])
 
   const configuredExploreMore = normalizeExploreMore(course.explore_more)
+  const courseTestimonials = normalizeCourseTestimonials(course.testimonials)
   const configuredCourseIds = [...new Set(
     configuredExploreMore
       .filter((item) => item.target_type === 'course' && item.course_id && item.course_id !== course.id)
@@ -169,7 +174,7 @@ export default async function CourseDetailPage({ params }) {
         description: item.description,
         rich_description: course.rich_content?.explore_more?.[index]?.description,
         cta_text: item.cta_text,
-        image_url: null,
+        image_url: item.image_url || null,
       }]
     }
 
@@ -203,6 +208,7 @@ export default async function CourseDetailPage({ params }) {
       galleryImages={galleryImages || []}
       faqs={faqs || []}
       exploreMoreItems={exploreMoreItems}
+      testimonials={courseTestimonials}
       isLoggedIn={Boolean(user)}
       isEnrolled={hasStaffAccess || Boolean(enrollment)}
     />

@@ -6,8 +6,8 @@ export const moneyEgoStates = {
   themeColor: '#4CAF50',
   options: [
     { label: 'Parent', value: 'parent' },
-    { label: 'Child', value: 'child' },
-    { label: 'Adult', value: 'adult' }
+    { label: 'Adult', value: 'adult' },
+    { label: 'Child', value: 'child' }
   ],
   questions: [
     { id: 'q1', text: '"You should never waste money; it\'s dangerous to spend."', correctAnswer: 'parent' },

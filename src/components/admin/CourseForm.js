@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useId, useRef, useState } from 'react'
-import { FaCheck, FaChevronDown, FaCloudUploadAlt, FaDatabase, FaExclamationCircle } from 'react-icons/fa'
-import { PUBLIC_PAGE_OPTIONS, legacyDetailsToBlocks, normalizeContentBlocks, normalizeExploreMore } from '@/lib/course-content'
+import { FaCheck, FaChevronDown, FaCloudUploadAlt, FaDatabase, FaExclamationCircle, FaQuoteLeft } from 'react-icons/fa'
+import { PUBLIC_PAGE_OPTIONS, legacyDetailsToBlocks, normalizeContentBlocks, normalizeCourseTestimonials, normalizeExploreMore } from '@/lib/course-content'
 import { enrichContentBlocks, enrichExploreMore, enrichRichList, sanitizeCourseRichContent } from '@/lib/course-rich-content'
 import { createRichText, richTextToPlainText } from '@/lib/rich-text'
 import { createClient } from '@/lib/supabase/client'
@@ -11,7 +11,7 @@ import RichTextEditor from './RichTextEditor'
 import styles from './CourseForm.module.css'
 
 const ONE_MEGABYTE = 1024 * 1024
-const FILE_LIMITS = { logo: ONE_MEGABYTE, gallery: ONE_MEGABYTE, certificate: 10 * ONE_MEGABYTE }
+const FILE_LIMITS = { logo: ONE_MEGABYTE, gallery: ONE_MEGABYTE, explore_page: ONE_MEGABYTE, testimonial: ONE_MEGABYTE, certificate: 10 * ONE_MEGABYTE }
 const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
 const COURSE_LEVEL_OPTIONS = [
   { value: 'Beginner', label: 'Beginner' },
@@ -180,7 +180,7 @@ function isYouTubeUrl(value) {
 
 function validateFile(file, kind) {
   if (!file || file.size === 0) return null
-  const label = kind === 'certificate' ? 'Certificate PDF' : kind === 'logo' ? 'Course logo' : 'Gallery image'
+  const label = kind === 'certificate' ? 'Certificate PDF' : kind === 'logo' ? 'Course logo' : kind === 'explore_page' ? 'Page card image' : kind === 'testimonial' ? 'Testimonial image' : 'Gallery image'
   if (file.size > FILE_LIMITS[kind]) return `${label} must be ${kind === 'certificate' ? '10 MB' : '1 MB'} or smaller.`
   if (kind === 'certificate' && file.type !== 'application/pdf') return 'Certificate template must be a PDF file.'
   if (kind !== 'certificate' && !IMAGE_TYPES.has(file.type)) return `${label} must be a JPG, PNG, WebP, or GIF file.`
@@ -190,6 +190,8 @@ function validateFile(file, kind) {
 function assetLabel(kind) {
   if (kind === 'logo') return 'course logo'
   if (kind === 'certificate') return 'certificate PDF'
+  if (kind === 'explore_page') return 'page card image'
+  if (kind === 'testimonial') return 'testimonial image'
   return 'gallery image'
 }
 
@@ -328,6 +330,117 @@ function StructuredContentEditor({ title, description, items, setItems, titleLab
   )
 }
 
+function CourseTestimonialsEditor({ heading, setHeading, subheading, setSubheading, items, setItems, error, headingError, subheadingError }) {
+  const addTestimonial = () => {
+    setItems((current) => [...current, {
+      name: '',
+      quote: '',
+      image_url: '',
+      image_preview: '',
+      image_input_version: 0,
+      _upload_key: `testimonial-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    }])
+  }
+
+  const updateItem = (index, field, value) => {
+    setItems((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, [field]: value } : item))
+  }
+
+  const updateImage = (index, event) => {
+    const file = event.target.files?.[0]
+    if (!file || !file.type.startsWith('image/')) {
+      updateItem(index, 'image_preview', '')
+      return
+    }
+    const reader = new FileReader()
+    reader.onloadend = () => updateItem(index, 'image_preview', reader.result)
+    reader.readAsDataURL(file)
+  }
+
+  const clearImage = (index) => {
+    setItems((current) => current.map((item, itemIndex) => itemIndex === index
+      ? { ...item, image_url: '', image_preview: '', image_input_version: (item.image_input_version || 0) + 1 }
+      : item))
+  }
+
+  return (
+    <section className={styles.builderSection}>
+      <div className={styles.builderHeader}>
+        <div>
+          <h2>Course Testimonials</h2>
+        </div>
+        {items.length === 0 && <button type="button" onClick={addTestimonial} className={styles.addButton}>+ Add Testimonial</button>}
+      </div>
+
+      <FieldError message={error} />
+
+      <div className={styles.testimonialSectionFields}>
+        <div className={styles.formGroup} data-error-key="testimonials_heading" tabIndex={-1}>
+          <label>Section heading</label>
+          <input type="text" value={heading} onChange={(event) => setHeading(event.target.value)} placeholder="e.g. What learners say about this course" aria-invalid={Boolean(headingError)} />
+          <FieldError message={headingError} />
+        </div>
+        <div className={styles.formGroup} data-error-key="testimonials_subheading" tabIndex={-1}>
+          <label>Section subheading</label>
+          <RichTextEditor
+            value={subheading}
+            onChange={setSubheading}
+            placeholder="Add a short introduction to the learner stories..."
+            ariaLabel="Testimonial section subheading"
+            maxLength={3000}
+          />
+          <FieldError message={subheadingError} />
+        </div>
+      </div>
+
+      <div className={styles.builderItems} data-error-key="testimonials" tabIndex={-1}>
+        {items.map((item, index) => (
+          <article className={`${styles.builderItem} ${styles.testimonialBuilderItem}`} key={item._upload_key || index}>
+            <div className={styles.builderItemTopline}>
+              <strong><FaQuoteLeft aria-hidden="true" /> Testimonial {index + 1}</strong>
+              <button type="button" onClick={() => setItems((current) => current.filter((_, itemIndex) => itemIndex !== index))} className={styles.removeItemButton}>Remove</button>
+            </div>
+            <div className={styles.formGroup}>
+              <label>Testimonial</label>
+              <textarea value={item.quote} onChange={(event) => updateItem(index, 'quote', event.target.value)} placeholder="Add the learner's testimonial..." rows="6" />
+            </div>
+            <div className={styles.gridTwo}>
+              <div className={styles.formGroup}>
+                <label>Learner name</label>
+                <input type="text" value={item.name} onChange={(event) => updateItem(index, 'name', event.target.value)} placeholder="Full name" />
+              </div>
+              <div className={styles.formGroup}>
+                <label>Learner image</label>
+                <p className={styles.fieldHint}>JPG, PNG, WebP, or GIF. Maximum 1 MB.</p>
+                {(item.image_preview || item.image_url) && (
+                  <div className={`${styles.recommendationImagePreview} ${styles.testimonialImagePreview}`}>
+                    <img src={item.image_preview || item.image_url} alt={`${item.name || `Learner ${index + 1}`} preview`} />
+                    <button type="button" onClick={() => clearImage(index)}>Remove image</button>
+                  </div>
+                )}
+                <input
+                  key={item.image_input_version || 0}
+                  className={styles.fileInput}
+                  type="file"
+                  name={`testimonial_image_${item._upload_key}`}
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  onChange={(event) => updateImage(index, event)}
+                />
+              </div>
+            </div>
+            {index === items.length - 1 && (
+              <div className={styles.builderItemFooter}>
+                <button type="button" onClick={addTestimonial} className={styles.addButton}>+ Add Another Testimonial</button>
+              </div>
+            )}
+          </article>
+        ))}
+        {items.length === 0 && <p className={styles.builderEmpty}>No testimonials added yet.</p>}
+      </div>
+    </section>
+  )
+}
+
 function ExploreMoreEditor({ items, setItems, availableCourses, error }) {
   const updateItem = (index, field, value) => {
     setItems((current) => current.map((item, itemIndex) => {
@@ -338,6 +451,8 @@ function ExploreMoreEditor({ items, setItems, availableCourses, error }) {
           target_type: value,
           course_id: value === 'course' ? (availableCourses[0]?.id || '') : '',
           page_path: value === 'page' ? PUBLIC_PAGE_OPTIONS[0].path : '',
+          image_url: value === 'page' ? item.image_url : '',
+          image_preview: value === 'page' ? item.image_preview : '',
         }
       }
       return { ...item, [field]: value }
@@ -350,6 +465,23 @@ function ExploreMoreEditor({ items, setItems, availableCourses, error }) {
       : item))
   }
 
+  const updatePageImage = (index, event) => {
+    const file = event.target.files?.[0]
+    if (!file || !file.type.startsWith('image/')) {
+      updateItem(index, 'image_preview', '')
+      return
+    }
+    const reader = new FileReader()
+    reader.onloadend = () => updateItem(index, 'image_preview', reader.result)
+    reader.readAsDataURL(file)
+  }
+
+  const clearPageImage = (index) => {
+    setItems((current) => current.map((item, itemIndex) => itemIndex === index
+      ? { ...item, image_url: '', image_preview: '', image_input_version: (item.image_input_version || 0) + 1 }
+      : item))
+  }
+
   const newItem = () => {
     const useCourse = availableCourses.length > 0
     return {
@@ -359,6 +491,10 @@ function ExploreMoreEditor({ items, setItems, availableCourses, error }) {
       description: '',
       description_rich: createRichText(),
       cta_text: '',
+      image_url: '',
+      image_preview: '',
+      image_input_version: 0,
+      _upload_key: `recommendation-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     }
   }
 
@@ -386,7 +522,7 @@ function ExploreMoreEditor({ items, setItems, availableCourses, error }) {
       <div className={styles.builderItems}>
         <FieldError message={error} />
         {items.map((item, index) => (
-          <article className={styles.builderItem} key={index}>
+          <article className={styles.builderItem} key={item._upload_key || index}>
             <div className={styles.builderItemTopline}>
               <strong>Recommendation {index + 1}</strong>
               <button type="button" onClick={() => setItems((current) => current.filter((_, itemIndex) => itemIndex !== index))} className={styles.removeItemButton}>Remove</button>
@@ -425,6 +561,26 @@ function ExploreMoreEditor({ items, setItems, availableCourses, error }) {
                 )}
               </div>
             </div>
+            {item.target_type === 'page' && (
+              <div className={`${styles.formGroup} ${styles.recommendationImageField}`}>
+                <label>Page card image <span className={styles.optionalLabel}>Optional</span></label>
+                <p className={styles.fieldHint}>JPG, PNG, WebP, or GIF. Maximum 1 MB. The white ZakTalks logo is used when no image is added.</p>
+                {(item.image_preview || item.image_url) && (
+                  <div className={styles.recommendationImagePreview}>
+                    <img src={item.image_preview || item.image_url} alt={`Recommendation ${index + 1} preview`} />
+                    <button type="button" onClick={() => clearPageImage(index)}>Remove image</button>
+                  </div>
+                )}
+                <input
+                  key={item.image_input_version || 0}
+                  className={styles.fileInput}
+                  type="file"
+                  name={`explore_more_image_${item._upload_key}`}
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  onChange={(event) => updatePageImage(index, event)}
+                />
+              </div>
+            )}
             <div className={styles.gridTwo}>
               <div className={styles.formGroup}>
                 <label>Description</label>
@@ -459,6 +615,18 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
   const initialDetailsItems = legacyDetailsToBlocks(initialData.details_to_know_items, initialData.details_to_know)
   const initialExploreItems = normalizeContentBlocks(initialData.what_youll_explore)
   const initialExploreMore = normalizeExploreMore(initialData.explore_more)
+  const initialExploreMoreWithKeys = initialExploreMore.map((item, index) => ({
+    ...item,
+    _upload_key: `existing-${index}`,
+    image_preview: '',
+    image_input_version: 0,
+  }))
+  const initialTestimonials = normalizeCourseTestimonials(initialData.testimonials).map((item, index) => ({
+    ...item,
+    _upload_key: `existing-testimonial-${index}`,
+    image_preview: '',
+    image_input_version: 0,
+  }))
   const [initialRichContent] = useState(() => sanitizeCourseRichContent(initialData.rich_content, {
     promise: initialData.promise ?? initialData.description ?? '',
     short_introduction: initialData.short_introduction ?? initialData.subheadline ?? '',
@@ -471,6 +639,7 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
     subheadline: initialData.subheadline || '',
     what_youll_explore: initialExploreItems,
     meet_the_tutor: initialData.meet_the_tutor || '',
+    testimonials_subheading: initialData.testimonials_subheading || '',
     explore_more: initialExploreMore,
   }))
   const [richFields, setRichFields] = useState(() => ({
@@ -480,6 +649,7 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
     audience_supporting_text: initialRichContent.audience_supporting_text,
     subheadline: initialRichContent.subheadline,
     meet_the_tutor: initialRichContent.meet_the_tutor,
+    testimonials_subheading: initialRichContent.testimonials_subheading,
   }))
   const [learningOutcomes, setLearningOutcomes] = useState(() => enrichRichList(initialData.what_youll_learn || [], initialRichContent.what_youll_learn, 1000))
   const [skills, setSkills] = useState(initialData.skills_youll_gain || [])
@@ -487,7 +657,9 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
   const [notForAudience, setNotForAudience] = useState(() => enrichRichList(toList(initialData.who_this_is_not_for), initialRichContent.who_this_is_not_for, 1000))
   const [detailsItems, setDetailsItems] = useState(() => enrichContentBlocks(initialDetailsItems, initialRichContent.details_to_know_items))
   const [exploreItems, setExploreItems] = useState(() => enrichContentBlocks(initialExploreItems, initialRichContent.what_youll_explore))
-  const [exploreMore, setExploreMore] = useState(() => enrichExploreMore(initialExploreMore, initialRichContent.explore_more))
+  const [exploreMore, setExploreMore] = useState(() => enrichExploreMore(initialExploreMoreWithKeys, initialRichContent.explore_more))
+  const [testimonialsHeading, setTestimonialsHeading] = useState(initialData.testimonials_heading || '')
+  const [testimonials, setTestimonials] = useState(initialTestimonials)
   const [faqs, setFaqs] = useState(initialData.faqs || [])
   const [existingImages, setExistingImages] = useState(initialData.images || [])
   const [deletedImageUrls, setDeletedImageUrls] = useState([])
@@ -644,6 +816,29 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
     const invalidGallery = galleryFiles.map((file) => validateFile(file, 'gallery')).find(Boolean)
     if (invalidGallery) errors.gallery_images = invalidGallery
 
+    const invalidExploreImage = exploreMore
+      .filter((item) => item.target_type === 'page')
+      .map((item) => validateFile(formData.get(`explore_more_image_${item._upload_key}`), 'explore_page'))
+      .find(Boolean)
+    if (invalidExploreImage) errors.explore_more = invalidExploreImage
+
+    if (testimonials.length > 0) {
+      const incompleteTestimonial = testimonials.some((item) => {
+        const imageFile = formData.get(`testimonial_image_${item._upload_key}`)
+        return !String(item.name || '').trim()
+          || !String(item.quote || '').trim()
+          || (!String(item.image_url || '').trim() && !(imageFile?.size > 0))
+      })
+      if (!String(testimonialsHeading || '').trim()) errors.testimonials_heading = 'Add the testimonial section heading.'
+      if (!String(testimonialsSubheading || '').trim()) errors.testimonials_subheading = 'Add the testimonial section subheading.'
+      if (incompleteTestimonial) errors.testimonials = 'Complete the text, learner name, and image for every testimonial.'
+
+      const invalidTestimonialImage = testimonials
+        .map((item) => validateFile(formData.get(`testimonial_image_${item._upload_key}`), 'testimonial'))
+        .find(Boolean)
+      if (invalidTestimonialImage) errors.testimonials = invalidTestimonialImage
+    }
+
     return errors
   }
 
@@ -651,7 +846,9 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
     const firstKey = Object.keys(errors)[0]
     if (!firstKey) return
     window.requestAnimationFrame(() => {
-      const target = formRef.current?.querySelector(`[name="${firstKey}"], [data-error-key="${firstKey}"]`)
+      const target = formRef.current?.querySelector(`[data-error-key="${firstKey}"]`)
+        || formRef.current?.querySelector(`[name="${firstKey}"]:not([type="hidden"])`)
+        || formRef.current?.querySelector(`[name="${firstKey}"]`)
       target?.scrollIntoView({ behavior: 'smooth', block: 'center' })
       target?.focus?.({ preventScroll: true })
     })
@@ -683,6 +880,15 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
     if (logoFile?.size > 0) files.push({ key: 'logo', kind: 'logo', file: logoFile })
     if (certificateFile?.size > 0) files.push({ key: 'certificate', kind: 'certificate', file: certificateFile })
     galleryFiles.forEach((file, index) => files.push({ key: `gallery-${index}`, kind: 'gallery', file }))
+    exploreMore.forEach((item) => {
+      if (item.target_type !== 'page') return
+      const file = formData.get(`explore_more_image_${item._upload_key}`)
+      if (file?.size > 0) files.push({ key: `explore-page:${item._upload_key}`, kind: 'explore_page', file })
+    })
+    testimonials.forEach((item) => {
+      const file = formData.get(`testimonial_image_${item._upload_key}`)
+      if (file?.size > 0) files.push({ key: `testimonial:${item._upload_key}`, kind: 'testimonial', file })
+    })
 
     const mode = initialData?.id ? 'edit' : 'create'
     let preparedUploads = []
@@ -740,6 +946,8 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
       formData.delete('logo')
       formData.delete('certificate_template')
       formData.delete('gallery_images')
+      exploreMore.forEach((item) => formData.delete(`explore_more_image_${item._upload_key}`))
+      testimonials.forEach((item) => formData.delete(`testimonial_image_${item._upload_key}`))
 
       setProgress({ visible: true, stage: 'save', percent: 90, label: 'Saving course', detail: 'Writing the course details and connecting its files.' })
       saveStarted = true
@@ -769,7 +977,22 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
 
   const plainDetailsItems = detailsItems.map(({ title, content_type, text, items }) => ({ title, content_type, text, items }))
   const plainExploreItems = exploreItems.map(({ title, content_type, text, items }) => ({ title, content_type, text, items }))
-  const plainExploreMore = exploreMore.map(({ target_type, course_id, page_path, description, cta_text }) => ({ target_type, course_id, page_path, description, cta_text }))
+  const plainExploreMore = exploreMore.map(({ target_type, course_id, page_path, description, cta_text, image_url, _upload_key }) => ({
+    target_type,
+    course_id,
+    page_path,
+    description,
+    cta_text,
+    image_url: target_type === 'page' ? image_url : '',
+    image_upload_key: _upload_key,
+  }))
+  const plainTestimonials = testimonials.map(({ name, quote, image_url, _upload_key }) => ({
+    name,
+    quote,
+    image_url,
+    image_upload_key: _upload_key,
+  }))
+  const testimonialsSubheading = richTextToPlainText(richFields.testimonials_subheading, 3000)
   const courseRichContent = {
     version: 1,
     ...richFields,
@@ -791,6 +1014,9 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
       <input type="hidden" name="details_to_know_items_json" value={JSON.stringify(plainDetailsItems)} />
       <input type="hidden" name="what_youll_explore_json" value={JSON.stringify(plainExploreItems)} />
       <input type="hidden" name="explore_more_json" value={JSON.stringify(plainExploreMore)} />
+      <input type="hidden" name="testimonials_json" value={JSON.stringify(plainTestimonials)} />
+      <input type="hidden" name="testimonials_heading" value={testimonialsHeading} />
+      <input type="hidden" name="testimonials_subheading" value={testimonialsSubheading} />
       <input type="hidden" name="course_rich_content_json" value={JSON.stringify(courseRichContent)} />
 
       <div className={styles.note}>
@@ -1190,6 +1416,18 @@ export default function CourseForm({ initialData = {}, action, buttonText = "Sav
           {faqs.length === 0 && <p className={styles.emptyState}>No FAQs added yet.</p>}
         </div>
       </div>
+
+      <CourseTestimonialsEditor
+        heading={testimonialsHeading}
+        setHeading={setTestimonialsHeading}
+        subheading={richFields.testimonials_subheading}
+        setSubheading={(value) => updateRichField('testimonials_subheading', value)}
+        items={testimonials}
+        setItems={setTestimonials}
+        error={fieldErrors.testimonials}
+        headingError={fieldErrors.testimonials_heading}
+        subheadingError={fieldErrors.testimonials_subheading}
+      />
 
       <ExploreMoreEditor items={exploreMore} setItems={setExploreMore} availableCourses={availableCourses} error={fieldErrors.explore_more} />
 

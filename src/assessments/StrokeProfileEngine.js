@@ -60,25 +60,21 @@ function ProfilePair({ positiveGroup, negativeGroup, positiveScore, negativeScor
   return (
     <div className={styles.strokeProfilePair}>
       <div className={styles.strokePairNumber}>({positiveGroup.number})</div>
-
       <div className={styles.strokeReferenceTrack} aria-label={`${positiveGroup.title}: ${positiveScore} out of 24`}>
         <div className={`${styles.strokeReferenceFill} ${styles.strokeReferenceFillPositive}`} style={{ height: `${positiveHeight}%` }}></div>
         <span className={styles.strokePositiveScoreMarker} style={{ bottom: `${Math.min(96, Math.max(4, positiveHeight))}%` }}>{positiveScore}</span>
       </div>
-
       <div className={styles.strokePairLabel}>{positiveGroup.profileLabel}</div>
-
       <div className={styles.strokeReferenceTrack} aria-label={`${negativeGroup.title}: ${negativeScore} out of 24`}>
         <div className={`${styles.strokeReferenceFill} ${styles.strokeReferenceFillNegative}`} style={{ height: `${negativeHeight}%` }}></div>
         <span className={styles.strokeNegativeScoreMarker} style={{ top: `${Math.min(96, Math.max(4, negativeHeight))}%` }}>{negativeScore}</span>
       </div>
-
       <div className={styles.strokePairNumber}>({negativeGroup.number})</div>
     </div>
   );
 }
 
-export default function StrokeProfileEngine({ definition, onComplete, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture', resultDownloadFormat = 'png' }) {
+export default function StrokeProfileEngine({ definition, onComplete, embeddedInCoursePlayer = false, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture', resultDownloadFormat = 'png' }) {
   const questions = useMemo(() => buildQuestions(definition.groups), [definition.groups]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -148,50 +144,73 @@ export default function StrokeProfileEngine({ definition, onComplete, enableResu
     })).filter((pair) => pair.negativeGroup);
 
     return (
-      <div className={styles.strokeResultContainer} id={enableResultScreenshot ? resultCaptureId : undefined}>
-        <div className={styles.strokeResultHeader}>
-          <h2>{definition.resultTitle}</h2>
-          <p>{definition.profileTitle}</p>
+      <div className={`${styles.strokeResultContainer} ${embeddedInCoursePlayer ? styles.embeddedAssessmentResult : ''}`} id={enableResultScreenshot ? resultCaptureId : undefined}>
+        <div className={styles.strokeResultHero}>
+          <h2>Your Stroke Profile</h2>
+          <p>This visual profile brings together your results across the eight stroke patterns. The filled areas show your total score in each category, from 0 to 24.</p>
         </div>
 
-        <p className={styles.strokeProfileInstructions}>{definition.profileInstructions}</p>
+        <div className={styles.strokeGraphIntro}>
+          <h3>Your pattern at a glance</h3>
+          <p>Positive strokes appear above the center line. Negative strokes appear below it.</p>
+        </div>
 
-        <div className={styles.strokeReferenceViewport}>
-          <div className={styles.strokeReferenceChart} role="img" aria-label="Stroke profile with positive scores above the center and negative scores below it">
-            <h3 className={styles.strokeReferenceTitle}>POSITIVE STROKES</h3>
-
-            <div className={styles.strokeReferenceBody}>
-              <ProfileScale side="left" />
-
-              <div className={styles.strokePairGrid}>
-                {profilePairs.map(({ positiveGroup, negativeGroup }) => (
-                  <ProfilePair
-                    key={`${positiveGroup.id}-${negativeGroup.id}`}
-                    positiveGroup={positiveGroup}
-                    negativeGroup={negativeGroup}
-                    positiveScore={totals[positiveGroup.id] || 0}
-                    negativeScore={totals[negativeGroup.id] || 0}
-                  />
-                ))}
-                <span className={`${styles.strokeAxisWord} ${styles.strokeAxisWordPositive}`} aria-hidden="true">STROKES</span>
-                <span className={`${styles.strokeAxisWord} ${styles.strokeAxisWordNegative}`} aria-hidden="true">ATTENTION</span>
+        <div className={styles.strokeResultOverview}>
+          <div className={styles.strokeReferenceViewport}>
+            <div className={styles.strokeReferenceChart} role="img" aria-label="Stroke profile with positive scores above the center and negative scores below it">
+              <h3 className={styles.strokeReferenceTitle}>POSITIVE STROKES</h3>
+              <div className={styles.strokeReferenceBody}>
+                <ProfileScale side="left" />
+                <div className={styles.strokePairGrid}>
+                  {profilePairs.map(({ positiveGroup, negativeGroup }) => (
+                    <ProfilePair
+                      key={`${positiveGroup.id}-${negativeGroup.id}`}
+                      positiveGroup={positiveGroup}
+                      negativeGroup={negativeGroup}
+                      positiveScore={totals[positiveGroup.id] || 0}
+                      negativeScore={totals[negativeGroup.id] || 0}
+                    />
+                  ))}
+                  <span className={`${styles.strokeAxisWord} ${styles.strokeAxisWordPositive}`} aria-hidden="true">STROKES</span>
+                  <span className={`${styles.strokeAxisWord} ${styles.strokeAxisWordNegative}`} aria-hidden="true">ATTENTION</span>
+                </div>
+                <ProfileScale side="right" />
               </div>
-
-              <ProfileScale side="right" />
+              <h3 className={styles.strokeReferenceTitle}>NEGATIVE STROKES</h3>
             </div>
+          </div>
 
-            <h3 className={styles.strokeReferenceTitle}>NEGATIVE STROKES</h3>
+          <div className={styles.strokeTotalsList}>
+            {definition.groups.map((group) => (
+              <div key={group.id} className={`${styles.strokeTotalRow} ${group.polarity === 'positive' ? styles.strokeTotalRowPositive : styles.strokeTotalRowNegative}`}>
+                <span><i aria-hidden="true"></i>{group.title.replace(/^Total\s*-\s*/i, '')}</span>
+                <strong>{totals[group.id] || 0}/24</strong>
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className={styles.strokeTotalsList}>
-          {definition.groups.map((group) => (
-            <div key={group.id} className={styles.strokeTotalRow}>
-              <span>{group.title}</span>
-              <strong>{totals[group.id] || 0}/24</strong>
-            </div>
-          ))}
-        </div>
+        <section className={styles.strokeInterpretation}>
+          <h3>What your profile may be showing</h3>
+          <div className={styles.strokeInterpretationList}>
+            <article className={styles.strokeInterpretationPositive}>
+              <h4>You give positive recognition generously.</h4>
+              <p>Your strongest pattern is offering praise, appreciation, or encouragement. Notice whether this feels easy because it is genuine, because it keeps connection safe, or both.</p>
+            </article>
+            <article className={styles.strokeInterpretationPositive}>
+              <h4>Receiving praise may be easier than asking for it.</h4>
+              <p>You seem relatively comfortable taking positive recognition, but may find it harder to ask clearly for what you need.</p>
+            </article>
+            <article className={styles.strokeInterpretationNegative}>
+              <h4>You may hold back negative recognition.</h4>
+              <p>A higher score for refusing to give negative strokes can signal care and restraint, or difficulty naming disappointment, boundaries, or conflict directly.</p>
+            </article>
+            <article className={styles.strokeInterpretationNegative}>
+              <h4>Attention may become indirect when needs are not stated.</h4>
+              <p>Notice when you hope people will understand what you need without your having to ask for it.</p>
+            </article>
+          </div>
+        </section>
 
         {enableResultScreenshot && (
           <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} format={resultDownloadFormat} />
@@ -206,7 +225,7 @@ export default function StrokeProfileEngine({ definition, onComplete, enableResu
   }
 
   return (
-    <div className={`${styles.container} ${definition.externalOnly ? styles.externalQuestionContainer : ''}`}>
+    <div className={`${styles.container} ${embeddedInCoursePlayer ? styles.embeddedAssessmentContainer : ''} ${styles.strokeQuestionContainer} ${definition.externalOnly ? styles.externalQuestionContainer : ''}`}>
       <div className={styles.header}>
         <div className={styles.progressInfo}>
           <span className={styles.progressPercentage}>{currentIndex + 1} / {totalQuestions}</span>

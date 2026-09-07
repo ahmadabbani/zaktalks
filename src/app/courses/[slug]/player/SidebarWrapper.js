@@ -14,7 +14,7 @@ export default function SidebarWrapper({ children }) {
 
   return (
     <>
-      {/* Desktop sidebar (visible on > 992px via CSS) */}
+      {/* Desktop sidebar (visible on > 1024px via CSS) */}
       <div className={`${styles.desktopSidebarShell} ${!isDesktopOpen ? styles.desktopSidebarShellClosed : ''}`}>
         <aside className={styles.sidebar} aria-hidden={!isDesktopOpen}>
           {children}
@@ -31,7 +31,7 @@ export default function SidebarWrapper({ children }) {
         </button>
       </div>
 
-      {/* Dropdown toggle button (visible on <= 992px via CSS) */}
+      {/* Dropdown toggle button (visible on <= 1024px via CSS) */}
       <button
         className={styles.sidebarToggle}
         onClick={() => setMobileMenuState({ pathname, isOpen: !isMobileOpen })}
@@ -44,7 +44,7 @@ export default function SidebarWrapper({ children }) {
         <FaChevronDown className={`${styles.toggleIcon} ${isMobileOpen ? styles.toggleIconOpen : ''}`} />
       </button>
 
-      {/* Dropdown panel (visible on <= 992px via CSS) */}
+      {/* Dropdown panel (visible on <= 1024px via CSS) */}
       <div className={`${styles.dropdownPanel} ${isMobileOpen ? styles.dropdownPanelOpen : ''}`}>
         {children}
       </div>

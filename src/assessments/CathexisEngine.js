@@ -7,6 +7,18 @@ import ResultScreenshotButton from '@/components/ResultScreenshotButton';
 import useDelayedAnswerAdvance from './useDelayedAnswerAdvance';
 import styles from './assessment.module.css';
 
+const DRAMA_ROLE_DESCRIPTIONS = {
+  rescuer: 'Taking responsibility for others, helping without being asked, or putting your needs aside.',
+  persecutor: 'Judging, blaming, controlling, or feeling others should do better.',
+  victim: 'Feeling powerless, stuck, or unable to influence what happens.'
+};
+
+const ENERGY_PATTERN_COLORS = {
+  free: '#258C9B',
+  unbound: '#69B7C2',
+  bound: '#F1C40F'
+};
+
 function hexToRgba(hex, alpha) {
   const safe = (hex || '').replace('#', '');
   if (safe.length !== 6) return `rgba(14, 165, 233, ${alpha})`;
@@ -16,7 +28,49 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-export default function CathexisEngine({ definition, onComplete, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture', resultDownloadFormat = 'png' }) {
+function RoleResultSummary({ primaryRoles, secondaryRoles, categories }) {
+  const renderRoles = (roles, type) => roles.length ? roles.map(([key, score]) => {
+    const category = categories[key];
+    const fallbackColor = type === 'primary' ? '#2563EB' : '#16A34A';
+
+    return (
+      <div
+        key={`${type}-${key}`}
+        className={styles.cathRoleResultItem}
+        style={{
+          '--role-color': category?.color || fallbackColor,
+          '--role-soft': hexToRgba(category?.color || fallbackColor, 0.12)
+        }}
+      >
+        <span className={styles.cathRoleResultName}>{category?.label || key}</span>
+        <span className={styles.cathRoleResultScore}>{score}<small>/20</small></span>
+        {DRAMA_ROLE_DESCRIPTIONS[key] && (
+          <p className={styles.cathRoleResultDescription}>{DRAMA_ROLE_DESCRIPTIONS[key]}</p>
+        )}
+      </div>
+    );
+  }) : (
+    <div className={styles.cathRoleResultEmpty}>
+      <span>No {type} role in this range</span>
+      <strong>{type === 'primary' ? 'Primary range: 13-20' : 'Secondary range: 7-12'}</strong>
+    </div>
+  );
+
+  return (
+    <div className={styles.cathRoleResultGrid}>
+      <div className={`${styles.cathRoleResultCard} ${styles.cathRoleResultCardPrimary}`}>
+        <div className={styles.cathRoleResultEyebrow}>My prominent role</div>
+        {renderRoles(primaryRoles, 'primary')}
+      </div>
+      <div className={`${styles.cathRoleResultCard} ${styles.cathRoleResultCardSecondary}`}>
+        <div className={styles.cathRoleResultEyebrow}>My secondary role</div>
+        {renderRoles(secondaryRoles, 'secondary')}
+      </div>
+    </div>
+  );
+}
+
+export default function CathexisEngine({ definition, onComplete, embeddedInCoursePlayer = false, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture', resultDownloadFormat = 'png' }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const answersRef = useRef({});
@@ -30,6 +84,10 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
   const progress = (currentIndex / totalQuestions) * 100;
   const scaleValues = definition.scale?.values || [1, 2, 3, 4, 5];
   const maxScaleValue = Math.max(...scaleValues);
+  const isDramaTriangle = definition.id === 'drama-triangle-assessment-v1';
+  const isEnergyAssessment = definition.id === 'energy-self-assessment-v1';
+  const isFinancialFrequency = definition.id === 'unlock-financial-frequency-v1';
+  const usesLabeledFivePointScale = isEnergyAssessment || isFinancialFrequency;
 
   const handleSelect = (value) => {
     if (isSubmitting || isAdvancing) return;
@@ -110,7 +168,33 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
     const dominantKey = savedResult
       ? savedDominantKey || null
       : isMixed ? null : highest[0];
-    const dominantColor = dominantKey ? definition.categories[dominantKey].color : '#8B5CF6';
+    const getCategoryColor = (key) => (
+      isEnergyAssessment
+        ? ENERGY_PATTERN_COLORS[key] || definition.categories[key]?.color
+        : definition.categories[key]?.color
+    );
+    const dominantColor = dominantKey ? getCategoryColor(dominantKey) : '#8B5CF6';
+    const energyPatternName = (key) => `${key.charAt(0).toUpperCase()}${key.slice(1)} energy`;
+    const energyScoreTotal = entries.reduce((sum, [, score]) => sum + score, 0);
+    let energySegmentStart = 0;
+    const energyDonutGradient = isEnergyAssessment
+      ? `conic-gradient(${Object.entries(definition.categories).map(([key]) => {
+          const score = categoryScores[key] || 0;
+          const segmentStart = energySegmentStart;
+          energySegmentStart += energyScoreTotal > 0 ? (score / energyScoreTotal) * 360 : 0;
+          return `${getCategoryColor(key)} ${segmentStart}deg ${energySegmentStart}deg`;
+        }).join(', ')})`
+      : '';
+    let financialSegmentStart = 0;
+    const financialScoreTotal = entries.reduce((sum, [, score]) => sum + score, 0);
+    const financialDonutGradient = isFinancialFrequency
+      ? `conic-gradient(${Object.entries(definition.categories).map(([key, category]) => {
+          const score = categoryScores[key] || 0;
+          const segmentStart = financialSegmentStart;
+          financialSegmentStart += financialScoreTotal > 0 ? (score / financialScoreTotal) * 360 : 0;
+          return `${category.color} ${segmentStart}deg ${financialSegmentStart}deg`;
+        }).join(', ')})`
+      : '';
 
     const resultMode = definition.resultMode || '';
     const rankedNeeds = resultMode === 'ranked-needs';
@@ -133,18 +217,58 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
       : [];
 
     return (
-      <div className={styles.cathResultContainer} id={enableResultScreenshot ? resultCaptureId : undefined}>
-        <h2 className={styles.cathResultHeader}>Assessment Complete!</h2>
-        <p className={styles.cathResultSubtitle}>
-          {rankedNeeds ? 'Relational needs score breakdown' : (scoresOnly ? 'Score breakdown' : "Here's your energy profile breakdown")}
-        </p>
+      <div className={`${styles.cathResultContainer} ${embeddedInCoursePlayer ? styles.embeddedAssessmentResult : ''}`} id={enableResultScreenshot ? resultCaptureId : undefined}>
+        {isEnergyAssessment ? (
+          <header className={styles.energyResultHero}>
+            <h2>Your Money Energy Profile</h2>
+            <p>Your scores show how energy may be operating in your money decisions right now. They are not fixed traits. They are patterns you can notice and work with.</p>
+          </header>
+        ) : isFinancialFrequency ? (
+          <header className={styles.financialResultHero}>
+            <h2>Your Financial Frequency Profile</h2>
+            <p>These results highlight the patterns that may be influencing your relationship with money right now. They are not fixed identities. They are invitations to understand what drives your choices and where you may want more freedom.</p>
+          </header>
+        ) : (
+          <>
+            <h2 className={styles.cathResultHeader}>Assessment Complete!</h2>
+            <p className={styles.cathResultSubtitle}>
+              {rankedNeeds ? 'Relational needs score breakdown' : (scoresOnly ? 'Score breakdown' : "Here's your energy profile breakdown")}
+            </p>
+          </>
+        )}
 
-        <div className={scoresOnly ? styles.cathScoreOnlyList : styles.cathCategoryCards}>
+        {roleRanges && (
+          <RoleResultSummary
+            primaryRoles={primaryRoles}
+            secondaryRoles={secondaryRoles}
+            categories={definition.categories}
+          />
+        )}
+
+        <div className={scoresOnly ? `${styles.cathScoreOnlyList} ${isFinancialFrequency ? styles.financialFrequencyCards : ''}` : `${styles.cathCategoryCards} ${isEnergyAssessment ? styles.energyCategoryCards : ''}`}>
           {Object.entries(definition.categories).map(([key, cat]) => {
             const score = categoryScores[key] || 0;
             const maxPerCategory = (categoryQuestionCounts[key] || 0) * maxScaleValue;
             const percentage = maxPerCategory > 0 ? (score / maxPerCategory) * 100 : 0;
             const isDominant = key === dominantKey;
+            const categoryColor = getCategoryColor(key);
+
+            if (isFinancialFrequency) {
+              const isFinancialDominant = key === highest[0];
+              return (
+                <article
+                  key={key}
+                  className={`${styles.financialFrequencyCard} ${isFinancialDominant ? styles.financialFrequencyCardDominant : ''}`}
+                >
+                  <h4>{cat.label}</h4>
+                  <strong>{score}<small>/{maxPerCategory}</small></strong>
+                  <div className={styles.financialFrequencyBar}>
+                    <span style={{ width: `${percentage}%` }} />
+                  </div>
+                  {isFinancialDominant && <div className={styles.financialDominantBadge}>Dominant</div>}
+                </article>
+              );
+            }
 
             if (scoresOnly) {
               return (
@@ -152,7 +276,7 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
                   <div className={styles.cathScoreOnlyLabelWrap}>
                     <div
                       className={styles.cathCategoryDot}
-                      style={{ backgroundColor: cat.color }}
+                      style={{ backgroundColor: categoryColor }}
                     ></div>
                     <h4 className={styles.cathCategoryLabel}>{cat.label}</h4>
                   </div>
@@ -162,22 +286,22 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
                         className={styles.cathBarFill}
                         style={{
                           width: `${percentage}%`,
-                          backgroundColor: cat.color
+                          backgroundColor: categoryColor
                         }}
                       ></div>
                     </div>
                   </div>
                   <div className={styles.cathScoreOnlyValue}>
-                    <span style={{ color: cat.color, fontWeight: 900 }}>{score}</span>
+                    <span style={{ color: categoryColor, fontWeight: 900 }}>{score}</span>
                     <span className={styles.cathScoreMax}>/ {maxPerCategory}</span>
                   </div>
                   {roleRanges && (
-                    <div className={styles.cathScoreOnlyDominantBadge} style={{ backgroundColor: cat.color }}>
+                    <div className={styles.cathScoreOnlyDominantBadge} style={{ backgroundColor: categoryColor }}>
                       {getRoleRangeLabel(score)}
                     </div>
                   )}
                   {isDominant && !scoreTableOnly && !roleRanges && (
-                    <div className={styles.cathScoreOnlyDominantBadge} style={{ backgroundColor: cat.color }}>
+                    <div className={styles.cathScoreOnlyDominantBadge} style={{ backgroundColor: categoryColor }}>
                       Dominant
                     </div>
                   )}
@@ -188,25 +312,25 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
             return (
               <div
                 key={key}
-                className={`${styles.cathCategoryCard} ${isDominant ? styles.cathCategoryDominant : ''}`}
+                className={`${styles.cathCategoryCard} ${isDominant ? styles.cathCategoryDominant : ''} ${isEnergyAssessment ? styles.energyCategoryCard : ''}`}
                 style={{
-                  borderColor: isDominant ? cat.color : 'transparent',
-                  '--cat-color': cat.color
+                  borderColor: isDominant ? categoryColor : 'transparent',
+                  '--cat-color': categoryColor
                 }}
               >
                 <div className={styles.cathCategoryHeader}>
                   <div
                     className={styles.cathCategoryDot}
-                    style={{ backgroundColor: cat.color }}
+                    style={{ backgroundColor: categoryColor }}
                   ></div>
                   <div>
-                    <h4 className={styles.cathCategoryLabel}>{cat.label}</h4>
-                    <span className={styles.cathCategorySubtitle}>{cat.subtitle}</span>
+                    <h4 className={styles.cathCategoryLabel}>{isEnergyAssessment ? energyPatternName(key) : cat.label}</h4>
+                    {!isEnergyAssessment && <span className={styles.cathCategorySubtitle}>{cat.subtitle}</span>}
                   </div>
                 </div>
 
                 <div className={styles.cathScoreRow}>
-                  <span className={styles.cathScoreValue} style={{ color: cat.color }}>
+                  <span className={styles.cathScoreValue} style={{ color: categoryColor }}>
                     {score}
                   </span>
                   <span className={styles.cathScoreMax}>/ {maxPerCategory}</span>
@@ -217,7 +341,7 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
                     className={styles.cathBarFill}
                     style={{
                       width: `${percentage}%`,
-                      backgroundColor: cat.color
+                      backgroundColor: categoryColor
                     }}
                   ></div>
                 </div>
@@ -225,7 +349,7 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
                 <p className={styles.cathCategoryDesc}>{cat.description}</p>
 
                 {isDominant && (
-                  <div className={styles.cathDominantBadge} style={{ backgroundColor: cat.color }}>
+                  <div className={styles.cathDominantBadge} style={{ backgroundColor: categoryColor }}>
                     Dominant
                   </div>
                 )}
@@ -234,7 +358,7 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
           })}
         </div>
 
-        {!scoresOnly && (
+        {!scoresOnly && !isEnergyAssessment && (
           <div
             className={styles.cathInterpretation}
             style={{
@@ -261,7 +385,101 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
           </div>
         )}
 
-        {scoresOnly && !scoreTableOnly && !roleRanges && (
+        {isEnergyAssessment && (
+          <section className={styles.energyBalanceSection}>
+            <div className={styles.energyBalanceVisual}>
+              <h3>Your energy balance</h3>
+              <p>This visual shows the relative strength of each energy pattern in your current responses.</p>
+              <div className={styles.energyDonutWrap}>
+                <div className={styles.energyDonut} style={{ background: energyDonutGradient }}>
+                  <div className={styles.energyDonutCenter}>
+                    <strong>{isMixed ? 'Mixed energy pattern' : energyPatternName(highest[0])}</strong>
+                    <span>{isMixed ? 'no single dominant pattern' : 'is most available'}</span>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.energyLegend}>
+                {Object.entries(definition.categories).map(([key]) => (
+                  <span key={`energy-legend-${key}`}>
+                    <i style={{ backgroundColor: getCategoryColor(key) }} />
+                    {energyPatternName(key)}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.energyPatternSummary}>
+              <h3>What your pattern may be showing</h3>
+              {isMixed ? (
+                <article className={styles.energyMixedSummary}>
+                  <div className={styles.energyMixedDots} aria-hidden="true">
+                    {entries
+                      .filter(([, score]) => score === highest[1])
+                      .map(([key]) => <i key={`mixed-dot-${key}`} style={{ backgroundColor: getCategoryColor(key) }} />)}
+                  </div>
+                  <div>
+                    <h4>{definition.mixedResult.subtitle}</h4>
+                    <p>{definition.mixedResult.interpretation}</p>
+                  </div>
+                </article>
+              ) : (
+                [highest, secondHighest].filter(Boolean).map(([key], index) => {
+                  const category = definition.categories[key];
+                  return (
+                    <article key={`energy-summary-${key}`}>
+                      <i style={{ backgroundColor: getCategoryColor(key) }} />
+                      <div>
+                        <h4>{energyPatternName(key)} {index === 0 ? 'is your strongest pattern.' : 'is your second-highest pattern.'}</h4>
+                        <p>{category.interpretation}</p>
+                      </div>
+                    </article>
+                  );
+                })
+              )}
+            </div>
+          </section>
+        )}
+
+        {isFinancialFrequency && (
+          <section className={styles.financialPatternSection}>
+            <div className={styles.financialPatternVisual}>
+              <h3>Your pattern at a glance</h3>
+              <p>Each segment represents one financial-frequency pattern. Larger segments reflect stronger scores.</p>
+              <div className={styles.financialDonutWrap}>
+                <div className={styles.financialDonut} style={{ background: financialDonutGradient }}>
+                  <div className={styles.financialDonutCenter}>
+                    <strong>{definition.categories[highest[0]]?.label}</strong>
+                    <span>strongest pattern</span>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.financialLegend}>
+                {Object.entries(definition.categories).map(([key, category]) => (
+                  <span key={`financial-legend-${key}`}>
+                    <i style={{ backgroundColor: category.color }} />
+                    {category.label}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.financialTopPatterns}>
+              <h3>Your strongest patterns</h3>
+              {topThree.map(([key, score], index) => (
+                <article key={`financial-top-${key}`}>
+                  <span>{index + 1}</span>
+                  <div>
+                    <h4>{definition.categories[key]?.label}</h4>
+                    <small>{score}/{(categoryQuestionCounts[key] || 0) * maxScaleValue}</small>
+                    <p>Interpretation for this financial-frequency pattern will be added here.</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {scoresOnly && !scoreTableOnly && !roleRanges && !isFinancialFrequency && (
           <div
             className={styles.cathScoreOnlyResult}
             style={{
@@ -309,58 +527,32 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
         )}
 
         {roleRanges && (
-          <div className={styles.cathRoleResultGrid}>
-            <div className={`${styles.cathRoleResultCard} ${styles.cathRoleResultCardPrimary}`}>
-              <div className={styles.cathRoleResultEyebrow}>My prominent role</div>
-              {primaryRoles.length ? primaryRoles.map(([key, score]) => {
-                const category = definition.categories[key];
+          <>
+            <section className={styles.cathRoleScoreGuide}>
+              <h3>How scores are read</h3>
+              <div className={styles.cathRoleScoreGuideList}>
+                <article>
+                  <h4>0–6: Not a prominent role</h4>
+                  <p>You may recognize this pattern occasionally, but it is not a dominant response for you.</p>
+                </article>
+                <article>
+                  <h4>7–12: Secondary role</h4>
+                  <p>You may move into this role in particular situations or relationships.</p>
+                </article>
+                <article>
+                  <h4>13–20: Primary role</h4>
+                  <p>This may be the role you adopt most readily when you feel pressure, conflict, or responsibility.</p>
+                </article>
+              </div>
+            </section>
 
-                return (
-                  <div
-                    key={`primary-${key}`}
-                    className={styles.cathRoleResultItem}
-                    style={{
-                      '--role-color': category?.color || '#2563EB',
-                      '--role-soft': hexToRgba(category?.color || '#2563EB', 0.12)
-                    }}
-                  >
-                    <span className={styles.cathRoleResultName}>{category?.label || key}</span>
-                    <span className={styles.cathRoleResultScore}>{score}<small>/20</small></span>
-                  </div>
-                );
-              }) : (
-                <div className={styles.cathRoleResultEmpty}>
-                  <span>No primary role in this range</span>
-                  <strong>Primary range: 13-20</strong>
-                </div>
-              )}
-            </div>
-            <div className={`${styles.cathRoleResultCard} ${styles.cathRoleResultCardSecondary}`}>
-              <div className={styles.cathRoleResultEyebrow}>My secondary role</div>
-              {secondaryRoles.length ? secondaryRoles.map(([key, score]) => {
-                const category = definition.categories[key];
+            <section className={styles.cathRoleInterpretationPlaceholder}>
+              <h3>What your results may be showing</h3>
+              <p><strong>Your prominent role:</strong> Interpretation will be added here.</p>
+              <p><strong>Your secondary role:</strong> Interpretation will be added here.</p>
+            </section>
 
-                return (
-                  <div
-                    key={`secondary-${key}`}
-                    className={styles.cathRoleResultItem}
-                    style={{
-                      '--role-color': category?.color || '#16A34A',
-                      '--role-soft': hexToRgba(category?.color || '#16A34A', 0.12)
-                    }}
-                  >
-                    <span className={styles.cathRoleResultName}>{category?.label || key}</span>
-                    <span className={styles.cathRoleResultScore}>{score}<small>/20</small></span>
-                  </div>
-                );
-              }) : (
-                <div className={styles.cathRoleResultEmpty}>
-                  <span>No secondary role in this range</span>
-                  <strong>Secondary range: 7-12</strong>
-                </div>
-              )}
-            </div>
-          </div>
+          </>
         )}
 
         {enableResultScreenshot && (
@@ -376,7 +568,7 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
   }
 
   return (
-    <div className={`${styles.container} ${definition.externalOnly ? styles.externalQuestionContainer : ''}`}>
+    <div className={`${styles.container} ${embeddedInCoursePlayer ? styles.embeddedAssessmentContainer : ''} ${isDramaTriangle ? styles.dramaQuestionContainer : ''} ${definition.externalOnly ? styles.externalQuestionContainer : ''}`}>
       <div className={styles.header}>
         <div className={styles.progressInfo}>
           <span className={styles.progressPercentage}>{currentIndex + 1} / {totalQuestions}</span>
@@ -394,34 +586,45 @@ export default function CathexisEngine({ definition, onComplete, enableResultScr
       </div>
 
       <div key={`answers-${currentQuestion.id}`} className={`${styles.optionsSection} ${styles.questionTransition} ${styles.answerTransition}`}>
-        {Array.isArray(definition.scale?.legend) && definition.scale.legend.length > 0 ? (
-          <div
-            className={styles.scaleLegendGrid}
-            style={{ gridTemplateColumns: `repeat(${definition.scale.legend.length}, minmax(0, 1fr))` }}
-          >
-            {definition.scale.legend.map((item) => (
-              <span key={`legend-${item.value}`} className={styles.scaleLegendGridItem}>
-                {item.label}
-              </span>
-            ))}
-          </div>
-        ) : (
-          <div className={styles.scaleLabels}>
-            <span>{definition.scale?.minLabel || 'NOT AT ALL TRUE'}</span>
-            <span>{definition.scale?.maxLabel || 'VERY TRUE'}</span>
-          </div>
-        )}
-        <div className={styles.scaleButtons}>
-          {scaleValues.map((val) => (
-            <button
-              key={val}
-              onClick={() => handleSelect(val)}
-              disabled={isSubmitting || isAdvancing}
-              className={`${styles.scaleBtn} ${answers[currentQuestion.id] === val ? styles.scaleBtnSelected : ''}`}
+        {!isDramaTriangle && !usesLabeledFivePointScale && (
+          Array.isArray(definition.scale?.legend) && definition.scale.legend.length > 0 ? (
+            <div
+              className={styles.scaleLegendGrid}
+              style={{ gridTemplateColumns: `repeat(${definition.scale.legend.length}, minmax(0, 1fr))` }}
             >
-              {val}
-            </button>
-          ))}
+              {definition.scale.legend.map((item) => (
+                <span key={`legend-${item.value}`} className={styles.scaleLegendGridItem}>
+                  {item.label}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.scaleLabels}>
+              <span>{definition.scale?.minLabel || 'NOT AT ALL TRUE'}</span>
+              <span>{definition.scale?.maxLabel || 'VERY TRUE'}</span>
+            </div>
+          )
+        )}
+        <div className={`${styles.scaleButtons} ${isDramaTriangle ? styles.dramaScaleButtons : ''} ${usesLabeledFivePointScale ? styles.energyScaleButtons : ''}`}>
+          {scaleValues.map((val) => {
+            const optionLabel = definition.scale?.legend?.find((item) => item.value === val)?.label;
+
+            return (
+              <button
+                key={val}
+                onClick={() => handleSelect(val)}
+                disabled={isSubmitting || isAdvancing}
+                className={`${styles.scaleBtn} ${isDramaTriangle ? styles.dramaScaleBtn : ''} ${usesLabeledFivePointScale ? styles.energyScaleBtn : ''} ${answers[currentQuestion.id] === val ? styles.scaleBtnSelected : ''}`}
+              >
+                {isDramaTriangle || usesLabeledFivePointScale ? (
+                  <>
+                    <strong>{val}</strong>
+                    <span>{optionLabel}</span>
+                  </>
+                ) : val}
+              </button>
+            );
+          })}
         </div>
       </div>
 

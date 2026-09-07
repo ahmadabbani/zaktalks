@@ -6,7 +6,7 @@ import { FaQuoteLeft } from 'react-icons/fa'
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi'
 import styles from './TestimonialsSection.module.css'
 
-const testimonials = [
+const DEFAULT_TESTIMONIALS = [
   {
     quote: `Zack helped me better understand myself and work through the issues I was facing. With his knowledge and experience, he guided me throughout this journey and helped me become a better person. His approach is unique: he draws on different schools of thought to understand each situation from multiple angles and work toward resolution. Because of our work together, I feel more confident and happier, and I have developed stronger communication skills.`,
     name: 'Jad Fakhry',
@@ -112,7 +112,16 @@ function getCardsPerView() {
   return 3
 }
 
-export default function TestimonialsSection() {
+export default function TestimonialsSection({
+  items = DEFAULT_TESTIMONIALS,
+  heading = 'What changes when the work becomes real',
+  subheading = (
+    <>Transformation is not about fixing yourself. It is about starting from <strong>Okayness</strong>, unlearning what once helped you survive, and choosing more authentic ways of living and relating.</>
+  ),
+  label = '',
+  embedded = false,
+  headingId = 'testimonials-heading',
+}) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [cardsPerView, setCardsPerView] = useState(3)
   const [expandedIndex, setExpandedIndex] = useState(null)
@@ -120,7 +129,7 @@ export default function TestimonialsSection() {
   const [visibleItems, setVisibleItems] = useState([])
   const itemRefs = useRef({})
 
-  const maxIndex = Math.max(0, testimonials.length - cardsPerView)
+  const maxIndex = Math.max(0, items.length - cardsPerView)
 
   useEffect(() => {
     const updateCardsPerView = () => setCardsPerView(getCardsPerView())
@@ -173,8 +182,8 @@ export default function TestimonialsSection() {
 
   return (
     <section
-      className={`${styles.section} ${motionReady ? styles.motionReady : ''}`}
-      aria-labelledby="testimonials-heading"
+      className={`${styles.section} ${embedded ? styles.embedded : ''} ${motionReady ? styles.motionReady : ''}`}
+      aria-labelledby={headingId}
     >
       <div className={styles.container}>
         <header
@@ -182,19 +191,18 @@ export default function TestimonialsSection() {
           className={`${styles.header} ${isVisible('header') ? styles.itemVisible : ''}`}
         >
           <div className={styles.headingBlock}>
-            <h2 id="testimonials-heading" className={styles.title}>
-              <span className={styles.titleLine}>What changes when the work becomes real</span>
+            {label && <span className={styles.eyebrow}>{label}</span>}
+            <h2 id={headingId} className={styles.title}>
+              <span className={styles.titleLine}>{heading}</span>
             </h2>
-            <p className={styles.intro}>
-              Transformation is not about fixing yourself. It is about starting from <strong>Okayness</strong>, unlearning what once helped you survive, and choosing more authentic ways of living and relating.
-            </p>
+            {subheading && <p className={styles.intro}>{subheading}</p>}
           </div>
 
         </header>
 
         <div className={styles.carouselViewport}>
           <div className={styles.track} style={{ '--testimonial-index': activeIndex }}>
-            {testimonials.map((testimonial, index) => {
+            {items.map((testimonial, index) => {
               const itemId = `testimonial-${index}`
               const isExpanded = expandedIndex === index
               const canExpand = testimonial.quote.length > TESTIMONIAL_PREVIEW_LENGTH

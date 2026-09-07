@@ -163,6 +163,16 @@
   white-space: pre-line;
 }
 
+.eyebrow {
+  display: inline-flex;
+  margin-bottom: 0.8rem;
+  color: var(--color-dark-blue);
+  font-size: clamp(0.72rem, 0.78vw, 0.86rem);
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
 .track:has(.card.isExpanded) {
   align-items: flex-start;
 }
@@ -249,6 +259,54 @@
 .progressDotActive {
   width: 1.75rem;
   background: var(--color-yellow);
+}
+
+.section.embedded {
+  overflow: visible;
+  padding: 0;
+  background: transparent;
+}
+
+.embedded .container {
+  width: 100%;
+  margin: 0;
+}
+
+.embedded .header {
+  margin-bottom: clamp(1.5rem, 2.5vw, 2.4rem);
+}
+
+.embedded .title {
+  color: var(--color-dark-blue);
+  font-size: clamp(1.8rem, 3vw, 3.2rem);
+  text-wrap: wrap;
+}
+
+.embedded .intro {
+  max-width: 70ch;
+  color: rgba(33, 44, 45, 0.74);
+  font-size: clamp(0.95rem, 1.15vw, 1.12rem);
+}
+
+.embedded .eyebrow {
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-yellow-dark);
+  font-size: clamp(0.68rem, 0.62vw, 0.8rem);
+  line-height: 1;
+}
+
+.embedded .eyebrow svg {
+  color: var(--color-yellow);
+}
+
+.embedded .carouselViewport {
+  width: 100%;
+  margin: 0;
+}
+
+.embedded .card {
+  min-height: 20rem;
 }
 
 .motionReady .header,

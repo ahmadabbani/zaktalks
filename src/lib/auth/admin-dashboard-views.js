@@ -32,6 +32,13 @@ export const ADMIN_DASHBOARD_GROUPS = [
         description: 'Create and revoke temporary public assessment links.',
         icon: 'links',
       },
+      {
+        id: 'creation-activity',
+        permission: 'courses.activity',
+        label: 'Content Activity',
+        description: 'See who created, updated, or deleted course content.',
+        icon: 'activity',
+      },
     ],
   },
   {

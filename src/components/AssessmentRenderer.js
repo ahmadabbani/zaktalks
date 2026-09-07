@@ -7,6 +7,7 @@ import CorrectIncorrectEngine from '@/assessments/CorrectIncorrectEngine';
 import CathexisEngine from '@/assessments/CathexisEngine';
 import FillableWorksheetEngine from '@/assessments/FillableWorksheetEngine';
 import StrokeProfileEngine from '@/assessments/StrokeProfileEngine';
+import DriverQuestionnaireEngine from '@/assessments/DriverQuestionnaireEngine';
 import { updateLessonProgress } from '@/app/courses/actions';
 import { useCourseProgress } from '@/app/courses/[slug]/player/CourseProgressContext';
 import RichText from '@/components/RichText';
@@ -70,6 +71,7 @@ export default function AssessmentRenderer({
   const scoredEngineProps = {
     definition,
     onComplete: handleComplete,
+    embeddedInCoursePlayer: true,
     enableResultScreenshot: true,
     resultCaptureId: `lesson-assessment-result-${lessonId}`,
     resultDownloadFormat: 'pdf'
@@ -148,6 +150,9 @@ export default function AssessmentRenderer({
   }
   if (definition.type === 'stroke-profile') {
     return <StrokeProfileEngine {...scoredEngineProps} />;
+  }
+  if (definition.type === 'driver-questionnaire') {
+    return <DriverQuestionnaireEngine {...scoredEngineProps} />;
   }
 
   // Default: Likert scale engine

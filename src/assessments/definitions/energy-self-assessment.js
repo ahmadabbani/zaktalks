@@ -4,6 +4,16 @@ export const energySelfAssessment = {
   title: 'Energy Self-Assessment Questionnaire',
   description: 'Read each statement and rate how true it feels for you on a scale of 1–5.',
   themeColor: '#8B5CF6',
+  scale: {
+    values: [1, 2, 3, 4, 5],
+    legend: [
+      { value: 1, label: 'Not at all true' },
+      { value: 2, label: 'Slightly true' },
+      { value: 3, label: 'Neutral' },
+      { value: 4, label: 'Often true' },
+      { value: 5, label: 'Very true' }
+    ]
+  },
   questions: [
     { id: 'q1', text: 'I tend to spend money impulsively when I\'m stressed, even if I regret it later.', category: 'unbound' },
     { id: 'q2', text: 'I can pause, evaluate, and then act when facing financial choices.', category: 'free' },

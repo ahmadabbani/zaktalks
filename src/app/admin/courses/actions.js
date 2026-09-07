@@ -8,6 +8,12 @@ import { normalizeYouTubeVideoUrl } from '@/lib/youtube-url'
 import { PUBLIC_PAGE_PATHS } from '@/lib/course-content'
 import { sanitizeCourseRichContent } from '@/lib/course-rich-content'
 import { randomUUID } from 'node:crypto'
+import {
+  contentFieldChange,
+  deleteContentWithActivity,
+  recordContentActivity,
+  recordContentCreationActivity,
+} from '@/lib/admin/content-creation-audit'
 
 const LESSON_RESOURCE_BUCKET = 'lesson-resources'
 const COURSE_IMAGE_BUCKET = 'course-images'
@@ -16,6 +22,8 @@ const ONE_MEGABYTE = 1024 * 1024
 const COURSE_ASSET_LIMITS = {
   logo: ONE_MEGABYTE,
   gallery: ONE_MEGABYTE,
+  explore_page: ONE_MEGABYTE,
+  testimonial: ONE_MEGABYTE,
   certificate: 10 * ONE_MEGABYTE,
 }
 const COURSE_IMAGE_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
@@ -42,7 +50,7 @@ function validateAssetDescriptor(asset) {
   const mimeType = cleanText(asset?.type, 120).toLowerCase()
   const maxSize = COURSE_ASSET_LIMITS[kind]
   if (!Number.isFinite(size) || size <= 0 || size > maxSize) {
-    const label = kind === 'certificate' ? 'Certificate PDF' : kind === 'logo' ? 'Course logo' : 'Gallery image'
+    const label = kind === 'certificate' ? 'Certificate PDF' : kind === 'logo' ? 'Course logo' : kind === 'explore_page' ? 'Page card image' : kind === 'testimonial' ? 'Testimonial image' : 'Gallery image'
     throw new Error(`${label} must be ${kind === 'certificate' ? '10 MB' : '1 MB'} or smaller.`)
   }
   if (kind === 'certificate' ? mimeType !== 'application/pdf' : !COURSE_IMAGE_MIME_TYPES.has(mimeType)) {
@@ -57,6 +65,8 @@ function validateAssetDescriptor(asset) {
 function assetLocation(kind, userId, extension) {
   if (kind === 'logo') return { bucket: COURSE_IMAGE_BUCKET, path: `logos/${userId}/${randomUUID()}.${extension}` }
   if (kind === 'gallery') return { bucket: COURSE_IMAGE_BUCKET, path: `gallery/${userId}/${randomUUID()}.${extension}` }
+  if (kind === 'explore_page') return { bucket: COURSE_IMAGE_BUCKET, path: `explore-more/${userId}/${randomUUID()}.${extension}` }
+  if (kind === 'testimonial') return { bucket: COURSE_IMAGE_BUCKET, path: `testimonials/${userId}/${randomUUID()}.${extension}` }
   return { bucket: CERTIFICATE_BUCKET, path: `templates/${userId}/${randomUUID()}.pdf` }
 }
 
@@ -75,7 +85,11 @@ function parseUploadedAssets(formData, userId) {
       ? `logos/${userId}/`
       : kind === 'gallery'
         ? `gallery/${userId}/`
-        : `templates/${userId}/`
+        : kind === 'explore_page'
+          ? `explore-more/${userId}/`
+          : kind === 'testimonial'
+            ? `testimonials/${userId}/`
+            : `templates/${userId}/`
 
     if (!Object.hasOwn(COURSE_ASSET_LIMITS, kind) || bucket !== expectedBucket || !path.startsWith(expectedPrefix) || seenPaths.has(`${bucket}:${path}`)) {
       throw new Error('Uploaded course file information is invalid. Please select the files again.')
@@ -101,6 +115,30 @@ async function removeUploadedAssets(supabase, assets) {
 
 function publicAssetUrl(supabase, asset) {
   return supabase.storage.from(asset.bucket).getPublicUrl(asset.path).data.publicUrl
+}
+
+function explorePageImagePath(imageUrl) {
+  const pathPart = String(imageUrl || '').split('/course-images/')[1]
+  if (!pathPart) return null
+  const decodedPath = decodeURIComponent(pathPart)
+  return decodedPath.startsWith('explore-more/') ? decodedPath : null
+}
+
+async function removeExplorePageImages(supabase, imageUrls) {
+  const paths = [...new Set((imageUrls || []).map(explorePageImagePath).filter(Boolean))]
+  if (paths.length > 0) await supabase.storage.from(COURSE_IMAGE_BUCKET).remove(paths)
+}
+
+function testimonialImagePath(imageUrl) {
+  const pathPart = String(imageUrl || '').split('/course-images/')[1]
+  if (!pathPart) return null
+  const decodedPath = decodeURIComponent(pathPart)
+  return decodedPath.startsWith('testimonials/') ? decodedPath : null
+}
+
+async function removeTestimonialImages(supabase, imageUrls) {
+  const paths = [...new Set((imageUrls || []).map(testimonialImagePath).filter(Boolean))]
+  if (paths.length > 0) await supabase.storage.from(COURSE_IMAGE_BUCKET).remove(paths)
 }
 
 export async function prepareCourseAssetUploads(mode, assets) {
@@ -194,8 +232,22 @@ function parseExploreMore(value) {
       page_path: cleanText(item?.page_path, 120),
       description: cleanText(item?.description, 3000),
       cta_text: cleanText(item?.cta_text, 120),
+      image_url: cleanText(item?.image_url, 1200),
+      image_upload_key: cleanText(item?.image_upload_key, 100),
     }))
     .filter((item) => item.course_id || item.page_path || item.description || item.cta_text)
+}
+
+function parseTestimonials(value) {
+  return parseJsonArray(value, 'Course testimonials')
+    .slice(0, 60)
+    .map((item) => ({
+      name: cleanText(item?.name, 180),
+      quote: cleanText(item?.quote, 8000),
+      image_url: cleanText(item?.image_url, 1200),
+      image_upload_key: cleanText(item?.image_upload_key, 100),
+    }))
+    .filter((item) => item.name || item.quote || item.image_url)
 }
 
 function legacyDetailsText(items) {
@@ -205,10 +257,46 @@ function legacyDetailsText(items) {
   }).filter(Boolean).join('\n')
 }
 
-async function buildCourseContent(formData, supabase, currentCourseId = null) {
+async function buildCourseContent(formData, supabase, currentCourseId = null, uploadedAssets = []) {
   const detailsToKnowItems = parseContentBlocks(formData.get('details_to_know_items_json'), 'Details to Know')
   const whatYoullExplore = parseContentBlocks(formData.get('what_youll_explore_json'), 'What You’ll Explore')
-  const exploreMore = parseExploreMore(formData.get('explore_more_json'))
+  const exploreImageUploads = new Map(
+    uploadedAssets
+      .filter((asset) => asset.kind === 'explore_page')
+      .map((asset) => [asset.key, publicAssetUrl(supabase, asset)])
+  )
+  const exploreMore = parseExploreMore(formData.get('explore_more_json')).map((item) => {
+    const uploadedImage = exploreImageUploads.get(`explore-page:${item.image_upload_key}`)
+    return {
+      target_type: item.target_type,
+      course_id: item.course_id,
+      page_path: item.page_path,
+      description: item.description,
+      cta_text: item.cta_text,
+      image_url: item.target_type === 'page' ? (uploadedImage || item.image_url) : '',
+    }
+  })
+  const testimonialImageUploads = new Map(
+    uploadedAssets
+      .filter((asset) => asset.kind === 'testimonial')
+      .map((asset) => [asset.key, publicAssetUrl(supabase, asset)])
+  )
+  const testimonials = parseTestimonials(formData.get('testimonials_json')).map((item) => ({
+    name: item.name,
+    quote: item.quote,
+    image_url: testimonialImageUploads.get(`testimonial:${item.image_upload_key}`) || item.image_url,
+  }))
+
+  const testimonialsHeading = cleanText(formData.get('testimonials_heading'), 500)
+  const testimonialsSubheading = cleanText(formData.get('testimonials_subheading'), 3000)
+  if (testimonials.length > 0) {
+    if (!testimonialsHeading || !testimonialsSubheading) {
+      throw new Error('Add the testimonial section heading and subheading.')
+    }
+    if (testimonials.some((item) => !item.name || !item.quote || !item.image_url)) {
+      throw new Error('Complete the text, learner name, and image for every testimonial.')
+    }
+  }
 
   for (const item of exploreMore) {
     if (item.target_type === 'page' && !PUBLIC_PAGE_PATHS.has(item.page_path)) {
@@ -264,6 +352,9 @@ async function buildCourseContent(formData, supabase, currentCourseId = null) {
     details_cta_text: cleanText(formData.get('details_cta_text'), 120),
     what_youll_explore: whatYoullExplore,
     explore_more: exploreMore,
+    testimonials_heading: testimonialsHeading,
+    testimonials_subheading: testimonialsSubheading,
+    testimonials,
     target_audience: cleanList(formData.getAll('target_audience')),
     who_this_is_not_for: cleanList(formData.getAll('who_this_is_not_for')),
     what_youll_learn: cleanList(formData.getAll('what_youll_learn')),
@@ -319,7 +410,7 @@ export async function createCourse(formData) {
 
   let courseContent
   try {
-    courseContent = await buildCourseContent(formData, supabase)
+    courseContent = await buildCourseContent(formData, supabase, null, uploadedAssets)
   } catch (error) {
     return fail(error.message)
   }
@@ -460,6 +551,8 @@ export async function createCourse(formData) {
     }
   }
 
+  await recordContentCreationActivity(supabase, access, 'course', data.id)
+
   revalidatePath('/admin/dashboard')
   redirect(`/admin/courses/${data.id}/lessons?created=true`)
 }
@@ -467,6 +560,16 @@ export async function createCourse(formData) {
 export async function updateCourse(id, formData) {
   const access = await requirePermission('courses.edit')
   const supabase = await createAdminClient()
+
+  const [courseResult, faqResult] = await Promise.all([
+    supabase.from('courses').select('*').eq('id', id).is('deleted_at', null).maybeSingle(),
+    supabase.from('course_faqs').select('question, answer, display_order').eq('course_id', id).order('display_order'),
+  ])
+  const existingCourse = courseResult.data
+  const existingFaqs = faqResult.data || []
+
+  if (courseResult.error || !existingCourse) return { error: 'Course not found.' }
+  if (faqResult.error) return { error: 'The current course FAQs could not be loaded.' }
 
   let uploadedAssets = []
   try {
@@ -504,7 +607,7 @@ export async function updateCourse(id, formData) {
 
   let courseContent
   try {
-    courseContent = await buildCourseContent(formData, supabase, id)
+    courseContent = await buildCourseContent(formData, supabase, id, uploadedAssets)
   } catch (error) {
     return fail(error.message)
   }
@@ -610,6 +713,18 @@ export async function updateCourse(id, formData) {
     return fail(error.message)
   }
 
+  const previousExploreImageUrls = Array.isArray(existingCourse?.explore_more)
+    ? existingCourse.explore_more.filter((item) => item?.target_type === 'page').map((item) => item?.image_url).filter(Boolean)
+    : []
+  const retainedExploreImageUrls = new Set(courseContent.explore_more.map((item) => item.image_url).filter(Boolean))
+  await removeExplorePageImages(supabase, previousExploreImageUrls.filter((url) => !retainedExploreImageUrls.has(url)))
+
+  const previousTestimonialImageUrls = Array.isArray(existingCourse?.testimonials)
+    ? existingCourse.testimonials.map((item) => item?.image_url).filter(Boolean)
+    : []
+  const retainedTestimonialImageUrls = new Set(courseContent.testimonials.map((item) => item.image_url).filter(Boolean))
+  await removeTestimonialImages(supabase, previousTestimonialImageUrls.filter((url) => !retainedTestimonialImageUrls.has(url)))
+
   // Handle FAQs (Sync strategy: delete and re-insert)
   await supabase.from('course_faqs').delete().eq('course_id', id)
   const faqQuestions = formData.getAll('faq_questions')
@@ -641,6 +756,7 @@ export async function updateCourse(id, formData) {
 
   // Handle New Gallery Images submitted through the legacy server-upload path.
   const galleryFiles = formData.getAll('gallery_images')
+  let legacyGalleryAddedCount = 0
   for (let i = 0; i < galleryFiles.length; i++) {
       const file = galleryFiles[i]
       if (file && file.size > 0) {
@@ -657,14 +773,86 @@ export async function updateCourse(id, formData) {
                   .from('course-images')
                   .getPublicUrl(filePath)
               
-              await supabase.from('course_images').insert({
+              const { error: galleryInsertError } = await supabase.from('course_images').insert({
                   course_id: id,
                   image_url: urlData.publicUrl,
                   display_order: 99 // Or fetch max and increment
               })
+              if (!galleryInsertError) legacyGalleryAddedCount += 1
           }
       }
   }
+
+  const courseFieldLabels = {
+    title: 'Course title',
+    slug: 'Course URL',
+    promise: 'Hero promise',
+    short_introduction: 'Hero introduction',
+    primary_cta_text: 'Primary CTA',
+    description: 'Course description',
+    what_youll_learn: 'What you’ll learn',
+    skills_youll_gain: 'Skills you’ll gain',
+    details_to_know_items: 'Details to know',
+    details_cta_text: 'Details CTA',
+    target_audience_title: 'Who this is for title',
+    target_audience: 'Who this is for',
+    who_this_is_not_for_title: 'Who this is not for title',
+    who_this_is_not_for: 'Who this is not for',
+    audience_supporting_text: 'Audience supporting text',
+    bold_introduction: 'Course subheadline lead',
+    subheadline: 'Course subheadline',
+    what_youll_explore: 'What you’ll explore',
+    introduction_video_url: 'Introduction video',
+    course_info_modules: 'Modules information',
+    course_level: 'Course level',
+    course_language: 'Course language',
+    flexible_schedule: 'Flexible schedule',
+    course_support: 'Course support',
+    tutor_name: 'Tutor name',
+    meet_the_tutor: 'Tutor description',
+    testimonials_heading: 'Testimonials heading',
+    testimonials_subheading: 'Testimonials subheading',
+    testimonials: 'Testimonials',
+    explore_more: 'Explore more',
+    price_cents: 'Course price',
+    money_back_guarantee: 'Money-back guarantee',
+    is_published: 'Publishing status',
+    logo_url: 'Course logo',
+    certificate_template_url: 'Certificate template',
+  }
+  const changes = Object.entries(courseFieldLabels)
+    .map(([field, label]) => contentFieldChange(
+      label,
+      existingCourse[field],
+      Object.hasOwn(updateData, field) ? updateData[field] : existingCourse[field],
+    ))
+    .filter(Boolean)
+
+  const nextFaqs = faqsToInsert.map(({ question, answer, display_order }) => ({ question, answer, display_order }))
+  changes.push(contentFieldChange('FAQs', existingFaqs, nextFaqs))
+  if (uploadedGallery.length + legacyGalleryAddedCount > 0) changes.push({ field: 'Course gallery', operation: 'added' })
+  if (deletedUrls.length > 0) changes.push({ field: 'Course gallery', operation: 'removed' })
+
+  const changedPlainContent = changes.some((change) => [
+    'Hero promise',
+    'Hero introduction',
+    'Course description',
+    'What you’ll learn',
+    'Details to know',
+    'Who this is for',
+    'Who this is not for',
+    'Audience supporting text',
+    'Course subheadline',
+    'What you’ll explore',
+    'Tutor description',
+    'Testimonials subheading',
+    'Explore more',
+  ].includes(change?.field))
+  if (!changedPlainContent) {
+    changes.push(contentFieldChange('Text formatting', existingCourse.rich_content, updateData.rich_content))
+  }
+
+  await recordContentActivity(supabase, access, 'updated', 'course', id, changes)
 
   revalidatePath('/admin/dashboard')
   revalidatePath(`/admin/courses/${id}/edit`)
@@ -673,7 +861,7 @@ export async function updateCourse(id, formData) {
 }
 
 export async function deleteCourse(id) {
-  await requirePermission('courses.edit')
+  const access = await requirePermission('courses.edit')
   const supabase = await createAdminClient()
 
   // First, get the course data to find all files that need to be deleted
@@ -687,41 +875,6 @@ export async function deleteCourse(id) {
     return { error: 'Course not found' }
   }
 
-  // Delete logo from storage if exists
-  if (course.logo_url) {
-    const pathPart = course.logo_url.split('/course-images/')[1]
-    if (pathPart) {
-      const filePath = decodeURIComponent(pathPart)
-      await supabase.storage.from('course-images').remove([filePath])
-    }
-  }
-
-  // Delete certificate PDF from storage if exists
-  if (course.certificate_template_url) {
-    const pathPart = course.certificate_template_url.split('/certificates/')[1]
-    if (pathPart) {
-      const filePath = decodeURIComponent(pathPart)
-      await supabase.storage.from('certificates').remove([filePath])
-    }
-  }
-
-  // Delete all gallery images from storage
-  if (course.images && course.images.length > 0) {
-    for (const img of course.images) {
-      const pathPart = img.image_url.split('/course-images/')[1]
-      if (pathPart) {
-        const filePath = decodeURIComponent(pathPart)
-        await supabase.storage.from('course-images').remove([filePath])
-      }
-    }
-  }
-
-  // Delete gallery images from database
-  await supabase.from('course_images').delete().eq('course_id', id)
-
-  // Delete FAQs
-  await supabase.from('course_faqs').delete().eq('course_id', id)
-
   // Capture private lesson PDF paths before lesson deletion cascades their metadata.
   const { data: lessonResources, error: resourceLookupError } = await supabase
     .from('lesson_resources')
@@ -731,10 +884,44 @@ export async function deleteCourse(id) {
 
   if (resourceLookupError) {
     console.error('Unable to load lesson resources before course deletion:', resourceLookupError.message)
+    return { error: 'The course files could not be checked safely. Please try deleting the course again.' }
   }
 
-  // Delete lessons
-  await supabase.from('lessons').delete().eq('course_id', id)
+  const explorePageImageUrls = Array.isArray(course.explore_more)
+    ? course.explore_more.filter((item) => item?.target_type === 'page').map((item) => item?.image_url).filter(Boolean)
+    : []
+  const testimonialImageUrls = Array.isArray(course.testimonials)
+    ? course.testimonials.map((item) => item?.image_url).filter(Boolean)
+    : []
+
+  const deleteResult = await deleteContentWithActivity(supabase, access, 'course', id, { courseId: id })
+  if (deleteResult.error) return deleteResult
+
+  const imagePaths = [course.logo_url, ...(course.images || []).map((image) => image.image_url)]
+    .map((url) => String(url || '').split('/course-images/')[1])
+    .filter(Boolean)
+    .map((path) => decodeURIComponent(path))
+  if (imagePaths.length > 0) {
+    for (let index = 0; index < imagePaths.length; index += 100) {
+      const { error: imageDeleteError } = await supabase.storage
+        .from(COURSE_IMAGE_BUCKET)
+        .remove(imagePaths.slice(index, index + 100))
+      if (imageDeleteError) console.error('Unable to remove some course images:', imageDeleteError.message)
+    }
+  }
+
+  if (course.certificate_template_url) {
+    const pathPart = course.certificate_template_url.split('/certificates/')[1]
+    if (pathPart) {
+      const { error: certificateDeleteError } = await supabase.storage
+        .from(CERTIFICATE_BUCKET)
+        .remove([decodeURIComponent(pathPart)])
+      if (certificateDeleteError) console.error('Unable to remove the course certificate template:', certificateDeleteError.message)
+    }
+  }
+
+  await removeExplorePageImages(supabase, explorePageImageUrls)
+  await removeTestimonialImages(supabase, testimonialImageUrls)
 
   const lessonResourcePaths = (lessonResources || []).map((resource) => resource.storage_path).filter(Boolean)
   for (let index = 0; index < lessonResourcePaths.length; index += 100) {
@@ -742,19 +929,6 @@ export async function deleteCourse(id) {
       .from(LESSON_RESOURCE_BUCKET)
       .remove(lessonResourcePaths.slice(index, index + 100))
     if (resourceDeleteError) console.error('Unable to remove some lesson resource PDFs:', resourceDeleteError.message)
-  }
-
-  // Delete user enrollments for this course so it no longer appears in user dashboards
-  await supabase.from('user_enrollments').delete().eq('course_id', id)
-
-  // Finally, delete the course (soft delete)
-  const { error } = await supabase
-    .from('courses')
-    .update({ deleted_at: new Date().toISOString() })
-    .eq('id', id)
-
-  if (error) {
-    return { error: error.message }
   }
 
   revalidatePath('/admin/dashboard')

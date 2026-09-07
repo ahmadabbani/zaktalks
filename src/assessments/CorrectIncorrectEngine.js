@@ -7,7 +7,7 @@ import ResultScreenshotButton from '@/components/ResultScreenshotButton';
 import useDelayedAnswerAdvance from './useDelayedAnswerAdvance';
 import styles from './assessment.module.css';
 
-export default function CorrectIncorrectEngine({ definition, onComplete, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture', resultDownloadFormat = 'png' }) {
+export default function CorrectIncorrectEngine({ definition, onComplete, embeddedInCoursePlayer = false, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture', resultDownloadFormat = 'png' }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
@@ -17,6 +17,7 @@ export default function CorrectIncorrectEngine({ definition, onComplete, enableR
   const currentQuestion = definition.questions[currentIndex];
   const totalQuestions = definition.questions.length;
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
+  const isMoneyEgoStates = definition.id === 'money-ego-states-v1';
 
   // Use shared options from definition, or per-question options if defined
   const getOptions = (question) => {
@@ -77,10 +78,17 @@ export default function CorrectIncorrectEngine({ definition, onComplete, enableR
     const correctCount = totalQuestions - wrongAnswers.length;
 
     return (
-      <div className={styles.resultContainer} style={{ maxWidth: '800px' }} id={enableResultScreenshot ? resultCaptureId : undefined}>
-        <h2 className={styles.resultHeader}>Assessment Complete!</h2>
+      <div className={`${styles.resultContainer} ${embeddedInCoursePlayer ? styles.embeddedAssessmentResult : ''} ${isMoneyEgoStates ? styles.moneyEgoResult : ''}`} style={{ maxWidth: embeddedInCoursePlayer ? 'none' : '800px' }} id={enableResultScreenshot ? resultCaptureId : undefined}>
+        {isMoneyEgoStates ? (
+          <header className={styles.moneyEgoResultHero}>
+            <h2>Your Ego-State Awareness</h2>
+            <p>This result reflects how accurately you identified the Parent, Adult, and Child voices. More importantly, it gives you language to notice what is speaking before you make a money decision.</p>
+          </header>
+        ) : (
+          <h2 className={styles.resultHeader}>Assessment Complete!</h2>
+        )}
 
-        <div className={styles.resultContent}>
+        <div className={`${styles.resultContent} ${isMoneyEgoStates ? styles.moneyEgoScoreContent : ''}`}>
           <h3 className={styles.resultLabel}>
             Your Score: {correctCount} out of {totalQuestions}
           </h3>
@@ -92,7 +100,7 @@ export default function CorrectIncorrectEngine({ definition, onComplete, enableR
         </div>
 
         {wrongAnswers.length > 0 && (
-          <div className={styles.ciReviewSection}>
+          <div className={`${styles.ciReviewSection} ${isMoneyEgoStates ? styles.moneyEgoReviewSection : ''}`}>
             <h3 className={styles.ciReviewTitle}>Review Wrong Answers</h3>
             <div className={styles.ciReviewList}>
               {wrongAnswers.map((q) => {
@@ -100,13 +108,13 @@ export default function CorrectIncorrectEngine({ definition, onComplete, enableR
                 const userLabel = options.find((o) => o.value === answers[q.id])?.label || answers[q.id];
                 const correctLabel = options.find((o) => o.value === q.correctAnswer)?.label || q.correctAnswer;
                 return (
-                  <div key={q.id} className={styles.ciReviewItem}>
+                  <div key={q.id} className={`${styles.ciReviewItem} ${isMoneyEgoStates ? styles.moneyEgoReviewItem : ''}`}>
                     <p className={styles.ciReviewQuestion}>{q.text}</p>
                     <div className={styles.ciReviewAnswers}>
-                      <span className={styles.ciWrongAnswer}>
+                      <span className={`${styles.ciWrongAnswer} ${isMoneyEgoStates ? styles.moneyEgoWrongAnswer : ''}`}>
                         <FaTimes /> Your answer: {userLabel}
                       </span>
-                      <span className={styles.ciCorrectAnswer}>
+                      <span className={`${styles.ciCorrectAnswer} ${isMoneyEgoStates ? styles.moneyEgoCorrectAnswer : ''}`}>
                         <FaCheck /> Correct answer: {correctLabel}
                       </span>
                     </div>
@@ -132,7 +140,7 @@ export default function CorrectIncorrectEngine({ definition, onComplete, enableR
   const options = getOptions(currentQuestion);
 
   return (
-    <div className={`${styles.container} ${definition.externalOnly ? styles.externalQuestionContainer : ''}`}>
+    <div className={`${styles.container} ${embeddedInCoursePlayer ? styles.embeddedAssessmentContainer : ''} ${definition.externalOnly ? styles.externalQuestionContainer : ''}`}>
       {/* Header / Progress */}
       <div className={styles.header}>
         <div className={styles.progressInfo}>
@@ -152,7 +160,7 @@ export default function CorrectIncorrectEngine({ definition, onComplete, enableR
       </div>
 
       {/* Options */}
-      <div key={`answers-${currentQuestion.id}`} className={`${styles.ciOptionsSection} ${styles.questionTransition} ${styles.answerTransition}`}>
+      <div key={`answers-${currentQuestion.id}`} className={`${styles.ciOptionsSection} ${isMoneyEgoStates ? styles.moneyEgoOptions : ''} ${styles.questionTransition} ${styles.answerTransition}`}>
         {options.map((option) => (
           <button
             key={option.value}

@@ -1,0 +1,430 @@
+.dashboard {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  width: 100%;
+  margin-top: clamp(1.4rem, 2.5vw, 2.25rem);
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.metrics article {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.85rem;
+  padding: clamp(1rem, 1.7vw, 1.3rem);
+  border: 1px solid rgba(33, 44, 45, 0.09);
+  border-radius: 1.1rem;
+  background: var(--color-white);
+  box-shadow: 0 0.75rem 1.8rem rgba(33, 44, 45, 0.06);
+}
+
+.metrics article > span,
+.creator > span,
+.entity > span {
+  display: inline-grid;
+  flex: 0 0 auto;
+  place-items: center;
+  color: var(--color-white);
+  background: var(--color-dark-blue);
+}
+
+.metrics article > span {
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: 0.85rem;
+  font-size: 1.05rem;
+}
+
+.metrics article div {
+  display: grid;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.metrics small {
+  color: var(--color-gray-dark);
+  font-size: clamp(0.78rem, 0.85vw, 0.9rem);
+  font-weight: 750;
+}
+
+.metrics strong {
+  color: var(--color-black);
+  font-size: clamp(1.65rem, 2.4vw, 2.35rem);
+  line-height: 1;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem;
+  border-radius: 1.1rem;
+  background: var(--color-gray-light);
+}
+
+.searchField {
+  display: flex;
+  min-width: min(100%, 21rem);
+  flex: 1 1 23rem;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0 0.95rem;
+  border: 1px solid rgba(33, 44, 45, 0.13);
+  border-radius: 999px;
+  background: var(--color-white);
+  color: var(--color-dark-blue);
+}
+
+.searchField input {
+  width: 100%;
+  min-width: 0;
+  padding: 0.78rem 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-black);
+  font: inherit;
+  font-size: clamp(0.84rem, 0.9vw, 0.96rem);
+}
+
+.searchField input::placeholder {
+  color: rgba(33, 44, 45, 0.5);
+}
+
+.filters {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.filterGroups {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: end;
+}
+
+.filters button {
+  padding: 0.66rem 0.86rem;
+  border: 1px solid rgba(33, 44, 45, 0.13);
+  border-radius: 999px;
+  background: var(--color-white);
+  color: var(--color-black);
+  font: inherit;
+  font-size: clamp(0.75rem, 0.78vw, 0.84rem);
+  font-weight: 750;
+  cursor: pointer;
+  transition: color 0.22s ease, background-color 0.22s ease, border-color 0.22s ease;
+}
+
+.filters button:hover,
+.filters button:focus-visible,
+.filters .filterActive {
+  border-color: var(--color-dark-blue);
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+  outline: none;
+}
+
+.tableShell {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid rgba(33, 44, 45, 0.09);
+  border-radius: 1.1rem;
+  background: var(--color-white);
+}
+
+.tableShell table {
+  width: 100%;
+  min-width: 58rem;
+  border-collapse: collapse;
+}
+
+.tableShell th,
+.tableShell td {
+  padding: clamp(0.9rem, 1.2vw, 1.15rem);
+  border-bottom: 1px solid rgba(33, 44, 45, 0.08);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.tableShell th {
+  color: var(--color-white);
+  background: var(--color-dark-blue);
+  font-size: clamp(0.75rem, 0.8vw, 0.86rem);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.tableShell tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.tableShell tbody tr {
+  transition: background-color 0.22s ease;
+}
+
+.tableShell tbody tr:hover {
+  background: rgba(var(--color-dark-blue-rgb), 0.055);
+}
+
+.creator,
+.entity {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.creator > span,
+.entity > span {
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 0.7rem;
+  font-size: 0.82rem;
+}
+
+.entity > span {
+  color: var(--color-black);
+  background: var(--color-yellow);
+}
+
+.creator div,
+.entity div {
+  display: grid;
+  min-width: 0;
+  gap: 0.18rem;
+}
+
+.creator strong,
+.entity strong,
+.contextTitle {
+  color: var(--color-black);
+  font-size: clamp(0.84rem, 0.9vw, 0.96rem);
+  line-height: 1.3;
+}
+
+.creator small,
+.creator em,
+.entity small,
+.entity em,
+.contextText,
+.tableShell time {
+  color: var(--color-gray-dark);
+  font-size: clamp(0.75rem, 0.78vw, 0.84rem);
+  font-style: normal;
+  line-height: 1.35;
+}
+
+.creator em {
+  width: fit-content;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(var(--color-dark-blue-rgb), 0.1);
+  color: var(--color-dark-blue);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.entity small {
+  color: var(--color-dark-blue);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.entity .actionBadge {
+  width: fit-content;
+  padding: 0.22rem 0.5rem;
+  border-radius: 999px;
+  letter-spacing: 0.035em;
+}
+
+.entity .actionCreated {
+  background: rgba(var(--color-dark-blue-rgb), 0.11);
+  color: var(--color-dark-blue);
+}
+
+.entity .actionUpdated {
+  background: rgb(241 196 15 / 30%);
+  color: var(--color-black);
+}
+
+.entity .actionDeleted {
+  background: rgba(199, 57, 57, 0.11);
+  color: var(--color-error);
+}
+
+.changeList {
+  display: grid;
+  gap: 0.32rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.changeList li {
+  position: relative;
+  padding-left: 0.85rem;
+  color: var(--color-gray-dark);
+  font-size: clamp(0.75rem, 0.78vw, 0.84rem);
+  line-height: 1.4;
+}
+
+.changeList li::before {
+  position: absolute;
+  top: 0.56em;
+  left: 0;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--color-dark-blue);
+  content: '';
+}
+
+.error,
+.empty {
+  border-radius: 1.1rem;
+  text-align: center;
+}
+
+.error {
+  padding: 1rem;
+  background: rgba(199, 57, 57, 0.1);
+  color: var(--color-error);
+  font-weight: 750;
+}
+
+.empty {
+  display: grid;
+  min-height: 18rem;
+  place-content: center;
+  justify-items: center;
+  gap: 0.6rem;
+  padding: 2rem;
+  border: 1px solid rgba(33, 44, 45, 0.09);
+  background: var(--color-gray-light);
+}
+
+.empty > svg {
+  color: var(--color-dark-blue);
+  font-size: 2rem;
+}
+
+.empty strong {
+  color: var(--color-black);
+  font-size: 1.08rem;
+}
+
+.empty p {
+  margin: 0;
+  color: var(--color-gray-dark);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 1024px) {
+  .toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .searchField {
+    min-width: 0;
+    flex-basis: auto;
+  }
+
+  .filters {
+    justify-content: flex-start;
+  }
+
+  .filterGroups {
+    justify-items: start;
+  }
+}
+
+@media (max-width: 700px) {
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .tableShell {
+    overflow: visible;
+    border: 0;
+    background: transparent;
+  }
+
+  .tableShell table,
+  .tableShell tbody,
+  .tableShell tr,
+  .tableShell td {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .tableShell thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .tableShell tr {
+    margin-bottom: 0.85rem;
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(33, 44, 45, 0.09);
+    border-radius: 1rem;
+    background: var(--color-white);
+  }
+
+  .tableShell td {
+    display: grid;
+    grid-template-columns: minmax(6rem, 0.4fr) minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(33, 44, 45, 0.08);
+  }
+
+  .tableShell td::before {
+    content: attr(data-label);
+    color: var(--color-gray-dark);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .tableShell tbody tr:last-child td:not(:last-child) {
+    border-bottom: 1px solid rgba(33, 44, 45, 0.08);
+  }
+
+  .tableShell td:last-child {
+    border-bottom: 0;
+  }
+}
+
+@media (max-width: 460px) {
+  .filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filters button {
+    width: 100%;
+  }
+
+  .tableShell td {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+}

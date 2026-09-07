@@ -8,6 +8,7 @@ export const PERMISSION_GROUPS = [
       { key: 'courses.create', label: 'Create courses', description: 'Create and publish new course records.', href: '/admin/courses/new' },
       { key: 'courses.edit', label: 'Edit courses', description: 'Edit course details, imagery, FAQs, and publishing state.', href: '/admin/dashboard?view=courses' },
       { key: 'courses.content', label: 'Manage modules and lessons', description: 'Create, edit, move, and remove course modules and lessons.', href: '/admin/dashboard?view=courses' },
+      { key: 'courses.activity', label: 'View content activity', description: 'Review who created, updated, or deleted course content.', href: '/admin/dashboard?view=creation-activity' },
       { key: 'external_assessments.manage', label: 'External assessment links', description: 'Create and revoke public assessment links.', href: '/admin/dashboard?view=assessment-links' },
     ],
   },

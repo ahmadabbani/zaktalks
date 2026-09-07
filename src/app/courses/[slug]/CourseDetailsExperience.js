@@ -17,18 +17,18 @@ import {
   FaExpand,
   FaGlobe,
   FaHeadset,
-  FaImages,
   FaLightbulb,
   FaLock,
   FaPlay,
   FaQuestionCircle,
+  FaQuoteLeft,
   FaRegClock,
   FaTimes,
-  FaUserTie,
   FaVideo
 } from 'react-icons/fa'
 import EnrollButton from '@/components/EnrollButton'
 import RichText from '@/components/RichText'
+import TestimonialsSection from '@/components/TestimonialsSection'
 import { legacyDetailsToBlocks, normalizeContentBlocks } from '@/lib/course-content'
 import { sanitizeCourseRichContent } from '@/lib/course-rich-content'
 import { getLessonDisplayNumber } from '@/lib/lesson-numbering'
@@ -274,8 +274,47 @@ function CourseFaqs({ faqs }) {
   )
 }
 
-export default function CourseDetailsExperience({ course, courseIntroductionLesson, curriculumModules, galleryImages, faqs, exploreMoreItems, isLoggedIn, isEnrolled }) {
+function ExploreMoreCarousel({ items }) {
+  const trackRef = useRef(null)
+
+  const scroll = (direction) => {
+    const track = trackRef.current
+    if (!track) return
+    track.scrollBy({ left: direction * Math.max(300, track.clientWidth * 0.78), behavior: 'smooth' })
+  }
+
+  return (
+    <div className={styles.relatedCarousel}>
+      <div className={styles.relatedCarouselControls} aria-label="Explore more carousel controls">
+        <button type="button" onClick={() => scroll(-1)} aria-label="Previous recommendations"><FaArrowLeft /></button>
+        <button type="button" onClick={() => scroll(1)} aria-label="Next recommendations"><FaArrowRight /></button>
+      </div>
+      <div className={styles.relatedTrack} ref={trackRef}>
+        {items.map((item) => (
+          <article className={`${styles.relatedCard} ${item.target_type === 'page' ? styles.relatedPageCard : ''}`} key={item.id}>
+            <Link href={item.target_path} className={styles.relatedImage}>
+              {item.image_url
+                ? <Image src={item.image_url} alt={item.title} fill sizes="(max-width: 520px) 7.5rem, 16vw" quality={86} unoptimized />
+                : item.target_type === 'page'
+                  ? <Image className={styles.relatedFallbackLogo} src="/logowhite1.png" alt="ZakTalks" fill sizes="(max-width: 520px) 7.5rem, 16vw" quality={86} />
+                  : <span><FaBookOpen /></span>}
+            </Link>
+            <div>
+              <h3>{item.title}</h3>
+              {item.description && <p><RichText value={item.rich_description} fallback={item.description} maxLength={3000} /></p>}
+              <Link href={item.target_path} className={styles.relatedCta}>{item.cta_text || (item.target_type === 'page' ? 'Visit page' : 'View course')} <FaArrowRight /></Link>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default function CourseDetailsExperience({ course, courseIntroductionLesson, curriculumModules, galleryImages, faqs, exploreMoreItems, testimonials, isLoggedIn, isEnrolled }) {
   const [openModule, setOpenModule] = useState(curriculumModules[0]?.id || null)
+  const [showStickyGallery, setShowStickyGallery] = useState(true)
+  const contentSectionRef = useRef(null)
   const revealProps = useScrollReveal()
   const learningOutcomes = useMemo(() => toList(course.what_youll_learn), [course.what_youll_learn])
   const skills = useMemo(() => toList(course.skills_youll_gain), [course.skills_youll_gain])
@@ -295,6 +334,7 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
     subheadline: course.subheadline || '',
     what_youll_explore: exploreItems,
     meet_the_tutor: course.meet_the_tutor || '',
+    testimonials_subheading: course.testimonials_subheading || '',
     explore_more: exploreMoreItems,
   }), [course, detailItems, exploreItems, exploreMoreItems, learningOutcomes, notForAudience, targetAudience])
   const lessonCount = curriculumModules.reduce(
@@ -308,7 +348,7 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
   const descriptionCopy = hasDistinctText(course.description, course.promise) ? course.description : ''
   const subheadlineCopy = hasDistinctText(course.subheadline, course.short_introduction) ? course.subheadline : ''
   const hasCourseSubheadline = Boolean(String(course.bold_introduction || '').trim() || subheadlineCopy)
-  const hasDescriptionSection = Boolean(descriptionCopy || hasIntroductionVideo || galleryImages.length)
+  const hasDescriptionSection = Boolean(descriptionCopy || hasIntroductionVideo)
   const descriptionSectionTitle = descriptionCopy
     ? 'Course description'
     : hasIntroductionVideo
@@ -321,6 +361,38 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
     { label: 'Flexible schedule', value: course.flexible_schedule, Icon: FaRegClock },
     { label: 'Support', value: course.course_support, Icon: FaHeadset },
   ].filter((item) => String(item.value || '').trim())
+  const sidebarLogoImages = course.logo_url
+    ? [{ id: `course-logo-${course.id}`, image_url: course.logo_url, alt_text: `${course.title} logo` }]
+    : []
+
+  useEffect(() => {
+    if (!course.logo_url) return undefined
+
+    let frame = null
+    const updateGalleryVisibility = () => {
+      if (frame !== null) return
+      frame = window.requestAnimationFrame(() => {
+        frame = null
+        if (window.innerWidth <= 1024) {
+          setShowStickyGallery(true)
+          return
+        }
+
+        const section = contentSectionRef.current
+        const sectionTop = section ? section.getBoundingClientRect().top + window.scrollY : 0
+        setShowStickyGallery(window.scrollY <= sectionTop + 280)
+      })
+    }
+
+    updateGalleryVisibility()
+    window.addEventListener('scroll', updateGalleryVisibility, { passive: true })
+    window.addEventListener('resize', updateGalleryVisibility)
+    return () => {
+      if (frame !== null) window.cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', updateGalleryVisibility)
+      window.removeEventListener('resize', updateGalleryVisibility)
+    }
+  }, [course.logo_url])
 
   const renderPurchaseAction = (showPrice = true) => isEnrolled ? (
     <Link href="/dashboard" className={styles.continueButton}>Continue learning <FaArrowRight /></Link>
@@ -345,7 +417,7 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
               <h1>{course.title}</h1>
               {course.promise && <p className={styles.heroDescription}><RichText value={richContent.promise} fallback={course.promise} maxLength={8000} /></p>}
               {course.short_introduction && <p className={styles.heroSubheadline}><RichText value={richContent.short_introduction} fallback={course.short_introduction} maxLength={4000} /></p>}
-              <div className={styles.instructorLine}><span><FaUserTie /></span><p><small>Instructor</small><strong>{course.tutor_name || 'Zak Dakkash'}</strong></p></div>
+              <div className={styles.instructorLine}><span><Image src="/events-hero.jpg" alt={course.tutor_name || 'Zak Dakkash'} fill sizes="96px" quality={100} /></span><p><small>Instructor</small><strong>{course.tutor_name || 'Zak Dakkash'}</strong></p></div>
               <div className={styles.heroActions} id="course-action">
                 <div className={styles.heroEnroll}>{renderPurchaseAction()}</div>
                 <a href="#curriculum" className={styles.curriculumButton}>View curriculum <FaArrowRight /></a>
@@ -376,7 +448,7 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
         </div>
       </section>
 
-      <section className={styles.contentSection}>
+      <section className={styles.contentSection} ref={contentSectionRef}>
         <div className={`container ${styles.contentGrid}`}>
           <div className={styles.primaryContent}>
             {hasDescriptionSection && (
@@ -390,12 +462,6 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
                     <CourseIntroPlayer url={course.introduction_video_url} title={course.title} />
                   </div>
                 )}
-                {galleryImages.length > 0 && (
-                  <div className={styles.descriptionMediaBlock}>
-                    {(descriptionCopy || hasIntroductionVideo) && <h3><FaImages /> Inside the experience</h3>}
-                    <CourseGallery images={galleryImages} courseTitle={course.title} />
-                  </div>
-                )}
               </section>
             )}
 
@@ -403,9 +469,9 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
               <section {...revealProps('learning')}>
                 <div className={styles.sectionLabel}><FaCheck /> Course outcomes</div>
                 <h2 className={styles.sectionTitle}>What you&apos;ll learn</h2>
-                <div className={styles.learningGrid}>
-                  {learningOutcomes.map((outcome, index) => <article key={`${outcome}-${index}`}><span>{String(index + 1).padStart(2, '0')}</span><p><RichText value={richContent.what_youll_learn[index]} fallback={outcome} maxLength={1000} /></p></article>)}
-                </div>
+                <ul className={styles.learningGrid}>
+                  {learningOutcomes.map((outcome, index) => <li key={`${outcome}-${index}`}><span aria-hidden="true" /><p><RichText value={richContent.what_youll_learn[index]} fallback={outcome} maxLength={1000} /></p></li>)}
+                </ul>
               </section>
             )}
 
@@ -413,7 +479,7 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
               <section {...revealProps('skills')}>
                 <div className={styles.sectionLabel}><FaLightbulb /> Practical growth</div>
                 <h2 className={styles.sectionTitle}>Skills you&apos;ll gain</h2>
-                <div className={styles.skillsList}>{skills.map((skill, index) => <span key={`${skill}-${index}`}><FaCheck /> {skill}</span>)}</div>
+                <ul className={styles.skillsList}>{skills.map((skill, index) => <li key={`${skill}-${index}`}><span aria-hidden="true" />{skill}</li>)}</ul>
               </section>
             )}
 
@@ -522,8 +588,8 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
             {course.meet_the_tutor && (
               <section {...revealProps('tutor')}>
                 <div className={styles.tutorSection}>
-                  <span className={styles.tutorMark}><FaUserTie /></span>
-                  <div><div className={styles.sectionLabel}>Your instructor</div><h2>Meet {course.tutor_name || 'Zak Dakkash'}</h2><p><RichText value={richContent.meet_the_tutor} fallback={course.meet_the_tutor} maxLength={8000} /></p></div>
+                  <span className={styles.tutorMark}><Image src="/events-hero.jpg" alt={course.tutor_name || 'Zak Dakkash'} fill sizes="192px" quality={100} /></span>
+                  <div><div className={styles.sectionLabel}>Your instructor</div><h2>Meet {course.tutor_name || 'Zak Dakkash'}</h2><p><RichText value={richContent.meet_the_tutor} fallback={course.meet_the_tutor} maxLength={8000} /></p><Link href="/about" className={styles.tutorCta}>About Zak <FaArrowRight /></Link></div>
                 </div>
               </section>
             )}
@@ -536,33 +602,43 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
               </section>
             )}
 
+            {testimonials.length > 0 && (
+              <section {...revealProps('testimonials')}>
+                <TestimonialsSection
+                  items={testimonials.map((testimonial) => ({
+                    quote: testimonial.quote,
+                    name: testimonial.name,
+                    image: testimonial.image_url,
+                  }))}
+                  heading={course.testimonials_heading}
+                  subheading={(
+                    <RichText
+                      value={richContent.testimonials_subheading}
+                      fallback={course.testimonials_subheading}
+                      maxLength={3000}
+                    />
+                  )}
+                  label={<><FaQuoteLeft aria-hidden="true" /> What learners can expect</>}
+                  embedded
+                  headingId={`course-testimonials-${course.id}`}
+                />
+              </section>
+            )}
+
             {exploreMoreItems.length > 0 && (
               <section {...revealProps('related')}>
                 <div className={styles.sectionLabel}><FaBookOpen /> Continue exploring</div>
                 <h2 className={styles.sectionTitle}>Explore more</h2>
-                <div className={styles.relatedGrid}>
-                  {exploreMoreItems.map((item) => (
-                    <article className={`${styles.relatedCard} ${item.target_type === 'page' ? styles.relatedPageCard : ''}`} key={item.id}>
-                      <Link href={item.target_path} className={styles.relatedImage}>
-                        {item.image_url
-                          ? <Image src={item.image_url} alt={item.title} fill sizes="(max-width: 520px) 7.5rem, 16vw" quality={86} unoptimized />
-                          : <span>{item.target_type === 'page' ? <FaGlobe /> : <FaBookOpen />}</span>}
-                      </Link>
-                      <div>
-                        <h3>{item.title}</h3>
-                        {item.description && <p><RichText value={item.rich_description} fallback={item.description} maxLength={3000} /></p>}
-                        <Link href={item.target_path} className={styles.relatedCta}>{item.cta_text || (item.target_type === 'page' ? 'Visit page' : 'View course')} <FaArrowRight /></Link>
-                      </div>
-                    </article>
-                  ))}
-                </div>
+                <ExploreMoreCarousel items={exploreMoreItems} />
               </section>
             )}
           </div>
 
           <aside className={styles.purchaseColumn}>
             <div className={styles.purchaseSticky}>
-              <div className={styles.purchaseCard}>
+              <div className={styles.purchaseStack}>
+                {sidebarLogoImages.length > 0 && <div className={`${styles.sidebarGallery} ${showStickyGallery ? '' : styles.sidebarGalleryHidden}`}><CourseGallery images={sidebarLogoImages} courseTitle={course.title} /></div>}
+                <div className={styles.purchaseCard}>
                 <span className={styles.purchaseEyebrow}>{isEnrolled ? 'Your learning' : 'Start this course'}</span>
                 <h2>{isEnrolled ? 'Continue where you left off' : 'Learn at your pace'}</h2>
                 <p>Your progress is counted through completed lessons and activities, not just opening a page.</p>
@@ -574,9 +650,10 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
                   <div><span><FaClipboardCheck /></span><p><strong>Assessments</strong><small>Complete the activity to mark it finished and unlock the next lesson.</small></p></div>
                 </div>
                 <div className={styles.sidebarInstructor}>
-                  <span><FaUserTie /></span>
+                  <span><Image src="/events-hero.jpg" alt={course.tutor_name || 'Zak Dakkash'} fill sizes="96px" quality={100} /></span>
                   <p><small>Instructor</small><strong>{course.tutor_name || 'Zak Dakkash'}</strong><em>Educator, Co-Creative Transactional Analyst and Coach</em></p>
                 </div>
+              </div>
               </div>
             </div>
           </aside>

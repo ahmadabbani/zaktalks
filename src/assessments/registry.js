@@ -8,7 +8,7 @@ import { transactionalAnalysisQuestionnaire } from './definitions/transactional-
 import { strokingQuestionnaire } from './definitions/stroking-questionnaire';
 import { dramaTriangleAssessment } from './definitions/drama-triangle-assessment';
 import { codependencyAssessment } from './definitions/codependency-assessment';
-import { driverQuestionnaire } from './definitions/driver-questionnaire';
+import { driverQuestionnaire, driverQuestionnaireForCourse } from './definitions/driver-questionnaire';
 import { egoStateAnalysis } from './definitions/ego-state-analysis';
 import { getAssessmentStatementCount } from '@/lib/assessment-lesson-metadata';
 
@@ -24,6 +24,7 @@ export const ASSESSMENTS = {
   [dramaTriangleAssessment.id]: dramaTriangleAssessment,
   [codependencyAssessment.id]: codependencyAssessment,
   [driverQuestionnaire.id]: driverQuestionnaire,
+  [driverQuestionnaireForCourse.id]: driverQuestionnaireForCourse,
   [egoStateAnalysis.id]: egoStateAnalysis,
 };
 

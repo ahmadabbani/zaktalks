@@ -13,6 +13,7 @@ import {
   FaClipboardCheck,
   FaCog,
   FaGraduationCap,
+  FaHistory,
   FaLink,
   FaLock,
   FaPlayCircle,
@@ -37,6 +38,7 @@ function DashboardIcon({ name }) {
     case 'payments': return <FaShoppingBag aria-hidden="true" />
     case 'courses': return <FaGraduationCap aria-hidden="true" />
     case 'links': return <FaLink aria-hidden="true" />
+    case 'activity': return <FaHistory aria-hidden="true" />
     case 'discounts': return <FaCog aria-hidden="true" />
     case 'coupons': return <FaTag aria-hidden="true" />
     case 'roles': return <FaUserShield aria-hidden="true" />

@@ -32,6 +32,17 @@ export function normalizeExploreMore(value) {
     page_path: typeof item?.page_path === 'string' ? item.page_path : '',
     description: typeof item?.description === 'string' ? item.description : '',
     cta_text: typeof item?.cta_text === 'string' ? item.cta_text : '',
+    image_url: typeof item?.image_url === 'string' ? item.image_url : '',
+  }))
+}
+
+export function normalizeCourseTestimonials(value) {
+  if (!Array.isArray(value)) return []
+
+  return value.map((item) => ({
+    name: typeof item?.name === 'string' ? item.name : '',
+    quote: typeof item?.quote === 'string' ? item.quote : '',
+    image_url: typeof item?.image_url === 'string' ? item.image_url : '',
   }))
 }
 

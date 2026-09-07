@@ -7,7 +7,7 @@ import ResultScreenshotButton from '@/components/ResultScreenshotButton';
 import useDelayedAnswerAdvance from './useDelayedAnswerAdvance';
 import styles from './assessment.module.css';
 
-export default function LikertEngine({ definition, onComplete, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture', resultDownloadFormat = 'png' }) {
+export default function LikertEngine({ definition, onComplete, embeddedInCoursePlayer = false, enableResultScreenshot = false, resultCaptureId = 'assessment-result-capture', resultDownloadFormat = 'png' }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
@@ -81,7 +81,7 @@ export default function LikertEngine({ definition, onComplete, enableResultScree
     const result = definition.scoring.thresholds.find(t => scoreToUse <= t.max);
 
     return (
-      <div className={styles.resultContainer} id={enableResultScreenshot ? resultCaptureId : undefined}>
+      <div className={`${styles.resultContainer} ${embeddedInCoursePlayer ? styles.embeddedAssessmentResult : ''}`} id={enableResultScreenshot ? resultCaptureId : undefined}>
         <h2 className={styles.resultHeader}>Assessment Complete!</h2>
         <div className={styles.resultContent}>
           <h3 className={styles.resultLabel}>Your Result: {result?.label}</h3>
@@ -99,7 +99,7 @@ export default function LikertEngine({ definition, onComplete, enableResultScree
   }
 
   return (
-    <div className={`${styles.container} ${definition.externalOnly ? styles.externalQuestionContainer : ''}`}>
+    <div className={`${styles.container} ${embeddedInCoursePlayer ? styles.embeddedAssessmentContainer : ''} ${definition.externalOnly ? styles.externalQuestionContainer : ''}`}>
       {/* Header / Progress */}
       <div className={styles.header}>
         <div className={styles.progressInfo}>

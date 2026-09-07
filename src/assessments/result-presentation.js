@@ -54,6 +54,33 @@ export function getAssessmentResult(attempt, assessmentKey, options = {}) {
     }
   }
 
+  if (definition.type === 'driver-questionnaire' && breakdown.length) {
+    const detailedBreakdown = breakdown.map((item) => {
+      const characteristic = definition.characteristics?.find((entry) => (
+        entry.id === item.key
+        || (item.key === 'please' && entry.id === 'please_others')
+      ))
+      return { ...item, meaning: characteristic?.description || '' }
+    })
+    const tendencies = detailedBreakdown.filter((item) => (
+      number(item.score) >= number(definition.scoring?.tendencyThreshold)
+    ))
+
+    return {
+      mode: 'categories',
+      title: 'Driver assessment results',
+      subtitle: total,
+      breakdown: detailedBreakdown,
+      conclusion: {
+        label: 'Your driver tendencies',
+        value: tendencies.length
+          ? tendencies.map((item) => item.label).join(', ')
+          : 'No strong driver tendency',
+        description: 'A score of 3 or more indicates a tendency toward that driver.'
+      }
+    }
+  }
+
   if (breakdown.length) {
     const detailedBreakdown = breakdown.map((item) => {
       const category = definition.categories?.[item.key]

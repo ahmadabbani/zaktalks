@@ -95,8 +95,8 @@
 .formGroup textarea {
     width: 100%;
     padding: var(--space-md);
-    background: var(--color-gray-light);
-    border: 2px solid transparent;
+    background: var(--color-white);
+    border: 1px solid rgba(33, 44, 45, 0.18);
     border-radius: 0.5rem;
     color: var(--color-black);
     font-size: 1rem;
@@ -136,9 +136,9 @@
     width: 100%;
     min-height: 3.25rem;
     padding: var(--space-md);
-    border: 2px solid transparent;
+    border: 1px solid rgba(33, 44, 45, 0.18);
     border-radius: 0.6rem;
-    background: var(--color-gray-light);
+    background: var(--color-white);
     color: var(--color-black);
     font: inherit;
     font-size: 1rem;
@@ -481,9 +481,9 @@
     min-width: 0;
     min-height: 2.9rem;
     padding: 0.78rem 0.95rem;
-    border: 2px solid transparent;
+    border: 1px solid rgba(33, 44, 45, 0.18);
     border-radius: 0.5rem;
-    background: var(--color-gray-light);
+    background: var(--color-white);
     color: var(--color-black);
     font: inherit;
 }
@@ -515,7 +515,7 @@
     padding: var(--space-md);
     border-radius: 0.5rem;
     border: 2px dashed var(--color-gray);
-    background: var(--color-gray-light);
+    background: var(--color-white);
     color: var(--color-gray-dark);
     cursor: pointer;
     transition: all var(--transition-normal);
@@ -597,6 +597,87 @@
 
 .imageSlotInput {
     flex: 1;
+}
+
+.recommendationImageField {
+    margin-top: var(--space-md);
+}
+
+.optionalLabel {
+    margin-left: 0.35rem;
+    color: var(--color-gray-dark);
+    font-size: 0.76em;
+    font-weight: 650;
+    text-transform: none;
+}
+
+.fieldHint {
+    margin: 0.35rem 0 0.7rem;
+    color: var(--color-gray-dark);
+    font-size: 0.86rem;
+    line-height: 1.45;
+}
+
+.recommendationImagePreview {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.recommendationImagePreview img {
+    width: 7rem;
+    height: 4.5rem;
+    border-radius: 0.65rem;
+    object-fit: cover;
+}
+
+.recommendationImagePreview button {
+    padding: 0.55rem 0.8rem;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(199, 57, 57, 0.1);
+    color: var(--color-error);
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.testimonialSectionFields {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
+    padding: clamp(1rem, 1.5vw, 1.3rem);
+    border-radius: 0.85rem;
+    background: var(--color-gray-light);
+}
+
+.testimonialSectionFields .formGroup {
+    margin-bottom: 0;
+}
+
+.testimonialBuilderItem .builderItemTopline strong {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.testimonialBuilderItem .builderItemTopline svg {
+    color: var(--color-dark-blue);
+}
+
+.testimonialImagePreview img {
+    width: 4.75rem;
+    height: 4.75rem;
+    border-radius: 50%;
+}
+
+@media (max-width: 700px) {
+    .testimonialSectionFields {
+        grid-template-columns: 1fr;
+    }
 }
 
 .deleteSlotButton {

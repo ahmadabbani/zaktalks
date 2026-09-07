@@ -153,6 +153,37 @@ function resultForStrokeProfile(definition, answers) {
   }
 }
 
+function resultForDriverQuestionnaire(definition, answers) {
+  const configuredValues = (definition.options || []).map((option) => option.value)
+  const maximumValue = Math.max(...configuredValues)
+  const breakdown = definition.sections.map((section) => {
+    const score = section.questionIds.reduce((total, questionId) => {
+      const question = definition.questions.find((item) => item.id === questionId)
+      return total + Number(answerForQuestion(definition, question, answers, configuredValues))
+    }, 0)
+
+    return {
+      key: section.id,
+      label: section.label,
+      score,
+      max: section.questionIds.length * maximumValue
+    }
+  })
+  const strongestScore = breakdown.reduce((highest, item) => Math.max(highest, item.score), 0)
+  const strongestMaximum = breakdown.reduce((highest, item) => Math.max(highest, item.max), 0)
+  const tendencies = breakdown.filter((item) => item.score >= definition.scoring.tendencyThreshold)
+
+  return {
+    scoreValue: strongestScore,
+    scoreMax: strongestMaximum,
+    scorePercent: roundedPercent(strongestScore, strongestMaximum),
+    resultLabel: tendencies.length
+      ? tendencies.map((item) => item.label).join(', ')
+      : 'No strong driver tendency',
+    scoreDetails: { breakdown }
+  }
+}
+
 /**
  * Recalculates a lesson-player assessment result from its submitted answers.
  * Raw answers are validated here but are intentionally not returned or stored.
@@ -169,6 +200,8 @@ export function calculateAssessmentResult(definition, answers) {
       return categoryResult(definition, answers)
     case 'stroke-profile':
       return resultForStrokeProfile(definition, answers)
+    case 'driver-questionnaire':
+      return resultForDriverQuestionnaire(definition, answers)
     case 'likert':
       return resultForLikert(definition, answers)
     default:

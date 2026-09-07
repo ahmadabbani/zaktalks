@@ -1,7 +1,7 @@
 export const driverQuestionnaire = {
   type: 'driver-questionnaire',
   id: 'driver-questionnaire-v1',
-  title: 'THE DRIVER QUESTIONNAIRE',
+  title: 'Driver Assessment (External)',
   externalOnly: true,
   introVariant: 'driver',
   description:
@@ -10,9 +10,9 @@ export const driverQuestionnaire = {
     'Beside each question write the most appropriate response for you.\n‘YES’, ‘NO’ or ‘TO SOME EXTENT’.',
   themeColor: '#F1C40F',
   options: [
-    { label: 'YES', value: 1 },
-    { label: 'NO', value: 0 },
-    { label: 'TO SOME EXTENT', value: 0.5 }
+    { label: 'Yes', pointsLabel: '1 point', value: 1 },
+    { label: 'To some extent', pointsLabel: '½ point', value: 0.5 },
+    { label: 'No', pointsLabel: '0 points', value: 0 }
   ],
   questions: [
     { id: 'q1', text: 'Do you set yourself high standards and then criticize yourself for failing to meet them?' },
@@ -85,4 +85,12 @@ export const driverQuestionnaire = {
         'Try Hard people are enthusiastic, we get involved in lots of different activities, and tend to volunteer for things. We are energised by having something new to try. But sometimes we turn small jobs into major projects because we want to chase every possibility. We may even become bored with the detailed work that follows, even to the point of leaving work undone so we can move on to a new, exciting activity.'
     }
   ]
+}
+
+export const driverQuestionnaireForCourse = {
+  ...driverQuestionnaire,
+  id: 'driver-questionnaire-course-v1',
+  title: 'Driver Assessment (For Course)',
+  externalOnly: false,
+  courseOnly: true
 }

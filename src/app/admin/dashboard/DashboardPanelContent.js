@@ -16,6 +16,7 @@ import CourseSuccessToast from '../courses/CourseSuccessToast'
 import SettingsForm from '../settings/SettingsForm'
 import CouponsTable from '../coupons/CouponsTable'
 import ExternalAssessmentLinks from './ExternalAssessmentLinks'
+import CreationActivityDashboard from './CreationActivityDashboard'
 import { getAdminSettings } from '../settings/settings.actions'
 import { getAllCourses, getCoupons } from '../coupons/coupons.actions'
 import userStyles from '../users/admin-users.module.css'
@@ -93,10 +94,28 @@ async function AssessmentLinksPanel() {
   return <div className={userStyles.embeddedAdminPanel}>
     <ExternalAssessmentLinks
       showHeading={false}
-      assessments={Object.values(ASSESSMENTS).map((assessment) => ({ id: assessment.id, title: assessment.title, description: assessment.description }))}
+      assessments={Object.values(ASSESSMENTS).filter((assessment) => assessment.courseOnly !== true).map((assessment) => ({ id: assessment.id, title: assessment.title, description: assessment.description }))}
       initialLinks={(externalLinks || []).map((link) => ({ ...link, path: `/assessments/external/${link.token}` }))}
     />
   </div>
+}
+
+async function CreationActivityPanel() {
+  const supabase = await createAdminClient()
+  const { data, error } = await supabase
+    .from('content_creation_audit_log')
+    .select('id, actor_user_id, actor_role, actor_name, actor_email, action, entity_type, entity_id, course_id, module_id, lesson_id, entity_title, course_title, module_title, lesson_type, assessment_key, is_course_introduction, changes, created_at')
+    .order('created_at', { ascending: false })
+    .limit(1000)
+
+  if (error) console.error('Unable to load content creation activity:', error)
+
+  const entries = (data || []).map((entry) => ({
+    ...entry,
+    assessment_title: entry.assessment_key ? ASSESSMENTS[entry.assessment_key]?.title || entry.assessment_key : '',
+  }))
+
+  return <CreationActivityDashboard entries={entries} error={error ? 'Content activity could not be loaded.' : ''} />
 }
 
 async function DiscountSettingsPanel() {
@@ -137,6 +156,7 @@ export default async function DashboardPanelContent({ viewId, access }) {
     case 'purchases': return <PaymentsDashboard />
     case 'courses': return <CoursesPanel access={access} />
     case 'assessment-links': return <AssessmentLinksPanel />
+    case 'creation-activity': return <CreationActivityPanel />
     case 'discounts': return <DiscountSettingsPanel />
     case 'coupons': return <CouponsPanel />
     case 'roles': return access.role === 'admin' ? <RolesPanel /> : null

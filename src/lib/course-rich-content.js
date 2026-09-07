@@ -12,6 +12,7 @@ const FIELD_LIMITS = {
   audience_supporting_text: 5000,
   subheadline: 4000,
   meet_the_tutor: 8000,
+  testimonials_subheading: 3000,
 }
 
 function list(value) {
@@ -87,6 +88,7 @@ export function sanitizeCourseRichContent(rawValue, canonical = {}) {
     subheadline: richTextForPlain(parsed.subheadline, canonical.subheadline || '', FIELD_LIMITS.subheadline),
     what_youll_explore: sanitizeBlocks(parsed.what_youll_explore, canonical.what_youll_explore),
     meet_the_tutor: richTextForPlain(parsed.meet_the_tutor, canonical.meet_the_tutor || '', FIELD_LIMITS.meet_the_tutor),
+    testimonials_subheading: richTextForPlain(parsed.testimonials_subheading, canonical.testimonials_subheading || '', FIELD_LIMITS.testimonials_subheading),
     explore_more: sanitizeRecommendations(parsed.explore_more, canonical.explore_more),
   }
 }

@@ -8,6 +8,12 @@ import { sanitizeDescriptionRichContent, sanitizeLessonRichContent } from '@/lib
 import { normalizeYouTubeVideoUrl } from '@/lib/youtube-url'
 import { LESSON_NUMBERING_STYLES } from '@/lib/lesson-numbering'
 import { isAssessmentTimeOption } from '@/lib/assessment-lesson-metadata'
+import {
+  contentFieldChange,
+  deleteContentWithActivity,
+  recordContentActivity,
+  recordContentCreationActivity,
+} from '@/lib/admin/content-creation-audit'
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 const LESSON_RESOURCE_BUCKET = 'lesson-resources'
@@ -160,13 +166,23 @@ function revalidateCourseStructure(courseId) {
 }
 
 export async function updateCourseLessonNumbering(courseId, numberingStyle) {
-  await requirePermission('courses.content')
+  const access = await requirePermission('courses.content')
 
   if (!isUuid(courseId) || !Object.values(LESSON_NUMBERING_STYLES).includes(numberingStyle)) {
     return { error: 'Choose a valid lesson numbering style.' }
   }
 
   const supabase = await createAdminClient()
+  const { data: currentCourse, error: currentCourseError } = await supabase
+    .from('courses')
+    .select('id, lesson_numbering_style')
+    .eq('id', courseId)
+    .is('deleted_at', null)
+    .maybeSingle()
+
+  if (currentCourseError) return { error: currentCourseError.message }
+  if (!currentCourse) return { error: 'Course not found.' }
+
   const { data, error } = await supabase
     .from('courses')
     .update({ lesson_numbering_style: numberingStyle, updated_at: new Date().toISOString() })
@@ -176,6 +192,10 @@ export async function updateCourseLessonNumbering(courseId, numberingStyle) {
 
   if (error) return { error: error.message }
   if (!data) return { error: 'Course not found.' }
+
+  await recordContentActivity(supabase, access, 'updated', 'course', courseId, [
+    contentFieldChange('Lesson numbering', currentCourse.lesson_numbering_style, numberingStyle),
+  ])
 
   revalidateCourseStructure(courseId)
   return { success: true }
@@ -207,7 +227,7 @@ async function getNextLessonOrder(supabase, moduleId) {
 }
 
 export async function createModule(courseId, formData) {
-  await requirePermission('courses.content')
+  const access = await requirePermission('courses.content')
   const supabase = await createAdminClient()
   const title = cleanText(formData.get('title'), 120)
   const description = cleanText(formData.get('description'), 500) || null
@@ -231,27 +251,40 @@ export async function createModule(courseId, formData) {
     .limit(1)
     .maybeSingle()
 
-  const { error } = await supabase.from('course_modules').insert({
-    course_id: courseId,
-    title,
-    description,
-    rich_content: richContent,
-    display_order: (lastModule?.display_order || 0) + 1
-  })
+  const { data: module, error } = await supabase
+    .from('course_modules')
+    .insert({
+      course_id: courseId,
+      title,
+      description,
+      rich_content: richContent,
+      display_order: (lastModule?.display_order || 0) + 1
+    })
+    .select('id')
+    .single()
 
   if (error) return { error: error.message }
+
+  await recordContentCreationActivity(supabase, access, 'module', module.id)
 
   revalidateCourseStructure(courseId)
   return { success: true }
 }
 
 export async function updateModule(courseId, moduleId, formData) {
-  await requirePermission('courses.content')
+  const access = await requirePermission('courses.content')
   const supabase = await createAdminClient()
   const title = cleanText(formData.get('title'), 120)
   const description = cleanText(formData.get('description'), 500) || null
 
-  if (!title || !(await getCourseModule(supabase, courseId, moduleId))) {
+  const { data: currentModule, error: currentModuleError } = await supabase
+    .from('course_modules')
+    .select('id, course_id, title, description, rich_content')
+    .eq('id', moduleId)
+    .eq('course_id', courseId)
+    .maybeSingle()
+
+  if (currentModuleError || !title || !currentModule) {
     return { error: 'Module not found or the title is invalid.' }
   }
 
@@ -270,6 +303,15 @@ export async function updateModule(courseId, moduleId, formData) {
 
   if (error) return { error: error.message }
 
+  const changes = [
+    contentFieldChange('Module title', currentModule.title, title),
+    contentFieldChange('Module description', currentModule.description, description),
+  ]
+  if (!changes.some(Boolean)) {
+    changes.push(contentFieldChange('Module text formatting', currentModule.rich_content, richContent))
+  }
+  await recordContentActivity(supabase, access, 'updated', 'module', moduleId, changes)
+
   revalidateCourseStructure(courseId)
   return { success: true }
 }
@@ -287,7 +329,7 @@ function courseIntroductionFields(formData) {
 }
 
 export async function createCourseIntroduction(courseId, formData) {
-  await requirePermission('courses.content')
+  const access = await requirePermission('courses.content')
   if (!isUuid(courseId)) return { error: 'Course not found.' }
 
   const supabase = await createAdminClient()
@@ -309,25 +351,31 @@ export async function createCourseIntroduction(courseId, formData) {
     if (existingError) return { error: existingError.message }
     if (existing) return { error: 'This course already has an introduction video.' }
 
-    const { error } = await supabase.from('lessons').insert({
-      course_id: courseId,
-      module_id: null,
-      title,
-      description,
-      rich_content: richContent,
-      type: 'video',
-      youtube_url: youtubeUrl,
-      duration_seconds: null,
-      assessment_key: null,
-      passing_score: null,
-      display_order: 1,
-      is_course_introduction: true
-    })
+    const { data: lesson, error } = await supabase
+      .from('lessons')
+      .insert({
+        course_id: courseId,
+        module_id: null,
+        title,
+        description,
+        rich_content: richContent,
+        type: 'video',
+        youtube_url: youtubeUrl,
+        duration_seconds: null,
+        assessment_key: null,
+        passing_score: null,
+        display_order: 1,
+        is_course_introduction: true
+      })
+      .select('id')
+      .single()
 
     if (error) {
       if (error.code === '23505') return { error: 'This course already has an introduction video.' }
       return { error: error.message }
     }
+
+    await recordContentCreationActivity(supabase, access, 'lesson', lesson.id)
 
     revalidateCourseStructure(courseId)
     return { success: true }
@@ -337,7 +385,7 @@ export async function createCourseIntroduction(courseId, formData) {
 }
 
 export async function updateCourseIntroduction(courseId, lessonId, formData) {
-  await requirePermission('courses.content')
+  const access = await requirePermission('courses.content')
   if (!isUuid(courseId) || !isUuid(lessonId)) return { error: 'Course introduction not found.' }
 
   const supabase = await createAdminClient()
@@ -351,7 +399,7 @@ export async function updateCourseIntroduction(courseId, lessonId, formData) {
     )
     const { data: current, error: currentError } = await supabase
       .from('lessons')
-      .select('id, youtube_url, duration_seconds')
+      .select('id, title, description, rich_content, youtube_url, duration_seconds')
       .eq('id', lessonId)
       .eq('course_id', courseId)
       .eq('is_course_introduction', true)
@@ -376,6 +424,16 @@ export async function updateCourseIntroduction(courseId, lessonId, formData) {
 
     if (error) return { error: error.message }
 
+    const changes = [
+      contentFieldChange('Introduction title', current.title, title),
+      contentFieldChange('Introduction description', current.description, description),
+      contentFieldChange('Introduction video', current.youtube_url, youtubeUrl),
+    ]
+    if (!changes.some(Boolean)) {
+      changes.push(contentFieldChange('Introduction text formatting', current.rich_content, richContent))
+    }
+    await recordContentActivity(supabase, access, 'updated', 'lesson', lessonId, changes)
+
     revalidateCourseStructure(courseId)
     return { success: true }
   } catch (error) {
@@ -384,25 +442,22 @@ export async function updateCourseIntroduction(courseId, lessonId, formData) {
 }
 
 export async function deleteCourseIntroduction(courseId, lessonId) {
-  await requirePermission('courses.content')
+  const access = await requirePermission('courses.content')
   if (!isUuid(courseId) || !isUuid(lessonId)) return { error: 'Course introduction not found.' }
 
   const supabase = await createAdminClient()
-  const { error } = await supabase
-    .from('lessons')
-    .delete()
-    .eq('id', lessonId)
-    .eq('course_id', courseId)
-    .eq('is_course_introduction', true)
-
-  if (error) return { error: error.message }
+  const deleteResult = await deleteContentWithActivity(supabase, access, 'lesson', lessonId, {
+    courseId,
+    isCourseIntroduction: true,
+  })
+  if (deleteResult.error) return deleteResult
 
   revalidateCourseStructure(courseId)
   return { success: true }
 }
 
 export async function deleteModule(courseId, moduleId) {
-  await requirePermission('courses.content')
+  const access = await requirePermission('courses.content')
   const supabase = await createAdminClient()
 
   if (!(await getCourseModule(supabase, courseId, moduleId))) {
@@ -419,13 +474,8 @@ export async function deleteModule(courseId, moduleId) {
     return { error: 'Move or delete this module’s lessons before deleting the module.' }
   }
 
-  const { error } = await supabase
-    .from('course_modules')
-    .delete()
-    .eq('id', moduleId)
-    .eq('course_id', courseId)
-
-  if (error) return { error: error.message }
+  const deleteResult = await deleteContentWithActivity(supabase, access, 'module', moduleId, { courseId })
+  if (deleteResult.error) return deleteResult
 
   revalidateCourseStructure(courseId)
   return { success: true }
@@ -519,7 +569,7 @@ export async function updateCourseStructure(courseId, structure) {
 }
 
 export async function createLesson(courseId, formData) {
-  await requirePermission('courses.content')
+  const access = await requirePermission('courses.content')
   const supabase = await createAdminClient()
   const moduleId = String(formData.get('module_id') || '')
   const courseModule = await getCourseModule(supabase, courseId, moduleId)
@@ -595,12 +645,14 @@ export async function createLesson(courseId, formData) {
     return { error: resourceError.message }
   }
 
+  await recordContentCreationActivity(supabase, access, 'lesson', lesson.id)
+
   revalidateCourseStructure(courseId)
   return { success: true }
 }
 
 export async function deleteLesson(courseId, lessonId) {
-  await requirePermission('courses.content')
+  const access = await requirePermission('courses.content')
   const supabase = await createAdminClient()
 
   if (!isUuid(courseId) || !isUuid(lessonId)) return { error: 'Invalid lesson.' }
@@ -613,14 +665,11 @@ export async function deleteLesson(courseId, lessonId) {
     return { error: resourceError.message }
   }
 
-  const { error } = await supabase
-    .from('lessons')
-    .delete()
-    .eq('id', lessonId)
-    .eq('course_id', courseId)
-    .eq('is_course_introduction', false)
-
-  if (error) return { error: error.message }
+  const deleteResult = await deleteContentWithActivity(supabase, access, 'lesson', lessonId, {
+    courseId,
+    isCourseIntroduction: false,
+  })
+  if (deleteResult.error) return deleteResult
 
   if (resourcePath) {
     const { error: storageError } = await supabase.storage.from(LESSON_RESOURCE_BUCKET).remove([resourcePath])
@@ -632,22 +681,30 @@ export async function deleteLesson(courseId, lessonId) {
 }
 
 export async function updateLesson(courseId, lessonId, formData) {
-  await requirePermission('courses.content')
+  const access = await requirePermission('courses.content')
   const supabase = await createAdminClient()
   const moduleId = String(formData.get('module_id') || '')
   const courseModule = await getCourseModule(supabase, courseId, moduleId)
 
   if (!courseModule || !isUuid(lessonId)) return { error: 'Lesson or module not found.' }
 
-  const { data: currentLesson } = await supabase
+  const { data: currentLesson, error: currentLessonError } = await supabase
     .from('lessons')
-    .select('module_id, display_order')
+    .select('module_id, display_order, title, description, instructions, assessment_time_estimate, assessment_completion_guidance, rich_content, type, youtube_url, assessment_key')
     .eq('id', lessonId)
     .eq('course_id', courseId)
     .eq('is_course_introduction', false)
     .maybeSingle()
 
+  if (currentLessonError) return { error: currentLessonError.message }
   if (!currentLesson) return { error: 'Lesson not found.' }
+
+  let currentResource
+  try {
+    currentResource = await getLessonResource(supabase, lessonId)
+  } catch (resourceError) {
+    return { error: resourceError.message }
+  }
 
   const title = cleanText(formData.get('title'), 200)
   const description = cleanText(formData.get('description'), 2000) || null
@@ -720,11 +777,55 @@ export async function updateLesson(courseId, lessonId, formData) {
 
   if (error) return { error: error.message }
 
+  const changes = [
+    contentFieldChange('Lesson title', currentLesson.title, lessonData.title),
+    contentFieldChange('Lesson description', currentLesson.description, lessonData.description),
+    contentFieldChange('Lesson type', currentLesson.type, lessonData.type),
+    contentFieldChange('Module', currentLesson.module_id, lessonData.module_id),
+    contentFieldChange('Video', currentLesson.youtube_url, lessonData.youtube_url),
+    contentFieldChange('Assessment', currentLesson.assessment_key, lessonData.assessment_key),
+    contentFieldChange('Assessment instructions', currentLesson.instructions, lessonData.instructions),
+    contentFieldChange('Assessment time', currentLesson.assessment_time_estimate, lessonData.assessment_time_estimate),
+    contentFieldChange('Assessment completion guidance', currentLesson.assessment_completion_guidance, lessonData.assessment_completion_guidance),
+  ]
+  if (!changes.some(Boolean)) {
+    changes.push(contentFieldChange('Lesson text formatting', currentLesson.rich_content, lessonData.rich_content))
+  }
+
   try {
     await saveLessonResource(supabase, courseId, lessonId, formData)
   } catch (resourceError) {
+    await recordContentActivity(supabase, access, 'updated', 'lesson', lessonId, changes)
     return { error: `The lesson was updated, but its additional resource was not saved. ${resourceError.message}` }
   }
+
+  const nextResourceType = cleanText(formData.get('resource_type'), 20) || 'none'
+  const currentResourceType = currentResource?.resource_type || 'none'
+  if (currentResourceType !== nextResourceType) {
+    changes.push({
+      field: 'Additional resource',
+      operation: currentResourceType === 'none' ? 'added' : nextResourceType === 'none' ? 'removed' : 'updated',
+    })
+  } else if (nextResourceType === 'text') {
+    changes.push(contentFieldChange('Additional resource', currentResource?.text_content, cleanText(formData.get('resource_text'), 20000)))
+    if (!changes.some((change) => change?.field === 'Additional resource')) {
+      changes.push(contentFieldChange(
+        'Additional resource formatting',
+        currentResource?.rich_content,
+        sanitizeDescriptionRichContent(
+          formData.get('resource_rich_content_json'),
+          cleanText(formData.get('resource_text'), 20000),
+          20000,
+        ),
+      ))
+    }
+  } else if (nextResourceType === 'link') {
+    changes.push(contentFieldChange('Additional resource', currentResource?.external_url, cleanExternalUrl(formData.get('resource_url'))))
+  } else if (nextResourceType === 'pdf' && isUploadedFile(formData.get('resource_pdf'))) {
+    changes.push({ field: 'Additional resource', operation: currentResource ? 'updated' : 'added' })
+  }
+
+  await recordContentActivity(supabase, access, 'updated', 'lesson', lessonId, changes)
 
   revalidateCourseStructure(courseId)
   return { success: true }
