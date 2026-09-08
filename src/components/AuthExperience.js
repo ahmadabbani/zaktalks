@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { login, signup } from '@/app/auth/actions'
 import AuthForm from '@/components/AuthForm'
+import { PUBLIC_REGISTRATION_LINKS_ENABLED } from '@/lib/publicFeatureFlags'
 import styles from '@/app/auth.module.css'
 
 const MODE_PATHS = {
@@ -83,7 +84,7 @@ export default function AuthExperience({ initialMode = 'login' }) {
           />
           <div className={styles.visualMessage}>
             <h1>Welcome to ZakTalks.</h1>
-            <p>Sign in or create an account to continue.</p>
+            <p>{isLogin ? 'Sign in to continue your journey.' : 'Create your account to continue.'}</p>
           </div>
           <p className={styles.visualFooter}>Learn at your own pace.</p>
         </div>
@@ -91,26 +92,28 @@ export default function AuthExperience({ initialMode = 'login' }) {
 
       <section className={styles.formPanel}>
         <div className={styles.formShell}>
-          <div className={styles.modeSwitch} role="tablist" aria-label="Choose authentication mode">
-            <button
-              type="button"
-              role="tab"
-              aria-selected={isLogin}
-              className={isLogin ? styles.modeActive : ''}
-              onClick={() => selectMode('login')}
-            >
-              Sign in
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={!isLogin}
-              className={!isLogin ? styles.modeActive : ''}
-              onClick={() => selectMode('register')}
-            >
-              Create account
-            </button>
-          </div>
+          {PUBLIC_REGISTRATION_LINKS_ENABLED && (
+            <div className={styles.modeSwitch} role="tablist" aria-label="Choose authentication mode">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={isLogin}
+                className={isLogin ? styles.modeActive : ''}
+                onClick={() => selectMode('login')}
+              >
+                Sign in
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={!isLogin}
+                className={!isLogin ? styles.modeActive : ''}
+                onClick={() => selectMode('register')}
+              >
+                Create account
+              </button>
+            </div>
+          )}
 
           <AuthForm
             key={mode}

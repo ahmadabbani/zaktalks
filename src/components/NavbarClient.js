@@ -6,7 +6,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import {
   PUBLIC_AUTH_ENTRY_ENABLED,
+  PUBLIC_AUTH_NAV_ACTIONS_ENABLED,
   PUBLIC_COURSE_CATALOG_ENABLED,
+  PUBLIC_REGISTRATION_LINKS_ENABLED,
 } from '@/lib/publicFeatureFlags'
 import styles from './Navbar.module.css'
 
@@ -199,7 +201,7 @@ export default function NavbarClient({ user, role, signout }) {
               </form>
             )}
 
-            {!user && PUBLIC_AUTH_ENTRY_ENABLED && (
+            {!user && PUBLIC_AUTH_ENTRY_ENABLED && PUBLIC_AUTH_NAV_ACTIONS_ENABLED && (
               <div className={styles.authActions} aria-label="Account access">
                 <Link
                   href="/login"
@@ -207,12 +209,14 @@ export default function NavbarClient({ user, role, signout }) {
                 >
                   Sign in
                 </Link>
-                <Link
-                  href="/register"
-                  className={`${styles.registerLink} ${pathname === '/register' ? styles.authActionActive : ''}`}
-                >
-                  Create account
-                </Link>
+                {PUBLIC_REGISTRATION_LINKS_ENABLED && (
+                  <Link
+                    href="/register"
+                    className={`${styles.registerLink} ${pathname === '/register' ? styles.authActionActive : ''}`}
+                  >
+                    Create account
+                  </Link>
+                )}
               </div>
             )}
           </div>
@@ -306,7 +310,7 @@ export default function NavbarClient({ user, role, signout }) {
             </form>
           )}
 
-          {!user && PUBLIC_AUTH_ENTRY_ENABLED && (
+          {!user && PUBLIC_AUTH_ENTRY_ENABLED && PUBLIC_AUTH_NAV_ACTIONS_ENABLED && (
             <div className={styles.mobileAuthActions} aria-label="Account access">
               <Link
                 href="/login"
@@ -315,13 +319,15 @@ export default function NavbarClient({ user, role, signout }) {
               >
                 Sign in
               </Link>
-              <Link
-                href="/register"
-                className={`${styles.mobileRegisterLink} ${pathname === '/register' ? styles.mobileAuthActive : ''}`}
-                onClick={closeMenu}
-              >
-                Create account
-              </Link>
+              {PUBLIC_REGISTRATION_LINKS_ENABLED && (
+                <Link
+                  href="/register"
+                  className={`${styles.mobileRegisterLink} ${pathname === '/register' ? styles.mobileAuthActive : ''}`}
+                  onClick={closeMenu}
+                >
+                  Create account
+                </Link>
+              )}
             </div>
           )}
         </div>
