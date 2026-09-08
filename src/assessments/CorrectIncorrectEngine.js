@@ -78,7 +78,14 @@ export default function CorrectIncorrectEngine({ definition, onComplete, embedde
     const correctCount = totalQuestions - wrongAnswers.length;
 
     return (
-      <div className={`${styles.resultContainer} ${embeddedInCoursePlayer ? styles.embeddedAssessmentResult : ''} ${isMoneyEgoStates ? styles.moneyEgoResult : ''}`} style={{ maxWidth: embeddedInCoursePlayer ? 'none' : '800px' }} id={enableResultScreenshot ? resultCaptureId : undefined}>
+      <div
+        className={`${styles.resultContainer} ${embeddedInCoursePlayer ? styles.embeddedAssessmentResult : ''} ${isMoneyEgoStates ? styles.moneyEgoResult : ''}`}
+        style={{
+          maxWidth: embeddedInCoursePlayer ? 'none' : '800px',
+          marginInline: definition.externalOnly && isMoneyEgoStates ? 'auto' : undefined
+        }}
+        id={enableResultScreenshot ? resultCaptureId : undefined}
+      >
         {isMoneyEgoStates ? (
           <header className={styles.moneyEgoResultHero}>
             <h2>Your Ego-State Awareness</h2>

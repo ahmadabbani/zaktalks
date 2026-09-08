@@ -3,6 +3,31 @@ export const moneyEgoStates = {
   id: 'money-ego-states-v1',
   title: 'Money & Ego-States Awareness',
   description: 'Read each statement below. Mark which ego-state do you think is speaking: Parent, Child, or Adult.',
+  externalPresentation: {
+    title: 'Money and Ego States Assessment',
+    introVariant: 'ego-states',
+    description: 'This assessment helps you explore the connection between your relationship with money and the ego states that may be influencing it. You will reflect on how you tend to think, feel, and behave when you earn, spend, save, invest, ask for money, receive support, or face financial uncertainty.\n\nThere are no right or wrong results. The purpose is to notice whether fear, rules, pressure, people-pleasing, rebellion, control, or grounded Adult awareness tends to lead your financial decisions.',
+    intro: 'Each statement reflects a possible money-related thought or inner message. Select the ego-state that you believe is most present.',
+    instructionGuide: [
+      {
+        title: '1. PARENT:',
+        text: 'Often sounds like “should,” “must,” or inherited rules about money, safety, or responsibility.'
+      },
+      {
+        title: '2. ADULT:',
+        text: 'Often asks what is true now, considers evidence, and creates realistic options.'
+      },
+      {
+        title: '3. CHILD:',
+        text: 'Often reflects feeling, wanting, fear, shame, urgency, or the wish to be cared for.'
+      },
+      {
+        title: 'Feedback after each choice:',
+        text: 'You will receive an explanation, then move on. The aim is understanding, not perfection.'
+      }
+    ],
+    completionInstructions: 'Read the thought. Then identify which ego-state is speaking.'
+  },
   themeColor: '#4CAF50',
   options: [
     { label: 'Parent', value: 'parent' },

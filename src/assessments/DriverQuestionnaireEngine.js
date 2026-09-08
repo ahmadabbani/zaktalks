@@ -69,6 +69,7 @@ export default function DriverQuestionnaireEngine({
   const currentQuestion = definition.questions[currentIndex]
   const totalQuestions = definition.questions.length
   const progress = ((currentIndex + 1) / totalQuestions) * 100
+  const advancesOnSelection = embeddedInCoursePlayer || definition.externalOnly
 
   const handleSelect = (value) => {
     if (isSubmitting || isAdvancing) return
@@ -77,7 +78,7 @@ export default function DriverQuestionnaireEngine({
     answersRef.current = nextAnswers
     setAnswers(nextAnswers)
 
-    if (!embeddedInCoursePlayer) return
+    if (!advancesOnSelection) return
 
     advanceAfterFeedback(() => {
       if (currentIndex < totalQuestions - 1) {
@@ -240,7 +241,7 @@ export default function DriverQuestionnaireEngine({
   }
 
   return (
-    <div className={`${styles.container} ${embeddedInCoursePlayer ? styles.embeddedAssessmentContainer : ''} ${definition.externalOnly ? styles.externalQuestionContainer : ''}`}>
+    <div className={`${styles.container} ${embeddedInCoursePlayer ? styles.embeddedAssessmentContainer : ''} ${definition.externalOnly && !embeddedInCoursePlayer ? styles.externalQuestionContainer : ''}`}>
       <div className={styles.header}>
         <div className={styles.progressInfo}>
           <span className={styles.progressPercentage}>{currentIndex + 1} / {totalQuestions}</span>
@@ -280,7 +281,7 @@ export default function DriverQuestionnaireEngine({
         >
           <FaChevronLeft /> Previous
         </button>
-        {!embeddedInCoursePlayer && (
+        {!advancesOnSelection && (
           <button className={`${styles.navBtn} ${styles.nextBtn}`} onClick={handleNext} disabled={isSubmitting}>
             {currentIndex === totalQuestions - 1 ? 'Finish' : 'Next'} <FaChevronRight />
           </button>

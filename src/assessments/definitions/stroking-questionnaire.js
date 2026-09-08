@@ -3,6 +3,22 @@ export const strokingQuestionnaire = {
   id: 'stroking-questionnaire-v1',
   title: 'Stroking Questionnaire',
   description: 'Give each statement the number corresponding to that which best describes you',
+  externalPresentation: {
+    title: 'Stroke Assessment',
+    introVariant: 'scale',
+    description: 'In Transactional Analysis, a “stroke” is a unit of recognition: a word, gesture, response, or sign that says, “I see you.” This assessment helps you notice patterns in how you exchange that recognition with others.\n\nThere are no right or wrong profiles. The aim is awareness: seeing what feels natural, what feels difficult, and where your relationships may benefit from clearer choices.',
+    intro: 'For each statement, select the number that best reflects how often it is true for you. Answer from your usual experience, not from how you think you should behave.',
+    completionInstructions: 'Choose the number that best describes you.',
+    scaleLegend: [
+      { value: 0, label: 'Never' },
+      { value: 1, label: 'Rarely' },
+      { value: 2, label: 'Seldom' },
+      { value: 3, label: 'Sometimes' },
+      { value: 4, label: 'Often' },
+      { value: 5, label: 'Usually' },
+      { value: 6, label: 'Always' }
+    ]
+  },
   intro: `FILL IN THE BLANK WITH THE NUMBER CORRESPONDING TO THAT WHICH BEST DESCRIBES YOU.
 
 0 = NEVER

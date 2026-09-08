@@ -3,6 +3,18 @@ export const dramaTriangleAssessment = {
   id: 'drama-triangle-assessment-v1',
   title: 'Drama triangle assessment',
   description: 'Identify your prominent role in the Drama Triangle.',
+  externalPresentation: {
+    title: 'The Drama Triangle Assessment',
+    introVariant: 'scale',
+    description: 'The Drama Triangle describes three familiar patterns that can appear in difficult relationships: the Victim, the Persecutor, and the Rescuer. Most people can move between all three roles depending on the situation.\n\nThis assessment is not about blame. It helps you notice which role may become more prominent when you feel under pressure, responsible for others, powerless, or frustrated.',
+    intro: 'Read each statement and select the answer that feels most honest. Do not answer based on the person you want to be, or the role you think you should play. Answer based on what you recognize in yourself, especially during stress, conflict, or difficulty.',
+    completionInstructions: 'Choose the score that best reflects how much each statement applies to you.',
+    scaleLegend: [
+      { value: 0, label: "can’t relate to it." },
+      { value: 1, label: 'somewhat identify with it.' },
+      { value: 2, label: 'defines me strongly.' }
+    ]
+  },
   intro: `Assign a score to each of these statements as they apply to you:
 
 Score 0: You can't relate to it

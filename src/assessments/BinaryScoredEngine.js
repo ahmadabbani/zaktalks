@@ -4,6 +4,7 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { FaChevronLeft, FaChevronRight, FaRedo } from 'react-icons/fa'
 import ResultScreenshotButton from '@/components/ResultScreenshotButton'
+import useDelayedAnswerAdvance from './useDelayedAnswerAdvance'
 import styles from './assessment.module.css'
 
 function findResult(thresholds, score) {
@@ -19,19 +20,42 @@ export default function BinaryScoredEngine({
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState({})
   const [showResult, setShowResult] = useState(false)
+  const { isAdvancing, advanceAfterFeedback } = useDelayedAnswerAdvance()
 
   const currentQuestion = definition.questions[currentIndex]
   const totalQuestions = definition.questions.length
   const progress = ((currentIndex + 1) / totalQuestions) * 100
 
   const handleSelect = (value) => {
-    setAnswers({ ...answers, [currentQuestion.id]: value })
+    if (isAdvancing) return
+
+    const nextAnswers = { ...answers, [currentQuestion.id]: value }
+    setAnswers(nextAnswers)
+
+    if (definition.externalOnly) {
+      advanceAfterFeedback(() => advanceOrFinish(nextAnswers))
+    }
   }
 
-  const calculateScore = () => {
+  const calculateScore = (submittedAnswers = answers) => {
     return definition.questions.reduce((total, question) => {
-      return total + (answers[question.id] === question.scoreWhen ? 1 : 0)
+      return total + (submittedAnswers[question.id] === question.scoreWhen ? 1 : 0)
     }, 0)
+  }
+
+  const advanceOrFinish = (submittedAnswers) => {
+    if (currentIndex < totalQuestions - 1) {
+      setCurrentIndex((index) => index + 1)
+      return
+    }
+
+    const score = calculateScore(submittedAnswers)
+    const result = findResult(definition.scoring.thresholds, score)
+
+    setShowResult(true)
+    if (onComplete) {
+      onComplete({ score, label: result?.label, answers: submittedAnswers })
+    }
   }
 
   const handleNext = () => {
@@ -40,18 +64,7 @@ export default function BinaryScoredEngine({
       return
     }
 
-    if (currentIndex < totalQuestions - 1) {
-      setCurrentIndex(currentIndex + 1)
-      return
-    }
-
-    const score = calculateScore()
-    const result = findResult(definition.scoring.thresholds, score)
-
-    setShowResult(true)
-    if (onComplete) {
-      onComplete({ score, label: result?.label, answers })
-    }
+    advanceOrFinish(answers)
   }
 
   const handlePrev = () => {
@@ -132,6 +145,7 @@ export default function BinaryScoredEngine({
             key={option.label}
             type="button"
             onClick={() => handleSelect(option.value)}
+            disabled={isAdvancing}
             className={`${styles.binaryOptionBtn} ${answers[currentQuestion.id] === option.value ? styles.binaryOptionBtnSelected : ''}`}
           >
             {option.label}
@@ -143,13 +157,15 @@ export default function BinaryScoredEngine({
         <button
           className={`${styles.navBtn} ${styles.prevBtn}`}
           onClick={handlePrev}
-          disabled={currentIndex === 0}
+          disabled={currentIndex === 0 || isAdvancing}
         >
           <FaChevronLeft /> Previous
         </button>
-        <button className={`${styles.navBtn} ${styles.nextBtn}`} onClick={handleNext}>
-          {currentIndex === totalQuestions - 1 ? 'Finish' : 'Next'} <FaChevronRight />
-        </button>
+        {!definition.externalOnly && (
+          <button className={`${styles.navBtn} ${styles.nextBtn}`} onClick={handleNext}>
+            {currentIndex === totalQuestions - 1 ? 'Finish' : 'Next'} <FaChevronRight />
+          </button>
+        )}
       </div>
     </div>
   )

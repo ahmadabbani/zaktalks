@@ -1,8 +1,11 @@
 export const energySelfAssessment = {
   type: 'cathexis',
   id: 'energy-self-assessment-v1',
-  title: 'Energy Self-Assessment Questionnaire',
-  description: 'Read each statement and rate how true it feels for you on a scale of 1–5.',
+  title: 'Energy Self-Assessment',
+  introVariant: 'energy',
+  description: 'This assessment helps you check in with your current emotional and nervous-system energy. You will reflect on how you respond to stress, uncertainty, pressure, rest, conflict, financial decisions, and change.\n\nThe aim is not to judge your capacity or force yourself to “perform better.” It is to recognise where your energy may be depleted, restricted, overextended, or ready for a more supportive rhythm.',
+  intro: 'Read each statement and select the number that best reflects your current experience. There are no right answers. The point is to notice your relationship with money more clearly, not to judge yourself for it.',
+  completionInstructions: 'Rate how true each statement feels for you right now.',
   themeColor: '#8B5CF6',
   scale: {
     values: [1, 2, 3, 4, 5],

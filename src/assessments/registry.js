@@ -8,7 +8,7 @@ import { transactionalAnalysisQuestionnaire } from './definitions/transactional-
 import { strokingQuestionnaire } from './definitions/stroking-questionnaire';
 import { dramaTriangleAssessment } from './definitions/drama-triangle-assessment';
 import { codependencyAssessment } from './definitions/codependency-assessment';
-import { driverQuestionnaire, driverQuestionnaireForCourse } from './definitions/driver-questionnaire';
+import { driverAssessment } from './definitions/driver-questionnaire';
 import { egoStateAnalysis } from './definitions/ego-state-analysis';
 import { getAssessmentStatementCount } from '@/lib/assessment-lesson-metadata';
 
@@ -23,9 +23,12 @@ export const ASSESSMENTS = {
   [strokingQuestionnaire.id]: strokingQuestionnaire,
   [dramaTriangleAssessment.id]: dramaTriangleAssessment,
   [codependencyAssessment.id]: codependencyAssessment,
-  [driverQuestionnaire.id]: driverQuestionnaire,
-  [driverQuestionnaireForCourse.id]: driverQuestionnaireForCourse,
+  [driverAssessment.id]: driverAssessment,
   [egoStateAnalysis.id]: egoStateAnalysis,
+};
+
+const LEGACY_ASSESSMENT_IDS = {
+  'driver-questionnaire-v1': driverAssessment.id,
 };
 
 export const getAssessmentList = () => {
@@ -40,5 +43,5 @@ export const getAssessmentList = () => {
 };
 
 export const getAssessmentById = (id) => {
-  return ASSESSMENTS[id] || null;
+  return ASSESSMENTS[id] || ASSESSMENTS[LEGACY_ASSESSMENT_IDS[id]] || null;
 };

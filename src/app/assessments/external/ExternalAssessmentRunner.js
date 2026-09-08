@@ -29,24 +29,28 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
     )
   }
 
+  const displayDefinition = definition.externalPresentation
+    ? { ...definition, ...definition.externalPresentation }
+    : definition
+
   if (stage !== 'assessment') {
-    const statementCount = getAssessmentStatementCount(definition)
+    const statementCount = getAssessmentStatementCount(displayDefinition)
 
     return (
       <div className={`${styles.externalAssessmentShell} ${styles.externalSharedAssessment}`}>
         <div className={`${styles.introContainer} ${styles.externalSharedIntro}`}>
           <header className={styles.introHero}>
             <div className={styles.introHeroCopy}>
-              <h2>{definition.title}</h2>
+              <h2>{displayDefinition.title}</h2>
               <div className={styles.introHeroMeta}>
                 {statementCount > 0 && <span>{statementCount} statements</span>}
                 <span><FaShieldAlt /> Private by default</span>
               </div>
             </div>
-            {definition.logo ? (
+            {displayDefinition.logo ? (
               <span className={styles.externalIntroHeroLogo}>
                 <Image
-                  src={definition.logo}
+                  src={displayDefinition.logo}
                   alt=""
                   aria-hidden="true"
                   width={96}
@@ -62,8 +66,16 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
           {stage === 'overview' ? (
             <div className={styles.introBody}>
               <span className={styles.introEyebrow}>What this assessment explores</span>
-              {definition.description && (
-                <p className={styles.introDescription}>{definition.description}</p>
+              {displayDefinition.introVariant === 'driver' ? (
+                <div className={styles.externalDriverOverviewCopy}>
+                  <p>{displayDefinition.description}</p>
+                  <p>
+                    {displayDefinition.descriptionFollowup}{' '}
+                    <strong>{displayDefinition.highlightedDrivers.join(', ')}</strong>.
+                  </p>
+                </div>
+              ) : displayDefinition.description && (
+                <p className={styles.introDescription}>{displayDefinition.description}</p>
               )}
               <button
                 type="button"
@@ -76,13 +88,50 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
           ) : (
             <div className={`${styles.introBody} ${styles.introPreparation}`}>
               <h3>Instructions</h3>
-              {definition.intro && (
-                <p className={styles.introCompletionText}>{definition.intro}</p>
+              {displayDefinition.intro && (
+                <p className={styles.introCompletionText}>{displayDefinition.intro}</p>
               )}
-              {definition.scoring?.instructions && (
+              {displayDefinition.introVariant === 'driver' && (
+                <div className={styles.externalDriverAnswerGuide} aria-label="Assessment response scores">
+                  {displayDefinition.options.map((option) => (
+                    <div key={`driver-guide-${option.label}`}>
+                      <strong>{option.label}</strong>
+                      <strong>{option.pointsLabel}</strong>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {(displayDefinition.introVariant === 'energy' || displayDefinition.introVariant === 'scale') && (
+                <div
+                  className={`${styles.externalEnergyAnswerGuide} ${displayDefinition.id === 'drama-triangle-assessment-v1' ? styles.externalDramaAnswerGuide : ''}`}
+                  aria-label="Assessment response scale"
+                >
+                  {(displayDefinition.scaleLegend || displayDefinition.scale.legend).map((option) => (
+                    <strong key={`scale-guide-${option.value}`}>
+                      {option.value} - {option.label}
+                    </strong>
+                  ))}
+                </div>
+              )}
+              {displayDefinition.introVariant === 'ego-states' && (
+                <div className={styles.externalEgoInstructionGuide}>
+                  {displayDefinition.instructionGuide.map((item) => (
+                    <p key={item.title}>
+                      <strong>{item.title}</strong> {item.text}
+                    </p>
+                  ))}
+                </div>
+              )}
+              {displayDefinition.completionInstructions && (
+                <div className={styles.introInstructions}>
+                  <strong>How to complete this assessment</strong>
+                  <p>{displayDefinition.completionInstructions}</p>
+                </div>
+              )}
+              {!displayDefinition.completionInstructions && displayDefinition.scoring?.instructions && (
                 <div className={styles.introInstructions}>
                   <strong>Scoring</strong>
-                  <p>{definition.scoring.instructions}</p>
+                  <p>{displayDefinition.scoring.instructions}</p>
                 </div>
               )}
               <button
@@ -100,7 +149,7 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
   }
 
   const engineProps = {
-    definition: { ...definition, externalOnly: true },
+    definition: { ...displayDefinition, externalOnly: true },
     enableResultScreenshot: true,
     resultCaptureId
   }

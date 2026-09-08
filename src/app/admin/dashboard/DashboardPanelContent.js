@@ -96,7 +96,11 @@ async function AssessmentLinksPanel() {
   return <div className={userStyles.embeddedAdminPanel}>
     <ExternalAssessmentLinks
       showHeading={false}
-      assessments={Object.values(ASSESSMENTS).filter((assessment) => assessment.courseOnly !== true).map((assessment) => ({ id: assessment.id, title: assessment.title, description: assessment.description }))}
+      assessments={Object.values(ASSESSMENTS).filter((assessment) => assessment.courseOnly !== true).map((assessment) => ({
+        id: assessment.id,
+        title: assessment.externalPresentation?.title || assessment.title,
+        description: assessment.externalPresentation?.description || assessment.description
+      }))}
       initialLinks={(externalLinks || []).map((link) => ({ ...link, path: `/assessments/external/${link.token}` }))}
     />
   </div>

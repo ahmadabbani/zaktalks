@@ -3,6 +3,12 @@ export const unlockFinancialFrequency = {
   id: 'unlock-financial-frequency-v1',
   title: 'Unlock Your Financial Frequency',
   description: 'Answer each question on a scale of 1 to 5. 1 = Not at all true for me, 5 = Very true for me.',
+  externalPresentation: {
+    introVariant: 'scale',
+    description: 'Money is rarely only about money. It can involve security, freedom, belonging, contribution, achievement, visibility, and the stories we have learned about what is safe or possible.\n\nThis assessment identifies the financial patterns that may feel most familiar to you right now. It is for reflection—not judgment, diagnosis, or financial advice.',
+    intro: 'Read each statement and choose the number that most accurately reflects your current experience. Do not choose what you think you should believe or do. Choose what is true for you.',
+    completionInstructions: 'Rate how true each statement feels for you right now.'
+  },
   themeColor: '#38BDF8',
   resultMode: 'scores-only',
   scale: {

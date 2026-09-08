@@ -1,13 +1,18 @@
-export const driverQuestionnaire = {
+export const driverAssessment = {
   type: 'driver-questionnaire',
-  id: 'driver-questionnaire-v1',
-  title: 'Driver Assessment (External)',
+  id: 'driver-questionnaire-course-v1',
+  title: 'The Driver Assessment',
   externalOnly: true,
   introVariant: 'driver',
   description:
-    'This questionnaire is not a ‘personality test’. It is intended to stimulate your self-awareness and indicate that kind of stress behaviour you may typically or frequently get into.',
+    'This is not a personality test. It is a self-awareness tool to help you notice stress behaviours you may frequently move into. Most people experience every driver at different times, but two or three patterns often appear more regularly.',
+  descriptionFollowup:
+    'Your answers will show your tendency toward five drivers:',
+  highlightedDrivers: ['Be Perfect', 'Please', 'Hurry Up', 'Be Strong', 'Try Hard'],
   intro:
-    'Beside each question write the most appropriate response for you.\n‘YES’, ‘NO’ or ‘TO SOME EXTENT’.',
+    'Read each statement carefully and select the answer that feels most accurate. Answer honestly—not according to how you believe you should behave.',
+  completionInstructions:
+    'Choose the response that best reflects your usual experience.',
   themeColor: '#F1C40F',
   options: [
     { label: 'Yes', pointsLabel: '1 point', value: 1 },
@@ -85,12 +90,4 @@ export const driverQuestionnaire = {
         'Try Hard people are enthusiastic, we get involved in lots of different activities, and tend to volunteer for things. We are energised by having something new to try. But sometimes we turn small jobs into major projects because we want to chase every possibility. We may even become bored with the detailed work that follows, even to the point of leaving work undone so we can move on to a new, exciting activity.'
     }
   ]
-}
-
-export const driverQuestionnaireForCourse = {
-  ...driverQuestionnaire,
-  id: 'driver-questionnaire-course-v1',
-  title: 'Driver Assessment (For Course)',
-  externalOnly: false,
-  courseOnly: true
 }

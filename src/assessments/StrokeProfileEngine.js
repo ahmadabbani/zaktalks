@@ -8,6 +8,77 @@ import useDelayedAnswerAdvance from './useDelayedAnswerAdvance';
 import styles from './assessment.module.css';
 
 const MAX_GROUP_SCORE = 24;
+const MEANINGFUL_SCORE_GAP = 3;
+
+function buildStrokeInterpretations(totals) {
+  const score = (key) => Number(totals[key]) || 0;
+  const average = (...values) => values.reduce((sum, value) => sum + value, 0) / values.length;
+  const formatScore = (value) => Number.isInteger(value) ? value : value.toFixed(1);
+  const giving = average(
+    score('giving_positive_strokes'),
+    score('giving_negative_strokes')
+  );
+  const taking = average(
+    score('taking_positive_strokes'),
+    score('taking_negative_strokes')
+  );
+  const interpretations = [];
+
+  if (giving - taking >= MEANINGFUL_SCORE_GAP) {
+    interpretations.push({
+      tone: 'positive',
+      title: 'I recognize everyone else, but I struggle to let recognition come back to me.',
+      evidence: `Your giving scores average ${formatScore(giving)}/24, compared with ${formatScore(taking)}/24 across your taking scores.`,
+      text: 'Giving recognition may feel more available than receiving it. Notice what happens when you become the recipient.'
+    });
+  }
+
+  if (score('asking_for_attention') - score('asking_for_positive_strokes') >= MEANINGFUL_SCORE_GAP) {
+    interpretations.push({
+      tone: 'negative',
+      title: 'I want recognition, but I expect people to know that without me asking.',
+      evidence: `Your asking-for-attention score is ${score('asking_for_attention')}/24, compared with ${score('asking_for_positive_strokes')}/24 for asking directly for positive strokes.`,
+      text: 'Unspoken needs can create disappointment. Experiment with asking clearly instead of relying on hints.'
+    });
+  }
+
+  if (score('taking_negative_strokes') - score('taking_positive_strokes') >= MEANINGFUL_SCORE_GAP) {
+    interpretations.push({
+      tone: 'negative',
+      title: 'Criticism enters easily; appreciation does not.',
+      evidence: `Your taking-negative-strokes score is ${score('taking_negative_strokes')}/24, compared with ${score('taking_positive_strokes')}/24 for taking positive strokes.`,
+      text: 'Negative feedback may carry more weight than positive recognition. Notice whether appreciation is being filtered out.'
+    });
+  }
+
+  if (score('giving_positive_strokes') - score('giving_negative_strokes') >= MEANINGFUL_SCORE_GAP) {
+    interpretations.push({
+      tone: 'positive',
+      title: "I can appreciate you, but I struggle to tell you when something is not OK.",
+      evidence: `Your giving-positive-strokes score is ${score('giving_positive_strokes')}/24, compared with ${score('giving_negative_strokes')}/24 for giving negative strokes.`,
+      text: 'Warmth may come easily while disagreement and boundaries are harder to express directly.'
+    });
+  }
+
+  if (score('giving_negative_strokes') - score('giving_positive_strokes') >= MEANINGFUL_SCORE_GAP) {
+    interpretations.push({
+      tone: 'negative',
+      title: 'I notice what needs correcting more easily than what deserves appreciation.',
+      evidence: `Your giving-negative-strokes score is ${score('giving_negative_strokes')}/24, compared with ${score('giving_positive_strokes')}/24 for giving positive strokes.`,
+      text: 'Standards and accountability may be strong while positive recognition receives less attention.'
+    });
+  }
+
+  if (!interpretations.length) {
+    interpretations.push({
+      tone: 'positive',
+      title: 'No single contrast strongly defines your profile.',
+      text: 'Balance is not about perfect scores. Notice where you have the freedom to give, receive, ask for, or refuse recognition, and where your response feels automatic.'
+    });
+  }
+
+  return interpretations;
+}
 
 function buildQuestions(groups) {
   return groups.flatMap((group) =>
@@ -136,6 +207,7 @@ export default function StrokeProfileEngine({ definition, onComplete, embeddedIn
 
   if (showResult) {
     const totals = calculateTotals(definition.groups, answers);
+    const interpretations = buildStrokeInterpretations(totals);
     const positiveGroups = definition.groups.filter((group) => group.polarity === 'positive');
     const negativeGroups = definition.groups.filter((group) => group.polarity === 'negative');
     const profilePairs = positiveGroups.map((positiveGroup, index) => ({
@@ -193,23 +265,22 @@ export default function StrokeProfileEngine({ definition, onComplete, embeddedIn
         <section className={styles.strokeInterpretation}>
           <h3>What your profile may be showing</h3>
           <div className={styles.strokeInterpretationList}>
-            <article className={styles.strokeInterpretationPositive}>
-              <h4>You give positive recognition generously.</h4>
-              <p>Your strongest pattern is offering praise, appreciation, or encouragement. Notice whether this feels easy because it is genuine, because it keeps connection safe, or both.</p>
-            </article>
-            <article className={styles.strokeInterpretationPositive}>
-              <h4>Receiving praise may be easier than asking for it.</h4>
-              <p>You seem relatively comfortable taking positive recognition, but may find it harder to ask clearly for what you need.</p>
-            </article>
-            <article className={styles.strokeInterpretationNegative}>
-              <h4>You may hold back negative recognition.</h4>
-              <p>A higher score for refusing to give negative strokes can signal care and restraint, or difficulty naming disappointment, boundaries, or conflict directly.</p>
-            </article>
-            <article className={styles.strokeInterpretationNegative}>
-              <h4>Attention may become indirect when needs are not stated.</h4>
-              <p>Notice when you hope people will understand what you need without your having to ask for it.</p>
-            </article>
+            {interpretations.map((interpretation) => (
+              <article
+                key={interpretation.title}
+                className={interpretation.tone === 'negative'
+                  ? styles.strokeInterpretationNegative
+                  : styles.strokeInterpretationPositive}
+              >
+                <h4>{interpretation.title}</h4>
+                {interpretation.evidence && (
+                  <p className={styles.strokeInterpretationEvidence}>{interpretation.evidence}</p>
+                )}
+                <p>{interpretation.text}</p>
+              </article>
+            ))}
           </div>
+          <p className={styles.strokeInterpretationClosing}>The goal is awareness, flexibility, and choice.</p>
         </section>
 
         {enableResultScreenshot && (
@@ -250,7 +321,8 @@ export default function StrokeProfileEngine({ definition, onComplete, embeddedIn
       <div key={`answers-${currentQuestion.id}`} className={`${styles.optionsSection} ${styles.strokeOptionsSection} ${styles.questionTransition} ${styles.answerTransition}`}>
         <div className={`${styles.scaleButtons} ${styles.strokeScaleButtons}`}>
           {scaleValues.map((value) => {
-            const scaleOption = definition.scale.legend.find((item) => item.value === value);
+            const scaleOptions = definition.scaleLegend || definition.scale.legend;
+            const scaleOption = scaleOptions.find((item) => item.value === value);
             const label = scaleOption?.label
               ? `${scaleOption.label.charAt(0)}${scaleOption.label.slice(1).toLowerCase()}`
               : String(value);
@@ -262,7 +334,12 @@ export default function StrokeProfileEngine({ definition, onComplete, embeddedIn
                 disabled={isSubmitting || isAdvancing}
                 className={`${styles.scaleBtn} ${styles.strokeScaleBtn} ${answers[currentQuestion.id] === value ? styles.scaleBtnSelected : ''}`}
               >
-                {value} – {label}
+                {definition.externalOnly ? (
+                  <>
+                    <span>{label}</span>
+                    <strong>{value}</strong>
+                  </>
+                ) : `${value} – ${label}`}
               </button>
             );
           })}

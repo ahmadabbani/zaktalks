@@ -2171,6 +2171,28 @@
     font-size: clamp(0.74rem, 0.78vw, 0.92rem);
 }
 
+.externalQuestionContainer .scaleBtn.strokeScaleBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    min-height: 52px;
+    padding-block: 0.42rem;
+    line-height: 1.1;
+}
+
+.externalQuestionContainer .scaleBtn.strokeScaleBtn span {
+    color: inherit;
+    font-weight: 800;
+}
+
+.externalQuestionContainer .scaleBtn.strokeScaleBtn strong {
+    color: inherit;
+    font-size: 0.82em;
+    font-weight: 900;
+}
+
 @media (max-width: 900px) {
     .scaleButtons.strokeScaleButtons {
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -2844,6 +2866,21 @@
     line-height: 1.65;
 }
 
+.strokeInterpretationList .strokeInterpretationEvidence {
+    margin-bottom: 0.25rem;
+    font-weight: 750;
+}
+
+.strokeInterpretationClosing {
+    margin: 1.25rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-black) 12%, transparent);
+    color: var(--color-black);
+    font-size: clamp(0.92rem, 1vw, 1rem);
+    font-weight: 850;
+    line-height: 1.5;
+}
+
 @container stroke-result (max-width: 900px) {
     .strokeResultOverview {
         grid-template-columns: 1fr;
@@ -2993,6 +3030,49 @@
 .externalSharedAssessment .ciOptionBtn {
     padding: clamp(0.6rem, 1vw, 0.8rem) clamp(0.55rem, 1.2vw, 1rem);
     font-size: clamp(0.84rem, 1vw, 1rem);
+}
+
+.externalSharedAssessment .scaleBtn,
+.externalSharedAssessment .binaryOptionBtn,
+.externalSharedAssessment .driverOptionBtn,
+.externalSharedAssessment .ciOptionBtn,
+.externalSharedAssessment .egoRankBtn,
+.externalSharedAssessment .egoRankBtnSelected {
+    box-shadow: none;
+    transition: background-color var(--transition-normal), border-color var(--transition-normal), color var(--transition-normal), opacity var(--transition-normal), transform var(--transition-normal);
+}
+
+.externalSharedAssessment .scaleBtn:hover:not(:disabled),
+.externalSharedAssessment .binaryOptionBtn:hover:not(:disabled),
+.externalSharedAssessment .driverOptionBtn:hover:not(:disabled),
+.externalSharedAssessment .ciOptionBtn:hover:not(:disabled),
+.externalSharedAssessment .egoRankBtn:hover:not(:disabled) {
+    border-color: rgba(37, 140, 155, 0.48);
+    background: rgba(37, 140, 155, 0.08);
+    color: var(--color-black);
+    box-shadow: none;
+    transform: translateY(-1px);
+}
+
+.externalSharedAssessment .scaleBtnSelected,
+.externalSharedAssessment .scaleBtnSelected:hover,
+.externalSharedAssessment .binaryOptionBtnSelected,
+.externalSharedAssessment .binaryOptionBtnSelected:hover,
+.externalSharedAssessment .driverOptionBtnSelected,
+.externalSharedAssessment .driverOptionBtnSelected:hover,
+.externalSharedAssessment .ciOptionBtnSelected,
+.externalSharedAssessment .ciOptionBtnSelected:hover,
+.externalSharedAssessment .egoRankBtnSelected,
+.externalSharedAssessment .egoRankBtnSelected:hover {
+    border-color: var(--color-yellow);
+    background: var(--color-yellow);
+    color: var(--color-black);
+    box-shadow: none;
+    transform: translateY(-1px);
+}
+
+.externalSharedAssessment button:disabled {
+    cursor: default;
 }
 
 @media (max-width: 768px) {
@@ -3585,7 +3665,8 @@
 }
 
 .energyResultHero,
-.financialResultHero {
+.financialResultHero,
+.dramaResultHero {
     width: 100%;
     margin: 0 0 var(--space-2xl);
     padding: clamp(1.1rem, 2.4vw, 1.6rem) clamp(1rem, 3vw, 1.8rem);
@@ -3596,7 +3677,8 @@
 }
 
 .energyResultHero h2,
-.financialResultHero h2 {
+.financialResultHero h2,
+.dramaResultHero h2 {
     margin: 0 0 0.55rem;
     color: #ffffff;
     font-size: clamp(1.55rem, 3vw, 2.2rem);
@@ -3605,7 +3687,8 @@
 }
 
 .energyResultHero p,
-.financialResultHero p {
+.financialResultHero p,
+.dramaResultHero p {
     max-width: 760px;
     margin: 0 auto;
     color: rgba(255, 255, 255, 0.88);
@@ -4277,6 +4360,25 @@
     text-align: left;
 }
 
+.externalDriverOverviewCopy {
+    display: grid;
+    gap: 0.8rem;
+    width: 100%;
+    margin: 0 0 clamp(1.4rem, 3vw, 2.1rem);
+}
+
+.externalDriverOverviewCopy p {
+    margin: 0;
+    color: var(--color-black);
+    font-size: clamp(1rem, 1.25vw, 1.12rem);
+    line-height: 1.75;
+}
+
+.externalDriverOverviewCopy strong {
+    color: var(--color-black);
+    font-weight: 900;
+}
+
 .introPreparation h3 {
     margin: 0 0 0.7rem;
     color: var(--color-black);
@@ -4292,6 +4394,95 @@
     font-size: clamp(1rem, 1.2vw, 1.1rem);
     line-height: 1.75;
     white-space: pre-line;
+}
+
+.externalDriverAnswerGuide {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.7rem;
+    width: 100%;
+    margin: 0 0 1.25rem;
+}
+
+.externalDriverAnswerGuide > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-width: 0;
+    padding: 0.8rem 0.7rem;
+    border: 1px solid color-mix(in srgb, var(--color-dark-blue) 18%, transparent);
+    border-radius: 0.85rem;
+    background: color-mix(in srgb, var(--color-dark-blue) 6%, white);
+    color: var(--color-black);
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.externalDriverAnswerGuide strong {
+    font-size: clamp(0.84rem, 1.1vw, 0.98rem);
+    font-weight: 900;
+    line-height: 1.3;
+}
+
+.externalEnergyAnswerGuide {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.55rem;
+    width: 100%;
+    margin: 0 0 1.25rem;
+}
+
+.externalEnergyAnswerGuide strong {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 0.78rem 0.55rem;
+    border: 1px solid color-mix(in srgb, var(--color-dark-blue) 18%, transparent);
+    border-radius: 0.85rem;
+    background: color-mix(in srgb, var(--color-dark-blue) 6%, white);
+    color: var(--color-black);
+    font-size: clamp(0.78rem, 1vw, 0.92rem);
+    font-weight: 900;
+    line-height: 1.3;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.externalDramaAnswerGuide {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.externalDramaAnswerGuide strong {
+    flex: 0 1 auto;
+    padding-inline: 1rem;
+    white-space: nowrap;
+}
+
+.externalEgoInstructionGuide {
+    display: grid;
+    gap: 0.7rem;
+    width: 100%;
+    margin: 0 0 1.25rem;
+}
+
+.externalEgoInstructionGuide p {
+    margin: 0;
+    padding: 0.85rem 1rem;
+    border-radius: 0.85rem;
+    background: color-mix(in srgb, var(--color-dark-blue) 7%, white);
+    color: var(--color-black);
+    font-size: clamp(0.9rem, 1.05vw, 1rem);
+    line-height: 1.6;
+}
+
+.externalEgoInstructionGuide strong {
+    color: var(--color-dark-blue);
+    font-weight: 900;
 }
 
 .introBody .introInstructions {
@@ -4320,6 +4511,10 @@
 }
 
 @media (max-width: 768px) {
+    .externalEnergyAnswerGuide {
+        grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+    }
+
     .introContainer {
         padding: 0;
     }
@@ -4343,6 +4538,12 @@
 
     .introBody {
         padding-top: 1.4rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .externalDramaAnswerGuide strong {
+        white-space: normal;
     }
 }
 
@@ -4670,7 +4871,268 @@
     font-weight: 900;
 }
 
+.dramaResultContainer {
+    max-width: 1180px;
+}
+
+.dramaResultOverview {
+    display: grid;
+    grid-template-columns: minmax(430px, 1.25fr) minmax(310px, 0.75fr);
+    align-items: start;
+    gap: clamp(1.25rem, 3vw, 2.4rem);
+    margin-bottom: var(--space-2xl);
+}
+
+.dramaTriangleVisual {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 420 / 340;
+    min-height: 390px;
+    border: 1px solid color-mix(in srgb, var(--color-dark-blue) 14%, transparent);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--color-gray-light) 48%, white);
+}
+
+.dramaTriangleArrows {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.dramaTriangleArrows > path {
+    fill: none;
+    stroke: var(--color-dark-blue);
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    marker-start: url("#drama-arrow");
+    marker-end: url("#drama-arrow");
+}
+
+.dramaTriangleArrows marker path {
+    fill: var(--color-dark-blue);
+}
+
+.dramaTriangleRole {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(38%, 155px);
+    text-align: center;
+}
+
+.dramaTriangleRole > strong {
+    color: var(--color-black);
+    font-size: clamp(0.88rem, 1.55vw, 1.08rem);
+    font-weight: 950;
+    line-height: 1.15;
+    text-transform: uppercase;
+}
+
+.dramaTriangleRole > span {
+    margin-top: 0.28rem;
+    color: var(--color-dark-blue);
+    font-size: clamp(0.94rem, 1.6vw, 1.1rem);
+    font-weight: 900;
+    line-height: 1;
+}
+
+.dramaTriangleRole > small {
+    margin-top: 0.45rem;
+    padding: 0.32rem 0.58rem;
+    border-radius: 999px;
+    font-size: 0.64rem;
+    font-weight: 950;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.dramaRolePrimaryBadge {
+    background: var(--color-dark-blue);
+    color: white;
+}
+
+.dramaRoleSecondaryBadge {
+    background: var(--color-yellow);
+    color: var(--color-black);
+}
+
+.dramaTrianglePersecutor {
+    top: 4.5%;
+    left: 3%;
+}
+
+.dramaTriangleRescuer {
+    top: 4.5%;
+    right: 3%;
+}
+
+.dramaTriangleVictim {
+    bottom: 2.5%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.dramaScorePanel {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.dramaScorePanel .cathRoleScoreGuide {
+    margin: 0;
+    background: white;
+}
+
+.dramaScorePanel .cathRoleScoreGuideList {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+}
+
+.dramaScoreList {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+}
+
+.dramaScoreList article {
+    padding: 0.9rem 1rem;
+    border: 1px solid color-mix(in srgb, var(--color-black) 10%, transparent);
+    border-radius: 0.95rem;
+    background: color-mix(in srgb, var(--color-gray-light) 45%, white);
+}
+
+.dramaScoreList article > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.38rem;
+}
+
+.dramaScoreList h4,
+.dramaScoreList p {
+    margin: 0;
+}
+
+.dramaScoreList h4 {
+    color: var(--color-black);
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    font-weight: 900;
+    text-align: center;
+}
+
+.dramaScoreList article > div > strong {
+    flex-shrink: 0;
+    color: var(--color-dark-blue);
+    font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+    font-weight: 950;
+}
+
+.dramaScoreList article > div > strong small {
+    font-size: 0.72em;
+}
+
+.dramaScoreList p {
+    margin-top: 0.3rem;
+    color: var(--color-gray-dark);
+    font-size: clamp(0.82rem, 1vw, 0.92rem);
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: center;
+}
+
+.dramaScoreList .dramaPrimaryStatus,
+.dramaScoreList .dramaSecondaryStatus {
+    font-weight: 900;
+}
+
+.dramaScoreList .dramaPrimaryStatus {
+    color: var(--color-dark-blue);
+}
+
+.dramaScoreList .dramaSecondaryStatus {
+    color: color-mix(in srgb, var(--color-yellow) 78%, var(--color-black));
+}
+
+.cathRoleInterpretationPlaceholder {
+    background: white;
+}
+
+.dramaInterpretationGroup {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.dramaInterpretationGroup + .dramaInterpretationGroup {
+    margin-top: 1rem;
+}
+
+.dramaInterpretationGroup article {
+    position: relative;
+    padding: 1rem 1rem 1rem 2.2rem;
+    border-radius: 0.95rem;
+    background: color-mix(in srgb, var(--color-gray-light) 48%, white);
+}
+
+.dramaInterpretationGroup article::before {
+    position: absolute;
+    top: 1.35rem;
+    left: 1rem;
+    width: 0.62rem;
+    height: 0.62rem;
+    border-radius: 50%;
+    background: var(--color-dark-blue);
+    content: "";
+}
+
+.dramaInterpretationGroup + .dramaInterpretationGroup article::before {
+    background: var(--color-yellow);
+}
+
+.dramaInterpretationGroup h4 {
+    margin: 0 0 0.35rem;
+    color: var(--color-black);
+    font-size: clamp(0.98rem, 1.3vw, 1.08rem);
+    font-weight: 800;
+    line-height: 1.4;
+}
+
+.dramaInterpretationGroup h4 strong {
+    color: var(--color-dark-blue);
+    font-weight: 950;
+}
+
+.dramaInterpretationGroup p {
+    margin: 0;
+    color: var(--color-black);
+    font-size: clamp(0.9rem, 1vw, 0.98rem);
+    line-height: 1.62;
+}
+
 /* Responsive - Cathexis */
+@media (max-width: 900px) {
+    .dramaResultOverview {
+        grid-template-columns: 1fr;
+    }
+
+    .dramaTriangleVisual {
+        width: min(100%, 560px);
+        margin-inline: auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .dramaScoreList {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 768px) {
     .cathResultContainer {
         padding: var(--space-lg);
@@ -4745,6 +5207,15 @@
 
     .cathResultSubtitle {
         font-size: 0.875rem;
+    }
+
+    .dramaTriangleVisual {
+        min-height: 310px;
+    }
+
+    .dramaTriangleRole > small {
+        padding: 0.28rem 0.42rem;
+        font-size: 0.56rem;
     }
 
     .cathCategoryCard {

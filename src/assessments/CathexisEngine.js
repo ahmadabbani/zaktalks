@@ -7,10 +7,10 @@ import ResultScreenshotButton from '@/components/ResultScreenshotButton';
 import useDelayedAnswerAdvance from './useDelayedAnswerAdvance';
 import styles from './assessment.module.css';
 
-const DRAMA_ROLE_DESCRIPTIONS = {
-  rescuer: 'Taking responsibility for others, helping without being asked, or putting your needs aside.',
-  persecutor: 'Judging, blaming, controlling, or feeling others should do better.',
-  victim: 'Feeling powerless, stuck, or unable to influence what happens.'
+const DRAMA_ROLE_INTERPRETATIONS = {
+  rescuer: 'You may feel responsible for solving problems, easing discomfort, or carrying more than is yours. Helping can be generous. It becomes costly when it replaces another person’s responsibility or leaves no room for your own needs.',
+  victim: 'When your efforts are not recognized or situations feel beyond your control, you may sometimes feel stuck, overlooked, or unable to change what is happening.',
+  persecutor: 'Judging, blaming, controlling, or feeling others should do better.'
 };
 
 const ENERGY_PATTERN_COLORS = {
@@ -28,44 +28,43 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-function RoleResultSummary({ primaryRoles, secondaryRoles, categories }) {
-  const renderRoles = (roles, type) => roles.length ? roles.map(([key, score]) => {
-    const category = categories[key];
-    const fallbackColor = type === 'primary' ? '#2563EB' : '#16A34A';
-
-    return (
-      <div
-        key={`${type}-${key}`}
-        className={styles.cathRoleResultItem}
-        style={{
-          '--role-color': category?.color || fallbackColor,
-          '--role-soft': hexToRgba(category?.color || fallbackColor, 0.12)
-        }}
-      >
-        <span className={styles.cathRoleResultName}>{category?.label || key}</span>
-        <span className={styles.cathRoleResultScore}>{score}<small>/20</small></span>
-        {DRAMA_ROLE_DESCRIPTIONS[key] && (
-          <p className={styles.cathRoleResultDescription}>{DRAMA_ROLE_DESCRIPTIONS[key]}</p>
-        )}
-      </div>
-    );
-  }) : (
-    <div className={styles.cathRoleResultEmpty}>
-      <span>No {type} role in this range</span>
-      <strong>{type === 'primary' ? 'Primary range: 13-20' : 'Secondary range: 7-12'}</strong>
-    </div>
-  );
+function DramaTriangleVisual({ categoryScores, primaryRoles, secondaryRoles, categories }) {
+  const primaryKeys = new Set(primaryRoles.map(([key]) => key));
+  const secondaryKeys = new Set(secondaryRoles.map(([key]) => key));
+  const roles = [
+    { key: 'persecutor', positionClass: styles.dramaTrianglePersecutor },
+    { key: 'rescuer', positionClass: styles.dramaTriangleRescuer },
+    { key: 'victim', positionClass: styles.dramaTriangleVictim }
+  ];
 
   return (
-    <div className={styles.cathRoleResultGrid}>
-      <div className={`${styles.cathRoleResultCard} ${styles.cathRoleResultCardPrimary}`}>
-        <div className={styles.cathRoleResultEyebrow}>My prominent role</div>
-        {renderRoles(primaryRoles, 'primary')}
-      </div>
-      <div className={`${styles.cathRoleResultCard} ${styles.cathRoleResultCardSecondary}`}>
-        <div className={styles.cathRoleResultEyebrow}>My secondary role</div>
-        {renderRoles(secondaryRoles, 'secondary')}
-      </div>
+    <div className={styles.dramaTriangleVisual} aria-label="Your Drama Triangle scores">
+      <svg className={styles.dramaTriangleArrows} viewBox="0 0 420 340" aria-hidden="true">
+        <defs>
+          <marker id="drama-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+        </defs>
+        <path d="M 118 92 L 302 92" />
+        <path d="M 310 112 L 225 265" />
+        <path d="M 195 265 L 110 112" />
+      </svg>
+
+      {roles.map(({ key, positionClass }) => {
+        const isPrimary = primaryKeys.has(key);
+        const isSecondary = secondaryKeys.has(key);
+        return (
+          <div key={key} className={`${styles.dramaTriangleRole} ${positionClass}`}>
+            <strong>{categories[key]?.label || key}</strong>
+            <span>{categoryScores[key] || 0}/20</span>
+            {(isPrimary || isSecondary) && (
+              <small className={isPrimary ? styles.dramaRolePrimaryBadge : styles.dramaRoleSecondaryBadge}>
+                {isPrimary ? 'Prominent' : 'Secondary'}
+              </small>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -217,7 +216,7 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
       : [];
 
     return (
-      <div className={`${styles.cathResultContainer} ${embeddedInCoursePlayer ? styles.embeddedAssessmentResult : ''}`} id={enableResultScreenshot ? resultCaptureId : undefined}>
+      <div className={`${styles.cathResultContainer} ${roleRanges ? styles.dramaResultContainer : ''} ${embeddedInCoursePlayer ? styles.embeddedAssessmentResult : ''}`} id={enableResultScreenshot ? resultCaptureId : undefined}>
         {isEnergyAssessment ? (
           <header className={styles.energyResultHero}>
             <h2>Your Money Energy Profile</h2>
@@ -227,6 +226,11 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
           <header className={styles.financialResultHero}>
             <h2>Your Financial Frequency Profile</h2>
             <p>These results highlight the patterns that may be influencing your relationship with money right now. They are not fixed identities. They are invitations to understand what drives your choices and where you may want more freedom.</p>
+          </header>
+        ) : roleRanges ? (
+          <header className={styles.dramaResultHero}>
+            <h2>Your Drama Triangle pattern</h2>
+            <p>These scores reflect the roles you may be most likely to move into under stress. They are not labels. Use them as information about what you may need to notice, question, or choose differently.</p>
           </header>
         ) : (
           <>
@@ -238,13 +242,66 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
         )}
 
         {roleRanges && (
-          <RoleResultSummary
-            primaryRoles={primaryRoles}
-            secondaryRoles={secondaryRoles}
-            categories={definition.categories}
-          />
+          <section className={styles.dramaResultOverview}>
+            <DramaTriangleVisual
+              categoryScores={categoryScores}
+              primaryRoles={primaryRoles}
+              secondaryRoles={secondaryRoles}
+              categories={definition.categories}
+            />
+
+            <div className={styles.dramaScorePanel}>
+              <div className={styles.cathRoleScoreGuide}>
+                <h3>How scores are read</h3>
+                <div className={styles.cathRoleScoreGuideList}>
+                  <article>
+                    <h4>0–6: Not a prominent role</h4>
+                    <p>You may recognize this pattern occasionally, but it is not a dominant response for you.</p>
+                  </article>
+                  <article>
+                    <h4>7–12: Secondary role</h4>
+                    <p>You may move into this role in particular situations or relationships.</p>
+                  </article>
+                  <article>
+                    <h4>13–20: Primary role</h4>
+                    <p>This may be the role you adopt most readily when you feel pressure, conflict, or responsibility.</p>
+                  </article>
+                </div>
+              </div>
+
+            </div>
+
+            <div className={styles.dramaScoreList}>
+              {entries.map(([key, score]) => {
+                const category = definition.categories[key];
+                const rangeLabel = getRoleRangeLabel(score);
+                const isPrimaryRole = primaryRoles.some(([roleKey]) => roleKey === key);
+                const isSecondaryRole = secondaryRoles.some(([roleKey]) => roleKey === key);
+                const status = isPrimaryRole ? 'Primary Role' : isSecondaryRole ? 'Secondary Role' : '';
+                const description = status
+                  ? rangeLabel.replace(/\s*\((Primary|Secondary) Role\)\s*$/, '')
+                  : rangeLabel;
+
+                return (
+                  <article key={`drama-score-${key}`}>
+                    <div>
+                      <h4>{category.label}</h4>
+                      <strong>{score}<small>/20</small></strong>
+                    </div>
+                    <p>
+                      {description}
+                      {status && (
+                        <> <strong className={isPrimaryRole ? styles.dramaPrimaryStatus : styles.dramaSecondaryStatus}>({status})</strong></>
+                      )}
+                    </p>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
         )}
 
+        {!roleRanges && (
         <div className={scoresOnly ? `${styles.cathScoreOnlyList} ${isFinancialFrequency ? styles.financialFrequencyCards : ''}` : `${styles.cathCategoryCards} ${isEnergyAssessment ? styles.energyCategoryCards : ''}`}>
           {Object.entries(definition.categories).map(([key, cat]) => {
             const score = categoryScores[key] || 0;
@@ -357,6 +414,7 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
             );
           })}
         </div>
+        )}
 
         {!scoresOnly && !isEnergyAssessment && (
           <div
@@ -527,32 +585,37 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
         )}
 
         {roleRanges && (
-          <>
-            <section className={styles.cathRoleScoreGuide}>
-              <h3>How scores are read</h3>
-              <div className={styles.cathRoleScoreGuideList}>
-                <article>
-                  <h4>0–6: Not a prominent role</h4>
-                  <p>You may recognize this pattern occasionally, but it is not a dominant response for you.</p>
-                </article>
-                <article>
-                  <h4>7–12: Secondary role</h4>
-                  <p>You may move into this role in particular situations or relationships.</p>
-                </article>
-                <article>
-                  <h4>13–20: Primary role</h4>
-                  <p>This may be the role you adopt most readily when you feel pressure, conflict, or responsibility.</p>
-                </article>
-              </div>
-            </section>
+          <section className={styles.cathRoleInterpretationPlaceholder}>
+            <h3>What your results may be showing</h3>
 
-            <section className={styles.cathRoleInterpretationPlaceholder}>
-              <h3>What your results may be showing</h3>
-              <p><strong>Your prominent role:</strong> Interpretation will be added here.</p>
-              <p><strong>Your secondary role:</strong> Interpretation will be added here.</p>
-            </section>
+            <div className={styles.dramaInterpretationGroup}>
+              {primaryRoles.length ? primaryRoles.map(([key]) => (
+                <article key={`primary-interpretation-${key}`}>
+                  <h4>Your prominent role: <strong>{definition.categories[key]?.label || key}</strong></h4>
+                  <p>{DRAMA_ROLE_INTERPRETATIONS[key]}</p>
+                </article>
+              )) : (
+                <article>
+                  <h4>No prominent role reached the primary range.</h4>
+                  <p>Your scores do not currently show one role as a strong primary response.</p>
+                </article>
+              )}
+            </div>
 
-          </>
+            <div className={styles.dramaInterpretationGroup}>
+              {secondaryRoles.length ? secondaryRoles.map(([key]) => (
+                <article key={`secondary-interpretation-${key}`}>
+                  <h4>Your secondary role: <strong>{definition.categories[key]?.label || key}</strong></h4>
+                  <p>{DRAMA_ROLE_INTERPRETATIONS[key]}</p>
+                </article>
+              )) : (
+                <article>
+                  <h4>No secondary role reached the secondary range.</h4>
+                  <p>No additional role currently falls within the assessment’s secondary range.</p>
+                </article>
+              )}
+            </div>
+          </section>
         )}
 
         {enableResultScreenshot && (

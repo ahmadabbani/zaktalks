@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { FaChevronLeft, FaChevronRight, FaRedo } from 'react-icons/fa'
 import ResultScreenshotButton from '@/components/ResultScreenshotButton'
+import useDelayedAnswerAdvance from './useDelayedAnswerAdvance'
 import styles from './assessment.module.css'
 
 const BEST_SCORE = 2
@@ -35,7 +36,9 @@ export default function EgoStateAnalysisEngine({
 }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState({})
+  const answersRef = useRef({})
   const [showResult, setShowResult] = useState(false)
+  const { isAdvancing, advanceAfterFeedback } = useDelayedAnswerAdvance()
 
   const currentQuestion = definition.questions[currentIndex]
   const totalQuestions = definition.questions.length
@@ -43,44 +46,54 @@ export default function EgoStateAnalysisEngine({
   const currentAnswer = answers[currentQuestion.id] || {}
 
   const updateChoice = (optionId, rank) => {
-    setAnswers((current) => {
-      const previous = current[currentQuestion.id] || {}
-      const nextAnswer = { ...previous }
+    if (isAdvancing) return
 
-      if (rank === 'best') {
-        nextAnswer.best = optionId
-        if (nextAnswer.next === optionId) nextAnswer.next = undefined
-      } else {
-        nextAnswer.next = optionId
-        if (nextAnswer.best === optionId) nextAnswer.best = undefined
-      }
+    const previous = answersRef.current[currentQuestion.id] || {}
+    const nextAnswer = { ...previous }
 
-      return {
-        ...current,
-        [currentQuestion.id]: nextAnswer
-      }
-    })
+    if (rank === 'best') {
+      nextAnswer.best = optionId
+      if (nextAnswer.next === optionId) nextAnswer.next = undefined
+    } else {
+      nextAnswer.next = optionId
+      if (nextAnswer.best === optionId) nextAnswer.best = undefined
+    }
+
+    const nextAnswers = {
+      ...answersRef.current,
+      [currentQuestion.id]: nextAnswer
+    }
+    answersRef.current = nextAnswers
+    setAnswers(nextAnswers)
+
+    if (definition.externalOnly && nextAnswer.best && nextAnswer.next) {
+      advanceAfterFeedback(() => advanceOrFinish(nextAnswers))
+    }
+  }
+
+  const advanceOrFinish = (submittedAnswers) => {
+    if (currentIndex < totalQuestions - 1) {
+      setCurrentIndex((index) => index + 1)
+      return
+    }
+
+    const totals = calculateTotals(definition, submittedAnswers)
+    const score = Math.max(...Object.values(totals))
+
+    setShowResult(true)
+    if (onComplete) {
+      onComplete({ score, answers: submittedAnswers })
+    }
   }
 
   const handleNext = () => {
-    const answer = answers[currentQuestion.id]
+    const answer = answersRef.current[currentQuestion.id]
     if (!answer?.best || !answer?.next) {
       toast.error('Please choose one BEST choice and one NEXT BEST choice.')
       return
     }
 
-    if (currentIndex < totalQuestions - 1) {
-      setCurrentIndex(currentIndex + 1)
-      return
-    }
-
-    const totals = calculateTotals(definition, answers)
-    const score = Math.max(...Object.values(totals))
-
-    setShowResult(true)
-    if (onComplete) {
-      onComplete({ score, answers })
-    }
+    advanceOrFinish(answersRef.current)
   }
 
   const handlePrev = () => {
@@ -193,6 +206,7 @@ export default function EgoStateAnalysisEngine({
               <button
                 type="button"
                 onClick={() => updateChoice(option.id, 'best')}
+                disabled={isAdvancing}
                 className={currentAnswer.best === option.id ? styles.egoRankBtnSelected : styles.egoRankBtn}
               >
                 BEST
@@ -200,6 +214,7 @@ export default function EgoStateAnalysisEngine({
               <button
                 type="button"
                 onClick={() => updateChoice(option.id, 'next')}
+                disabled={isAdvancing}
                 className={currentAnswer.next === option.id ? styles.egoRankBtnSelected : styles.egoRankBtn}
               >
                 NEXT BEST
@@ -213,13 +228,15 @@ export default function EgoStateAnalysisEngine({
         <button
           className={`${styles.navBtn} ${styles.prevBtn}`}
           onClick={handlePrev}
-          disabled={currentIndex === 0}
+          disabled={currentIndex === 0 || isAdvancing}
         >
           <FaChevronLeft /> Previous
         </button>
-        <button className={`${styles.navBtn} ${styles.nextBtn}`} onClick={handleNext}>
-          {currentIndex === totalQuestions - 1 ? 'Finish' : 'Next'} <FaChevronRight />
-        </button>
+        {!definition.externalOnly && (
+          <button className={`${styles.navBtn} ${styles.nextBtn}`} onClick={handleNext}>
+            {currentIndex === totalQuestions - 1 ? 'Finish' : 'Next'} <FaChevronRight />
+          </button>
+        )}
       </div>
     </div>
   )
