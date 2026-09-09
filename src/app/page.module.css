@@ -2581,6 +2581,16 @@
   }
 }
 
+/* Keep the homepage hero portrait exactly aligned with the shared desktop
+   oval dimensions used by the other public-page portrait sections. */
+@media (min-width: 1025px) {
+  .heroImageWrapper {
+    width: var(--desktop-oval-width);
+    height: var(--desktop-oval-height);
+    border-radius: var(--desktop-oval-radius);
+  }
+}
+
 /* Homepage tablet/mobile composition */
 @media (max-width: 1024px) {
   .heroSection {
@@ -2593,7 +2603,7 @@
     width: min(62vw, 22rem);
     height: auto;
     max-width: 100%;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 0.72;
     border-radius: clamp(1.5rem, 3vw, 2.25rem);
     box-shadow: 0 1.1rem 2.5rem rgba(33, 44, 45, 0.12);
   }
@@ -2791,7 +2801,7 @@
 
   .heroImageWrapper {
     width: min(70vw, 19rem);
-    aspect-ratio: 1;
+    aspect-ratio: 0.82;
   }
 
   .forWhomMosaic {
@@ -2877,7 +2887,7 @@
 
   .heroImageWrapper {
     width: min(74vw, 17rem);
-    aspect-ratio: 1;
+    aspect-ratio: 0.82;
     border-radius: clamp(1.25rem, 5vw, 1.75rem);
   }
 

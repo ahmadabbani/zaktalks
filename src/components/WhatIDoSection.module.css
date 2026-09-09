@@ -185,17 +185,19 @@
 }
 
 .cardTitle {
-  max-width: 15ch;
+  width: 100%;
+  max-width: none;
   font-size: clamp(1.15rem, 0.55vw + 1rem, 1.55rem);
   font-weight: 820;
   letter-spacing: 0;
   line-height: 1.12;
-  text-wrap: balance;
+  overflow-wrap: normal;
+  white-space: normal;
   transition: font-size 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .cardActive .cardTitle {
-  max-width: 20ch;
+  max-width: none;
   font-size: clamp(1.4rem, 1.05vw, 1.75rem);
 }
 
@@ -419,12 +421,13 @@
   }
 
   .cardActive {
-    min-height: clamp(16.5rem, 26vw, 19rem);
+    min-height: clamp(19rem, 31vw, 21.5rem);
   }
 
   .cardTitle,
   .cardActive .cardTitle {
-    max-width: 24ch;
+    width: 100%;
+    max-width: none;
     font-size: 1.3rem;
   }
 
@@ -550,7 +553,7 @@
   .imageWrap {
     position: relative;
     inset: auto;
-    width: min(100%, clamp(15rem, 62vw, 18rem));
+    width: min(100%, clamp(17rem, 76vw, 22rem));
     max-height: 0;
     align-self: center;
     aspect-ratio: 1;
@@ -559,8 +562,8 @@
   }
 
   .cardActive .imageWrap {
-    height: calc(18rem + 100px);
-    max-height: calc(18rem + 100px);
+    height: calc(18rem + 140px);
+    max-height: calc(18rem + 140px);
     opacity: 1;
     transform: translateY(0) scale(1);
   }
@@ -624,6 +627,10 @@
 }
 
 @media (min-width: 1025px) {
+  .card2 .image {
+    object-position: 100% center;
+  }
+
   .cardActive .details,
   .cardActive .copy {
     max-width: 27ch;
@@ -777,6 +784,10 @@
     padding: clamp(4rem, 7vw, 5.5rem) 0;
   }
 
+  .image {
+    object-position: 60% center;
+  }
+
   .header {
     position: static;
     grid-template-columns: 1fr;
@@ -838,6 +849,18 @@
     padding: 3.75rem 0;
   }
 
+  .card1 .image {
+    object-position: 25% center;
+  }
+
+  .card2 .image {
+    object-position: 85% center;
+  }
+
+  .card3 .image {
+    object-position: 43% center;
+  }
+
   .header {
     gap: 1.15rem;
     margin-bottom: 1.6rem;
@@ -863,15 +886,15 @@
   }
 
   .imageWrap {
-    width: min(100%, clamp(15rem, 62vw, 18rem));
+    width: min(100%, clamp(17rem, 76vw, 22rem));
     align-self: center;
     border-radius: 1.1rem;
     aspect-ratio: auto;
   }
 
   .cardActive .imageWrap {
-    height: calc(18rem + 100px);
-    max-height: calc(18rem + 100px);
+    height: calc(18rem + 140px);
+    max-height: calc(18rem + 140px);
   }
 
   .cardCta,

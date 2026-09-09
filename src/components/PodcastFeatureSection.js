@@ -79,7 +79,7 @@ export default function PodcastFeatureSection() {
             className={itemClassName(styles.content, 'content')}
           >
             <h2 id="podcast-feature-heading" className={styles.title}>
-              Listen to the conversations most people avoid
+              Listen to the conversations <span className={styles.mobileTitlePhrase}>most people</span> avoid
             </h2>
 
             <p className={styles.copy}>

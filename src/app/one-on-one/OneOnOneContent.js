@@ -244,7 +244,7 @@ export default function OneOnOneContent() {
           <div className={styles.heroContent}>
             <p className={styles.eyebrow}>Private 1:1 Coaching</p>
 
-            <h1 id="one-on-one-hero-heading" className={styles.heroTitle}>
+            <h1 id="one-on-one-hero-heading" className={styles.heroTitle} data-mobile-natural-wrap>
               <span>When the conversation</span>
               <span>gets hard, it means we&rsquo;re</span>
               <span>getting somewhere.</span>
@@ -526,7 +526,7 @@ export default function OneOnOneContent() {
             ref={register('closing-header')}
             className={cx(styles.closingHeader, 'closing-header')}
           >
-            <h2 id="closing-heading" className={styles.closingTitle}>
+            <h2 id="closing-heading" className={styles.closingTitle} data-mobile-natural-wrap>
               <span>If something inside you knows</span>
               <span>you can&rsquo;t keep living the same way,</span>
               <span>that voice deserves a safe space.</span>

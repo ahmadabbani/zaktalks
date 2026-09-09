@@ -908,5 +908,6 @@
   .imageFrame {
     height: 100%;
     aspect-ratio: 0.5;
+    border-radius: var(--desktop-oval-radius);
   }
 }

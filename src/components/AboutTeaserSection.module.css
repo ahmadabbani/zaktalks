@@ -439,6 +439,7 @@
   }
 
   .portraitStage {
+    order: -1;
     width: 100%;
     justify-self: center;
     justify-content: center;
@@ -453,6 +454,11 @@
 
   .portraitFrame {
     width: min(65vw, 16.5rem);
+    aspect-ratio: 0.75;
+  }
+
+  .portrait {
+    object-position: 65% center;
   }
 }
 
@@ -463,7 +469,7 @@
 
   .portraitFrame {
     width: min(70vw, 15.5rem);
-    aspect-ratio: 1;
+    aspect-ratio: 0.75;
     border-radius: clamp(1.25rem, 5vw, 1.75rem);
   }
 }

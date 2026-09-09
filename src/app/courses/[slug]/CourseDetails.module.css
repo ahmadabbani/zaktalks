@@ -76,13 +76,43 @@
   color: var(--color-white);
 }
 
-.tagRow .heroPromotionBadge {
-  border-color: var(--color-dark-blue);
-  color: var(--color-white);
-  background: var(--color-dark-blue);
-  box-shadow: 0 0.35rem 0.9rem rgba(33, 44, 45, 0.12);
-  letter-spacing: 0;
-  text-transform: none;
+
+.promotionPriceDisplay {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.75rem;
+}
+
+.promotionOriginalPrice {
+  color: rgba(33, 44, 45, 0.56);
+  font-size: clamp(0.92rem, 1vw, 1.05rem);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.promotionCurrentPrice {
+  color: var(--color-dark-blue);
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  font-weight: 950;
+  line-height: 1;
+}
+
+.promotionPriceDisplay .promotionPriceBadge {
+  min-height: 1.75rem;
+  padding: 0.38rem 0.65rem;
+  border-color: var(--color-yellow);
+  background: var(--color-yellow);
+  color: var(--color-black);
+  box-shadow: none;
+}
+
+.heroPromotionPrice {
+  margin: -0.55rem 0 clamp(1rem, 1.7vw, 1.4rem);
 }
 
 .heroCopy h1 {
@@ -135,9 +165,9 @@
 .tutorMark img,
 .sidebarInstructor > span img {
   object-fit: cover;
-  object-position: center 20%;
+  object-position: center 15%;
   transform: scale(2.05);
-  transform-origin: center 24%;
+  transform-origin: center 18%;
 }
 
 .instructorLine p,
@@ -1516,19 +1546,19 @@
 }
 
 .relatedTrack .relatedCard {
-  flex: 0 0 clamp(18rem, 65vw, 27rem);
+  flex: 0 0 clamp(18rem, 65vw, 30rem);
   scroll-snap-align: start;
 }
 
 .relatedCard {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(7rem, 0.7fr) minmax(0, 1.3fr);
-  min-height: 13rem;
+  display: flex;
+  min-height: 0;
   border: 1px solid var(--course-border);
   border-radius: 1.15rem;
   overflow: hidden;
   background: var(--color-white);
+  flex-direction: column;
 }
 
 .relatedPromotionBadge {
@@ -1540,7 +1570,10 @@
 
 .relatedImage {
   position: relative;
-  min-height: 100%;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 0;
   overflow: hidden;
   background: var(--color-gray-light);
 }
@@ -1977,6 +2010,18 @@
   color: var(--color-black);
   font-size: clamp(1.8rem, 2.8vw, 2.65rem);
   line-height: 1;
+}
+
+.sidebarPromotionPrice {
+  margin-top: 1.35rem;
+}
+
+.sidebarPromotionPrice .promotionOriginalPrice {
+  font-size: clamp(0.9rem, 1.1vw, 1rem);
+}
+
+.sidebarPromotionPrice .promotionCurrentPrice {
+  font-size: clamp(1.8rem, 2.8vw, 2.65rem);
 }
 
 .purchaseAction {
@@ -2494,7 +2539,7 @@
   }
 
   .relatedCard {
-    grid-template-columns: 7.5rem minmax(0, 1fr);
+    min-height: 0;
   }
 
   .ratingRow {

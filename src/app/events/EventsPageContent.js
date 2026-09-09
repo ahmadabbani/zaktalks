@@ -212,9 +212,9 @@ export default function EventsPageContent({ galleryImages = [] }) {
 
             <div className={styles.introGrid}>
               <div className={styles.introHeader}>
-                <h2 id="events-intro-heading" className={styles.sectionTitle}>
+                <h2 id="events-intro-heading" className={styles.sectionTitle} data-mobile-natural-wrap>
                   A new speaker chapter
-                  <br />
+                  <br className="desktopHeadingBreak" />{' '}
                   Worth with real roots
                 </h2>
 

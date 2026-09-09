@@ -1458,13 +1458,62 @@
     margin: 0 auto;
     padding: var(--space-2xl);
     border-radius: 1.25rem;
-    background:
-        radial-gradient(circle at top right, rgba(241, 196, 15, 0.18), transparent 32%),
-        #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+    background: #ffffff;
+    border: 1px solid rgba(37, 140, 155, 0.16);
+    box-shadow: 0 18px 42px rgba(37, 140, 155, 0.1);
     animation: fadeIn 0.5s ease-out;
     overflow: hidden;
+}
+
+.egoAnalysisResultHero {
+    width: 100%;
+    margin: 0 0 var(--space-2xl);
+    padding: clamp(1.1rem, 2.4vw, 1.6rem) clamp(1rem, 3vw, 1.8rem);
+    border-radius: 1rem;
+    background: var(--color-dark-blue);
+    color: #ffffff;
+    text-align: center;
+}
+
+.egoAnalysisResultHero h2 {
+    margin: 0 0 0.55rem;
+    color: #ffffff;
+    font-size: clamp(1.55rem, 3vw, 2.2rem);
+    font-weight: 950;
+    line-height: 1.15;
+}
+
+.egoAnalysisResultHero p {
+    max-width: 760px;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: clamp(0.94rem, 1.35vw, 1.04rem);
+    font-weight: 600;
+    line-height: 1.6;
+}
+
+.egoAnalysisChartSection {
+    margin-bottom: var(--space-xl);
+    padding: clamp(1rem, 2.5vw, 1.6rem);
+    border: 1px solid rgba(37, 140, 155, 0.2);
+    border-radius: 1rem;
+    background: #ffffff;
+}
+
+.egoAnalysisChartSection > h3 {
+    margin: 0 0 0.4rem;
+    color: var(--color-black);
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.egoAnalysisChartSection > p {
+    margin: 0 0 1.35rem;
+    color: var(--color-gray-dark);
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.5;
 }
 
 .egoResultTitle {
@@ -1481,11 +1530,9 @@
     grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: var(--space-md);
     align-items: end;
-    margin-bottom: var(--space-xl);
-    padding: var(--space-lg);
-    border-radius: 1rem;
-    background: #f8fafc;
-    border: 1px solid rgba(15, 23, 42, 0.08);
+    margin: 0;
+    padding: 0;
+    background: transparent;
 }
 
 .egoChartColumn {
@@ -1501,17 +1548,9 @@
     width: min(100%, 64px);
     height: 220px;
     overflow: hidden;
-    border: 2px solid rgba(15, 23, 42, 0.16);
-    border-radius: 0.55rem;
-    background:
-        repeating-linear-gradient(
-            to top,
-            rgba(15, 23, 42, 0.08) 0,
-            rgba(15, 23, 42, 0.08) 1px,
-            transparent 1px,
-            transparent 5%
-        ),
-        white;
+    border: 1px solid rgba(37, 140, 155, 0.26);
+    border-radius: 0.65rem 0.65rem 0.25rem 0.25rem;
+    background: rgba(37, 140, 155, 0.1);
 }
 
 .egoBarFill {
@@ -1519,7 +1558,14 @@
     bottom: 0;
     left: 0;
     width: 100%;
+    min-height: 3px;
+    border-radius: inherit;
+    background: #69b7c2;
     transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.egoBarFillStrongest {
+    background: var(--color-dark-blue);
 }
 
 .egoChartColumn strong {
@@ -1527,6 +1573,13 @@
     font-size: 1.25rem;
     font-weight: 950;
     line-height: 1;
+}
+
+.egoChartColumn strong small,
+.egoTotalCard strong small {
+    font-size: 0.65em;
+    font-weight: 750;
+    opacity: 0.72;
 }
 
 .egoChartColumn span {
@@ -1550,8 +1603,8 @@
     min-width: 0;
     padding: var(--space-sm);
     border-radius: 0.85rem;
-    background: white;
-    border: 1px solid rgba(15, 23, 42, 0.1);
+    background: rgba(37, 140, 155, 0.07);
+    border: 1px solid rgba(37, 140, 155, 0.2);
 }
 
 .egoTotalCard span,
@@ -1563,6 +1616,7 @@
     min-height: 32px;
     padding: 4px 8px;
     border-radius: 0.65rem;
+    background: var(--color-dark-blue);
     color: white;
     font-size: 0.9rem;
     font-weight: 950;
@@ -1574,6 +1628,20 @@
     font-weight: 950;
 }
 
+.egoTotalCardStrongest {
+    border-color: var(--color-dark-blue);
+    background: var(--color-dark-blue);
+}
+
+.egoTotalCardStrongest > span {
+    background: var(--color-yellow);
+    color: var(--color-black);
+}
+
+.egoTotalCardStrongest > strong {
+    color: #ffffff;
+}
+
 .egoStateDetails {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1582,7 +1650,7 @@
 }
 
 .egoStateDetail {
-    border: 1px solid rgba(15, 23, 42, 0.12);
+    border: 1px solid rgba(37, 140, 155, 0.2);
     border-radius: 0.9rem;
     background: white;
     overflow: hidden;
@@ -1848,6 +1916,105 @@
 
 .externalWorksheetShell {
     max-width: 1120px;
+}
+
+.archetypeWorksheetShell {
+    border-color: rgba(37, 140, 155, 0.2);
+    background: #ffffff;
+    box-shadow: none;
+}
+
+.archetypeWorksheetShell .worksheetHeader {
+    padding: clamp(1.1rem, 2.4vw, 1.6rem) clamp(1rem, 3vw, 1.8rem);
+    border-radius: 1rem;
+    background: var(--color-dark-blue);
+    color: #ffffff;
+}
+
+.archetypeWorksheetShell .worksheetEyebrow {
+    color: var(--color-yellow);
+}
+
+.archetypeWorksheetShell .worksheetTitle {
+    color: #ffffff;
+}
+
+.archetypeWorksheetShell .worksheetIntro {
+    color: rgba(255, 255, 255, 0.88);
+    font-weight: 600;
+}
+
+.archetypeWorksheetShell .worksheetToolbar {
+    border-top-color: rgba(255, 255, 255, 0.2);
+}
+
+.archetypeWorksheetShell .worksheetProgress {
+    color: #ffffff;
+}
+
+.archetypeWorksheetShell .worksheetProgressTrack {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.archetypeWorksheetShell .worksheetProgressFill {
+    background: var(--color-yellow);
+}
+
+.archetypeWorksheetShell .worksheetSection {
+    border-color: rgba(37, 140, 155, 0.2);
+    border-radius: 1rem;
+}
+
+.archetypeWorksheetShell .worksheetSectionHeader {
+    border-bottom-color: rgba(37, 140, 155, 0.18);
+    background: rgba(37, 140, 155, 0.09);
+}
+
+.archetypeWorksheetShell .worksheetSectionHeader h3,
+.archetypeWorksheetShell .worksheetStoryBlock h4,
+.archetypeWorksheetShell .worksheetNewStoryBlock h4 {
+    color: var(--color-dark-blue);
+}
+
+.archetypeWorksheetShell .worksheetStoryBlock + .worksheetStoryBlock {
+    border-top-color: rgba(37, 140, 155, 0.18);
+}
+
+.archetypeWorksheetShell .worksheetLine input {
+    border-bottom-color: rgba(37, 140, 155, 0.5);
+}
+
+.archetypeWorksheetShell .worksheetLine input:focus {
+    border-color: var(--color-dark-blue);
+    box-shadow: 0 3px 0 rgba(37, 140, 155, 0.16);
+}
+
+.archetypeWorksheetShell .worksheetAnswerText {
+    border-bottom-color: rgba(37, 140, 155, 0.36);
+    background: rgba(37, 140, 155, 0.1);
+    color: var(--color-dark-blue);
+}
+
+.archetypeWorksheetShell .worksheetSubmitBtn {
+    border: 2px solid var(--color-dark-blue);
+    border-radius: 999px;
+    background: var(--color-dark-blue);
+    color: #ffffff;
+    box-shadow: none;
+}
+
+.archetypeWorksheetShell .worksheetEditBtn {
+    border-color: var(--color-dark-blue);
+    border-radius: 999px;
+    color: var(--color-dark-blue);
+}
+
+.archetypeWorksheetShell .worksheetSubmitBtn:hover,
+.archetypeWorksheetShell .worksheetEditBtn:hover {
+    border-color: var(--color-yellow);
+    background: var(--color-yellow);
+    color: var(--color-black);
+    box-shadow: none;
 }
 
 .worksheetHeader {
@@ -3666,6 +3833,7 @@
 
 .energyResultHero,
 .financialResultHero,
+.egoStyleResultHero,
 .dramaResultHero {
     width: 100%;
     margin: 0 0 var(--space-2xl);
@@ -3678,6 +3846,7 @@
 
 .energyResultHero h2,
 .financialResultHero h2,
+.egoStyleResultHero h2,
 .dramaResultHero h2 {
     margin: 0 0 0.55rem;
     color: #ffffff;
@@ -3688,6 +3857,7 @@
 
 .energyResultHero p,
 .financialResultHero p,
+.egoStyleResultHero p,
 .dramaResultHero p {
     max-width: 760px;
     margin: 0 auto;
@@ -4020,6 +4190,328 @@
     margin-bottom: var(--space-2xl);
 }
 
+.cathScoreOnlyList.egoStyleScoreCards {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-bottom: var(--space-2xl);
+}
+
+.egoStyleScoreCard {
+    display: flex;
+    min-width: 0;
+    min-height: 150px;
+    padding: 1rem 0.75rem;
+    border: 1px solid rgba(37, 140, 155, 0.2);
+    border-radius: 0.95rem;
+    background: rgba(37, 140, 155, 0.07);
+    color: var(--color-black);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.egoStyleScoreCard h4 {
+    min-height: 2.5em;
+    margin: 0 0 0.6rem;
+    color: var(--color-black);
+    font-size: clamp(0.86rem, 1.1vw, 1rem);
+    font-weight: 900;
+    line-height: 1.25;
+}
+
+.egoStyleScoreCard > strong {
+    color: var(--color-dark-blue);
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+    font-weight: 950;
+    line-height: 1;
+}
+
+.egoStyleScoreCard > strong small {
+    font-size: 0.68em;
+    font-weight: 750;
+    opacity: 0.75;
+}
+
+.egoStyleScoreCardStrongest {
+    border-color: var(--color-dark-blue);
+    background: var(--color-dark-blue);
+}
+
+.egoStyleScoreCardStrongest h4,
+.egoStyleScoreCardStrongest > strong {
+    color: #ffffff;
+}
+
+.egoStyleStrongestBadge {
+    width: fit-content;
+    margin-top: 0.75rem;
+    padding: 0.36rem 0.55rem;
+    border-radius: 999px;
+    background: var(--color-yellow);
+    color: var(--color-black);
+    font-size: 0.62rem;
+    font-weight: 950;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.egoStyleProfileSection {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
+    gap: clamp(1.25rem, 3vw, 2.25rem);
+    margin-bottom: var(--space-2xl);
+    padding: clamp(1rem, 2.5vw, 1.6rem);
+    border: 1px solid rgba(37, 140, 155, 0.2);
+    border-radius: 1rem;
+    background: #ffffff;
+}
+
+.egoStyleProfileVisual,
+.egoStyleTopStyles {
+    min-width: 0;
+}
+
+.egoStyleProfileVisual > h3,
+.egoStyleTopStyles > h3 {
+    margin: 0 0 0.55rem;
+    color: var(--color-black);
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.egoStyleProfileVisual > p {
+    margin: 0;
+    color: var(--color-gray-dark);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.egoStyleChart {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: start;
+    gap: clamp(0.4rem, 1.1vw, 0.8rem);
+    margin-top: 1.4rem;
+}
+
+.egoStyleChartColumn {
+    display: grid;
+    min-width: 0;
+    justify-items: center;
+    grid-template-rows: 180px auto auto;
+    gap: 0.42rem;
+    text-align: center;
+}
+
+.egoStyleChartTrack {
+    position: relative;
+    display: flex;
+    width: clamp(24px, 4vw, 42px);
+    height: 180px;
+    min-height: 180px;
+    border: 1px solid rgba(37, 140, 155, 0.24);
+    border-radius: 0.65rem 0.65rem 0.25rem 0.25rem;
+    background: rgba(37, 140, 155, 0.1);
+    box-sizing: border-box;
+    align-self: stretch;
+    justify-self: center;
+    align-items: flex-end;
+    overflow: hidden;
+}
+
+.egoStyleChartTrack > span {
+    display: block;
+    width: 100%;
+    min-height: 3px;
+    border-radius: inherit;
+    background: #69b7c2;
+    flex: 0 0 auto;
+    transition: height 420ms ease;
+}
+
+.egoStyleChartTrack > .egoStyleChartBarStrongest {
+    background: var(--color-dark-blue);
+}
+
+.egoStyleChartColumn > strong {
+    color: var(--color-black);
+    font-size: clamp(0.68rem, 0.9vw, 0.82rem);
+    font-weight: 850;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.egoStyleChartColumn > small {
+    color: var(--color-dark-blue);
+    font-size: 0.75rem;
+    font-weight: 900;
+}
+
+.egoStyleTopStyles > h3 {
+    margin-bottom: var(--space-lg);
+}
+
+.egoStyleTopStyles article {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.egoStyleTopStyles article + article {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(37, 140, 155, 0.18);
+}
+
+.egoStyleTopStyles article > span {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--color-dark-blue);
+    color: #ffffff;
+    flex: 0 0 auto;
+    place-items: center;
+    font-size: 0.78rem;
+    font-weight: 900;
+}
+
+.egoStyleTopStyles article:first-of-type > span {
+    background: var(--color-yellow);
+    color: var(--color-black);
+}
+
+.egoStyleTopStyles article > div {
+    min-width: 0;
+}
+
+.egoStyleTopStyles h4 {
+    margin: 0;
+    color: var(--color-black);
+    font-size: 1rem;
+    font-weight: 850;
+    line-height: 1.4;
+}
+
+.egoStyleTopStyles h4 strong {
+    color: var(--color-dark-blue);
+    font-weight: 900;
+}
+
+.egoStyleTopStyles small {
+    display: block;
+    margin-top: 0.18rem;
+    color: var(--color-dark-blue);
+    font-size: 0.78rem;
+    font-weight: 850;
+}
+
+.egoStyleTopStyles p {
+    margin: 0.42rem 0 0;
+    color: var(--color-gray-dark);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.55;
+}
+
+.egoStyleInterpretationDisclosure {
+    width: 100%;
+}
+
+.egoStyleInterpretationDisclosure summary {
+    display: flex;
+    width: 100%;
+    padding: 0;
+    background: transparent;
+    color: var(--color-black);
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 900;
+    list-style: none;
+}
+
+.egoStyleInterpretationDisclosure summary > span {
+    display: block;
+    min-width: 0;
+}
+
+.egoStyleInterpretationDisclosure summary::-webkit-details-marker {
+    display: none;
+}
+
+.egoStyleInterpretationDisclosure summary::after {
+    display: inline-block;
+    margin-top: 0.15rem;
+    color: var(--color-dark-blue);
+    content: "\203A";
+    font-size: 1.35rem;
+    font-weight: 900;
+    line-height: 0.8;
+    transition: transform 180ms ease;
+}
+
+.egoStyleInterpretationDisclosure[open] summary::after {
+    transform: rotate(90deg);
+}
+
+.egoStyleInterpretationDisclosure[open] .egoStyleInterpretation {
+    padding-top: 0.75rem;
+}
+
+.egoStyleInterpretation p + p {
+    margin-top: 0.55rem;
+}
+
+.egoStyleInterpretation .egoStyleAwarenessQuestion {
+    margin-top: 0.7rem;
+    padding: 0.7rem 0.8rem;
+    border-radius: 0.75rem;
+    background: rgba(37, 140, 155, 0.08);
+    color: var(--color-black);
+}
+
+.egoStyleAwarenessQuestion strong {
+    color: var(--color-dark-blue);
+    font-weight: 900;
+}
+
+@media (max-width: 900px) {
+    .cathScoreOnlyList.egoStyleScoreCards {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .egoStyleProfileSection {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .cathScoreOnlyList.egoStyleScoreCards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .egoStyleScoreCard {
+        min-height: 135px;
+    }
+
+    .egoStyleChartColumn {
+        grid-template-rows: 145px auto auto;
+    }
+
+    .egoStyleChartTrack {
+        height: 145px;
+        min-height: 145px;
+    }
+}
+
 .financialFrequencyCard {
     position: relative;
     min-width: 0;
@@ -4257,6 +4749,45 @@
     line-height: 1.55;
 }
 
+.financialTopPatterns p + p {
+    margin-top: 0.55rem;
+}
+
+.financialTopPatterns p strong {
+    color: var(--color-black);
+    font-weight: 900;
+}
+
+.financialBringingTogether {
+    margin-bottom: var(--space-2xl);
+    padding: clamp(1rem, 2.5vw, 1.6rem);
+    border: 1px solid rgba(37, 140, 155, 0.2);
+    border-radius: 1rem;
+    background: rgba(37, 140, 155, 0.07);
+    color: var(--color-black);
+}
+
+.financialBringingTogether h3 {
+    margin: 0 0 0.8rem;
+    color: var(--color-black);
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    font-weight: 900;
+}
+
+.financialBringingTogether p {
+    margin: 0;
+    font-size: clamp(0.9rem, 1vw, 1rem);
+    line-height: 1.65;
+}
+
+.financialBringingTogether p + p {
+    margin-top: 0.75rem;
+}
+
+.financialBringingTogether strong {
+    font-weight: 900;
+}
+
 /* Shared branded assessment introduction */
 .introContainer {
     width: 100%;
@@ -4485,6 +5016,147 @@
     font-weight: 900;
 }
 
+.externalEgoStyleAnswerGuide {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.65rem;
+    width: 100%;
+    margin: 0 0 1.25rem;
+}
+
+.externalEgoStyleAnswerGuide > div {
+    display: flex;
+    min-width: 0;
+    min-height: 72px;
+    padding: 0.7rem 0.6rem;
+    border: 1px solid color-mix(in srgb, var(--color-dark-blue) 18%, transparent);
+    border-radius: 0.85rem;
+    background: color-mix(in srgb, var(--color-dark-blue) 6%, white);
+    color: var(--color-black);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    text-align: center;
+}
+
+.externalEgoStyleAnswerGuide strong {
+    color: var(--color-dark-blue);
+    font-size: 1.05rem;
+    font-weight: 900;
+}
+
+.externalEgoStyleAnswerGuide span {
+    font-size: clamp(0.78rem, 1vw, 0.92rem);
+    font-weight: 750;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+.externalEgoAnalysisIntro {
+    color: var(--color-black);
+    font-weight: 650;
+}
+
+.externalEgoAnalysisGuide {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+    width: 100%;
+    margin: 0 0 1.25rem;
+}
+
+.externalEgoAnalysisGuide > div {
+    display: flex;
+    min-width: 0;
+    min-height: 68px;
+    padding: 0.75rem 0.8rem;
+    border: 1px solid color-mix(in srgb, var(--color-dark-blue) 18%, transparent);
+    border-radius: 0.85rem;
+    background: color-mix(in srgb, var(--color-dark-blue) 6%, white);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    text-align: center;
+}
+
+.externalEgoAnalysisGuide strong {
+    color: var(--color-dark-blue);
+    font-size: clamp(0.9rem, 1.1vw, 1rem);
+    font-weight: 900;
+}
+
+.externalEgoAnalysisGuide span {
+    color: var(--color-black);
+    font-size: clamp(0.8rem, 1vw, 0.92rem);
+    font-weight: 750;
+    line-height: 1.25;
+}
+
+.archetypeSelector {
+    width: 100%;
+    margin: 0 0 1.4rem;
+}
+
+.archetypeSelector h4 {
+    margin: 0 0 0.75rem;
+    color: var(--color-black);
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    font-weight: 900;
+    line-height: 1.3;
+}
+
+.archetypeSelectorGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.7rem;
+}
+
+.archetypeSelectorCard {
+    display: flex;
+    min-width: 0;
+    min-height: 74px;
+    padding: 0.8rem;
+    border: 1px solid rgba(37, 140, 155, 0.24);
+    border-radius: 0.9rem;
+    background: rgba(37, 140, 155, 0.07);
+    color: var(--color-black);
+    align-items: center;
+    justify-content: center;
+    font: inherit;
+    font-size: clamp(0.86rem, 1.1vw, 0.98rem);
+    font-weight: 850;
+    line-height: 1.3;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: none;
+    transition: border-color var(--transition-normal), background-color var(--transition-normal), color var(--transition-normal), transform var(--transition-normal);
+}
+
+.archetypeSelectorCard:hover {
+    border-color: rgba(37, 140, 155, 0.55);
+    background: rgba(37, 140, 155, 0.12);
+    transform: translateY(-1px);
+}
+
+.archetypeSelectorCardSelected,
+.archetypeSelectorCardSelected:hover {
+    border-color: var(--color-dark-blue);
+    background: var(--color-dark-blue);
+    color: #ffffff;
+}
+
+.archetypeContinueBtn:disabled,
+.archetypeContinueBtn:disabled:hover {
+    border-color: rgba(37, 140, 155, 0.28);
+    background: rgba(37, 140, 155, 0.28);
+    color: rgba(255, 255, 255, 0.9);
+    opacity: 1;
+    cursor: not-allowed;
+    transform: none;
+}
+
 .introBody .introInstructions {
     width: 100%;
     max-width: none;
@@ -4513,6 +5185,14 @@
 @media (max-width: 768px) {
     .externalEnergyAnswerGuide {
         grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+    }
+
+    .externalEgoStyleAnswerGuide {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .archetypeSelectorGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .introContainer {
@@ -4544,6 +5224,10 @@
 @media (max-width: 420px) {
     .externalDramaAnswerGuide strong {
         white-space: normal;
+    }
+
+    .archetypeSelectorGrid {
+        grid-template-columns: 1fr;
     }
 }
 

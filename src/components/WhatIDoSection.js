@@ -51,9 +51,20 @@ const services = [
 
 export default function WhatIDoSection() {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [showAllServices, setShowAllServices] = useState(false)
   const [motionReady, setMotionReady] = useState(false)
   const [visibleItems, setVisibleItems] = useState([])
   const itemRefs = useRef({})
+
+  useEffect(() => {
+    const mobileCardsQuery = window.matchMedia('(max-width: 720px)')
+    const syncMobileCards = () => setShowAllServices(mobileCardsQuery.matches)
+
+    syncMobileCards()
+    mobileCardsQuery.addEventListener('change', syncMobileCards)
+
+    return () => mobileCardsQuery.removeEventListener('change', syncMobileCards)
+  }, [])
 
   useEffect(() => {
     setMotionReady(true)
@@ -99,8 +110,8 @@ export default function WhatIDoSection() {
         >
           <div className={styles.headingBlock}>
             <p className={styles.eyebrow}>What I do</p>
-            <h2 id="what-i-do-heading" className={styles.title}>
-              Choose the path that<br />meets you where you are
+            <h2 id="what-i-do-heading" className={styles.title} data-mobile-natural-wrap>
+              Choose the path that<br className="desktopHeadingBreak" />{' '}meets you where you are
             </h2>
             <p className={styles.intro}>
               The work is built around what you need, what you are ready for, and what will actually move you forward.
@@ -114,7 +125,7 @@ export default function WhatIDoSection() {
             <div key={rowStart} className={styles.railRow}>
               {visibleServices.slice(rowStart, rowStart + 2).map((service, rowIndex) => {
                 const index = rowStart + rowIndex
-                const isActive = activeIndex === index
+                const isActive = showAllServices || activeIndex === index
                 const itemId = `service-${index}`
                 const detailsId = `service-details-${index}`
 
@@ -130,16 +141,20 @@ export default function WhatIDoSection() {
                       isItemVisible(itemId) ? styles.itemVisible : '',
                     ].filter(Boolean).join(' ')}
                     onPointerEnter={(event) => {
-                      if (event.pointerType !== 'touch') setActiveIndex(index)
+                      if (!showAllServices && event.pointerType !== 'touch') setActiveIndex(index)
                     }}
-                    onFocusCapture={() => setActiveIndex(index)}
+                    onFocusCapture={() => {
+                      if (!showAllServices) setActiveIndex(index)
+                    }}
                   >
                     <button
                       type="button"
                       className={styles.cardToggle}
                       aria-expanded={isActive}
                       aria-controls={detailsId}
-                      onClick={() => setActiveIndex(index)}
+                      onClick={() => {
+                        if (!showAllServices) setActiveIndex(index)
+                      }}
                     >
                       <span className={styles.cardNumber}>0{index + 1}</span>
                       <span className={styles.cardTitle}>{service.title}</span>

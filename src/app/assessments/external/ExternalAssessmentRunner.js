@@ -17,6 +17,7 @@ import styles from '@/assessments/assessment.module.css'
 
 export default function ExternalAssessmentRunner({ assessmentKey }) {
   const [stage, setStage] = useState('overview')
+  const [selectedWorksheetSectionId, setSelectedWorksheetSectionId] = useState(null)
   const definition = getAssessmentById(assessmentKey)
   const resultCaptureId = `external-assessment-result-${assessmentKey}`
 
@@ -32,6 +33,9 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
   const displayDefinition = definition.externalPresentation
     ? { ...definition, ...definition.externalPresentation }
     : definition
+  const requiresArchetypeSelection = Boolean(
+    definition.type === 'fillable-worksheet' && displayDefinition.archetypeSelection
+  )
 
   if (stage !== 'assessment') {
     const statementCount = getAssessmentStatementCount(displayDefinition)
@@ -43,7 +47,11 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
             <div className={styles.introHeroCopy}>
               <h2>{displayDefinition.title}</h2>
               <div className={styles.introHeroMeta}>
-                {statementCount > 0 && <span>{statementCount} statements</span>}
+                {definition.type === 'fillable-worksheet' ? (
+                  <span>{displayDefinition.sections?.length || 0} archetypes</span>
+                ) : statementCount > 0 && (
+                  <span>{statementCount} statements</span>
+                )}
                 <span><FaShieldAlt /> Private by default</span>
               </div>
             </div>
@@ -74,6 +82,14 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
                     <strong>{displayDefinition.highlightedDrivers.join(', ')}</strong>.
                   </p>
                 </div>
+              ) : displayDefinition.introVariant === 'ego-style' ? (
+                <div className={styles.externalDriverOverviewCopy}>
+                  <p>{displayDefinition.description}</p>
+                  <p>
+                    {displayDefinition.descriptionFollowup}{' '}
+                    <strong>{displayDefinition.highlightedStyles.join(', ')}</strong>.
+                  </p>
+                </div>
               ) : displayDefinition.description && (
                 <p className={styles.introDescription}>{displayDefinition.description}</p>
               )}
@@ -89,7 +105,9 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
             <div className={`${styles.introBody} ${styles.introPreparation}`}>
               <h3>Instructions</h3>
               {displayDefinition.intro && (
-                <p className={styles.introCompletionText}>{displayDefinition.intro}</p>
+                <p className={`${styles.introCompletionText} ${displayDefinition.introVariant === 'ego-analysis' ? styles.externalEgoAnalysisIntro : ''}`}>
+                  {displayDefinition.intro}
+                </p>
               )}
               {displayDefinition.introVariant === 'driver' && (
                 <div className={styles.externalDriverAnswerGuide} aria-label="Assessment response scores">
@@ -122,11 +140,56 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
                   ))}
                 </div>
               )}
+              {displayDefinition.introVariant === 'ego-style' && (
+                <div className={styles.externalEgoStyleAnswerGuide} aria-label="Assessment response scale">
+                  {displayDefinition.scale.legend.map((option) => (
+                    <div key={`ego-style-guide-${option.value}`}>
+                      <strong>{option.value}</strong>
+                      <span>{option.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {displayDefinition.introVariant === 'ego-analysis' && (
+                <div className={styles.externalEgoAnalysisGuide} aria-label="Assessment choice scores">
+                  {displayDefinition.instructionGuide.map((item) => (
+                    <div key={item.title}>
+                      <strong>{item.title}</strong>
+                      <span>{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
               {displayDefinition.completionInstructions && (
                 <div className={styles.introInstructions}>
                   <strong>How to complete this assessment</strong>
                   <p>{displayDefinition.completionInstructions}</p>
                 </div>
+              )}
+              {requiresArchetypeSelection && (
+                <section className={styles.archetypeSelector} aria-labelledby="archetype-selection-heading">
+                  <h4 id="archetype-selection-heading">
+                    {displayDefinition.archetypeSelectionPrompt || 'Choose your archetype'}
+                  </h4>
+                  <div className={styles.archetypeSelectorGrid} role="radiogroup" aria-label="Financial archetype">
+                    {displayDefinition.sections.map((section) => {
+                      const isSelected = selectedWorksheetSectionId === section.id
+
+                      return (
+                        <button
+                          key={section.id}
+                          type="button"
+                          role="radio"
+                          aria-checked={isSelected}
+                          className={`${styles.archetypeSelectorCard} ${isSelected ? styles.archetypeSelectorCardSelected : ''}`}
+                          onClick={() => setSelectedWorksheetSectionId(section.id)}
+                        >
+                          {section.title}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </section>
               )}
               {!displayDefinition.completionInstructions && displayDefinition.scoring?.instructions && (
                 <div className={styles.introInstructions}>
@@ -136,10 +199,14 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
               )}
               <button
                 type="button"
-                className={styles.introStartBtn}
+                className={`${styles.introStartBtn} ${requiresArchetypeSelection ? styles.archetypeContinueBtn : ''}`}
                 onClick={() => setStage('assessment')}
+                disabled={requiresArchetypeSelection && !selectedWorksheetSectionId}
               >
-                I&apos;m ready to begin <FaArrowRight />
+                {requiresArchetypeSelection && selectedWorksheetSectionId
+                  ? `Continue with ${displayDefinition.sections.find(section => section.id === selectedWorksheetSectionId)?.title}`
+                  : 'I\'m ready to begin'}{' '}
+                <FaArrowRight />
               </button>
             </div>
           )}
@@ -148,8 +215,16 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
     )
   }
 
+  const externalDefinition = {
+    ...displayDefinition,
+    externalOnly: true,
+    sections: requiresArchetypeSelection
+      ? displayDefinition.sections.filter(section => section.id === selectedWorksheetSectionId)
+      : displayDefinition.sections
+  }
+
   const engineProps = {
-    definition: { ...displayDefinition, externalOnly: true },
+    definition: externalDefinition,
     enableResultScreenshot: true,
     resultCaptureId
   }

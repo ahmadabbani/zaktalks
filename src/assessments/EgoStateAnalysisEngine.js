@@ -109,51 +109,61 @@ export default function EgoStateAnalysisEngine({
 
   if (showResult) {
     const totals = calculateTotals(definition, answers)
+    const highestScore = Math.max(...Object.values(totals))
 
     return (
       <div
         className={styles.egoResultContainer}
         id={enableResultScreenshot ? resultCaptureId : undefined}
       >
-        <h2 className={styles.egoResultTitle}>MY EGO GRAM</h2>
+        <header className={styles.egoAnalysisResultHero}>
+          <h2>My Ego Gram</h2>
+          <p>This profile shows the relative strength of the seven ego states reflected in your choices.</p>
+        </header>
 
-        <div className={styles.egoChart}>
+        <section className={styles.egoAnalysisChartSection}>
+          <h3>Your ego-state profile</h3>
+          <p>Each filled bar represents your total score for that ego state.</p>
+          <div className={styles.egoChart}>
+            {definition.egoStates.map((state) => {
+              const score = totals[state.id] || 0
+              const height = Math.max(0, Math.min(100, (score / MAX_SCORE) * 100))
+              const isStrongest = score === highestScore
+
+              return (
+                <div key={state.id} className={styles.egoChartColumn}>
+                  <div className={styles.egoBarFrame}>
+                    <div
+                      className={`${styles.egoBarFill} ${isStrongest ? styles.egoBarFillStrongest : ''}`}
+                      style={{ height: `${height}%` }}
+                    ></div>
+                  </div>
+                  <strong>{score}<small>/{MAX_SCORE}</small></strong>
+                  <span>{state.id}</span>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+
+        <div className={styles.egoTotalsGrid}>
           {definition.egoStates.map((state) => {
             const score = totals[state.id] || 0
-            const height = Math.max(0, Math.min(100, (score / MAX_SCORE) * 100))
-
+            const isStrongest = score === highestScore
             return (
-              <div key={state.id} className={styles.egoChartColumn}>
-                <div className={styles.egoBarFrame}>
-                  <div
-                    className={styles.egoBarFill}
-                    style={{
-                      height: `${height}%`,
-                      backgroundColor: state.color
-                    }}
-                  ></div>
-                </div>
-                <strong>{score}</strong>
+              <div key={state.id} className={`${styles.egoTotalCard} ${isStrongest ? styles.egoTotalCardStrongest : ''}`}>
                 <span>{state.id}</span>
+                <strong>{score}<small>/{MAX_SCORE}</small></strong>
               </div>
             )
           })}
-        </div>
-
-        <div className={styles.egoTotalsGrid}>
-          {definition.egoStates.map((state) => (
-            <div key={state.id} className={styles.egoTotalCard}>
-              <span style={{ backgroundColor: state.color }}>{state.id}</span>
-              <strong>{totals[state.id] || 0}</strong>
-            </div>
-          ))}
         </div>
 
         <div className={styles.egoStateDetails}>
           {definition.egoStates.map((state) => (
             <details key={state.id} className={styles.egoStateDetail}>
               <summary>
-                <span style={{ backgroundColor: state.color }}>{state.id}</span>
+                <span>{state.id}</span>
                 {state.label}
               </summary>
               <p>{state.label}</p>

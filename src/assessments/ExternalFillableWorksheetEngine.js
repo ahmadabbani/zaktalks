@@ -46,6 +46,7 @@ export default function ExternalFillableWorksheetEngine({
   enableResultScreenshot = false,
   resultCaptureId = 'assessment-result-capture'
 }) {
+  const isArchetypeWorksheet = definition.id === 'archetype-script-reframing-worksheet-v1'
   const [answers, setAnswers] = useState(() => buildInitialAnswers(definition))
   const [isFinished, setIsFinished] = useState(false)
 
@@ -134,14 +135,14 @@ export default function ExternalFillableWorksheetEngine({
 
   return (
     <form
-      className={`${styles.worksheetShell} ${styles.externalWorksheetShell}`}
+      className={`${styles.worksheetShell} ${styles.externalWorksheetShell} ${isArchetypeWorksheet ? styles.archetypeWorksheetShell : ''}`}
       onSubmit={handleSubmit}
       id={isFinished && enableResultScreenshot ? resultCaptureId : undefined}
     >
       <div className={styles.worksheetHeader}>
         <p className={styles.worksheetEyebrow}>Worksheet</p>
         <h2 className={styles.worksheetTitle}>{definition.title}</h2>
-        <p className={styles.worksheetIntro}>{definition.intro}</p>
+        <p className={styles.worksheetIntro}>{definition.worksheetIntro || definition.intro}</p>
 
         <div className={styles.worksheetToolbar}>
           <div className={styles.worksheetProgress}>

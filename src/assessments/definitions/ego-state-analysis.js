@@ -13,10 +13,17 @@ export const egoStateAnalysis = {
   id: 'ego-state-analysis-v1',
   title: 'EGO STATE ANALYSIS',
   externalOnly: true,
+  introVariant: 'ego-analysis',
   description:
-    'The next several pages contain a series of optional choice statements. Make 2 choices for each statement.',
+    'This assessment explores how seven ego-state patterns may influence the way you relate, solve problems, respond to pressure, and make choices. For each everyday situation, you will identify the response that describes you best and the response that describes you next best.\n\nYour final profile compares Critical Parent, Rescuing Parent, Nurturing Parent, Adult, Free Child, Helpless Child, and Defensive Child. It is a reflection tool, not a fixed label or diagnosis.',
   intro:
-    'Score a 2 for the choice that BEST describes you and a 1 for the choice that describes the NEXT best. LEAVE THE OTHERS BLANK.',
+    'For each statement, choose one BEST response and one NEXT BEST response. Leave the remaining options blank.',
+  instructionGuide: [
+    { title: 'BEST choice', text: '2 points' },
+    { title: 'NEXT BEST choice', text: '1 point' }
+  ],
+  completionInstructions:
+    'Choose one BEST response and one different NEXT BEST response for every statement.',
   themeColor: '#F1C40F',
   egoStates,
   questions: [

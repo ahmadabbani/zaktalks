@@ -97,7 +97,8 @@
 
   /* Shared desktop oval proportions, matched to the homepage hero portrait. */
   --desktop-oval-height: min(38rem, 74svh);
-  --desktop-oval-width: min(19rem, 37svh);
+  --desktop-oval-width: min(20rem, 39svh);
+  --desktop-oval-radius: 50% / 25.5%;
 }
 
 /* Public-page hero and section headings only. Keeping this list explicit
@@ -157,28 +158,28 @@
 @media (min-width: 1025px) and (max-width: 1499px) {
   :root {
     --desktop-oval-height: min(34rem, 74svh);
-    --desktop-oval-width: min(17rem, 37svh);
+    --desktop-oval-width: min(18rem, 39svh);
   }
 }
 
 @media (min-width: 2000px) and (max-width: 2399px) {
   :root {
     --desktop-oval-height: min(42rem, 74svh);
-    --desktop-oval-width: min(21rem, 37svh);
+    --desktop-oval-width: min(22rem, 39svh);
   }
 }
 
 @media (min-width: 2400px) and (max-width: 2799px) {
   :root {
     --desktop-oval-height: min(46rem, 74svh);
-    --desktop-oval-width: min(23rem, 37svh);
+    --desktop-oval-width: min(24rem, 39svh);
   }
 }
 
 @media (min-width: 2800px) {
   :root {
     --desktop-oval-height: min(56rem, 74svh);
-    --desktop-oval-width: min(28rem, 37svh);
+    --desktop-oval-width: min(29rem, 39svh);
   }
 }
 
@@ -388,5 +389,25 @@ ol {
     --home-text-size: 1.17rem;
     --home-cta-size: 1.09rem;
     --home-cta-min-height: 3.85rem;
+  }
+}
+@media (max-width: 768px) {
+  /* Desktop art-directed heading lines should return to natural wrapping on
+     smaller screens so a forced break cannot leave an orphaned word. */
+  [data-mobile-natural-wrap] {
+    text-wrap: wrap !important;
+  }
+
+  [data-mobile-natural-wrap] > .desktopHeadingBreak {
+    display: none;
+  }
+
+  [data-mobile-natural-wrap] > span {
+    display: inline !important;
+    white-space: normal !important;
+  }
+
+  [data-mobile-natural-wrap] > span:not(:last-child)::after {
+    content: " ";
   }
 }

@@ -86,7 +86,8 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
   const isDramaTriangle = definition.id === 'drama-triangle-assessment-v1';
   const isEnergyAssessment = definition.id === 'energy-self-assessment-v1';
   const isFinancialFrequency = definition.id === 'unlock-financial-frequency-v1';
-  const usesLabeledFivePointScale = isEnergyAssessment || isFinancialFrequency;
+  const isEgoStateAssessment = definition.id === 'transactional-analysis-personal-style-questionnaire-v1';
+  const usesLabeledScale = isEnergyAssessment || isFinancialFrequency || isEgoStateAssessment;
 
   const handleSelect = (value) => {
     if (isSubmitting || isAdvancing) return;
@@ -227,6 +228,11 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
             <h2>Your Financial Frequency Profile</h2>
             <p>These results highlight the patterns that may be influencing your relationship with money right now. They are not fixed identities. They are invitations to understand what drives your choices and where you may want more freedom.</p>
           </header>
+        ) : isEgoStateAssessment ? (
+          <header className={styles.egoStyleResultHero}>
+            <h2>Your Ego-State Personal Style Profile</h2>
+            <p>These results show the relative strength of five styles in your responses. A high score is not “better,” and a low score is not “worse.” Each style can be useful; the key is having choice over when and how you use it.</p>
+          </header>
         ) : roleRanges ? (
           <header className={styles.dramaResultHero}>
             <h2>Your Drama Triangle pattern</h2>
@@ -302,13 +308,27 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
         )}
 
         {!roleRanges && (
-        <div className={scoresOnly ? `${styles.cathScoreOnlyList} ${isFinancialFrequency ? styles.financialFrequencyCards : ''}` : `${styles.cathCategoryCards} ${isEnergyAssessment ? styles.energyCategoryCards : ''}`}>
+        <div className={scoresOnly ? `${styles.cathScoreOnlyList} ${isFinancialFrequency ? styles.financialFrequencyCards : ''} ${isEgoStateAssessment ? styles.egoStyleScoreCards : ''}` : `${styles.cathCategoryCards} ${isEnergyAssessment ? styles.energyCategoryCards : ''}`}>
           {Object.entries(definition.categories).map(([key, cat]) => {
             const score = categoryScores[key] || 0;
             const maxPerCategory = (categoryQuestionCounts[key] || 0) * maxScaleValue;
             const percentage = maxPerCategory > 0 ? (score / maxPerCategory) * 100 : 0;
             const isDominant = key === dominantKey;
             const categoryColor = getCategoryColor(key);
+
+            if (isEgoStateAssessment) {
+              const isStrongestStyle = key === highest[0];
+              return (
+                <article
+                  key={key}
+                  className={`${styles.egoStyleScoreCard} ${isStrongestStyle ? styles.egoStyleScoreCardStrongest : ''}`}
+                >
+                  <h4>{cat.label}</h4>
+                  <strong>{score}<small>/{maxPerCategory}</small></strong>
+                  {isStrongestStyle && <div className={styles.egoStyleStrongestBadge}>Strongest Style</div>}
+                </article>
+              );
+            }
 
             if (isFinancialFrequency) {
               const isFinancialDominant = key === highest[0];
@@ -529,10 +549,103 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
                   <div>
                     <h4>{definition.categories[key]?.label}</h4>
                     <small>{score}/{(categoryQuestionCounts[key] || 0) * maxScaleValue}</small>
-                    <p>Interpretation for this financial-frequency pattern will be added here.</p>
+                    <p>
+                      {definition.categories[key]?.interpretationLead}{' '}
+                      <strong>{definition.categories[key]?.interpretationEmphasis}</strong>.{' '}
+                      {definition.categories[key]?.interpretationDetail}
+                    </p>
+                    <p><strong>Healthy expression:</strong> {definition.categories[key]?.healthyExpression}</p>
+                    <p><strong>Overused expression:</strong> {definition.categories[key]?.overusedExpression}</p>
                   </div>
                 </article>
               ))}
+            </div>
+          </section>
+        )}
+
+        {isFinancialFrequency && definition.bringingItTogether && (
+          <section className={styles.financialBringingTogether}>
+            <h3>Bringing It Together</h3>
+            <p>
+              <strong>{definition.bringingItTogether.openingEmphasis}</strong>{' '}
+              {definition.bringingItTogether.openingText}
+            </p>
+            <p>
+              {definition.bringingItTogether.goalPrefix}{' '}
+              <strong>{definition.bringingItTogether.goalEmphasis}</strong>,{' '}
+              {definition.bringingItTogether.goalText}
+            </p>
+            <p><strong>{definition.bringingItTogether.closingEmphasis}</strong></p>
+          </section>
+        )}
+
+        {isEgoStateAssessment && (
+          <section className={styles.egoStyleProfileSection}>
+            <div className={styles.egoStyleProfileVisual}>
+              <h3>Your personal-style profile</h3>
+              <p>Total score by ego-state style, based on eight mapped statements per category.</p>
+              <div className={styles.egoStyleChart} aria-label="Your ego-state personal-style scores">
+                {entries.map(([key, score]) => {
+                  const category = definition.categories[key];
+                  const maxScore = (categoryQuestionCounts[key] || 0) * maxScaleValue;
+                  const height = maxScore > 0
+                    ? Math.max(0, Math.min(100, (score / maxScore) * 100))
+                    : 0;
+                  const isStrongestStyle = key === highest[0];
+
+                  return (
+                    <div key={`ego-style-chart-${key}`} className={styles.egoStyleChartColumn}>
+                      <div className={styles.egoStyleChartTrack}>
+                        <span
+                          className={isStrongestStyle ? styles.egoStyleChartBarStrongest : ''}
+                          style={{ height: `${height}%` }}
+                        />
+                      </div>
+                      <strong>{category?.label}</strong>
+                      <small>{score}/{maxScore}</small>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className={styles.egoStyleTopStyles}>
+              <h3>Your strongest styles</h3>
+              {topThree.map(([key, score], index) => {
+                const category = definition.categories[key];
+                const maxScore = (categoryQuestionCounts[key] || 0) * maxScaleValue;
+                const rankingLabel = index === 0
+                  ? 'your strongest available style.'
+                  : index === 1
+                    ? 'a strong supporting style.'
+                    : 'a meaningful source of energy.';
+
+                return (
+                  <article key={`ego-style-top-${key}`}>
+                    <span>{index + 1}</span>
+                    <div>
+                      <details className={styles.egoStyleInterpretationDisclosure} open={index === 0}>
+                        <summary>
+                          <span>
+                            <h4>{category?.label}: <strong>{rankingLabel}</strong></h4>
+                            <small>{score}/{maxScore}</small>
+                          </span>
+                        </summary>
+                        <div className={styles.egoStyleInterpretation}>
+                          {(category?.highScoreInterpretation || []).map((paragraph) => (
+                            <p key={paragraph}>{paragraph}</p>
+                          ))}
+                          {category?.awarenessQuestion && (
+                            <p className={styles.egoStyleAwarenessQuestion}>
+                              <strong>Awareness question:</strong> {category.awarenessQuestion}
+                            </p>
+                          )}
+                        </div>
+                      </details>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </section>
         )}
@@ -649,7 +762,7 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
       </div>
 
       <div key={`answers-${currentQuestion.id}`} className={`${styles.optionsSection} ${styles.questionTransition} ${styles.answerTransition}`}>
-        {!isDramaTriangle && !usesLabeledFivePointScale && (
+        {!isDramaTriangle && !usesLabeledScale && (
           Array.isArray(definition.scale?.legend) && definition.scale.legend.length > 0 ? (
             <div
               className={styles.scaleLegendGrid}
@@ -668,7 +781,7 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
             </div>
           )
         )}
-        <div className={`${styles.scaleButtons} ${isDramaTriangle ? styles.dramaScaleButtons : ''} ${usesLabeledFivePointScale ? styles.energyScaleButtons : ''}`}>
+        <div className={`${styles.scaleButtons} ${isDramaTriangle ? styles.dramaScaleButtons : ''} ${usesLabeledScale ? styles.energyScaleButtons : ''}`}>
           {scaleValues.map((val) => {
             const optionLabel = definition.scale?.legend?.find((item) => item.value === val)?.label;
 
@@ -677,9 +790,9 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
                 key={val}
                 onClick={() => handleSelect(val)}
                 disabled={isSubmitting || isAdvancing}
-                className={`${styles.scaleBtn} ${isDramaTriangle ? styles.dramaScaleBtn : ''} ${usesLabeledFivePointScale ? styles.energyScaleBtn : ''} ${answers[currentQuestion.id] === val ? styles.scaleBtnSelected : ''}`}
+                className={`${styles.scaleBtn} ${isDramaTriangle ? styles.dramaScaleBtn : ''} ${usesLabeledScale ? styles.energyScaleBtn : ''} ${answers[currentQuestion.id] === val ? styles.scaleBtnSelected : ''}`}
               >
-                {isDramaTriangle || usesLabeledFivePointScale ? (
+                {isDramaTriangle || usesLabeledScale ? (
                   <>
                     <strong>{val}</strong>
                     <span>{optionLabel}</span>

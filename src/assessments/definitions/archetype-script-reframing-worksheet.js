@@ -2,11 +2,19 @@ export const archetypeScriptReframingWorksheet = {
   type: 'fillable-worksheet',
   id: 'archetype-script-reframing-worksheet-v1',
   title: 'Archetype Script Reframing Worksheet',
+  externalOnly: true,
+  introVariant: 'archetype-worksheet',
+  archetypeSelection: true,
   description:
-    'Reflect on the emotional roots of your money beliefs, then write a new story from your Adult ego-state.',
+    'This guided worksheet helps you examine the money beliefs connected to one financial archetype. You will explore the feelings, assumptions, and learned messages shaping your Old Story, then reflect on a more balanced New Story from the Adult ego-state.',
   themeColor: '#38BDF8',
   intro:
-    'This expanded worksheet allows each financial archetype to reflect deeply on their internalized money beliefs. Use the prompts below to explore the emotional roots of your "Old Story" (typically formed in childhood) and consciously craft a "New Story" from your Adult ego-state.',
+    'Choose the archetype identified in your previous assessment. Complete its prompts from your real experience rather than what feels ideal, then read the New Story as a possible Adult perspective.',
+  completionInstructions:
+    'Select the archetype that matched your result in the Unlock Your Financial Frequency assessment. You will complete only that archetype\'s worksheet.',
+  archetypeSelectionPrompt: 'Choose your financial archetype',
+  worksheetIntro:
+    'Complete every blank in your Old Story, then read and reflect on the New Story.',
   sections: [
     {
       id: 'guardian',

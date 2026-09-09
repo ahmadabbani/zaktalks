@@ -54,6 +54,22 @@ function formatDuration(seconds) {
   return `${Math.max(1, Math.round(value / 60))} min`
 }
 
+function formatCoursePrice(cents) {
+  return `$${(Math.max(0, Number(cents) || 0) / 100).toFixed(2)}`
+}
+
+function PromotionPriceDisplay({ basePriceCents, promotion, className = '' }) {
+  if (!promotion?.applied) return null
+
+  return (
+    <div className={`${styles.promotionPriceDisplay} ${className}`.trim()}>
+      <span className={styles.promotionOriginalPrice}>{formatCoursePrice(basePriceCents)}</span>
+      <strong className={styles.promotionCurrentPrice}>{formatCoursePrice(promotion.priceAfterPromotionCents)}</strong>
+      <CoursePromotionBadge promotion={promotion} className={styles.promotionPriceBadge} />
+    </div>
+  )
+}
+
 function getYouTubeId(value) {
   const match = String(value || '').match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|shorts\/|live\/|watch\?(?:.*&)?v=))([a-zA-Z0-9_-]{11})/)
   return match?.[1] || null
@@ -296,9 +312,9 @@ function ExploreMoreCarousel({ items }) {
             {item.target_type === 'course' && <CoursePromotionBadge promotion={item.promotion} className={styles.relatedPromotionBadge} />}
             <Link href={item.target_path} className={styles.relatedImage}>
               {item.image_url
-                ? <Image src={item.image_url} alt={item.title} fill sizes="(max-width: 520px) 7.5rem, 16vw" quality={86} unoptimized />
+                ? <Image src={item.image_url} alt={item.title} fill sizes="(max-width: 520px) 18rem, (max-width: 1024px) 55vw, 30rem" quality={86} unoptimized />
                 : item.target_type === 'page'
-                  ? <Image className={styles.relatedFallbackLogo} src="/logowhite1.png" alt="ZakTalks" fill sizes="(max-width: 520px) 7.5rem, 16vw" quality={86} />
+                  ? <Image className={styles.relatedFallbackLogo} src="/logowhite1.png" alt="ZakTalks" fill sizes="(max-width: 520px) 18rem, (max-width: 1024px) 55vw, 30rem" quality={86} />
                   : <span><FaBookOpen /></span>}
             </Link>
             <div>
@@ -345,7 +361,7 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
   )
   const assessmentCount = curriculumModules.reduce((total, module) => total + module.lessons.filter((lesson) => lesson.type === 'assessment').length, 0)
   const moduleCount = curriculumModules.length
-  const formattedPrice = `$${(Number(course.price_cents || 0) / 100).toFixed(2)}`
+  const formattedPrice = formatCoursePrice(course.price_cents)
   const hasIntroductionVideo = Boolean(getYouTubeId(course.introduction_video_url))
   const descriptionCopy = hasDistinctText(course.description, course.promise) ? course.description : ''
   const subheadlineCopy = hasDistinctText(course.subheadline, course.short_introduction) ? course.subheadline : ''
@@ -416,8 +432,12 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
             <div className={styles.heroCopy}>
               <div className={styles.tagRow}>
                 {COURSE_TAGS.map((tag) => <span key={tag}>{tag}</span>)}
-                <CoursePromotionBadge promotion={course.promotion} className={styles.heroPromotionBadge} />
               </div>
+              <PromotionPriceDisplay
+                basePriceCents={course.price_cents}
+                promotion={course.promotion}
+                className={styles.heroPromotionPrice}
+              />
               <h1>{course.title}</h1>
               {course.promise && <p className={styles.heroDescription}><RichText value={richContent.promise} fallback={course.promise} maxLength={8000} /></p>}
               {course.short_introduction && <p className={styles.heroSubheadline}><RichText value={richContent.short_introduction} fallback={course.short_introduction} maxLength={4000} /></p>}
@@ -646,7 +666,15 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
                 <span className={styles.purchaseEyebrow}>{isEnrolled ? 'Your learning' : 'Start this course'}</span>
                 <h2>{isEnrolled ? 'Continue where you left off' : 'Learn at your pace'}</h2>
                 <p>Your progress is counted through completed lessons and activities, not just opening a page.</p>
-                {!isEnrolled && <strong className={styles.sidebarPrice}>{formattedPrice}</strong>}
+                {!isEnrolled && (course.promotion?.applied
+                  ? (
+                    <PromotionPriceDisplay
+                      basePriceCents={course.price_cents}
+                      promotion={course.promotion}
+                      className={styles.sidebarPromotionPrice}
+                    />
+                  )
+                  : <strong className={styles.sidebarPrice}>{formattedPrice}</strong>)}
                 <div className={styles.purchaseAction}>{renderPurchaseAction()}</div>
                 <div className={styles.completionRules}>
                   <h3>Completion rules</h3>

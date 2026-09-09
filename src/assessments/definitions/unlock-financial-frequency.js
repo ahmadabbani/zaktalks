@@ -146,36 +146,84 @@ export const unlockFinancialFrequency = {
   categories: {
     empire_builder: {
       label: 'Empire Builder',
-      color: '#0EA5E9'
+      color: '#0EA5E9',
+      interpretationLead: 'The Empire Builder is motivated by',
+      interpretationEmphasis: 'growth, achievement, and creating long-term impact',
+      interpretationDetail: 'They often see money as a tool for building businesses, opportunities, and legacy.',
+      healthyExpression: 'Strategic, visionary, willing to invest for the future.',
+      overusedExpression: 'Work becomes the priority over balance, relationships, or personal well-being.'
     },
     guardian: {
       label: 'Guardian',
-      color: '#F59E0B'
+      color: '#F59E0B',
+      interpretationLead: 'The Guardian seeks',
+      interpretationEmphasis: 'security, stability, and preparedness',
+      interpretationDetail: 'They prefer reducing uncertainty before making financial decisions.',
+      healthyExpression: 'Careful planning, thoughtful decision-making, financial resilience.',
+      overusedExpression: 'Excessive caution, overthinking, or delaying opportunities because certainty feels necessary.'
     },
     caretaker: {
       label: 'Caretaker',
-      color: '#10B981'
+      color: '#10B981',
+      interpretationLead: 'The Caretaker experiences money as a way to',
+      interpretationEmphasis: 'support and care for others',
+      interpretationDetail: 'Giving often feels meaningful and connected to their values.',
+      healthyExpression: 'Generous while maintaining healthy boundaries.',
+      overusedExpression: "Prioritizing others' needs so consistently that personal financial well-being is overlooked."
     },
     idealist: {
       label: 'Idealist',
-      color: '#6366F1'
+      color: '#6366F1',
+      interpretationLead: 'The Idealist wants money to be',
+      interpretationEmphasis: 'aligned with personal values and purpose',
+      interpretationDetail: 'Financial decisions are often guided by ethics, contribution, and meaningful impact.',
+      healthyExpression: 'Purpose-driven earning, investing, and giving.',
+      overusedExpression: 'Rejecting practical financial opportunities because they seem inconsistent with personal ideals.'
     },
     innocent: {
       label: 'Innocent',
-      color: '#A855F7'
+      color: '#A855F7',
+      interpretationLead: 'The Innocent prefers',
+      interpretationEmphasis: 'simplicity and trust',
+      interpretationDetail: 'They often feel less interested in financial complexity and may hope money will naturally work itself out.',
+      healthyExpression: 'Optimistic, trusting, and able to keep finances uncomplicated.',
+      overusedExpression: 'Avoiding financial decisions or relying entirely on others to manage money.'
     },
     pleasure_seeker: {
       label: 'Pleasure Seeker',
-      color: '#F43F5E'
+      color: '#F43F5E',
+      interpretationLead: 'The Pleasure Seeker values',
+      interpretationEmphasis: 'enjoyment, experiences, and living fully in the present',
+      interpretationDetail: 'Money is often associated with freedom and quality of life.',
+      healthyExpression: 'Creating memorable experiences while spending consciously.',
+      overusedExpression: 'Impulsive spending or focusing on immediate enjoyment without considering future needs.'
     },
     saver: {
       label: 'Saver',
-      color: '#14B8A6'
+      color: '#14B8A6',
+      interpretationLead: 'The Saver finds comfort in',
+      interpretationEmphasis: 'building financial reserves and preparing for the future',
+      interpretationDetail: 'Saving creates a sense of stability and control.',
+      healthyExpression: 'Disciplined, financially prepared, and patient.',
+      overusedExpression: 'Difficulty enjoying money or investing in experiences, growth, or personal needs despite having sufficient resources.'
     },
     star: {
       label: 'Star',
-      color: '#F97316'
+      color: '#F97316',
+      interpretationLead: 'The Star values',
+      interpretationEmphasis: 'visibility, influence, and recognition',
+      interpretationDetail: 'Money can become a way of expressing identity, success, and personal brand.',
+      healthyExpression: 'Inspiring others through authentic leadership and visible achievements.',
+      overusedExpression: 'Making financial decisions primarily to maintain an image or gain external validation.'
     }
+  },
+  bringingItTogether: {
+    openingEmphasis: 'Every person contains elements of multiple archetypes.',
+    openingText: 'Most people have one dominant archetype supported by one or two secondary patterns that influence different financial situations.',
+    goalPrefix: 'The goal is',
+    goalEmphasis: 'not to change your archetype',
+    goalText: 'but to understand how it shapes your decisions so you can respond with greater awareness rather than habit.',
+    closingEmphasis: 'Financial maturity begins when you recognize your patterns and realize that every pattern offers both strengths to leverage and blind spots to understand.'
   },
   mixedResult: {
     label: 'Mixed Archetype Pattern',

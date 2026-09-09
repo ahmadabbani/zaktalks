@@ -36,6 +36,10 @@
   text-wrap: balance;
 }
 
+.mobileTitlePhrase {
+  white-space: normal;
+}
+
 .copy {
   max-width: 66ch;
   color: var(--home-subheading-color);
@@ -738,6 +742,18 @@
   .platformIcon {
     width: 2.05rem;
     height: 2.05rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    width: 100%;
+    max-width: none;
+    text-wrap: wrap;
+  }
+
+  .mobileTitlePhrase {
+    white-space: nowrap;
   }
 }
 

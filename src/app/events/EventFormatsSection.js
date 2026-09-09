@@ -85,8 +85,8 @@ export default function EventFormatsSection() {
           className={`${styles.header} ${isVisible('formats-header') ? styles.revealed : ''}`}
         >
           <p className={styles.eyebrow}>Ways to work together</p>
-          <h2 id="event-formats-heading" className={styles.title}>
-            Conversations Zak can<br />bring to your event
+          <h2 id="event-formats-heading" className={styles.title} data-mobile-natural-wrap>
+            Conversations Zak can<br className="desktopHeadingBreak" />{' '}bring to your event
           </h2>
           <p className={styles.intro}>Choose the format that fits</p>
         </header>

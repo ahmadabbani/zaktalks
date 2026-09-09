@@ -3,6 +3,14 @@ export const transactionalAnalysisQuestionnaire = {
   id: 'transactional-analysis-personal-style-questionnaire-v1',
   title: 'Ego states assessment',
   description: 'For each statement, allocate a score to show how much the behaviour is like the way you behave.',
+  externalPresentation: {
+    introVariant: 'ego-style',
+    description: 'This reflection is based on Transactional Analysis personal styles. It does not define who you are. It helps you notice the patterns you may use most often when relating, leading, solving problems, responding to pressure, or expressing yourself.',
+    descriptionFollowup: 'Your results are grouped into five styles:',
+    highlightedStyles: ['Critical Parent', 'Nurturing Parent', 'Adult', 'Adaptive Child', 'Free Child'],
+    intro: 'Read each statement and select the response that feels most accurate. Answer from your usual behaviour—not how you wish to appear, or how you believe you should behave.',
+    completionInstructions: 'Rate how much each behaviour is like the way you behave.'
+  },
   intro: `Instructions - For each statement, allocate a score to show how much the behaviour is like the way you behave:
 
 Not true of me - 0
@@ -65,11 +73,60 @@ Extremely true of me - 3`,
     { id: 'q40', text: 'I go along too readily with what other people want.', category: 'adaptive_child' }
   ],
   categories: {
-    critical_parent: { label: 'Critical Parent', color: '#B91C1C' },
-    nurturing_parent: { label: 'Nurturing Parent', color: '#0EA5E9' },
-    adult: { label: 'Adult', color: '#16A34A' },
-    adaptive_child: { label: 'Adaptive Child', color: '#9333EA' },
-    free_child: { label: 'Free Child', color: '#EA580C' }
+    critical_parent: {
+      label: 'Critical Parent',
+      color: '#B91C1C',
+      highScoreInterpretation: [
+        'A higher Critical Parent score may indicate a strong relationship with standards, responsibility, principles, discipline, and structure. You may quickly recognize what needs correcting and feel comfortable establishing expectations.',
+        'These qualities can provide clarity, protection, and direction.',
+        'The invitation is to notice when healthy structure becomes rigidity, judgment, perfectionism, or excessive criticism—toward yourself as much as toward others. You may sometimes react to what “should” happen before considering what is actually happening.'
+      ],
+      awarenessQuestion: 'Are my standards guiding and protecting—or judging and controlling?'
+    },
+    nurturing_parent: {
+      label: 'Nurturing Parent',
+      color: '#0EA5E9',
+      highScoreInterpretation: [
+        'A higher Nurturing Parent score often reflects warmth, empathy, generosity, encouragement, and a natural sensitivity to other people’s needs.',
+        'People may experience you as someone who creates safety and offers support.',
+        'The area for awareness is whether nurturing sometimes becomes over-nurturing. You may give before being asked, protect people from experiences they need to face themselves, neglect your own needs, or feel responsible for keeping everyone comfortable.',
+        'Care is healthiest when it respects both people’s capacity.'
+      ],
+      awarenessQuestion: 'Am I supporting this person—or doing for them what they could do for themselves?'
+    },
+    adult: {
+      label: 'Adult',
+      color: '#16A34A',
+      highScoreInterpretation: [
+        'A higher Adult score may indicate a strong ability to observe, analyze, gather information, solve problems, evaluate alternatives, and make considered decisions.',
+        'This can provide stability and clarity, particularly in complex or emotionally charged situations.',
+        'Yet Adult functioning can also become a refuge from feeling. Analysis can sometimes replace emotional contact: instead of experiencing sadness, anger, fear, excitement, or vulnerability, you may immediately try to understand or solve it.',
+        'The goal is not to choose logic over emotion. It is to allow thinking and feeling to inform each other.'
+      ],
+      awarenessQuestion: 'Am I using my thinking to understand my experience—or to avoid experiencing it?'
+    },
+    adaptive_child: {
+      label: 'Adaptive Child',
+      color: '#9333EA',
+      highScoreInterpretation: [
+        'A higher Adapted Child score may indicate sensitivity to others, cooperation, social awareness, flexibility, and an ability to adjust your behavior to different environments.',
+        'These capacities help us live and work with other people.',
+        'The difficulty arises when adaptation becomes over-adaptation. You may become highly attentive to what others expect while losing contact with what you think, feel, or want. Approval may become especially important, conflict may feel threatening, and saying no may become difficult.',
+        'The goal is not to stop adapting. Healthy relationships require adaptation. The goal is to make adaptation a choice rather than an automatic strategy for maintaining acceptance.'
+      ],
+      awarenessQuestion: 'Am I adapting because I consciously choose to—or because I fear what might happen if I don’t?'
+    },
+    free_child: {
+      label: 'Free Child',
+      color: '#EA580C',
+      highScoreInterpretation: [
+        'A higher Free Child score may reflect vitality, creativity, openness, emotional expressiveness, curiosity, pleasure, and spontaneity.',
+        'You may find it relatively easy to connect with what you want and feel and to bring energy and originality into relationships and experiences.',
+        'The area for awareness is whether spontaneity sometimes becomes impulsivity. Immediate desires can occasionally overshadow consequences, commitments, boundaries, or the needs of others.',
+        'The aim is not to suppress your Free Child, but to let its energy coexist with Adult awareness.'
+      ],
+      awarenessQuestion: 'Can I honor what I want while also considering what happens next?'
+    }
   },
   mixedResult: {
     label: 'Mixed Result',

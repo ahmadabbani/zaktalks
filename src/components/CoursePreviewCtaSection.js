@@ -33,8 +33,8 @@ export default function CoursePreviewCtaSection() {
       <div className={styles.container}>
         <div className={styles.layout}>
           <div className={styles.content}>
-            <h2 id="course-preview-heading" className={styles.title}>
-              You knew before<br />you could name it
+            <h2 id="course-preview-heading" className={styles.title} data-mobile-natural-wrap>
+              You knew before<br className="desktopHeadingBreak" />{' '}you could name it
             </h2>
             <div className={styles.copy}>
               <p>The ways you protect yourself, communicate, lead, or hold back did not appear by accident. Many began as early decisions that once helped you cope but may no longer serve the life you want now.</p>
