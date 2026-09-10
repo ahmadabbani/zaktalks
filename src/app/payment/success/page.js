@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa'
+import { FaCheckCircle, FaClock, FaExclamationCircle } from 'react-icons/fa'
 import {
   fulfillCheckoutSession,
   FulfillmentInProgressError,
@@ -43,6 +43,7 @@ export default async function PaymentSuccessPage({ searchParams }) {
   const duplicateRefunded = result.status === 'duplicate_refunded'
   const duplicateNoCost = result.status === 'duplicate_no_cost'
   const delayed = ['processing', 'payment_processing', 'fulfillment_delayed'].includes(result.status)
+  const resolved = fulfilled || duplicateRefunded
 
   if (result.status === 'invalid' || result.status === 'open' || result.status === 'expired') {
     return (
@@ -64,8 +65,8 @@ export default async function PaymentSuccessPage({ searchParams }) {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <div className={`${styles.iconWrapper} ${fulfilled ? styles.successIconWrapper : styles.warningIconWrapper}`}>
-          {fulfilled ? <FaCheckCircle className={styles.icon} /> : <FaExclamationCircle className={styles.icon} />}
+        <div className={`${styles.iconWrapper} ${resolved ? styles.successIconWrapper : delayed ? styles.processingIconWrapper : styles.warningIconWrapper}`}>
+          {resolved ? <FaCheckCircle className={styles.icon} /> : delayed ? <FaClock className={styles.icon} /> : <FaExclamationCircle className={styles.icon} />}
         </div>
         <h1 className={styles.title}>
           {duplicateRefunded ? 'Duplicate payment refunded' : duplicateNoCost ? 'Course already available' : delayed ? 'Payment received' : 'Payment confirmed!'}

@@ -5,6 +5,7 @@ import {
   buildPaymentReceiptEmail,
 } from '@/lib/email/templates/purchase'
 import { buildCourseInactivityEmail } from '@/lib/email/templates/course-inactivity'
+import { buildPasswordSetupEmail } from '@/lib/email/templates/password-setup'
 import DownloadPdfButton from './DownloadPdfButton'
 import styles from './email-previews.module.css'
 
@@ -17,6 +18,12 @@ export default function EmailPreviewsPage() {
 
   const welcomeEmail = buildWelcomeEmail({
     firstName: 'Maya',
+    appUrl: SAMPLE_APP_URL,
+    supportEmail: 'hello@okayness.com',
+  })
+  const passwordSetupEmail = buildPasswordSetupEmail({
+    recipientName: 'Maya',
+    setupUrl: `${SAMPLE_APP_URL}/auth/update-password?preview=1`,
     appUrl: SAMPLE_APP_URL,
     supportEmail: 'hello@okayness.com',
   })
@@ -54,6 +61,14 @@ export default function EmailPreviewsPage() {
   })
 
   const previews = [
+    {
+      id: 'password-setup',
+      name: 'Guest password setup email',
+      description: 'Sent after a guest purchase so the learner can securely set a password.',
+      from: 'ZakTalks <noreply@zaktalks.com>',
+      height: 1160,
+      ...passwordSetupEmail,
+    },
     {
       id: 'welcome',
       name: 'Welcome email',

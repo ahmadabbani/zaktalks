@@ -1,9 +1,8 @@
 .page {
-  min-height: calc(100svh - 80px);
-  margin-top: 80px;
+  min-height: 100svh;
   display: grid;
   place-items: center;
-  padding: clamp(2.5rem, 6vw, 5rem) clamp(1rem, 4vw, 2.5rem);
+  padding: clamp(7rem, 10vw, 9rem) clamp(1rem, 4vw, 2.5rem) clamp(2.5rem, 6vw, 5rem);
   background: var(--color-gray-light);
 }
 
@@ -271,9 +270,8 @@
 
 @media (max-width: 600px) {
   .page {
-    min-height: calc(100svh - 70px);
-    margin-top: 70px;
-    padding: 1.5rem .75rem;
+    min-height: 100svh;
+    padding: 6.5rem .75rem 1.5rem;
   }
 
   .guestCard {

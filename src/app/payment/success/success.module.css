@@ -1,41 +1,9 @@
 .container {
-  position: relative;
-  isolation: isolate;
-  min-height: calc(100svh - 80px);
-  margin-top: 80px;
+  min-height: 100svh;
   display: grid;
   place-items: center;
-  overflow: hidden;
-  padding: clamp(2.5rem, 7vw, 6rem) clamp(1rem, 4vw, 2.5rem);
-  background:
-    radial-gradient(circle at 8% 16%, rgba(var(--color-dark-blue-rgb), .12), transparent 31rem),
-    radial-gradient(circle at 92% 88%, rgba(241, 196, 15, .13), transparent 25rem),
-    var(--color-gray-light);
-}
-
-.container::before,
-.container::after {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.container::before {
-  top: clamp(1rem, 7vw, 5rem);
-  right: clamp(-5rem, -3vw, -2rem);
-  width: clamp(9rem, 19vw, 17rem);
-  aspect-ratio: 1;
-  border: 1px solid rgba(var(--color-dark-blue-rgb), .15);
-}
-
-.container::after {
-  bottom: clamp(1rem, 6vw, 4rem);
-  left: clamp(-3rem, -2vw, -1rem);
-  width: clamp(5rem, 11vw, 9rem);
-  aspect-ratio: 1;
-  background: rgba(241, 196, 15, .14);
+  padding: clamp(7rem, 10vw, 9rem) clamp(1rem, 4vw, 2.5rem) clamp(2.5rem, 7vw, 6rem);
+  background: var(--color-gray-light);
 }
 
 .card {
@@ -66,6 +34,12 @@
 }
 
 .successIconWrapper {
+  color: var(--color-white);
+  background: var(--color-dark-blue);
+  box-shadow: 0 12px 30px rgba(var(--color-dark-blue-rgb), .25);
+}
+
+.processingIconWrapper {
   color: var(--color-white);
   background: var(--color-dark-blue);
   box-shadow: 0 12px 30px rgba(var(--color-dark-blue-rgb), .25);
@@ -179,9 +153,8 @@
 
 @media (max-width: 600px) {
   .container {
-    min-height: calc(100svh - 70px);
-    margin-top: 70px;
-    padding: 2rem 1rem;
+    min-height: 100svh;
+    padding: 6.5rem 1rem 2rem;
   }
 
   .card {

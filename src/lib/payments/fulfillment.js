@@ -1,8 +1,8 @@
 import 'server-only'
 
 import { after } from 'next/server'
-import { resend, ZAKTALKS_EMAIL_FROM } from '@/lib/resend'
-import { secureActionLink } from '@/lib/email/action-link'
+import { resend, ZAKTALKS_EMAIL_FROM, OKAYNESS_SUPPORT_EMAIL } from '@/lib/resend'
+import { buildPasswordSetupEmail } from '@/lib/email/templates/password-setup'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { stripe } from '@/lib/stripe'
 import {
@@ -60,24 +60,21 @@ function scheduleCheckoutCustomerEmails(sessionId, emailTypes, requestOrigin) {
   }
 }
 
-async function sendPasswordSetupEmail({ checkoutId, email, link, claimId }) {
-  const setupButton = secureActionLink(
-    link,
-    'Set Password',
-    'display:inline-block;padding:10px 20px;background:#f4c400;color:#212c2d;text-decoration:none;border-radius:999px;font-weight:bold;',
-  )
+async function sendPasswordSetupEmail({ checkoutId, email, firstName, link, claimId }) {
+  const message = buildPasswordSetupEmail({
+    recipientName: firstName,
+    setupUrl: link,
+    appUrl: process.env.NEXT_PUBLIC_APP_URL,
+    supportEmail: OKAYNESS_SUPPORT_EMAIL,
+  })
 
   const { data, error } = await resend.emails.send(
     {
       from: ZAKTALKS_EMAIL_FROM,
       to: email,
-      subject: 'Welcome to ZakTalks! Set your password',
-      html: `
-        <h1>Thank you for your purchase!</h1>
-        <p>You now have access to your course. Since you checked out as a guest, use the secure link below to confirm your email and set a password for your account:</p>
-        <p>${setupButton}</p>
-        <p>This secure link is single-use. If it has expired, contact support for a new one.</p>
-      `,
+      subject: message.subject,
+      text: message.text,
+      html: message.html,
     },
     { idempotencyKey: `guest-password-setup-${checkoutId}-${claimId}` },
   )
@@ -176,6 +173,7 @@ async function ensureGuestPasswordEmail({
     const emailId = await sendPasswordSetupEmail({
       checkoutId: checkout.id,
       email,
+      firstName: checkout.first_name,
       link: guestAccount.actionLink,
       claimId: new Date(claimedAt).getTime(),
     })
