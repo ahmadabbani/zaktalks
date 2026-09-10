@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { FaGraduationCap, FaPlus } from 'react-icons/fa'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
-import { ASSESSMENTS } from '@/assessments/registry'
+import { ASSESSMENTS, getExternalAssessmentPresentation } from '@/assessments/registry'
 import OverviewDashboard from '../users/OverviewDashboard'
 import UserDirectory from '../users/UserDirectory'
 import EnrollmentsDashboard from '../users/EnrollmentsDashboard'
@@ -96,11 +96,14 @@ async function AssessmentLinksPanel() {
   return <div className={userStyles.embeddedAdminPanel}>
     <ExternalAssessmentLinks
       showHeading={false}
-      assessments={Object.values(ASSESSMENTS).filter((assessment) => assessment.courseOnly !== true).map((assessment) => ({
-        id: assessment.id,
-        title: assessment.externalPresentation?.title || assessment.title,
-        description: assessment.externalPresentation?.description || assessment.description
-      }))}
+      assessments={Object.values(ASSESSMENTS).filter((assessment) => assessment.courseOnly !== true).map((assessment) => {
+        const presentation = getExternalAssessmentPresentation(assessment)
+        return {
+          id: assessment.id,
+          title: presentation.title,
+          description: presentation.description
+        }
+      })}
       initialLinks={(externalLinks || []).map((link) => ({ ...link, path: `/assessments/external/${link.token}` }))}
     />
   </div>

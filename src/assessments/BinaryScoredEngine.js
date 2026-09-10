@@ -87,26 +87,41 @@ export default function BinaryScoredEngine({
         className={styles.binaryResultContainer}
         id={enableResultScreenshot ? resultCaptureId : undefined}
       >
-        <p className={styles.binaryResultEyebrow}>Your Result</p>
-        <h2 className={styles.binaryResultTitle}>{result?.label}</h2>
+        <header className={styles.binaryResultHero}>
+          <h2>Your Codependency Awareness Profile</h2>
+          <p>Your score reflects patterns related to boundaries, self-care, emotional honesty, and how responsibility is shared in relationships. It is a reflection tool, not a diagnosis. Use it to notice where more support, choice, or balance may be helpful.</p>
+        </header>
 
-        <div className={styles.binaryScoreCard}>
-          <span>{score}</span>
-          <small>/ {totalQuestions}</small>
-        </div>
+        <section className={styles.binaryResultOverview}>
+          <div className={styles.binaryResultScorePanel}>
+            <span className={styles.binaryResultScoreLabel}>Your score</span>
+            <strong>{score}<small>/{totalQuestions}</small></strong>
+            <div
+              className={styles.binaryResultScoreTrack}
+              role="img"
+              aria-label={`Score: ${score} out of ${totalQuestions}`}
+            >
+              <span style={{ width: `${(score / totalQuestions) * 100}%` }} />
+            </div>
+            <div className={styles.binaryResultRange}>{result?.rangeLabel}</div>
+          </div>
 
-        <div className={styles.binaryResultRange}>{result?.rangeLabel}</div>
-
-        {result?.category && (
-          <h3 className={styles.binaryResultCategory}>{result.category}</h3>
-        )}
+          <div className={styles.binaryResultMeaning}>
+            <span>Your result</span>
+            {result?.category && <h3>{result.category}</h3>}
+            <p>{result?.label}</p>
+          </div>
+        </section>
 
         {Array.isArray(result?.points) && (
-          <ul className={styles.binaryResultList}>
-            {result.points.map((point) => (
-              <li key={point}>{point}</li>
-            ))}
-          </ul>
+          <section className={styles.binaryResultInsights}>
+            <h3>What your result may be showing</h3>
+            <ul className={styles.binaryResultList}>
+              {result.points.map((point) => (
+                <li key={point}>{point}</li>
+              ))}
+            </ul>
+          </section>
         )}
 
         {enableResultScreenshot && (

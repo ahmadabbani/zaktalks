@@ -1406,6 +1406,23 @@
     width: 100%;
   }
 
+  .heroBadgeStack {
+    width: min(
+      22rem,
+      calc(100% - var(--featured-section-gutter) - var(--featured-section-gutter))
+    );
+    max-width: calc(
+      100% - var(--featured-section-gutter) - var(--featured-section-gutter)
+    );
+    margin-inline: auto;
+  }
+
+  .heroBadge {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
   .heroFigure {
     max-width: none;
     align-self: center;

@@ -280,7 +280,7 @@ export async function getSpecificAssessmentSubmission({ lessonId, assessmentKey 
   }
 }
 
-export async function submitSpecificAssessment({ lessonId, assessmentKey, answers }) {
+export async function submitSpecificAssessment({ lessonId, assessmentKey, selectedSectionId = null, answers }) {
   const supabase = await createClient()
   const adminSupabase = await createAdminClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -293,13 +293,29 @@ export async function submitSpecificAssessment({ lessonId, assessmentKey, answer
       throw new Error('Worksheet assessment not found.')
     }
 
-    const { lesson, enrollment } = await getVerifiedContext(adminSupabase, user, lessonId)
+    const { lesson, enrollment } = await getVerifiedContext(
+      adminSupabase,
+      user,
+      lessonId,
+      { requireSpecificAssessment: false }
+    )
     if (lesson.assessment_key !== assessmentKey) {
       throw new Error('This worksheet does not belong to the current lesson.')
     }
 
-    const normalizedAnswers = buildAnswers(definition, answers)
-    validateAnswers(definition, normalizedAnswers)
+    const submittedDefinition = definition.archetypeSelection
+      ? {
+          ...definition,
+          sections: definition.sections.filter(section => section.id === selectedSectionId)
+        }
+      : definition
+
+    if (definition.archetypeSelection && submittedDefinition.sections.length !== 1) {
+      throw new Error('Please choose a valid financial archetype.')
+    }
+
+    const normalizedAnswers = buildAnswers(submittedDefinition, answers)
+    validateAnswers(submittedDefinition, normalizedAnswers)
 
     const { data: profile } = await supabase
       .from('users')
@@ -307,7 +323,7 @@ export async function submitSpecificAssessment({ lessonId, assessmentKey, answer
       .eq('id', user.id)
       .single()
 
-    const pdfBytes = await generateWorksheetPdf(definition, normalizedAnswers, profile)
+    const pdfBytes = await generateWorksheetPdf(submittedDefinition, normalizedAnswers, profile)
     const generatedFilePath = `submissions/${user.id}/${lessonId}/latest.pdf`
     const generatedFileName = `${definition.title.replace(/[^a-z0-9]+/gi, '_')}.pdf`
 

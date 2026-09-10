@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { getAssessmentById } from '@/assessments/registry'
+import { getAssessmentById, getExternalAssessmentPresentation } from '@/assessments/registry'
 import LikertEngine from '@/assessments/LikertEngine'
 import CorrectIncorrectEngine from '@/assessments/CorrectIncorrectEngine'
 import CathexisEngine from '@/assessments/CathexisEngine'
@@ -30,9 +30,7 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
     )
   }
 
-  const displayDefinition = definition.externalPresentation
-    ? { ...definition, ...definition.externalPresentation }
-    : definition
+  const displayDefinition = getExternalAssessmentPresentation(definition)
   const requiresArchetypeSelection = Boolean(
     definition.type === 'fillable-worksheet' && displayDefinition.archetypeSelection
   )
@@ -55,7 +53,7 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
                 <span><FaShieldAlt /> Private by default</span>
               </div>
             </div>
-            {displayDefinition.logo ? (
+            {displayDefinition.hideHeroVisual ? null : displayDefinition.logo ? (
               <span className={styles.externalIntroHeroLogo}>
                 <Image
                   src={displayDefinition.logo}

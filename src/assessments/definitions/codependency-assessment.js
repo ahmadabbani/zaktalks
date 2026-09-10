@@ -1,11 +1,11 @@
 export const codependencyAssessment = {
   type: 'binary-scored',
   id: 'codependency-assessment-v1',
-  title: 'Friel Co-Dependency Assessment Inventory',
+  title: 'Codependency Assessment',
   externalOnly: true,
-  logo: '/Codependancylogo.jpg',
+  hideHeroVisual: true,
   description:
-    'Below are a number of True / False statements dealing with how you feel about yourself, your life and those around you.',
+    'This assessment invites you to reflect on patterns involving self-care, boundaries, emotional honesty, self-trust, and responsibility in relationships. It can help you notice where connection with others may come at the expense of your own needs, identity, or wellbeing. There are no right or wrong answers; respond from your usual experience.',
   intro:
     'As your mark True or False for each question, be sure to answer honestly, but do not spend too much time dwelling on any one question. There are no right or wrong answers. Take each question as it comes and answer as you usually feel.',
   themeColor: '#F1C40F',
@@ -29,7 +29,7 @@ export const codependencyAssessment = {
     { id: 'q13', text: 'I am satisfied with the number and kind of relationships I have in my life.', scoreWhen: false },
     { id: 'q14', text: 'Even if I had the time and money to do it, I would feel uncomfortable taking a vacation by myself.', scoreWhen: true },
     { id: 'q15', text: 'I have enough help with everything that I must do every day.', scoreWhen: false },
-    { id: 'q16', text: 'I with that I could accomplish a lot more than I do now.', scoreWhen: true },
+    { id: 'q16', text: 'I wish that I could accomplish a lot more than I do now.', scoreWhen: true },
     { id: 'q17', text: 'My family taught me to express feelings and affection openly when I was growing up.', scoreWhen: false },
     { id: 'q18', text: 'It is hard for me to talk to someone in authority (boss, teachers, etc.).', scoreWhen: true },
     { id: 'q19', text: 'When I am in a relationship that becomes too confusing and complicated, I have no trouble getting out of it.', scoreWhen: false },
@@ -64,7 +64,7 @@ export const codependencyAssessment = {
     { id: 'q48', text: "There's so much to do and not enough time.", scoreWhen: true },
     { id: 'q49', text: 'I have few regrets about what I have done with my life.', scoreWhen: false },
     { id: 'q50', text: 'I tend to think of others more than I do of myself.', scoreWhen: true },
-    { id: 'q51', text: 'More often than not, my life has gone the way I wanted it to.', scoreWhen: false },
+    { id: 'q51', text: 'Most of the time, my life has gone the way I wanted it to.', scoreWhen: false },
     { id: 'q52', text: "People admire me because I'm so understanding of others, even when they do something that annoys me.", scoreWhen: true },
     { id: 'q53', text: 'I am comfortable with my own sexuality.', scoreWhen: false },
     { id: 'q54', text: 'I sometimes feel embarrassed by the behavior of those close to me.', scoreWhen: true },

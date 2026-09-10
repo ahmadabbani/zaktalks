@@ -442,6 +442,15 @@
     width: 100%;
     max-width: 24rem;
     margin-inline: auto;
+    justify-content: center;
+  }
+
+  .heroVisual .heroImageFrame {
+    margin-inline: auto;
+  }
+
+  .heroVisual .heroImage {
+    transform: translateX(8%);
   }
 }
 

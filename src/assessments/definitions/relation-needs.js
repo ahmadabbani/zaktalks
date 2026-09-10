@@ -17,8 +17,31 @@ On the line next to each numbered statement, write a score based on how strongly
 3 = Neutral - I don’t have an opinion either way.
 4 = I agree.
 5 = I strongly agree.`,
+  externalPresentation: {
+    description: 'This assessment helps you identify the relational needs that most influence the way you connect with others. There are no right or wrong answers. The purpose is to notice what helps you feel safe, valued, heard, and close and to recognise what may happen when these needs go unspoken or unmet.',
+    intro: 'On the line next to each numbered statement, write a score based on how strongly you agree with what the statement says. Here are the different scores to use:',
+    introVariant: 'scale',
+    scaleLegend: [
+      { value: 1, label: 'Strongly disagree' },
+      { value: 2, label: 'Disagree' },
+      { value: 3, label: 'Neutral - I don’t have an opinion either way' },
+      { value: 4, label: 'I agree' },
+      { value: 5, label: 'Strongly agree' }
+    ],
+    completionInstructions: 'On the line next to each numbered statement, write a score based on how strongly you agree with what the statement says.'
+  },
   themeColor: '#2563EB',
   resultMode: 'ranked-needs',
+  scale: {
+    values: [1, 2, 3, 4, 5],
+    legend: [
+      { value: 1, label: 'I strongly disagree' },
+      { value: 2, label: 'I disagree' },
+      { value: 3, label: 'Neutral' },
+      { value: 4, label: 'I agree' },
+      { value: 5, label: 'I strongly agree' }
+    ]
+  },
   questions: [
     { id: 'q1', text: 'It\'s important to me that people receive me for who I am, even if I\'m a little "different."', category: 'acceptance' },
     { id: 'q2', text: 'It is important to me that my world is in order.', category: 'security' },

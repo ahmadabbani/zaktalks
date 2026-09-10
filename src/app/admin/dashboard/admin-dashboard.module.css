@@ -654,10 +654,11 @@
 /* External Assessment Links */
 .externalLinksSection {
     margin-bottom: var(--space-2xl);
-    background: white;
-    border-radius: 1rem;
-    padding: var(--space-xl);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+    padding: clamp(1.1rem, 2.4vw, 1.75rem);
+    border: 1px solid rgba(var(--color-dark-blue-rgb), 0.12);
+    border-radius: 1.35rem;
+    background: var(--color-white);
+    box-shadow: 0 1rem 2.6rem rgba(33, 44, 45, 0.08);
 }
 
 .externalLinksHeader {
@@ -675,64 +676,178 @@
     line-height: 1.5;
 }
 
+.externalLinksHeader .sectionTitle {
+    margin: 0 0 0.4rem;
+    font-weight: 900;
+}
+
+.externalLinksHeader .sectionTitle svg {
+    color: var(--color-dark-blue);
+}
+
 .externalLinkForm {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
+    gap: 0.65rem;
     margin-bottom: var(--space-xl);
-    padding: var(--space-lg);
-    background: var(--color-gray-light);
-    border-radius: 0.75rem;
+    padding: clamp(1rem, 2vw, 1.35rem);
+    border: 1px solid rgba(var(--color-dark-blue-rgb), 0.14);
+    border-radius: 1rem;
+    background: rgba(var(--color-dark-blue-rgb), 0.055);
 }
 
 .externalLinkForm label {
     color: var(--color-black);
-    font-size: 0.85rem;
-    font-weight: 800;
+    font-size: 0.78rem;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
 .externalLinkFormRow {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: var(--space-md);
+    align-items: start;
+    gap: 0.8rem;
 }
 
-.externalLinkForm select {
+.externalAssessmentSelect {
+    position: relative;
     width: 100%;
     min-width: 0;
-    padding: 0.8rem 1rem;
-    border: 1px solid #ddd;
-    border-radius: 0.65rem;
-    color: var(--color-black);
-    background: white;
-    font: inherit;
-    font-weight: 650;
 }
 
-.externalLinkForm button,
+.externalAssessmentSelectTrigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    min-height: 3.15rem;
+    padding: 0.78rem 1rem;
+    border: 1px solid rgba(33, 44, 45, 0.18);
+    border-radius: 0.82rem;
+    color: var(--color-black);
+    background: var(--color-white);
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 750;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color var(--transition-normal), box-shadow var(--transition-normal), background-color var(--transition-normal);
+}
+
+.externalAssessmentSelectTrigger > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.externalAssessmentSelectTrigger svg {
+    flex: 0 0 auto;
+    color: var(--color-dark-blue);
+    transition: transform var(--transition-normal);
+}
+
+.externalAssessmentSelectTrigger:hover:not(:disabled),
+.externalAssessmentSelectTriggerOpen {
+    border-color: rgba(var(--color-dark-blue-rgb), 0.55);
+    background: var(--color-white);
+}
+
+.externalAssessmentSelectTriggerOpen {
+    box-shadow: 0 0 0 3px rgba(var(--color-dark-blue-rgb), 0.12);
+}
+
+.externalAssessmentSelectTriggerOpen svg {
+    transform: rotate(180deg);
+}
+
+.externalAssessmentSelectTrigger:focus-visible,
+.externalLinkGenerateButton:focus-visible,
+.externalLinkActions button:focus-visible {
+    outline: 3px solid rgba(var(--color-dark-blue-rgb), 0.2);
+    outline-offset: 2px;
+}
+
+.externalAssessmentSelectMenu {
+    position: absolute;
+    z-index: 50;
+    top: calc(100% + 0.45rem);
+    right: 0;
+    left: 0;
+    display: grid;
+    gap: 0.28rem;
+    max-height: 19rem;
+    padding: 0.45rem;
+    overflow-y: auto;
+    border: 1px solid rgba(33, 44, 45, 0.14);
+    border-radius: 0.9rem;
+    background: var(--color-white);
+    box-shadow: 0 1rem 2.5rem rgba(33, 44, 45, 0.16);
+}
+
+.externalAssessmentSelectMenu button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    min-height: 2.8rem;
+    padding: 0.7rem 0.85rem;
+    border: 0;
+    border-radius: 0.62rem;
+    color: var(--color-black);
+    background: transparent;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    transition: color var(--transition-normal), background-color var(--transition-normal);
+}
+
+.externalAssessmentSelectMenu button:hover,
+.externalAssessmentSelectOptionSelected {
+    color: var(--color-dark-blue) !important;
+    background: rgba(var(--color-dark-blue-rgb), 0.1) !important;
+}
+
+.externalAssessmentSelectMenu button svg {
+    flex: 0 0 auto;
+    color: var(--color-dark-blue);
+}
+
+.externalLinkGenerateButton,
 .externalLinkActions button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-xs);
-    min-height: 44px;
-    padding: 0.75rem 1rem;
-    border: none;
-    border-radius: 0.65rem;
-    background: var(--color-black);
-    color: var(--color-yellow);
+    gap: 0.5rem;
+    min-height: 3.15rem;
+    padding: 0.75rem 1.2rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    color: var(--color-white);
+    background: var(--color-dark-blue);
+    font: inherit;
+    font-size: 0.84rem;
     font-weight: 850;
     cursor: pointer;
-    transition: transform var(--transition-normal), opacity var(--transition-normal);
+    transition: transform var(--transition-normal), background-color var(--transition-normal), color var(--transition-normal), border-color var(--transition-normal), opacity var(--transition-normal);
 }
 
-.externalLinkForm button:hover:not(:disabled),
+.externalLinkGenerateButton:hover:not(:disabled),
 .externalLinkActions button:hover:not(:disabled) {
-    opacity: 0.92;
+    border-color: var(--color-yellow);
+    color: var(--color-black);
+    background: var(--color-yellow);
     transform: translateY(-1px);
 }
 
-.externalLinkForm button:disabled,
+.externalAssessmentSelectTrigger:disabled,
+.externalLinkGenerateButton:disabled,
 .externalLinkActions button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
@@ -746,9 +861,10 @@
 
 .externalLinksEmpty {
     padding: var(--space-lg);
-    border: 1px dashed rgba(0, 0, 0, 0.2);
-    border-radius: 0.75rem;
+    border: 1px dashed rgba(var(--color-dark-blue-rgb), 0.28);
+    border-radius: 0.9rem;
     color: var(--color-gray-dark);
+    background: rgba(var(--color-dark-blue-rgb), 0.035);
     font-weight: 700;
     text-align: center;
 }
@@ -758,10 +874,17 @@
     grid-template-columns: minmax(0, 1fr) auto;
     gap: var(--space-md);
     align-items: center;
-    padding: var(--space-md);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 0.85rem;
-    background: #fbfbfb;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(var(--color-dark-blue-rgb), 0.12);
+    border-radius: 1rem;
+    background: var(--color-white);
+    transition: border-color var(--transition-normal), box-shadow var(--transition-normal), transform var(--transition-normal);
+}
+
+.externalLinkCard:hover {
+    border-color: rgba(var(--color-dark-blue-rgb), 0.3);
+    box-shadow: 0 0.7rem 1.6rem rgba(33, 44, 45, 0.07);
+    transform: translateY(-1px);
 }
 
 .externalLinkMain {
@@ -779,7 +902,7 @@
 .externalLinkTitleRow h3 {
     margin: 0;
     color: var(--color-black);
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 900;
 }
 
@@ -796,11 +919,11 @@
 }
 
 .externalLinkStatusActive {
-    background: #16a34a;
+    background: var(--color-dark-blue);
 }
 
 .externalLinkStatusExpired {
-    background: #64748b;
+    background: var(--color-black);
 }
 
 .externalLinkStatusRevoked {
@@ -809,7 +932,7 @@
 
 .externalLinkUrl {
     margin: 0 0 var(--space-xs) 0;
-    color: #0f766e;
+    color: var(--color-dark-blue);
     font-family: monospace;
     font-size: 0.88rem;
     font-weight: 800;
@@ -829,9 +952,33 @@
     gap: var(--space-sm);
 }
 
+.externalLinkActions button {
+    min-height: 2.7rem;
+    padding: 0.62rem 0.95rem;
+}
+
+.externalLinkActions > button:first-child {
+    border-color: rgba(var(--color-dark-blue-rgb), 0.28);
+    color: var(--color-dark-blue);
+    background: rgba(var(--color-dark-blue-rgb), 0.08);
+}
+
+.externalLinkActions > button:first-child:hover:not(:disabled) {
+    border-color: var(--color-dark-blue);
+    color: var(--color-white);
+    background: var(--color-dark-blue);
+}
+
 .externalLinkActions .externalLinkRevokeBtn {
-    background: #fee2e2;
-    color: #991b1b;
+    border-color: rgba(33, 44, 45, 0.18);
+    color: var(--color-black);
+    background: var(--color-white);
+}
+
+.externalLinkActions .externalLinkRevokeBtn:hover:not(:disabled) {
+    border-color: var(--color-yellow);
+    color: var(--color-black);
+    background: var(--color-yellow);
 }
 
 /* Responsive Design */

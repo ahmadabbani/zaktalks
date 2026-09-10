@@ -42,6 +42,17 @@ export const getAssessmentList = () => {
     }));
 };
 
+export const getExternalAssessmentPresentation = (assessment) => {
+  if (!assessment) return null;
+  return assessment.externalPresentation
+    ? { ...assessment, ...assessment.externalPresentation }
+    : assessment;
+};
+
+export const getExternalAssessmentTitle = (assessment) => {
+  return getExternalAssessmentPresentation(assessment)?.title || '';
+};
+
 export const getAssessmentById = (id) => {
   return ASSESSMENTS[id] || ASSESSMENTS[LEGACY_ASSESSMENT_IDS[id]] || null;
 };

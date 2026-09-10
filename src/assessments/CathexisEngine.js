@@ -87,7 +87,9 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
   const isEnergyAssessment = definition.id === 'energy-self-assessment-v1';
   const isFinancialFrequency = definition.id === 'unlock-financial-frequency-v1';
   const isEgoStateAssessment = definition.id === 'transactional-analysis-personal-style-questionnaire-v1';
-  const usesLabeledScale = isEnergyAssessment || isFinancialFrequency || isEgoStateAssessment;
+  const isRelationalNeeds = embeddedInCoursePlayer && definition.id === 'relation-needs-v1';
+  const usesLabeledScale = isEnergyAssessment || isFinancialFrequency || isEgoStateAssessment || isRelationalNeeds;
+  const usesHorizontalScale = usesLabeledScale;
 
   const handleSelect = (value) => {
     if (isSubmitting || isAdvancing) return;
@@ -238,6 +240,11 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
             <h2>Your Drama Triangle pattern</h2>
             <p>These scores reflect the roles you may be most likely to move into under stress. They are not labels. Use them as information about what you may need to notice, question, or choose differently.</p>
           </header>
+        ) : rankedNeeds ? (
+          <header className={styles.relationalNeedsResultHero}>
+            <h2>Your Relational Needs Profile</h2>
+            <p>These results show which relational needs feel most important to you right now. Higher and lower scores are not good or bad. They offer a starting point for understanding what helps you feel connected, supported, and valued.</p>
+          </header>
         ) : (
           <>
             <h2 className={styles.cathResultHeader}>Assessment Complete!</h2>
@@ -245,6 +252,26 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
               {rankedNeeds ? 'Relational needs score breakdown' : (scoresOnly ? 'Score breakdown' : "Here's your energy profile breakdown")}
             </p>
           </>
+        )}
+
+        {rankedNeeds && (
+          <section className={styles.relationalNeedsTopNeed}>
+            <div>
+              <span>Your highest relational need</span>
+              <h3>
+                {dominantKey
+                  ? definition.categories[dominantKey].label
+                  : 'Mixed Top Needs'}
+              </h3>
+              {dominantKey && definition.categories[dominantKey].description && (
+                <p>{definition.categories[dominantKey].description}</p>
+              )}
+            </div>
+            <strong>
+              {highest?.[1] || 0}
+              <small>/25</small>
+            </strong>
+          </section>
         )}
 
         {roleRanges && (
@@ -308,13 +335,37 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
         )}
 
         {!roleRanges && (
-        <div className={scoresOnly ? `${styles.cathScoreOnlyList} ${isFinancialFrequency ? styles.financialFrequencyCards : ''} ${isEgoStateAssessment ? styles.egoStyleScoreCards : ''}` : `${styles.cathCategoryCards} ${isEnergyAssessment ? styles.energyCategoryCards : ''}`}>
-          {Object.entries(definition.categories).map(([key, cat]) => {
+        <div className={scoresOnly ? `${styles.cathScoreOnlyList} ${isFinancialFrequency ? styles.financialFrequencyCards : ''} ${isEgoStateAssessment ? styles.egoStyleScoreCards : ''} ${rankedNeeds ? styles.relationalNeedsScoreGrid : ''}` : `${styles.cathCategoryCards} ${isEnergyAssessment ? styles.energyCategoryCards : ''}`}>
+          {(rankedNeeds ? entries : Object.entries(definition.categories)).map(([key, rankedScore]) => {
+            const cat = definition.categories[key];
             const score = categoryScores[key] || 0;
             const maxPerCategory = (categoryQuestionCounts[key] || 0) * maxScaleValue;
             const percentage = maxPerCategory > 0 ? (score / maxPerCategory) * 100 : 0;
             const isDominant = key === dominantKey;
             const categoryColor = getCategoryColor(key);
+
+            if (rankedNeeds) {
+              const rank = entries.findIndex(([entryKey]) => entryKey === key) + 1;
+              return (
+                <article
+                  key={key}
+                  className={`${styles.relationalNeedScoreCard} ${rank === 1 ? styles.relationalNeedScoreCardFirst : ''}`}
+                >
+                  <div className={styles.relationalNeedScoreHeading}>
+                    <span>{rank}</span>
+                    <h4>{cat.label}</h4>
+                    <strong>{rankedScore}<small>/{maxPerCategory}</small></strong>
+                  </div>
+                  <div
+                    className={styles.relationalNeedScoreTrack}
+                    role="img"
+                    aria-label={`${cat.label}: ${rankedScore} out of ${maxPerCategory}`}
+                  >
+                    <span style={{ width: `${percentage}%` }} />
+                  </div>
+                </article>
+              );
+            }
 
             if (isEgoStateAssessment) {
               const isStrongestStyle = key === highest[0];
@@ -650,7 +701,7 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
           </section>
         )}
 
-        {scoresOnly && !scoreTableOnly && !roleRanges && !isFinancialFrequency && (
+        {scoresOnly && !scoreTableOnly && !roleRanges && !isFinancialFrequency && !rankedNeeds && (
           <div
             className={styles.cathScoreOnlyResult}
             style={{
@@ -781,7 +832,7 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
             </div>
           )
         )}
-        <div className={`${styles.scaleButtons} ${isDramaTriangle ? styles.dramaScaleButtons : ''} ${usesLabeledScale ? styles.energyScaleButtons : ''}`}>
+        <div className={`${styles.scaleButtons} ${isDramaTriangle ? styles.dramaScaleButtons : ''} ${usesHorizontalScale ? styles.energyScaleButtons : ''}`}>
           {scaleValues.map((val) => {
             const optionLabel = definition.scale?.legend?.find((item) => item.value === val)?.label;
 
@@ -790,7 +841,7 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
                 key={val}
                 onClick={() => handleSelect(val)}
                 disabled={isSubmitting || isAdvancing}
-                className={`${styles.scaleBtn} ${isDramaTriangle ? styles.dramaScaleBtn : ''} ${usesLabeledScale ? styles.energyScaleBtn : ''} ${answers[currentQuestion.id] === val ? styles.scaleBtnSelected : ''}`}
+                className={`${styles.scaleBtn} ${isDramaTriangle ? styles.dramaScaleBtn : ''} ${usesHorizontalScale ? styles.energyScaleBtn : ''} ${answers[currentQuestion.id] === val ? styles.scaleBtnSelected : ''}`}
               >
                 {isDramaTriangle || usesLabeledScale ? (
                   <>

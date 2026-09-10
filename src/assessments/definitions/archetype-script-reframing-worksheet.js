@@ -1,8 +1,7 @@
 export const archetypeScriptReframingWorksheet = {
   type: 'fillable-worksheet',
   id: 'archetype-script-reframing-worksheet-v1',
-  title: 'Archetype Script Reframing Worksheet',
-  externalOnly: true,
+  title: 'Archetype Script Reframing',
   introVariant: 'archetype-worksheet',
   archetypeSelection: true,
   description:
@@ -12,7 +11,7 @@ export const archetypeScriptReframingWorksheet = {
     'Choose the archetype identified in your previous assessment. Complete its prompts from your real experience rather than what feels ideal, then read the New Story as a possible Adult perspective.',
   completionInstructions:
     'Select the archetype that matched your result in the Unlock Your Financial Frequency assessment. You will complete only that archetype\'s worksheet.',
-  archetypeSelectionPrompt: 'Choose your financial archetype',
+  archetypeSelectionPrompt: 'Choose your financial archetype:',
   worksheetIntro:
     'Complete every blank in your Old Story, then read and reflect on the New Story.',
   sections: [

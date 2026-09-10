@@ -1,8 +1,8 @@
 'use client'
 
-import { useMemo, useState, useTransition } from 'react'
+import { useEffect, useId, useMemo, useRef, useState, useTransition } from 'react'
 import toast from 'react-hot-toast'
-import { FaCopy, FaLink, FaTrash } from 'react-icons/fa'
+import { FaCheck, FaChevronDown, FaCopy, FaLink, FaTrash } from 'react-icons/fa'
 import {
   generateExternalAssessmentLink,
   revokeExternalAssessmentLink
@@ -19,6 +19,87 @@ function getStatus(link) {
 
 function formatDate(value) {
   return new Date(value).toLocaleString()
+}
+
+function AssessmentSelect({ assessments, value, onChange, disabled }) {
+  const [open, setOpen] = useState(false)
+  const rootRef = useRef(null)
+  const menuId = useId()
+  const selected = assessments.find((assessment) => assessment.id === value)
+
+  useEffect(() => {
+    if (!open) return undefined
+
+    const handlePointerDown = (event) => {
+      if (!rootRef.current?.contains(event.target)) setOpen(false)
+    }
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleEscape)
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [open])
+
+  const moveSelection = (direction) => {
+    if (!assessments.length) return
+    const currentIndex = assessments.findIndex((assessment) => assessment.id === value)
+    const nextIndex = currentIndex < 0
+      ? 0
+      : (currentIndex + direction + assessments.length) % assessments.length
+    onChange(assessments[nextIndex].id)
+  }
+
+  const handleKeyDown = (event) => {
+    if (!['ArrowDown', 'ArrowUp'].includes(event.key)) return
+    event.preventDefault()
+    moveSelection(event.key === 'ArrowDown' ? 1 : -1)
+    setOpen(true)
+  }
+
+  return (
+    <div className={styles.externalAssessmentSelect} ref={rootRef} onKeyDown={handleKeyDown}>
+      <input type="hidden" name="assessment_key" value={value} />
+      <button
+        id="external-assessment-select"
+        type="button"
+        className={`${styles.externalAssessmentSelectTrigger} ${open ? styles.externalAssessmentSelectTriggerOpen : ''}`}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={menuId}
+        disabled={disabled}
+        onClick={() => setOpen((current) => !current)}
+      >
+        <span>{selected?.title || 'Select an assessment'}</span>
+        <FaChevronDown aria-hidden="true" />
+      </button>
+
+      {open && (
+        <div id={menuId} className={styles.externalAssessmentSelectMenu} role="listbox" aria-label="Assessment">
+          {assessments.map((assessment) => (
+            <button
+              key={assessment.id}
+              type="button"
+              role="option"
+              aria-selected={assessment.id === value}
+              className={assessment.id === value ? styles.externalAssessmentSelectOptionSelected : ''}
+              onClick={() => {
+                onChange(assessment.id)
+                setOpen(false)
+              }}
+            >
+              <span>{assessment.title}</span>
+              {assessment.id === value && <FaCheck aria-hidden="true" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default function ExternalAssessmentLinks({ assessments, initialLinks, showHeading = true }) {
@@ -89,21 +170,14 @@ export default function ExternalAssessmentLinks({ assessments, initialLinks, sho
       <form className={styles.externalLinkForm} onSubmit={handleGenerate}>
         <label htmlFor="external-assessment-select">Assessment</label>
         <div className={styles.externalLinkFormRow}>
-          <select
-            id="external-assessment-select"
-            name="assessment_key"
+          <AssessmentSelect
+            assessments={assessments}
             value={selectedAssessment}
-            onChange={(event) => setSelectedAssessment(event.target.value)}
+            onChange={setSelectedAssessment}
             disabled={isPending}
-            required
-          >
-            {assessments.map((assessment) => (
-              <option key={assessment.id} value={assessment.id}>
-                {assessment.title}
-              </option>
-            ))}
-          </select>
-          <button type="submit" disabled={isPending || !selectedAssessment}>
+          />
+          <button className={styles.externalLinkGenerateButton} type="submit" disabled={isPending || !selectedAssessment}>
+            <FaLink aria-hidden="true" />
             Generate Link
           </button>
         </div>
@@ -133,7 +207,7 @@ export default function ExternalAssessmentLinks({ assessments, initialLinks, sho
                 </div>
                 <div className={styles.externalLinkActions}>
                   <button type="button" onClick={() => copyLink(path)}>
-                    <FaCopy /> Copy
+                    <FaCopy aria-hidden="true" /> Copy
                   </button>
                   <button
                     type="button"
@@ -142,7 +216,7 @@ export default function ExternalAssessmentLinks({ assessments, initialLinks, sho
                     disabled={isPending}
                     aria-label={`Delete ${assessmentMap[link.assessment_key]?.title || link.assessment_key} link`}
                   >
-                    <FaTrash /> Delete
+                    <FaTrash aria-hidden="true" /> Delete
                   </button>
                 </div>
               </div>

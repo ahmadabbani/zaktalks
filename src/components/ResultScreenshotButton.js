@@ -72,7 +72,7 @@ async function downloadPdf(dataUrl, fileName) {
   window.setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
 
-export default function ResultScreenshotButton({ targetId, fileName, label, format = 'png' }) {
+export default function ResultScreenshotButton({ targetId, fileName, label, format = 'png', className = '', icon = null }) {
   const [isPending, setIsPending] = useState(false)
   const isPdf = format === 'pdf'
   const buttonLabel = label || (isPdf ? 'Download Result' : 'Download Result Screenshot')
@@ -107,12 +107,12 @@ export default function ResultScreenshotButton({ targetId, fileName, label, form
   return (
     <button
       type="button"
-      className={`${styles.screenshotBtn} ${isPdf ? styles.resultDownloadBtn : ''}`}
+      className={className || `${styles.screenshotBtn} ${isPdf ? styles.resultDownloadBtn : ''}`}
       onClick={handleDownload}
       disabled={isPending}
       data-screenshot-exclude="true"
     >
-      {isPdf ? <FaFilePdf /> : <FaCamera />} {isPending ? (isPdf ? 'Preparing PDF...' : 'Preparing...') : buttonLabel}
+      {icon || (isPdf ? <FaFilePdf /> : <FaCamera />)} {isPending ? (isPdf ? 'Preparing PDF...' : 'Preparing...') : buttonLabel}
     </button>
   )
 }

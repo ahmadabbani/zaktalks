@@ -47,6 +47,7 @@ function isComplete(definition, answers) {
 }
 
 export default function FillableWorksheetEngine({ definition, lessonId, onComplete }) {
+  const isArchetypeWorksheet = definition.id === 'archetype-script-reframing-worksheet-v1'
   const [answers, setAnswers] = useState(() => buildInitialAnswers(definition))
   const [submission, setSubmission] = useState(null)
   const [isEditing, setIsEditing] = useState(true)
@@ -123,10 +124,20 @@ export default function FillableWorksheetEngine({ definition, lessonId, onComple
             return <span key={`${part}-${index}`}>{part}</span>
           }
 
+          const value = answers[section.id][group][part.id]
+
+          if (!isEditing) {
+            return (
+              <span key={part.id} className={styles.worksheetAnswerText}>
+                {value}
+              </span>
+            )
+          }
+
           return (
             <input
               key={part.id}
-              value={answers[section.id][group][part.id]}
+              value={value}
               onChange={(event) => updateAnswer(section.id, group, part.id, event.target.value)}
               disabled={!isEditing || isPending}
               required
@@ -149,6 +160,7 @@ export default function FillableWorksheetEngine({ definition, lessonId, onComple
       const result = await submitSpecificAssessment({
         lessonId,
         assessmentKey: definition.id,
+        selectedSectionId: definition.archetypeSelection ? definition.sections?.[0]?.id : null,
         answers
       })
 
@@ -172,25 +184,29 @@ export default function FillableWorksheetEngine({ definition, lessonId, onComple
 
   if (isLoading) {
     return (
-      <div className={styles.worksheetShell}>
-        <div className={styles.worksheetHeader}>
-          <p className={styles.worksheetEyebrow}>Loading worksheet</p>
-          <h2 className={styles.worksheetTitle}>{definition.title}</h2>
-        </div>
+      <div
+        className={`${styles.worksheetShell} ${isArchetypeWorksheet ? `${styles.externalWorksheetShell} ${styles.archetypeWorksheetShell}` : ''} ${styles.worksheetLoadingShell}`}
+        role="status"
+        aria-label="Loading worksheet"
+      >
+        <span className={styles.worksheetLoadingSpinner} aria-hidden="true" />
       </div>
     )
   }
 
   return (
-    <form className={styles.worksheetShell} onSubmit={handleSubmit}>
+    <form
+      className={`${styles.worksheetShell} ${isArchetypeWorksheet ? `${styles.externalWorksheetShell} ${styles.archetypeWorksheetShell}` : ''}`}
+      onSubmit={handleSubmit}
+    >
       <div className={styles.worksheetHeader}>
         <p className={styles.worksheetEyebrow}>Worksheet</p>
         <h2 className={styles.worksheetTitle}>{definition.title}</h2>
-        <p className={styles.worksheetIntro}>{definition.intro}</p>
+        <p className={styles.worksheetIntro}>{definition.worksheetIntro || definition.intro}</p>
 
         <div className={styles.worksheetToolbar}>
           <div className={styles.worksheetProgress}>
-            <span>{completedFields.complete} / {completedFields.total} statements</span>
+            <span>{completedFields.percentage}% complete</span>
             <div className={styles.worksheetProgressTrack}>
               <div
                 className={styles.worksheetProgressFill}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getAssessmentById } from '@/assessments/registry';
 import LikertEngine from '@/assessments/LikertEngine';
 import CorrectIncorrectEngine from '@/assessments/CorrectIncorrectEngine';
@@ -31,9 +31,21 @@ export default function AssessmentRenderer({
   completionGuidance = ''
 }) {
   const [stage, setStage] = useState(showIntro ? 'overview' : 'assessment');
+  const [selectedWorksheetSectionId, setSelectedWorksheetSectionId] = useState(null);
   const [attemptId] = useState(() => crypto.randomUUID());
   const { completedMap, markLessonCompleted } = useCourseProgress();
   const definition = getAssessmentById(assessmentKey);
+  const requiresArchetypeSelection = Boolean(
+    definition?.type === 'fillable-worksheet' && definition.archetypeSelection
+  );
+  const worksheetDefinition = useMemo(() => {
+    if (!requiresArchetypeSelection || !selectedWorksheetSectionId) return definition;
+
+    return {
+      ...definition,
+      sections: definition.sections.filter(section => section.id === selectedWorksheetSectionId)
+    };
+  }, [definition, requiresArchetypeSelection, selectedWorksheetSectionId]);
 
   useEffect(() => {
     const shouldScrollTop = window.sessionStorage.getItem('assessment_retake_scroll_top') === '1';
@@ -123,8 +135,41 @@ export default function AssessmentRenderer({
                 <p><RichText value={lessonInstructionsRich} fallback={lessonInstructions} maxLength={5000} /></p>
               </div>
             )}
-            <button type="button" className={styles.introStartBtn} onClick={() => setStage('assessment')}>
-              I’m ready to begin <FaArrowRight />
+            {requiresArchetypeSelection && (
+              <section className={styles.archetypeSelector} aria-labelledby="internal-archetype-selection-heading">
+                <h4 id="internal-archetype-selection-heading">
+                  {definition.archetypeSelectionPrompt || 'Choose your financial archetype:'}
+                </h4>
+                <div className={styles.archetypeSelectorGrid} role="radiogroup" aria-label="Financial archetype">
+                  {definition.sections.map(section => {
+                    const isSelected = selectedWorksheetSectionId === section.id;
+
+                    return (
+                      <button
+                        key={section.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={isSelected}
+                        className={`${styles.archetypeSelectorCard} ${isSelected ? styles.archetypeSelectorCardSelected : ''}`}
+                        onClick={() => setSelectedWorksheetSectionId(section.id)}
+                      >
+                        {section.title}
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+            <button
+              type="button"
+              className={`${styles.introStartBtn} ${requiresArchetypeSelection ? styles.archetypeContinueBtn : ''}`}
+              onClick={() => setStage('assessment')}
+              disabled={requiresArchetypeSelection && !selectedWorksheetSectionId}
+            >
+              {requiresArchetypeSelection && selectedWorksheetSectionId
+                ? `Continue with ${definition.sections.find(section => section.id === selectedWorksheetSectionId)?.title}`
+                : 'I’m ready to begin'}{' '}
+              <FaArrowRight />
             </button>
           </div>
         )}
@@ -142,7 +187,7 @@ export default function AssessmentRenderer({
   if (definition.type === 'fillable-worksheet') {
     return (
       <FillableWorksheetEngine
-        definition={definition}
+        definition={worksheetDefinition}
         lessonId={lessonId}
         onComplete={() => markLessonCompleted(lessonId)}
       />

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
-import { FaCheck, FaRedo } from 'react-icons/fa'
+import { FaCheck, FaDownload, FaRedo } from 'react-icons/fa'
 import ResultScreenshotButton from '@/components/ResultScreenshotButton'
 import styles from './assessment.module.css'
 
@@ -154,6 +154,16 @@ export default function ExternalFillableWorksheetEngine({
               />
             </div>
           </div>
+          {isFinished && enableResultScreenshot && (
+            <ResultScreenshotButton
+              targetId={resultCaptureId}
+              fileName={definition.title}
+              label="Download Worksheet"
+              format="pdf"
+              className={styles.worksheetDownloadBtn}
+              icon={<FaDownload />}
+            />
+          )}
         </div>
       </div>
 

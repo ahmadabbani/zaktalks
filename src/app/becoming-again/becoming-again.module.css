@@ -1702,6 +1702,7 @@
   }
 
   .instructorPortraitStage {
+    order: -1;
     width: 100%;
     justify-self: center;
     justify-content: center;
@@ -1710,6 +1711,7 @@
 
   .instructorPortraitFrame {
     width: min(65vw, 16.5rem);
+    aspect-ratio: 0.75;
   }
 
   .instructorTitle {
@@ -1753,7 +1755,7 @@
 
   .instructorPortraitFrame {
     width: min(70vw, 15.5rem);
-    aspect-ratio: 0.94;
+    aspect-ratio: 0.75;
     border-radius: clamp(1.25rem, 5vw, 1.75rem);
   }
 
