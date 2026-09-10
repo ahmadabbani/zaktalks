@@ -3,6 +3,7 @@
 import { useState, Suspense, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { FaArrowRight, FaLock } from 'react-icons/fa'
 import DiscountSection from '@/components/DiscountSection'
 import TurnstileWidget from '@/components/TurnstileWidget'
 import styles from './guest.module.css'
@@ -94,55 +95,66 @@ function GuestForm() {
   }
 
   return (
-    <div className={`container ${styles.page}`}>
-      <div className={styles.guestCard}>
+    <main className={styles.page}>
+      <section className={styles.guestCard} aria-labelledby="guest-checkout-title">
         <div className={styles.header}>
-          <h2 className={styles.title}>Guest Checkout</h2>
-          {courseName && (
-            <p className={styles.courseName}>
-              {courseName}
-            </p>
-          )}
+          <span className={styles.eyebrow}><FaLock /> Secure checkout</span>
+          <h1 className={styles.title} id="guest-checkout-title">Guest Checkout</h1>
           <p className={styles.subtitle}>
             Please provide your details to receive access to the course and your receipt.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.row}>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>First Name</label>
-              <input 
-                type="text" 
-                name="first_name" 
-                required 
-                placeholder="name" 
-                className={styles.input}
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>Last Name</label>
-              <input 
-                type="text" 
-                name="last_name" 
-                required 
-                placeholder="last name" 
-                className={styles.input}
-              />
-            </div>
-          </div>
+        <div className={styles.courseSummary}>
+          <span>Selected course</span>
+          <strong className={courseName ? '' : styles.courseNameLoading}>
+            {courseName || 'Loading course'}
+          </strong>
+        </div>
 
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Email Address</label>
-            <input 
-              type="email" 
-              name="email" 
-              required 
-              placeholder="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={styles.input}
-            />
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.detailsFields}>
+            <div className={styles.row}>
+              <div className={styles.formGroup}>
+                <label className={styles.label} htmlFor="guest-first-name">First Name</label>
+                <input
+                  id="guest-first-name"
+                  type="text"
+                  name="first_name"
+                  required
+                  placeholder="First name"
+                  autoComplete="given-name"
+                  className={styles.input}
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.label} htmlFor="guest-last-name">Last Name</label>
+                <input
+                  id="guest-last-name"
+                  type="text"
+                  name="last_name"
+                  required
+                  placeholder="Last name"
+                  autoComplete="family-name"
+                  className={styles.input}
+                />
+              </div>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.label} htmlFor="guest-email">Email Address</label>
+              <input 
+                id="guest-email"
+                type="email"
+                name="email"
+                required
+                placeholder="Email address"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={styles.input}
+              />
+            </div>
           </div>
 
           {/* Discount Section */}
@@ -151,6 +163,7 @@ function GuestForm() {
             email={email}
             onDiscountsCalculated={handleDiscountsCalculated}
             disabled={loading}
+            variant="checkout"
           />
 
           {emailExists && (
@@ -160,27 +173,43 @@ function GuestForm() {
             </div>
           )}
 
-          <TurnstileWidget
-            onTokenChange={setCaptchaToken}
-            resetSignal={captchaReset}
-          />
+          <div className={styles.verification}>
+            <TurnstileWidget
+              onTokenChange={setCaptchaToken}
+              resetSignal={captchaReset}
+            />
+          </div>
 
           <button 
             type="submit" 
             disabled={loading || emailExists || !captchaToken}
             className={styles.submitButton}
           >
-            {loading ? 'Processing...' : 'Proceed to Payment'}
+            {loading ? (
+              <><span className={styles.spinner} aria-hidden="true" /> Preparing payment...</>
+            ) : (
+              <>Proceed to Payment <FaArrowRight aria-hidden="true" /></>
+            )}
           </button>
         </form>
-      </div>
-    </div>
+      </section>
+    </main>
+  )
+}
+
+function CheckoutFallback() {
+  return (
+    <main className={styles.page}>
+      <section className={`${styles.guestCard} ${styles.fallbackCard}`} role="status" aria-label="Loading checkout">
+        <span className={styles.pageLoader} aria-hidden="true" />
+      </section>
+    </main>
   )
 }
 
 export default function GuestCheckoutPage() {
   return (
-    <Suspense fallback={<div className="container" style={{ textAlign: 'center', padding: 'var(--space-xl)' }}>Loading Checkout...</div>}>
+    <Suspense fallback={<CheckoutFallback />}>
       <GuestForm />
     </Suspense>
   )

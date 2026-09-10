@@ -48,7 +48,7 @@ export default async function PaymentSuccessPage({ searchParams }) {
     return (
       <div className={styles.container}>
         <div className={styles.card}>
-          <div className={styles.iconWrapper}><FaExclamationCircle className={styles.icon} /></div>
+          <div className={`${styles.iconWrapper} ${styles.warningIconWrapper}`}><FaExclamationCircle className={styles.icon} /></div>
           <h1 className={styles.title}>Payment not confirmed</h1>
           <div className={styles.messageBox}>
             <p className={styles.registeredMessage}>
@@ -64,7 +64,7 @@ export default async function PaymentSuccessPage({ searchParams }) {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <div className={styles.iconWrapper}>
+        <div className={`${styles.iconWrapper} ${fulfilled ? styles.successIconWrapper : styles.warningIconWrapper}`}>
           {fulfilled ? <FaCheckCircle className={styles.icon} /> : <FaExclamationCircle className={styles.icon} />}
         </div>
         <h1 className={styles.title}>

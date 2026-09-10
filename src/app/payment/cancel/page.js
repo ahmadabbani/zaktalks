@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { FaTimesCircle } from 'react-icons/fa'
 import { markCheckoutTerminal } from '@/lib/payments/fulfillment'
 import { stripe } from '@/lib/stripe'
+import styles from './cancel.module.css'
 
 export const dynamic = 'force-dynamic'
 
@@ -39,16 +40,18 @@ export default async function PaymentCancelPage({ searchParams }) {
       : 'The checkout is closed. If you see a completed charge, contact us with your payment receipt so we can verify it.'
 
   return (
-    <div className="container" style={{ textAlign: 'center', padding: 'var(--space-xl) 0' }}>
-      <div className="card" style={{ maxWidth: '500px', margin: '0 auto', padding: 'var(--space-xl)' }}>
-        <FaTimesCircle style={{ fontSize: '4rem', color: 'var(--color-error)', marginBottom: 'var(--space-md)' }} />
-        <h1 style={{ marginBottom: 'var(--space-sm)' }}>{processing ? 'Payment processing' : 'Checkout cancelled'}</h1>
-        <p style={{ opacity: 0.8, marginBottom: 'var(--space-xl)' }}>{message}</p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
-          <Link href="/" className="btn btn-primary">Back to Courses</Link>
-          {processing && <Link href="/dashboard" className="btn btn-secondary">Check Dashboard</Link>}
+    <main className={styles.container}>
+      <section className={styles.card}>
+        <div className={styles.iconWrapper}>
+          <FaTimesCircle className={styles.icon} />
         </div>
-      </div>
-    </div>
+        <h1 className={styles.title}>{processing ? 'Payment processing' : 'Checkout cancelled'}</h1>
+        <p className={styles.message}>{message}</p>
+        <div className={styles.actions}>
+          <Link href="/" className={styles.primaryButton}>Back to Courses</Link>
+          {processing && <Link href="/dashboard" className={styles.secondaryButton}>Check Dashboard</Link>}
+        </div>
+      </section>
+    </main>
   )
 }
