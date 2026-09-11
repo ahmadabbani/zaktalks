@@ -40,11 +40,17 @@ export default async function AdminLessonsPage({ params }) {
   if (lessonIds.length) {
     const { data } = await supabase
       .from('lesson_resources')
-      .select('id, lesson_id, resource_type, text_content, rich_content, external_url, storage_path, original_file_name, file_size_bytes')
+      .select('id, lesson_id, resource_type, text_content, rich_content, external_url, storage_path, original_file_name, file_size_bytes, display_order')
       .in('lesson_id', lessonIds)
+      .order('display_order', { ascending: true })
     resources = data || []
   }
-  const resourceByLesson = new Map(resources.map((resource) => [resource.lesson_id, resource]))
+  const resourcesByLesson = resources.reduce((grouped, resource) => {
+    const lessonResources = grouped.get(resource.lesson_id) || []
+    lessonResources.push(resource)
+    grouped.set(resource.lesson_id, lessonResources)
+    return grouped
+  }, new Map())
   const introductionLesson = (lessons || []).find((lesson) => lesson.is_course_introduction) || null
 
   // Fetch simple assessment list for the dropdown
@@ -68,7 +74,7 @@ export default async function AdminLessonsPage({ params }) {
               .filter((lesson) => !lesson.is_course_introduction && lesson.module_id === module.id)
               .map((lesson) => ({
                 ...lesson,
-                additional_resource: resourceByLesson.get(lesson.id) || null
+                additional_resources: resourcesByLesson.get(lesson.id) || []
               }))
           }))}
           assessments={assessments} 

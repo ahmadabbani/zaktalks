@@ -47,12 +47,13 @@ export default async function LessonPage({ params }) {
   const resourceQuery = progress?.is_completed && !lesson.is_course_introduction
     ? supabase
         .from('lesson_resources')
-        .select('resource_type, text_content, rich_content, external_url, original_file_name')
+        .select('id, resource_type, text_content, rich_content, external_url, original_file_name, display_order')
         .eq('lesson_id', lesson.id)
-        .maybeSingle()
-    : Promise.resolve({ data: null, error: null })
+        .order('display_order', { ascending: true })
+        .order('created_at', { ascending: true })
+    : Promise.resolve({ data: [], error: null })
 
-  const [{ data: lessonRows }, { data: moduleRows }, { data: initialResource, error: initialResourceError }] = await Promise.all([
+  const [{ data: lessonRows }, { data: moduleRows }, { data: initialResources, error: initialResourcesError }] = await Promise.all([
     supabase
       .from('lessons')
       .select('id, module_id, display_order, is_course_introduction')
@@ -213,8 +214,8 @@ export default async function LessonPage({ params }) {
         <LessonResource
           key={lesson.id}
           lessonId={lesson.id}
-          initialResource={initialResource || null}
-          initiallyCompleted={Boolean(progress?.is_completed && !initialResourceError)}
+          initialResources={initialResources || []}
+          initiallyCompleted={Boolean(progress?.is_completed && !initialResourcesError)}
         />
       )}
       {learningContext}

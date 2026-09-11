@@ -170,8 +170,14 @@
 }
 
 /* Completion-gated lesson resources */
-.lessonResource {
+.lessonResourceList {
+    display: grid;
+    gap: var(--space-md);
     margin-bottom: var(--space-xl);
+}
+
+.lessonResource {
+    margin-bottom: 0;
     padding: clamp(1.1rem, 2vw, 1.55rem);
     border: 1px solid rgba(33, 44, 45, 0.1);
     border-radius: 1rem;
@@ -498,7 +504,7 @@
         margin-bottom: var(--space-lg);
     }
 
-    .lessonResource {
+    .lessonResourceList {
         order: 3;
         margin-bottom: var(--space-lg);
     }

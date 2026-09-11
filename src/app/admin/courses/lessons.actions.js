@@ -19,6 +19,7 @@ const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3
 const LESSON_RESOURCE_BUCKET = 'lesson-resources'
 const LESSON_RESOURCE_TYPES = new Set(['none', 'text', 'pdf', 'link'])
 const MAX_RESOURCE_PDF_BYTES = 10 * 1024 * 1024
+const MAX_LESSON_RESOURCES = 20
 
 function cleanText(value, maxLength) {
   return String(value || '').trim().slice(0, maxLength)
@@ -48,15 +49,16 @@ function cleanExternalUrl(value) {
   }
 }
 
-async function getLessonResource(supabase, lessonId) {
+async function getLessonResources(supabase, lessonId) {
   const { data, error } = await supabase
     .from('lesson_resources')
     .select('id, lesson_id, resource_type, text_content, rich_content, external_url, storage_path, original_file_name, file_size_bytes')
     .eq('lesson_id', lessonId)
-    .maybeSingle()
+    .order('display_order', { ascending: true })
+    .order('created_at', { ascending: true })
 
-  if (error) throw new Error(`Unable to load the lesson resource: ${error.message}`)
-  return data || null
+  if (error) throw new Error(`Unable to load the lesson resources: ${error.message}`)
+  return data || []
 }
 
 async function uploadResourcePdf(supabase, courseId, lessonId, file) {
@@ -82,81 +84,120 @@ async function uploadResourcePdf(supabase, courseId, lessonId, file) {
   }
 }
 
-async function saveLessonResource(supabase, courseId, lessonId, formData) {
-  const resourceType = cleanText(formData.get('resource_type'), 20) || 'none'
-  if (!LESSON_RESOURCE_TYPES.has(resourceType)) throw new Error('Choose a valid additional resource type.')
-
-  const currentResource = await getLessonResource(supabase, lessonId)
-  const oldStoragePath = currentResource?.resource_type === 'pdf' ? currentResource.storage_path : null
-
-  if (resourceType === 'none') {
-    if (currentResource) {
-      const { error } = await supabase.from('lesson_resources').delete().eq('lesson_id', lessonId)
-      if (error) throw new Error(`Unable to remove the lesson resource: ${error.message}`)
-    }
-    if (oldStoragePath) await supabase.storage.from(LESSON_RESOURCE_BUCKET).remove([oldStoragePath])
-    return
+function getSubmittedResourceCount(formData) {
+  const count = Number(formData.get('resource_count') || 0)
+  if (!Number.isInteger(count) || count < 0 || count > MAX_LESSON_RESOURCES) {
+    throw new Error(`A lesson can have up to ${MAX_LESSON_RESOURCES} additional resources.`)
   }
+  return count
+}
 
-  let resourceData
-  let newStoragePath = null
+function lessonResourceAuditValue(resources) {
+  return resources.map((resource) => ({
+    type: resource.resource_type,
+    text: resource.text_content || null,
+    rich: resource.rich_content || {},
+    url: resource.external_url || null,
+    file: resource.original_file_name || null,
+  }))
+}
 
-  if (resourceType === 'text') {
-    const textContent = cleanText(formData.get('resource_text'), 20000)
-    if (!textContent) throw new Error('Enter the additional resource text.')
-    const richContent = sanitizeDescriptionRichContent(
-      formData.get('resource_rich_content_json'),
-      textContent,
-      20000
-    )
-    resourceData = { resource_type: 'text', text_content: textContent, rich_content: richContent, external_url: null, storage_path: null, original_file_name: null, file_size_bytes: null }
-  } else if (resourceType === 'link') {
-    const externalUrl = cleanExternalUrl(formData.get('resource_url'))
-    if (!externalUrl) throw new Error('Enter a valid http or https resource link.')
-    resourceData = { resource_type: 'link', text_content: null, rich_content: {}, external_url: externalUrl, storage_path: null, original_file_name: null, file_size_bytes: null }
-  } else {
-    const pdfFile = formData.get('resource_pdf')
-    if (isUploadedFile(pdfFile)) {
-      const uploaded = await uploadResourcePdf(supabase, courseId, lessonId, pdfFile)
-      newStoragePath = uploaded.storagePath
-      resourceData = {
-        resource_type: 'pdf',
-        text_content: null,
-        rich_content: {},
-        external_url: null,
-        storage_path: uploaded.storagePath,
-        original_file_name: uploaded.originalFileName,
-        file_size_bytes: uploaded.fileSizeBytes
+async function saveLessonResources(supabase, courseId, lessonId, formData, currentResources = null) {
+  const existingResources = currentResources || await getLessonResources(supabase, lessonId)
+  const existingById = new Map(existingResources.map((resource) => [resource.id, resource]))
+  const count = getSubmittedResourceCount(formData)
+  const submittedIds = new Set()
+  const resources = []
+  const uploadedStoragePaths = []
+
+  try {
+    for (let index = 0; index < count; index += 1) {
+      const resourceNumber = index + 1
+      const submittedId = cleanText(formData.get(`resource_id_${index}`), 50) || null
+      const resourceType = cleanText(formData.get(`resource_type_${index}`), 20)
+
+      if (!LESSON_RESOURCE_TYPES.has(resourceType) || resourceType === 'none') {
+        throw new Error(`Choose a valid type for additional resource ${resourceNumber}.`)
       }
-    } else if (currentResource?.resource_type === 'pdf' && currentResource.storage_path) {
-      resourceData = {
-        resource_type: 'pdf',
-        text_content: null,
-        rich_content: {},
-        external_url: null,
-        storage_path: currentResource.storage_path,
-        original_file_name: currentResource.original_file_name,
-        file_size_bytes: currentResource.file_size_bytes
+      if (submittedId && (!isUuid(submittedId) || !existingById.has(submittedId) || submittedIds.has(submittedId))) {
+        throw new Error('One of the submitted lesson resources is invalid.')
       }
-    } else {
-      throw new Error('Choose a PDF to attach to this lesson.')
+      if (submittedId) submittedIds.add(submittedId)
+
+      const currentResource = submittedId ? existingById.get(submittedId) : null
+      let resourceData
+
+      if (resourceType === 'text') {
+        const textContent = cleanText(formData.get(`resource_text_${index}`), 20000)
+        if (!textContent) throw new Error(`Enter the text for additional resource ${resourceNumber}.`)
+        const richContent = sanitizeDescriptionRichContent(
+          formData.get(`resource_rich_content_json_${index}`),
+          textContent,
+          20000
+        )
+        resourceData = { resource_type: 'text', text_content: textContent, rich_content: richContent, external_url: null, storage_path: null, original_file_name: null, file_size_bytes: null }
+      } else if (resourceType === 'link') {
+        const externalUrl = cleanExternalUrl(formData.get(`resource_url_${index}`))
+        if (!externalUrl) throw new Error(`Enter a valid http or https URL for additional resource ${resourceNumber}.`)
+        resourceData = { resource_type: 'link', text_content: null, rich_content: {}, external_url: externalUrl, storage_path: null, original_file_name: null, file_size_bytes: null }
+      } else {
+        const pdfFile = formData.get(`resource_pdf_${index}`)
+        if (isUploadedFile(pdfFile)) {
+          const uploaded = await uploadResourcePdf(supabase, courseId, lessonId, pdfFile)
+          uploadedStoragePaths.push(uploaded.storagePath)
+          resourceData = {
+            resource_type: 'pdf',
+            text_content: null,
+            rich_content: {},
+            external_url: null,
+            storage_path: uploaded.storagePath,
+            original_file_name: uploaded.originalFileName,
+            file_size_bytes: uploaded.fileSizeBytes
+          }
+        } else if (currentResource?.resource_type === 'pdf' && currentResource.storage_path) {
+          resourceData = {
+            resource_type: 'pdf',
+            text_content: null,
+            rich_content: {},
+            external_url: null,
+            storage_path: currentResource.storage_path,
+            original_file_name: currentResource.original_file_name,
+            file_size_bytes: currentResource.file_size_bytes
+          }
+        } else {
+          throw new Error(`Choose a PDF for additional resource ${resourceNumber}.`)
+        }
+      }
+
+      resources.push({
+        id: submittedId || randomUUID(),
+        ...resourceData,
+        display_order: resourceNumber,
+      })
     }
+
+    const { error } = await supabase.rpc('replace_lesson_resources', {
+      p_lesson_id: lessonId,
+      p_resources: resources,
+    })
+    if (error) throw new Error(`Unable to save the lesson resources: ${error.message}`)
+  } catch (error) {
+    if (uploadedStoragePaths.length) {
+      await supabase.storage.from(LESSON_RESOURCE_BUCKET).remove(uploadedStoragePaths)
+    }
+    throw error
   }
 
-  const { error } = await supabase.from('lesson_resources').upsert({
-    lesson_id: lessonId,
-    ...resourceData,
-    updated_at: new Date().toISOString()
-  }, { onConflict: 'lesson_id' })
-
-  if (error) {
-    if (newStoragePath) await supabase.storage.from(LESSON_RESOURCE_BUCKET).remove([newStoragePath])
-    throw new Error(`Unable to save the lesson resource: ${error.message}`)
+  const retainedPaths = new Set(resources.map((resource) => resource.storage_path).filter(Boolean))
+  const obsoletePaths = existingResources
+    .filter((resource) => resource.resource_type === 'pdf' && resource.storage_path && !retainedPaths.has(resource.storage_path))
+    .map((resource) => resource.storage_path)
+  if (obsoletePaths.length) {
+    const { error } = await supabase.storage.from(LESSON_RESOURCE_BUCKET).remove(obsoletePaths)
+    if (error) console.error('Unable to remove replaced lesson resource PDFs:', error.message)
   }
 
-  if (oldStoragePath && oldStoragePath !== resourceData.storage_path) {
-    await supabase.storage.from(LESSON_RESOURCE_BUCKET).remove([oldStoragePath])
-  }
+  return resources
 }
 
 function revalidateCourseStructure(courseId) {
@@ -639,7 +680,7 @@ export async function createLesson(courseId, formData) {
   if (error) return { error: error.message }
 
   try {
-    await saveLessonResource(supabase, courseId, lesson.id, formData)
+    await saveLessonResources(supabase, courseId, lesson.id, formData, [])
   } catch (resourceError) {
     await supabase.from('lessons').delete().eq('id', lesson.id).eq('course_id', courseId)
     return { error: resourceError.message }
@@ -657,10 +698,12 @@ export async function deleteLesson(courseId, lessonId) {
 
   if (!isUuid(courseId) || !isUuid(lessonId)) return { error: 'Invalid lesson.' }
 
-  let resourcePath = null
+  let resourcePaths = []
   try {
-    const resource = await getLessonResource(supabase, lessonId)
-    resourcePath = resource?.resource_type === 'pdf' ? resource.storage_path : null
+    const resources = await getLessonResources(supabase, lessonId)
+    resourcePaths = resources
+      .filter((resource) => resource.resource_type === 'pdf' && resource.storage_path)
+      .map((resource) => resource.storage_path)
   } catch (resourceError) {
     return { error: resourceError.message }
   }
@@ -671,9 +714,9 @@ export async function deleteLesson(courseId, lessonId) {
   })
   if (deleteResult.error) return deleteResult
 
-  if (resourcePath) {
-    const { error: storageError } = await supabase.storage.from(LESSON_RESOURCE_BUCKET).remove([resourcePath])
-    if (storageError) console.error(`Unable to remove lesson resource ${resourcePath}:`, storageError.message)
+  if (resourcePaths.length) {
+    const { error: storageError } = await supabase.storage.from(LESSON_RESOURCE_BUCKET).remove(resourcePaths)
+    if (storageError) console.error('Unable to remove lesson resource PDFs:', storageError.message)
   }
 
   revalidateCourseStructure(courseId)
@@ -699,9 +742,9 @@ export async function updateLesson(courseId, lessonId, formData) {
   if (currentLessonError) return { error: currentLessonError.message }
   if (!currentLesson) return { error: 'Lesson not found.' }
 
-  let currentResource
+  let currentResources
   try {
-    currentResource = await getLessonResource(supabase, lessonId)
+    currentResources = await getLessonResources(supabase, lessonId)
   } catch (resourceError) {
     return { error: resourceError.message }
   }
@@ -793,36 +836,15 @@ export async function updateLesson(courseId, lessonId, formData) {
   }
 
   try {
-    await saveLessonResource(supabase, courseId, lessonId, formData)
+    const nextResources = await saveLessonResources(supabase, courseId, lessonId, formData, currentResources)
+    changes.push(contentFieldChange(
+      'Additional resources',
+      lessonResourceAuditValue(currentResources),
+      lessonResourceAuditValue(nextResources),
+    ))
   } catch (resourceError) {
     await recordContentActivity(supabase, access, 'updated', 'lesson', lessonId, changes)
-    return { error: `The lesson was updated, but its additional resource was not saved. ${resourceError.message}` }
-  }
-
-  const nextResourceType = cleanText(formData.get('resource_type'), 20) || 'none'
-  const currentResourceType = currentResource?.resource_type || 'none'
-  if (currentResourceType !== nextResourceType) {
-    changes.push({
-      field: 'Additional resource',
-      operation: currentResourceType === 'none' ? 'added' : nextResourceType === 'none' ? 'removed' : 'updated',
-    })
-  } else if (nextResourceType === 'text') {
-    changes.push(contentFieldChange('Additional resource', currentResource?.text_content, cleanText(formData.get('resource_text'), 20000)))
-    if (!changes.some((change) => change?.field === 'Additional resource')) {
-      changes.push(contentFieldChange(
-        'Additional resource formatting',
-        currentResource?.rich_content,
-        sanitizeDescriptionRichContent(
-          formData.get('resource_rich_content_json'),
-          cleanText(formData.get('resource_text'), 20000),
-          20000,
-        ),
-      ))
-    }
-  } else if (nextResourceType === 'link') {
-    changes.push(contentFieldChange('Additional resource', currentResource?.external_url, cleanExternalUrl(formData.get('resource_url'))))
-  } else if (nextResourceType === 'pdf' && isUploadedFile(formData.get('resource_pdf'))) {
-    changes.push({ field: 'Additional resource', operation: currentResource ? 'updated' : 'added' })
+    return { error: `The lesson was updated, but its additional resources were not saved. ${resourceError.message}` }
   }
 
   await recordContentActivity(supabase, access, 'updated', 'lesson', lessonId, changes)

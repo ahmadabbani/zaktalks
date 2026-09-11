@@ -30,7 +30,6 @@ import {
   FaFilePdf,
   FaFolderOpen,
   FaLayerGroup,
-  FaLink,
   FaListOl,
   FaPlay,
   FaPlus,
@@ -140,6 +139,26 @@ function normalizeModules(modules) {
     }))
 }
 
+let resourceDraftCounter = 0
+
+function createResourceDraft(resource = null) {
+  resourceDraftCounter += 1
+  return {
+    key: resource?.id || `new-resource-${Date.now()}-${resourceDraftCounter}`,
+    id: resource?.id || '',
+    resource_type: resource?.resource_type || 'text',
+    text_content: resource?.text_content || '',
+    rich_content: richTextForPlain(
+      resource?.rich_content?.description,
+      resource?.text_content || '',
+      20000
+    ),
+    external_url: resource?.external_url || '',
+    storage_path: resource?.storage_path || '',
+    original_file_name: resource?.original_file_name || '',
+  }
+}
+
 export default function LessonListUI({ courseId, initialNumberingStyle = 'module', initialIntroductionLesson = null, initialModules = [], assessments = [] }) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -151,11 +170,10 @@ export default function LessonListUI({ courseId, initialNumberingStyle = 'module
   const [lessonForm, setLessonForm] = useState(null)
   const [lessonType, setLessonType] = useState('video')
   const [assessmentKey, setAssessmentKey] = useState(() => assessments[0]?.id || '')
-  const [resourceType, setResourceType] = useState('none')
+  const [lessonResources, setLessonResources] = useState([])
   const [moduleDescriptionRich, setModuleDescriptionRich] = useState(() => createRichText())
   const [lessonDescriptionRich, setLessonDescriptionRich] = useState(() => createRichText())
   const [lessonInstructionsRich, setLessonInstructionsRich] = useState(() => createRichText())
-  const [resourceTextRich, setResourceTextRich] = useState(() => createRichText())
   const [introductionDescriptionRich, setIntroductionDescriptionRich] = useState(() => createRichText())
   const [isSaving, setIsSaving] = useState(false)
   const [saveLabel, setSaveLabel] = useState('Saving changes')
@@ -202,10 +220,9 @@ export default function LessonListUI({ courseId, initialNumberingStyle = 'module
     setModuleForm(null)
     setLessonType('video')
     setAssessmentKey(assessments[0]?.id || '')
-    setResourceType('none')
+    setLessonResources([])
     setLessonDescriptionRich(createRichText())
     setLessonInstructionsRich(createRichText())
-    setResourceTextRich(createRichText())
     setLessonForm({ mode: 'create', moduleId, lesson: null })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -215,14 +232,9 @@ export default function LessonListUI({ courseId, initialNumberingStyle = 'module
     setModuleForm(null)
     setLessonType(lesson.type)
     setAssessmentKey(lesson.assessment_key || assessments[0]?.id || '')
-    setResourceType(lesson.additional_resource?.resource_type || 'none')
+    setLessonResources((lesson.additional_resources || []).map((resource) => createResourceDraft(resource)))
     setLessonDescriptionRich(richTextForPlain(lesson.rich_content?.description, lesson.description || '', 2000))
     setLessonInstructionsRich(richTextForPlain(lesson.rich_content?.instructions, lesson.instructions || '', 5000))
-    setResourceTextRich(richTextForPlain(
-      lesson.additional_resource?.rich_content?.description,
-      lesson.additional_resource?.text_content || '',
-      20000
-    ))
     setLessonForm({ mode: 'edit', moduleId: lesson.module_id, lesson })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -300,6 +312,22 @@ export default function LessonListUI({ courseId, initialNumberingStyle = 'module
     }
     setIsSaving(false)
     setSaveTarget(null)
+  }
+
+  const addLessonResource = () => {
+    setLessonResources((current) => current.length >= 20
+      ? current
+      : [...current, createResourceDraft()])
+  }
+
+  const updateLessonResource = (key, updates) => {
+    setLessonResources((current) => current.map((resource) => (
+      resource.key === key ? { ...resource, ...updates } : resource
+    )))
+  }
+
+  const removeLessonResource = (key) => {
+    setLessonResources((current) => current.filter((resource) => resource.key !== key))
   }
 
   const moveModule = (index, direction) => {
@@ -585,7 +613,7 @@ export default function LessonListUI({ courseId, initialNumberingStyle = 'module
             description: lessonDescriptionRich,
             instructions: lessonType === 'assessment' ? lessonInstructionsRich : createRichText(),
           })} />
-          <input type="hidden" name="resource_rich_content_json" value={JSON.stringify({ version: 1, description: resourceTextRich })} />
+          <input type="hidden" name="resource_count" value={lessonResources.length} />
           <div className={styles.formHeadingRow}>
             <FaFolderOpen />
             <h3 className={styles.formTitle}>{lessonForm.mode === 'edit' ? 'Edit Lesson' : 'New Lesson'}</h3>
@@ -707,75 +735,122 @@ export default function LessonListUI({ courseId, initialNumberingStyle = 'module
           <div className={`${styles.formSection} ${styles.resourceSection}`}>
             <div className={styles.resourceHeading}>
               <div>
-                <h4>Additional resource</h4>
-                <p>Optionally attach one text note, PDF, or external link to this lesson.</p>
+                <h4>Additional resources</h4>
+                <p>Add text notes, PDFs, or external links in the order learners should see them.</p>
               </div>
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="resource-type">Resource Type</label>
-              <CustomSelect
-                id="resource-type"
-                name="resource_type"
-                value={resourceType}
-                onChange={setResourceType}
-                options={[
-                  { value: 'none', label: 'No additional resource' },
-                  { value: 'text', label: 'Text' },
-                  { value: 'pdf', label: 'PDF upload' },
-                  { value: 'link', label: 'External link' },
-                ]}
-                ariaLabel="Additional resource type"
-              />
+              <button
+                type="button"
+                className={styles.addResourceButton}
+                onClick={addLessonResource}
+                disabled={lessonResources.length >= 20}
+              >
+                <FaPlus /> Add resource
+              </button>
             </div>
 
-            {resourceType === 'text' && (
-              <div className={styles.formGroup}>
-                <label htmlFor="resource-text">Resource Text</label>
-                <RichTextEditor
-                  id="resource-text"
-                  name="resource_text"
-                  value={resourceTextRich}
-                  onChange={setResourceTextRich}
-                  ariaLabel="Additional resource text"
-                  maxLength={20000}
-                  placeholder="Add the supporting text for this lesson..."
-                />
+            {lessonResources.length === 0 ? (
+              <div className={styles.resourceEmptyState}>No additional resources added.</div>
+            ) : (
+              <div className={styles.resourceList}>
+                {lessonResources.map((resource, index) => {
+                  const resourceId = `lesson-resource-${resource.key}`
+                  return (
+                    <article className={styles.resourceEditorCard} key={resource.key}>
+                      <input type="hidden" name={`resource_id_${index}`} value={resource.id} />
+                      <input
+                        type="hidden"
+                        name={`resource_rich_content_json_${index}`}
+                        value={JSON.stringify({ version: 1, description: resource.rich_content })}
+                      />
+                      <div className={styles.resourceEditorHeader}>
+                        <strong>Resource {String(index + 1).padStart(2, '0')}</strong>
+                        <button
+                          type="button"
+                          className={styles.removeResourceButton}
+                          onClick={() => removeLessonResource(resource.key)}
+                          aria-label={`Remove additional resource ${index + 1}`}
+                          title="Remove resource"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label htmlFor={`${resourceId}-type`}>Resource Type</label>
+                        <CustomSelect
+                          id={`${resourceId}-type`}
+                          name={`resource_type_${index}`}
+                          value={resource.resource_type}
+                          onChange={(resource_type) => updateLessonResource(resource.key, { resource_type })}
+                          options={[
+                            { value: 'text', label: 'Text' },
+                            { value: 'pdf', label: 'PDF upload' },
+                            { value: 'link', label: 'External link' },
+                          ]}
+                          ariaLabel={`Additional resource ${index + 1} type`}
+                        />
+                      </div>
+
+                      {resource.resource_type === 'text' && (
+                        <div className={styles.formGroup}>
+                          <label htmlFor={`${resourceId}-text`}>Resource Text</label>
+                          <RichTextEditor
+                            id={`${resourceId}-text`}
+                            name={`resource_text_${index}`}
+                            value={resource.rich_content}
+                            onChange={(rich_content) => updateLessonResource(resource.key, { rich_content })}
+                            ariaLabel={`Additional resource ${index + 1} text`}
+                            maxLength={20000}
+                            placeholder="Add the supporting text for this lesson..."
+                          />
+                        </div>
+                      )}
+
+                      {resource.resource_type === 'link' && (
+                        <div className={styles.formGroup}>
+                          <label htmlFor={`${resourceId}-url`}>Resource Link</label>
+                          <input
+                            id={`${resourceId}-url`}
+                            name={`resource_url_${index}`}
+                            type="url"
+                            maxLength="2000"
+                            value={resource.external_url}
+                            onChange={(event) => updateLessonResource(resource.key, { external_url: event.target.value })}
+                            placeholder="https://example.com/resource"
+                            required
+                          />
+                        </div>
+                      )}
+
+                      {resource.resource_type === 'pdf' && (
+                        <div className={styles.formGroup}>
+                          <label htmlFor={`${resourceId}-pdf`}>Resource PDF <span>(10 MB maximum)</span></label>
+                          {resource.storage_path && resource.original_file_name && (
+                            <div className={styles.currentResourceFile}>
+                              <FaFilePdf />
+                              <span>{resource.original_file_name}</span>
+                              <small>Choose another PDF only if you want to replace it.</small>
+                            </div>
+                          )}
+                          <input
+                            id={`${resourceId}-pdf`}
+                            name={`resource_pdf_${index}`}
+                            type="file"
+                            accept="application/pdf,.pdf"
+                            required={!resource.storage_path}
+                          />
+                        </div>
+                      )}
+                    </article>
+                  )
+                })}
               </div>
             )}
 
-            {resourceType === 'link' && (
-              <div className={styles.formGroup}>
-                <label htmlFor="resource-url">Resource Link</label>
-                <input
-                  id="resource-url"
-                  name="resource_url"
-                  type="url"
-                  maxLength="2000"
-                  defaultValue={lessonForm.lesson?.additional_resource?.external_url || ''}
-                  placeholder="https://example.com/resource"
-                  required
-                />
-              </div>
-            )}
-
-            {resourceType === 'pdf' && (
-              <div className={styles.formGroup}>
-                <label htmlFor="resource-pdf">Resource PDF <span>(10 MB maximum)</span></label>
-                {lessonForm.lesson?.additional_resource?.resource_type === 'pdf' && (
-                  <div className={styles.currentResourceFile}>
-                    <FaFilePdf />
-                    <span>{lessonForm.lesson.additional_resource.original_file_name}</span>
-                    <small>Choose another PDF only if you want to replace it.</small>
-                  </div>
-                )}
-                <input
-                  id="resource-pdf"
-                  name="resource_pdf"
-                  type="file"
-                  accept="application/pdf,.pdf"
-                  required={lessonForm.lesson?.additional_resource?.resource_type !== 'pdf'}
-                />
-              </div>
+            {lessonResources.length > 0 && lessonResources.length < 20 && (
+              <button type="button" className={styles.addResourceButtonBottom} onClick={addLessonResource}>
+                <FaPlus /> Add another resource
+              </button>
             )}
           </div>
           <div className={styles.formActions}>
@@ -841,12 +916,10 @@ export default function LessonListUI({ courseId, initialNumberingStyle = 'module
                         <div className={styles.lessonTitle}>{lesson.title}</div>
                         <div className={styles.lessonMeta}>
                           <span>{lesson.type === 'video' ? 'VIDEO LESSON' : 'ASSESSMENT'}</span>
-                          {lesson.additional_resource && (
+                          {lesson.additional_resources?.length > 0 && (
                             <span className={styles.resourceBadge}>
-                              {lesson.additional_resource.resource_type === 'pdf' && <FaFilePdf />}
-                              {lesson.additional_resource.resource_type === 'link' && <FaLink />}
-                              {lesson.additional_resource.resource_type === 'text' && <FaFileAlt />}
-                              {lesson.additional_resource.resource_type} resource
+                              <FaFileAlt />
+                              {lesson.additional_resources.length} {lesson.additional_resources.length === 1 ? 'resource' : 'resources'}
                             </span>
                           )}
                         </div>

@@ -631,6 +631,105 @@
     line-height: 1.5;
 }
 
+.resourceHeading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-lg);
+}
+
+.addResourceButton,
+.addResourceButtonBottom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.7rem 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-dark-blue);
+    color: var(--color-white);
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: opacity var(--transition-normal), transform var(--transition-normal);
+}
+
+.addResourceButton:hover:not(:disabled),
+.addResourceButtonBottom:hover:not(:disabled) {
+    opacity: 0.86;
+    transform: translateY(-2px);
+}
+
+.addResourceButton:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.addResourceButtonBottom {
+    justify-self: start;
+}
+
+.resourceEmptyState {
+    padding: 1.1rem;
+    border: 1px dashed rgba(33, 44, 45, 0.2);
+    border-radius: 0.75rem;
+    background: var(--color-white);
+    color: var(--color-gray-dark);
+    font-size: 0.9rem;
+    font-weight: 650;
+    text-align: center;
+}
+
+.resourceList {
+    display: grid;
+    gap: var(--space-md);
+}
+
+.resourceEditorCard {
+    display: grid;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    border: 1px solid rgba(33, 44, 45, 0.12);
+    border-radius: 0.85rem;
+    background: var(--color-white);
+}
+
+.resourceEditorHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.resourceEditorHeader strong {
+    color: var(--color-dark-blue);
+    font-size: 0.78rem;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.removeResourceButton {
+    display: inline-grid;
+    place-items: center;
+    width: 2.45rem;
+    height: 2.45rem;
+    padding: 0;
+    border: 1px solid rgba(197, 48, 48, 0.2);
+    border-radius: 50%;
+    background: rgba(197, 48, 48, 0.07);
+    color: var(--color-error);
+    cursor: pointer;
+    transition: background-color var(--transition-normal), transform var(--transition-normal);
+}
+
+.removeResourceButton:hover {
+    background: rgba(197, 48, 48, 0.13);
+    transform: translateY(-1px);
+}
+
 .currentResourceFile {
     display: flex;
     align-items: center;
@@ -1315,6 +1414,20 @@
     }
 
     .resourceSection {
+        padding: var(--space-md);
+    }
+
+    .resourceHeading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .addResourceButton,
+    .addResourceButtonBottom {
+        width: 100%;
+    }
+
+    .resourceEditorCard {
         padding: var(--space-md);
     }
 

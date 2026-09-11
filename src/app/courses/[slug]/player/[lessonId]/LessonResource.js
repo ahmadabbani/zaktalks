@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { FaDownload, FaExternalLinkAlt, FaFileAlt, FaFilePdf, FaLink } from 'react-icons/fa'
 import {
-  getCompletedLessonResource,
+  getCompletedLessonResources,
   getCompletedLessonResourceDownloadUrl
 } from '@/app/courses/resource.actions'
 import RichText from '@/components/RichText'
@@ -16,14 +16,14 @@ const RESOURCE_DETAILS = {
   link: { label: 'Lesson link', icon: FaLink }
 }
 
-export default function LessonResource({ lessonId, initialResource = null, initiallyCompleted = false }) {
+export default function LessonResource({ lessonId, initialResources = [], initiallyCompleted = false }) {
   const { completedMap } = useCourseProgress()
   const isCompleted = Boolean(completedMap[lessonId])
-  const [resource, setResource] = useState(initialResource)
+  const [resources, setResources] = useState(initialResources)
   const [hasChecked, setHasChecked] = useState(initiallyCompleted)
   const [loadError, setLoadError] = useState('')
-  const [downloadError, setDownloadError] = useState('')
-  const [isDownloading, setIsDownloading] = useState(false)
+  const [downloadErrors, setDownloadErrors] = useState({})
+  const [downloadingId, setDownloadingId] = useState(null)
 
   useEffect(() => {
     if (!isCompleted || hasChecked) return
@@ -32,8 +32,8 @@ export default function LessonResource({ lessonId, initialResource = null, initi
 
     async function loadResource() {
       try {
-        const nextResource = await getCompletedLessonResource(lessonId)
-        if (!cancelled) setResource(nextResource)
+        const nextResources = await getCompletedLessonResources(lessonId)
+        if (!cancelled) setResources(nextResources)
       } catch (error) {
         if (!cancelled) setLoadError(error.message || 'The lesson resource could not be loaded.')
       } finally {
@@ -45,7 +45,7 @@ export default function LessonResource({ lessonId, initialResource = null, initi
     return () => { cancelled = true }
   }, [hasChecked, isCompleted, lessonId])
 
-  if (!isCompleted || (!resource && !loadError)) return null
+  if (!isCompleted || (!resources.length && !loadError)) return null
 
   if (loadError) {
     return (
@@ -55,17 +55,13 @@ export default function LessonResource({ lessonId, initialResource = null, initi
     )
   }
 
-  const details = RESOURCE_DETAILS[resource.resource_type]
-  if (!details) return null
-  const ResourceIcon = details.icon
-
-  const downloadPdf = async () => {
-    if (isDownloading) return
-    setIsDownloading(true)
-    setDownloadError('')
+  const downloadPdf = async (resource) => {
+    if (downloadingId) return
+    setDownloadingId(resource.id)
+    setDownloadErrors((current) => ({ ...current, [resource.id]: '' }))
 
     try {
-      const download = await getCompletedLessonResourceDownloadUrl(lessonId)
+      const download = await getCompletedLessonResourceDownloadUrl(lessonId, resource.id)
       const anchor = document.createElement('a')
       anchor.href = download.url
       anchor.download = download.fileName
@@ -74,46 +70,64 @@ export default function LessonResource({ lessonId, initialResource = null, initi
       anchor.click()
       anchor.remove()
     } catch (error) {
-      setDownloadError(error.message || 'The PDF could not be downloaded.')
+      setDownloadErrors((current) => ({
+        ...current,
+        [resource.id]: error.message || 'The PDF could not be downloaded.',
+      }))
     } finally {
-      setIsDownloading(false)
+      setDownloadingId(null)
     }
   }
 
   return (
-    <section className={styles.lessonResource} aria-labelledby={`lesson-resource-${lessonId}`}>
-      <div className={styles.lessonResourceHeader}>
-        <span className={styles.lessonResourceIcon}><ResourceIcon /></span>
-        <div>
-          <span className={styles.lessonResourceEyebrow}>Additional resource</span>
-          <h2 id={`lesson-resource-${lessonId}`}>{details.label}</h2>
-        </div>
-      </div>
+    <div className={styles.lessonResourceList} aria-label="Additional lesson resources">
+      {resources.map((resource, index) => {
+        const details = RESOURCE_DETAILS[resource.resource_type]
+        if (!details) return null
+        const ResourceIcon = details.icon
+        const headingId = `lesson-resource-${lessonId}-${resource.id}`
+        const isDownloading = downloadingId === resource.id
+        const downloadError = downloadErrors[resource.id]
 
-      {resource.resource_type === 'text' && (
-        <p className={styles.lessonResourceText}>
-          <RichText value={resource.rich_content?.description} fallback={resource.text_content} maxLength={20000} />
-        </p>
-      )}
+        return (
+          <section className={styles.lessonResource} aria-labelledby={headingId} key={resource.id}>
+            <div className={styles.lessonResourceHeader}>
+              <span className={styles.lessonResourceIcon}><ResourceIcon /></span>
+              <div>
+                <span className={styles.lessonResourceEyebrow}>
+                  Additional resource{resources.length > 1 ? ` ${index + 1}` : ''}
+                </span>
+                <h2 id={headingId}>{details.label}</h2>
+              </div>
+            </div>
 
-      {resource.resource_type === 'pdf' && (
-        <div className={styles.lessonResourceActionRow}>
-          <p>{resource.original_file_name || 'Supporting lesson PDF'}</p>
-          <button type="button" className={styles.lessonResourceButton} onClick={downloadPdf} disabled={isDownloading}>
-            <FaDownload /> {isDownloading ? 'Preparing...' : 'Download PDF'}
-          </button>
-          {downloadError && <span className={styles.lessonResourceActionError} role="alert">{downloadError}</span>}
-        </div>
-      )}
+            {resource.resource_type === 'text' && (
+              <p className={styles.lessonResourceText}>
+                <RichText value={resource.rich_content?.description} fallback={resource.text_content} maxLength={20000} />
+              </p>
+            )}
 
-      {resource.resource_type === 'link' && (
-        <div className={styles.lessonResourceActionRow}>
-          <p>Continue with the supporting resource for this lesson.</p>
-          <a className={styles.lessonResourceButton} href={resource.external_url} target="_blank" rel="noopener noreferrer">
-            Visit resource <FaExternalLinkAlt />
-          </a>
-        </div>
-      )}
-    </section>
+            {resource.resource_type === 'pdf' && (
+              <div className={styles.lessonResourceActionRow}>
+                <p>{resource.original_file_name || 'Supporting lesson PDF'}</p>
+                <button type="button" className={styles.lessonResourceButton} onClick={() => downloadPdf(resource)} disabled={Boolean(downloadingId)}>
+                  <FaDownload /> {isDownloading ? 'Preparing...' : 'Download PDF'}
+                </button>
+                {downloadError && <span className={styles.lessonResourceActionError} role="alert">{downloadError}</span>}
+              </div>
+            )}
+
+            {resource.resource_type === 'link' && (
+              <div className={styles.lessonResourceActionRow}>
+                <p>Continue with the supporting resource for this lesson.</p>
+                <a className={styles.lessonResourceButton} href={resource.external_url} target="_blank" rel="noopener noreferrer">
+                  Visit resource <FaExternalLinkAlt />
+                </a>
+              </div>
+            )}
+          </section>
+        )
+      })}
+    </div>
   )
 }

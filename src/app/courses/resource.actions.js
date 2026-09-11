@@ -13,31 +13,35 @@ async function getAuthenticatedClient() {
   return supabase
 }
 
-export async function getCompletedLessonResource(lessonId) {
+export async function getCompletedLessonResources(lessonId) {
   if (!UUID_PATTERN.test(String(lessonId || ''))) throw new Error('Invalid lesson resource request.')
 
   const supabase = await getAuthenticatedClient()
   const { data, error } = await supabase
     .from('lesson_resources')
-    .select('resource_type, text_content, rich_content, external_url, original_file_name')
+    .select('id, resource_type, text_content, rich_content, external_url, original_file_name, display_order')
     .eq('lesson_id', lessonId)
-    .maybeSingle()
+    .order('display_order', { ascending: true })
+    .order('created_at', { ascending: true })
 
   if (error) {
     console.error('Unable to load completed lesson resource:', error.message)
     throw new Error('The lesson resource could not be loaded.')
   }
 
-  return data || null
+  return data || []
 }
 
-export async function getCompletedLessonResourceDownloadUrl(lessonId) {
-  if (!UUID_PATTERN.test(String(lessonId || ''))) throw new Error('Invalid lesson resource request.')
+export async function getCompletedLessonResourceDownloadUrl(lessonId, resourceId) {
+  if (!UUID_PATTERN.test(String(lessonId || '')) || !UUID_PATTERN.test(String(resourceId || ''))) {
+    throw new Error('Invalid lesson resource request.')
+  }
 
   const supabase = await getAuthenticatedClient()
   const { data: resource, error: resourceError } = await supabase
     .from('lesson_resources')
     .select('storage_path, original_file_name')
+    .eq('id', resourceId)
     .eq('lesson_id', lessonId)
     .eq('resource_type', 'pdf')
     .maybeSingle()
