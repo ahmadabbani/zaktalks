@@ -24,14 +24,6 @@
     box-shadow: 0 8px 28px rgba(33, 44, 45, 0.06);
 }
 
-.learningContext::before {
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 5px;
-    background: var(--color-yellow);
-    content: '';
-}
-
 .contextItem {
     min-width: 0;
     padding: 1.15rem 1.3rem 1.2rem 1.45rem;
@@ -53,10 +45,6 @@
 .assessmentLearningContext {
     grid-template-columns: 1fr;
     background: color-mix(in srgb, var(--color-gray-light) 58%, white);
-}
-
-.assessmentLearningContext::before {
-    display: none;
 }
 
 .assessmentLearningContext .contextItem {
@@ -83,8 +71,8 @@
     width: 1.65rem;
     height: 1.65rem;
     border-radius: 50%;
-    background: var(--color-yellow);
-    color: var(--color-black);
+    background: var(--color-dark-blue);
+    color: var(--color-white);
     font-size: 0.68rem;
 }
 
@@ -425,13 +413,13 @@
 }
 
 .dashboardButton {
-    background: var(--color-black);
-    color: var(--color-yellow);
-    border-color: var(--color-black);
+    background: var(--color-dark-blue);
+    color: var(--color-white);
+    border-color: var(--color-dark-blue);
 }
 
 .dashboardButton:hover {
-    opacity: 0.9;
+    background: #1e7581;
     transform: translateY(-2px);
 }
 

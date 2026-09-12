@@ -114,6 +114,7 @@ export default async function LessonPage({ params }) {
           .select('id')
           .eq('user_id', user.id)
           .eq('course_id', lesson.course_id)
+          .is('deleted_at', null)
           .maybeSingle(),
   ])
 

@@ -18,6 +18,7 @@ import CouponsTable from '../coupons/CouponsTable'
 import CoursePromotionsPanel from '../promotions/CoursePromotionsPanel'
 import ExternalAssessmentLinks from './ExternalAssessmentLinks'
 import CreationActivityDashboard from './CreationActivityDashboard'
+import CourseReviewsDashboard from './CourseReviewsDashboard'
 import { getAdminSettings } from '../settings/settings.actions'
 import { getAllCourses, getCoupons } from '../coupons/coupons.actions'
 import { getCoursePromotions } from '../promotions/promotions.actions'
@@ -26,12 +27,14 @@ import courseStyles from '../courses/admin-courses.module.css'
 
 const PAGE_SIZE = 1000
 
-async function fetchAllRows(supabase, table, columns, orderColumn) {
+async function fetchAllRows(supabase, table, columns, orderColumn, whereNullColumn = null) {
   const rows = []
   let from = 0
 
   while (true) {
-    const { data, error } = await supabase.from(table).select(columns).order(orderColumn, { ascending: false }).range(from, from + PAGE_SIZE - 1)
+    let query = supabase.from(table).select(columns).order(orderColumn, { ascending: false }).range(from, from + PAGE_SIZE - 1)
+    if (whereNullColumn) query = query.is(whereNullColumn, null)
+    const { data, error } = await query
     if (error) throw error
     rows.push(...(data || []))
     if (!data || data.length < PAGE_SIZE) break
@@ -127,6 +130,27 @@ async function CreationActivityPanel() {
   return <CreationActivityDashboard entries={entries} error={error ? 'Content activity could not be loaded.' : ''} />
 }
 
+async function CourseReviewsPanel() {
+  const supabase = await createAdminClient()
+  let reviews = []
+  let errorMessage = ''
+
+  try {
+    reviews = await fetchAllRows(
+      supabase,
+      'course_reviews',
+      'id, course_id, user_id, rating, review_text, created_at, updated_at, is_published, published_at, is_test, course:courses!course_reviews_course_id_fkey(title, slug, deleted_at), learner:users!course_reviews_user_id_fkey(first_name, last_name, email)',
+      'created_at',
+      'deleted_at',
+    )
+  } catch (error) {
+    console.error('Unable to load course reviews:', error)
+    errorMessage = 'Course reviews could not be loaded.'
+  }
+
+  return <CourseReviewsDashboard initialReviews={reviews} error={errorMessage} />
+}
+
 async function DiscountSettingsPanel() {
   const settings = await getAdminSettings()
   return <div className={`${userStyles.embeddedAdminPanel} ${userStyles.embeddedAdminPanelNarrow}`}><SettingsForm initialSettings={settings} /></div>
@@ -171,6 +195,7 @@ export default async function DashboardPanelContent({ viewId, access }) {
     case 'courses': return <CoursesPanel access={access} />
     case 'assessment-links': return <AssessmentLinksPanel />
     case 'creation-activity': return <CreationActivityPanel />
+    case 'course-reviews': return access.role === 'admin' ? <CourseReviewsPanel /> : null
     case 'discounts': return <DiscountSettingsPanel />
     case 'coupons': return <CouponsPanel />
     case 'course-promotions': return <PromotionsPanel />

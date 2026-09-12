@@ -39,6 +39,13 @@ export const ADMIN_DASHBOARD_GROUPS = [
         description: 'See who created, updated, or deleted course content.',
         icon: 'activity',
       },
+      {
+        id: 'course-reviews',
+        adminOnly: true,
+        label: 'Course Reviews',
+        description: 'Read, edit, and approve learner reviews before publication.',
+        icon: 'reviews',
+      },
     ],
   },
   {

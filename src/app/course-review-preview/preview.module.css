@@ -9,6 +9,33 @@
 
 .playerPreview {
   width: min(100%, 72rem);
+  display: grid;
+  gap: 1.5rem;
+}
+
+.setup {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  padding: 1.4rem;
+  border: 1px solid rgba(32, 60, 64, 0.15);
+  border-radius: 1rem;
+  background: var(--color-white);
+}
+
+.setup > div { flex: 1 1 100%; }
+.setup span { color: var(--color-dark-blue); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; }
+.setup h1 { margin: 0.3rem 0 0; color: var(--color-black); font-size: clamp(1.4rem, 3vw, 2rem); }
+.setup label { align-self: center; color: var(--color-black); font-weight: 750; }
+.setup select { flex: 1 1 18rem; min-width: 0; min-height: 3rem; padding: 0.65rem 0.85rem; border: 1px solid rgba(32, 60, 64, 0.25); border-radius: 0.7rem; background: var(--color-white); color: var(--color-black); font: inherit; }
+.setup select:focus { outline: 2px solid var(--color-dark-blue); outline-offset: 2px; }
+.restartButton:disabled { cursor: not-allowed; opacity: 0.55; }
+
+@media (max-width: 600px) {
+  .setup { align-items: stretch; }
+  .setup label { align-self: auto; }
+  .setup select, .restartButton { flex: 1 1 100%; }
 }
 
 .restartButton {

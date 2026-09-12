@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { FaArrowRight, FaAward, FaCertificate, FaCheckCircle, FaSpinner, FaStar, FaTimes } from 'react-icons/fa'
 import { submitCourseReview } from '@/app/courses/review.actions'
+import { submitPreviewCourseReview } from '@/app/course-review-preview/review-preview.actions'
 import styles from './CourseReviewModal.module.css'
 
 const STAR_COUNT = 5
@@ -68,7 +69,7 @@ export default function CourseReviewModal({
   courseName,
   learnerName,
   hasCertificate,
-  preview = false,
+  previewSave = false,
 }) {
   const [mounted, setMounted] = useState(false)
   const [step, setStep] = useState('welcome')
@@ -137,8 +138,8 @@ export default function CourseReviewModal({
     setError('')
     setIsSaving(true)
     try {
-      const result = preview
-        ? await new Promise((resolve) => setTimeout(() => resolve({ success: true }), 650))
+      const result = previewSave
+        ? await submitPreviewCourseReview({ courseId, rating, reviewText: text })
         : await submitCourseReview({ courseId, rating, reviewText: text })
 
       if (!result.success) {

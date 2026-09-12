@@ -12,6 +12,7 @@ import {
   FaChartPie,
   FaChevronDown,
   FaClipboardCheck,
+  FaComments,
   FaCog,
   FaGraduationCap,
   FaHistory,
@@ -40,6 +41,7 @@ function DashboardIcon({ name }) {
     case 'courses': return <FaGraduationCap aria-hidden="true" />
     case 'links': return <FaLink aria-hidden="true" />
     case 'activity': return <FaHistory aria-hidden="true" />
+    case 'reviews': return <FaComments aria-hidden="true" />
     case 'discounts': return <FaCog aria-hidden="true" />
     case 'coupons': return <FaTag aria-hidden="true" />
     case 'promotions': return <FaBolt aria-hidden="true" />
