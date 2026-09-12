@@ -133,7 +133,7 @@ export function buildPaymentReceiptEmail({
   const safeInvoiceNumber = escapeHtml(invoiceNumber)
   const discounted = originalAmount && originalAmount !== amountPaid
   const subject = `Payment received for ${courseName || 'your course'}`
-  const previewText = 'We have received your payment. Your course access will be confirmed shortly.'
+  const previewText = 'We have received your payment and recorded your purchase.'
 
   const pricingRows = `${discounted ? `<tr>
       <td style="padding:8px 0;color:#687273;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;">Original price</td>
@@ -163,7 +163,7 @@ export function buildPaymentReceiptEmail({
     </table>
     <p style="margin:24px 0 0;color:${BRAND_BLACK};font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.72;">Your receipt is available here:</p>
     ${actionButton(receiptUrl, 'View your receipt')}
-    <p style="margin:25px 0 0;color:#596465;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.72;">We are now preparing your course access. You will receive a separate email shortly confirming that your account and course are ready.</p>
+    <p style="margin:25px 0 0;color:#596465;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.72;">Your purchase has been recorded. You can review it at any time from your learner dashboard.</p>
     <p style="margin:18px 0 0;color:#596465;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.72;">If you did not make this purchase, or if anything does not look right, please contact us at <a href="mailto:${escapeHtml(supportEmail)}" style="color:${BRAND_TEAL};font-weight:700;text-decoration:none;">${escapeHtml(supportEmail)}</a>.</p>
     <p style="margin:18px 0 0;color:${BRAND_BLACK};font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.72;">Thank you for choosing to invest in yourself.</p>
     <p style="margin:18px 0 0;color:${BRAND_BLACK};font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.72;">The Okayness Team</p>`
@@ -183,7 +183,7 @@ export function buildPaymentReceiptEmail({
   const originalLine = discounted ? `\nOriginal price: ${originalAmount}` : ''
   const promotionLabel = `${promotionName || 'Course promotion'}${promotionPercent ? ` (${promotionPercent}%)` : ''}`
   const promotionLine = promotionDiscountAmount ? `\n${promotionLabel}: -${promotionDiscountAmount}` : ''
-  const text = `Hi ${firstName(recipientFirstName)},\n\nWe have received your payment for ${courseName || 'your course'}.\n\nPayment details:${originalLine}${promotionLine}\nAmount paid: ${amountPaid}\nPayment date: ${paymentDate}\nInvoice number: ${invoiceNumber}\n\nView your receipt: ${receiptUrl}\n\nWe are now preparing your course access. You will receive a separate email shortly confirming that your account and course are ready.\n\nIf you did not make this purchase, or if anything does not look right, please contact us at ${supportEmail}.\n\nThank you for choosing to invest in yourself.\n\nThe Okayness Team\n\nThis is a transactional email related to your purchase. For billing or payment support, contact ${supportEmail}.`
+  const text = `Hi ${firstName(recipientFirstName)},\n\nWe have received your payment for ${courseName || 'your course'}.\n\nPayment details:${originalLine}${promotionLine}\nAmount paid: ${amountPaid}\nPayment date: ${paymentDate}\nInvoice number: ${invoiceNumber}\n\nView your receipt: ${receiptUrl}\n\nYour purchase has been recorded. You can review it at any time from your learner dashboard.\n\nIf you did not make this purchase, or if anything does not look right, please contact us at ${supportEmail}.\n\nThank you for choosing to invest in yourself.\n\nThe Okayness Team\n\nThis is a transactional email related to your purchase. For billing or payment support, contact ${supportEmail}.`
 
   return { subject, previewText, html, text }
 }
@@ -191,58 +191,4 @@ export function buildPaymentReceiptEmail({
 function brandHeading(title, safeFirstName) {
   return `<h1 style="margin:0 0 16px;color:${BRAND_TEAL};font-family:Arial,Helvetica,sans-serif;font-size:34px;font-weight:800;letter-spacing:-0.8px;line-height:1.15;">${escapeHtml(title)}</h1>
     <p style="margin:0 0 16px;color:${BRAND_BLACK};font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:1.7;">Hi ${safeFirstName},</p>`
-}
-
-export function buildCourseAccessEmail({
-  recipientFirstName,
-  courseName,
-  courseUrl,
-  appUrl,
-  supportEmail = 'hello@okayness.com',
-  logoUrl = '',
-}) {
-  const safeFirstName = escapeHtml(firstName(recipientFirstName))
-  const safeCourseName = escapeHtml(courseName || 'your course')
-  const subject = `You're in: your access to ${courseName || 'your course'} is ready`
-  const previewText = 'Your course is available now. Start with the first lesson when you are ready.'
-  const startSteps = [
-    'Log in to your learner dashboard',
-    `Open <strong>${safeCourseName}</strong>`,
-    'Begin with the first lesson',
-    'Complete the activities as you go. They are part of the work, not an extra task',
-  ]
-
-  const body = `${brandHeading('Your course is ready', safeFirstName)}
-    <p style="margin:0;color:${BRAND_BLACK};font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.72;">Your access to <strong>${safeCourseName}</strong> is now ready.</p>
-    <p style="margin:18px 0 0;color:#596465;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.72;">This course is self-paced. You do not need to rush through it, keep up with anyone, or have everything figured out before you begin.</p>
-    <p style="margin:18px 0 0;color:#596465;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.72;">What matters is that you show up honestly, stay curious about what you notice, and give yourself the space to apply what is useful.</p>
-    <h2 style="margin:28px 0 14px;color:${BRAND_BLACK};font-family:Arial,Helvetica,sans-serif;font-size:21px;font-weight:800;line-height:1.3;">Start here</h2>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;background:#F3F7F6;border:1px solid #E1E9E7;border-radius:16px;">
-      ${startSteps.map((step, index) => `<tr>
-        <td width="46" valign="top" style="width:46px;padding:${index === 0 ? '18px' : '8px'} 0 ${index === startSteps.length - 1 ? '18px' : '8px'} 18px;"><span style="display:inline-block;width:28px;height:28px;border-radius:50%;background:${index === 0 ? BRAND_YELLOW : BRAND_TEAL};color:${index === 0 ? BRAND_BLACK : '#FFFFFF'};font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:800;line-height:28px;text-align:center;">${index + 1}</span></td>
-        <td valign="middle" style="padding:${index === 0 ? '18px' : '8px'} 18px ${index === startSteps.length - 1 ? '18px' : '8px'} 10px;color:${BRAND_BLACK};font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;">${step}</td>
-      </tr>`).join('')}
-    </table>
-    ${actionButton(courseUrl, `Start ${courseName || 'your course'}`)}
-    <p style="margin:26px 0 0;color:${BRAND_BLACK};font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.72;">You have <strong>lifetime access</strong> to this course. You can return to the lessons, worksheets, and reflections whenever you need to revisit something with more clarity or a different perspective.</p>
-    <p style="margin:18px 0 0;color:#596465;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.72;">Your progress is based on meaningful action: completing lessons, activities, assessments, and reflections, not simply opening a page.</p>
-    <p style="margin:18px 0 0;color:#596465;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.72;">If you need help with access, login, or playback, email us at <a href="mailto:${escapeHtml(supportEmail)}" style="color:${BRAND_TEAL};font-weight:700;text-decoration:none;">${escapeHtml(supportEmail)}</a>. We aim to respond within 48 hours.</p>
-    <p style="margin:18px 0 0;color:${BRAND_BLACK};font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.72;">Start where you are.</p>
-    <p style="margin:18px 0 0;color:${BRAND_BLACK};font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.72;">The Okayness Team</p>`
-
-  const html = emailDocument({
-    subject,
-    previewText,
-    body,
-    logoUrl,
-    footer: emailFooter({
-      appUrl,
-      supportEmail,
-      notice: 'Your course access is for one individual learner account. Please keep your login details private and do not share or redistribute course materials.',
-    }),
-  })
-
-  const text = `Hi ${firstName(recipientFirstName)},\n\nYour access to ${courseName || 'your course'} is now ready.\n\nThis course is self-paced. You do not need to rush through it, keep up with anyone, or have everything figured out before you begin.\n\nWhat matters is that you show up honestly, stay curious about what you notice, and give yourself the space to apply what is useful.\n\nStart here\n1. Log in to your learner dashboard\n2. Open ${courseName || 'your course'}\n3. Begin with the first lesson\n4. Complete the activities as you go. They are part of the work, not an extra task\n\nStart ${courseName || 'your course'}: ${courseUrl}\n\nYou have lifetime access to this course. You can return to the lessons, worksheets, and reflections whenever you need to revisit something with more clarity or a different perspective.\n\nYour progress is based on meaningful action: completing lessons, activities, assessments, and reflections, not simply opening a page.\n\nIf you need help with access, login, or playback, email us at ${supportEmail}. We aim to respond within 48 hours.\n\nStart where you are.\n\nThe Okayness Team\n\nYour course access is for one individual learner account. Please keep your login details private and do not share or redistribute course materials.`
-
-  return { subject, previewText, html, text }
 }

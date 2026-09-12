@@ -11,6 +11,7 @@ import {
 } from '@/lib/payments/fulfillment-emails'
 import {
   CHECKOUT_CUSTOMER_EMAIL_TYPES,
+  enqueueCheckoutPaymentReceipt,
   maybeSendCheckoutCustomerEmails,
 } from '@/lib/payments/customer-emails'
 
@@ -58,6 +59,22 @@ function scheduleCheckoutCustomerEmails(sessionId, emailTypes, requestOrigin) {
     // Scheduling email must never change payment or course-access behavior.
     console.error(`Unable to schedule customer emails for ${sessionId}:`, error.message)
   }
+}
+
+async function queueAndSchedulePaymentReceipt(supabaseAdmin, checkoutId, sessionId, requestOrigin) {
+  try {
+    await enqueueCheckoutPaymentReceipt(supabaseAdmin, checkoutId)
+  } catch (error) {
+    // Receipt persistence is best effort and must never affect payment,
+    // enrollment, rewards, guest setup, or access fulfillment.
+    console.error(`Unable to persist payment receipt delivery for ${sessionId}:`, error.message)
+  }
+
+  scheduleCheckoutCustomerEmails(
+    sessionId,
+    [CHECKOUT_CUSTOMER_EMAIL_TYPES.PAYMENT_RECEIPT],
+    requestOrigin,
+  )
 }
 
 async function sendPasswordSetupEmail({ checkoutId, email, firstName, link, claimId }) {
@@ -316,9 +333,10 @@ export async function fulfillCheckoutSession(sessionId, { requestOrigin } = {}) 
     }
 
     if (['paid', 'no_payment_required', 'partially_refunded'].includes(latest?.payment_state)) {
-      scheduleCheckoutCustomerEmails(
+      await queueAndSchedulePaymentReceipt(
+        supabaseAdmin,
+        checkout.id,
         session.id,
-        [CHECKOUT_CUSTOMER_EMAIL_TYPES.PAYMENT_RECEIPT],
         requestOrigin,
       )
     }
@@ -356,11 +374,6 @@ export async function fulfillCheckoutSession(sessionId, { requestOrigin } = {}) 
       }
 
       await maybeSendFulfillmentRecoveryNotifications(supabaseAdmin, session.id)
-      scheduleCheckoutCustomerEmails(
-        session.id,
-        [CHECKOUT_CUSTOMER_EMAIL_TYPES.COURSE_ACCESS],
-        requestOrigin,
-      )
 
       return { status: 'fulfilled', session, enrollmentId: latest.enrollment_id }
     }
@@ -387,9 +400,10 @@ export async function fulfillCheckoutSession(sessionId, { requestOrigin } = {}) 
     if (verifiedPaymentError) {
       throw new Error(`Unable to record the verified Stripe payment: ${verifiedPaymentError.message}`)
     }
-    scheduleCheckoutCustomerEmails(
+    await queueAndSchedulePaymentReceipt(
+      supabaseAdmin,
+      checkout.id,
       session.id,
-      [CHECKOUT_CUSTOMER_EMAIL_TYPES.PAYMENT_RECEIPT],
       requestOrigin,
     )
 
@@ -464,11 +478,6 @@ export async function fulfillCheckoutSession(sessionId, { requestOrigin } = {}) 
     }
 
     await maybeSendFulfillmentRecoveryNotifications(supabaseAdmin, session.id)
-    scheduleCheckoutCustomerEmails(
-      session.id,
-      [CHECKOUT_CUSTOMER_EMAIL_TYPES.COURSE_ACCESS],
-      requestOrigin,
-    )
 
     return {
       status: 'fulfilled',

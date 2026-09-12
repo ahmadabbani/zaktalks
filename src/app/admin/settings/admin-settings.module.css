@@ -1,10 +1,8 @@
-/* Admin Settings Page Styles */
-
 .page {
-    background-color: var(--color-gray-light);
     min-height: 100vh;
-    padding: var(--space-2xl) var(--container-padding);
     margin-top: 80px;
+    padding: var(--space-2xl) var(--container-padding);
+    background: var(--color-gray-light);
 }
 
 .container {
@@ -20,215 +18,315 @@
 }
 
 .headerIcon {
-    color: var(--color-yellow);
+    color: var(--color-dark-blue);
     font-size: 2rem;
 }
 
 .backLink {
     display: inline-flex;
-    flex: 0 0 auto;
     align-items: center;
-    gap: 0.65rem;
+    gap: .65rem;
     min-height: 2.9rem;
-    padding: 0.75rem 1.1rem;
-    border: 1px solid rgba(33, 44, 45, 0.16);
+    margin-bottom: var(--space-md);
+    padding: .75rem 1.1rem;
+    border: 1px solid rgba(33, 44, 45, .16);
     border-radius: 999px;
     color: var(--color-black);
     background: var(--color-white);
+    font-size: .9rem;
+    font-weight: 750;
     text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin-bottom: var(--space-md);
-    transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+    transition: color .18s ease, background-color .18s ease, border-color .18s ease, transform .18s ease;
 }
 
 .backLink:hover {
-    border-color: var(--color-yellow);
+    border-color: var(--color-dark-blue);
     color: var(--color-white);
-    background: var(--color-yellow);
-    transform: translateY(-2px);
+    background: var(--color-dark-blue);
+    transform: translateY(-1px);
 }
 
 .pageTitle {
+    margin: 0;
+    color: var(--color-black);
     font-size: clamp(1.75rem, 3vw, 2.5rem);
     font-weight: 900;
-    color: var(--color-black);
-    margin: 0;
 }
 
 .description {
-    color: var(--color-gray-dark);
-    margin-bottom: var(--space-2xl);
     max-width: 700px;
-    line-height: 1.6;
+    margin-bottom: var(--space-2xl);
+    color: var(--color-gray-dark);
     font-size: 1rem;
+    line-height: 1.6;
 }
 
-/* Form Styles */
 .form {
+    display: grid;
+    gap: 1rem;
+    padding-top: 1.5rem;
+}
+
+.settingsGrid {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-xl);
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .9rem;
 }
 
 .settingCard {
-    background: white;
-    padding: var(--space-2xl);
-    border-radius: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: all var(--transition-normal);
+    position: relative;
+    display: grid;
+    align-content: start;
+    justify-items: center;
+    min-width: 0;
+    min-height: 15.5rem;
+    flex: 1 1 16rem;
+    max-width: calc((100% - 1.8rem) / 3);
+    padding: 1.3rem 1.1rem;
+    border: 1px solid rgba(33, 44, 45, .09);
+    border-radius: 1.1rem;
+    background: var(--color-white);
+    box-shadow: 0 .55rem 1.6rem rgba(33, 44, 45, .045);
+    text-align: center;
+    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
 
-.settingCard:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+.settingCard:first-child {
+    color: var(--color-white);
+    background: var(--color-dark-blue);
+    box-shadow: 0 1rem 2.3rem rgba(var(--color-dark-blue-rgb), .16);
+}
+
+.settingCard:not(:first-child):hover {
+    border-color: rgba(var(--color-dark-blue-rgb), .24);
+    box-shadow: 0 .85rem 2rem rgba(33, 44, 45, .08);
+    transform: translateY(-2px);
+}
+
+.settingCardMuted {
+    background: linear-gradient(145deg, var(--color-white), var(--color-gray-light));
 }
 
 .settingHeader {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-md);
+    gap: .6rem;
+    width: 100%;
+    margin-bottom: .65rem;
 }
 
 .settingIcon {
-    color: var(--color-yellow);
-    font-size: 1.5rem;
+    display: grid;
+    place-items: center;
+    width: 2.85rem;
+    aspect-ratio: 1;
+    border-radius: .85rem;
+    color: var(--color-white);
+    background: var(--color-dark-blue);
+    font-size: 1rem;
+}
+
+.settingCard:first-child .settingIcon {
+    color: var(--color-black);
+    background: var(--color-yellow);
 }
 
 .settingTitle {
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: var(--color-black);
     margin: 0;
+    color: var(--color-black);
+    font-size: 1rem;
+    font-weight: 850;
+    line-height: 1.25;
+}
+
+.settingCard:first-child .settingTitle {
+    color: var(--color-white);
+    font-size: 1.2rem;
 }
 
 .settingDescription {
+    min-height: 3.7rem;
+    margin: 0 0 .85rem;
     color: var(--color-gray-dark);
-    font-size: 0.875rem;
-    margin-bottom: var(--space-lg);
-    line-height: 1.5;
+    font-size: .78rem;
+    line-height: 1.55;
+}
+
+.settingCard:first-child .settingDescription {
+    color: rgba(255, 255, 255, .76);
+    font-size: .84rem;
 }
 
 .inputGroup {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+    width: 100%;
+    margin-top: .1rem;
 }
 
 .numberInput {
-    width: 150px;
-    padding: var(--space-md);
-    border: 2px solid var(--color-gray);
-    border-radius: 0.5rem;
-    background: white;
+    width: min(7.4rem, calc(100% - 2.7rem));
+    min-height: 3.2rem;
+    padding: .65rem .75rem;
+    border: 1px solid rgba(33, 44, 45, .15);
+    border-radius: .78rem 0 0 .78rem;
     color: var(--color-black);
-    font-size: 1.5rem;
-    font-weight: 700;
+    background: var(--color-white);
+    font: inherit;
+    font-size: 1.2rem;
+    font-weight: 850;
     text-align: center;
-    transition: all var(--transition-normal);
+    transition: border-color .18s ease, box-shadow .18s ease;
+    appearance: textfield;
+}
+
+.numberInput::-webkit-inner-spin-button,
+.numberInput::-webkit-outer-spin-button {
+    margin: 0;
+    appearance: none;
 }
 
 .numberInput:focus {
-    outline: none;
+    border-color: var(--color-dark-blue);
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(var(--color-dark-blue-rgb), .12);
+}
+
+.settingCard:first-child .numberInput:focus {
     border-color: var(--color-yellow);
-    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, .2);
 }
 
 .numberInput:disabled {
-    background: var(--color-gray-light);
     color: var(--color-gray-dark);
+    background: rgba(33, 44, 45, .07);
     cursor: not-allowed;
-    opacity: 0.6;
 }
 
-.percentIcon {
-    color: var(--color-yellow);
-    font-size: 1.25rem;
+.inputSuffix {
+    display: grid;
+    place-items: center;
+    width: 2.7rem;
+    min-height: 3.2rem;
+    border: 1px solid rgba(var(--color-dark-blue-rgb), .16);
+    border-left: 0;
+    border-radius: 0 .78rem .78rem 0;
+    color: var(--color-white);
+    background: var(--color-dark-blue);
+    font-size: .85rem;
 }
 
-.label {
+.settingCard:first-child .inputSuffix {
+    color: var(--color-black);
+    background: var(--color-yellow);
+    border-color: var(--color-yellow);
+}
+
+.inputSuffixText {
+    width: auto;
+    min-width: 4rem;
+    padding: 0 .7rem;
+    color: var(--color-white);
+    font-size: .66rem;
+    font-weight: 800;
+}
+
+.settingCardMuted .numberInput {
+    width: min(7.4rem, calc(100% - 4rem));
+}
+
+.inputNote {
+    flex-basis: 100%;
+    margin-top: .5rem;
     color: var(--color-gray-dark);
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: .68rem;
+    font-weight: 750;
 }
 
-.labelDisabled {
-    opacity: 0.5;
-}
-
-/* Message Alert */
 .message {
-    padding: var(--space-md) var(--space-lg);
-    border-radius: 0.75rem;
-    margin-bottom: var(--space-xl);
-    font-weight: 600;
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: .55rem;
+    padding: .78rem .9rem;
+    border-radius: .8rem;
+    font-size: .78rem;
+    font-weight: 750;
 }
 
 .messageSuccess {
-    background: rgba(34, 197, 94, 0.1);
-    border: 2px solid rgba(34, 197, 94, 0.3);
-    color: #16a34a;
+    border: 1px solid rgba(34, 139, 78, .22);
+    color: #246b44;
+    background: rgba(66, 166, 103, .11);
 }
 
 .messageError {
-    background: rgba(239, 68, 68, 0.1);
-    border: 2px solid rgba(239, 68, 68, 0.3);
-    color: #dc2626;
+    border: 1px solid rgba(181, 49, 49, .2);
+    color: #922f2f;
+    background: rgba(181, 49, 49, .09);
 }
 
-/* Save Button */
+.formActions {
+    display: flex;
+    justify-content: center;
+    padding: .85rem 0 0;
+}
+
 .saveButton {
-    margin-top: var(--space-sm);
-    padding: var(--space-md) var(--space-2xl);
-    background: var(--color-yellow);
-    color: var(--color-black);
-    border: none;
-    border-radius: 0.75rem;
-    font-size: 1.125rem;
-    font-weight: 700;
-    cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: var(--space-sm);
-    transition: all var(--transition-normal);
-    align-self: flex-start;
+    justify-content: center;
+    gap: .5rem;
+    min-height: 2.85rem;
+    padding: .72rem 1.2rem;
+    border: 0;
+    border-radius: 999px;
+    color: var(--color-white);
+    background: var(--color-dark-blue);
+    cursor: pointer;
+    font: inherit;
+    font-size: .8rem;
+    font-weight: 850;
+    transition: background-color .18s ease, transform .18s ease, opacity .18s ease;
 }
 
 .saveButton:hover:not(:disabled) {
-    opacity: 0.85;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+    background: var(--color-black);
+    transform: translateY(-1px);
 }
 
 .saveButton:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
+    opacity: .55;
+    cursor: wait;
 }
 
 .saveIcon {
-    font-size: 1.125rem;
+    font-size: .86rem;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 980px) {
+    .settingCard {
+        max-width: calc((100% - .9rem) / 2);
+    }
+}
+
+@media (max-width: 680px) {
     .page {
         padding: var(--space-xl) var(--space-md);
     }
 
     .settingCard {
-        padding: var(--space-lg);
+        flex-basis: 100%;
+        max-width: 100%;
+        min-height: 0;
     }
 
-    .inputGroup {
-        flex-wrap: wrap;
-    }
-
-    .numberInput {
-        width: 120px;
-        font-size: 1.25rem;
+    .formActions,
+    .saveButton {
+        width: 100%;
     }
 }

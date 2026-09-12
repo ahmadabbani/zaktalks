@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { createCoupon, updateCoupon } from './coupons.actions'
 import toast from 'react-hot-toast'
-import { FaTimes, FaSave, FaExclamationCircle } from 'react-icons/fa'
+import { FaTimes, FaSave, FaExclamationCircle, FaTag } from 'react-icons/fa'
 import styles from './coupon-modal.module.css'
 
 export default function CouponModal({ coupon, courses, onClose }) {
@@ -75,8 +75,12 @@ export default function CouponModal({ coupon, courses, onClose }) {
     <div className={styles.modalOverlay} onClick={() => !loading && onClose()}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h2 className={styles.modalTitle}>{isEditing ? 'Edit Coupon' : 'Create New Coupon'}</h2>
-          <button onClick={onClose} className={styles.closeButton} disabled={loading}>
+          <span className={styles.modalIcon}><FaTag /></span>
+          <div className={styles.modalHeading}>
+            <span>Coupon management</span>
+            <h2 className={styles.modalTitle}>{isEditing ? 'Edit Coupon' : 'Create New Coupon'}</h2>
+          </div>
+          <button type="button" onClick={onClose} className={styles.closeButton} disabled={loading} aria-label="Close coupon form">
             <FaTimes size={18} />
           </button>
         </div>

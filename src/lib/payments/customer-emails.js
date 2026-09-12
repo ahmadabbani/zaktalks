@@ -6,14 +6,12 @@ import {
   resend,
 } from '@/lib/resend'
 import {
-  buildCourseAccessEmail,
   buildPaymentReceiptEmail,
 } from '@/lib/email/templates/purchase'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 
 export const CHECKOUT_CUSTOMER_EMAIL_TYPES = {
   PAYMENT_RECEIPT: 'payment_receipt',
-  COURSE_ACCESS: 'course_access',
 }
 
 const VALID_EMAIL_TYPES = new Set(Object.values(CHECKOUT_CUSTOMER_EMAIL_TYPES))
@@ -98,41 +96,29 @@ async function claimIsCurrent(supabaseAdmin, sessionId, emailType, claimedAt) {
   return data === true
 }
 
-function buildMessage(emailType, checkout, requestOrigin) {
+function buildMessage(checkout, requestOrigin) {
   const appUrl = applicationUrl(requestOrigin)
   const course = courseRecord(checkout)
   const courseName = course.title || 'your course'
   const receiptUrl = appUrl ? `${appUrl}/dashboard?section=purchases` : ''
-  const courseUrl = appUrl ? `${appUrl}/dashboard?section=courses` : ''
-
-  if (emailType === CHECKOUT_CUSTOMER_EMAIL_TYPES.PAYMENT_RECEIPT) {
-    return buildPaymentReceiptEmail({
-      recipientFirstName: recipientName(checkout),
-      courseName,
-      amountPaid: formatAmount(checkout.expected_amount_cents),
-      originalAmount: formatAmount(checkout.original_price_cents ?? checkout.expected_amount_cents),
-      promotionName: checkout.promotion_name || '',
-      promotionDiscountPercent: checkout.promotion_discount_percent === null
-        ? null
-        : Number(checkout.promotion_discount_percent),
-      promotionDiscountAmount: checkout.promotion_discount_cents > 0
-        ? formatAmount(checkout.promotion_discount_cents)
-        : '',
-      // Checkout creation happens immediately before the Stripe Session is
-      // opened and stays immutable across retries, keeping the email payload
-      // compatible with Resend's idempotency key.
-      paymentDate: formatPaymentDate(checkout.created_at),
-      invoiceNumber: invoiceNumber(checkout.id),
-      receiptUrl,
-      appUrl,
-      supportEmail: OKAYNESS_SUPPORT_EMAIL,
-    })
-  }
-
-  return buildCourseAccessEmail({
+  return buildPaymentReceiptEmail({
     recipientFirstName: recipientName(checkout),
     courseName,
-    courseUrl,
+    amountPaid: formatAmount(checkout.expected_amount_cents),
+    originalAmount: formatAmount(checkout.original_price_cents ?? checkout.expected_amount_cents),
+    promotionName: checkout.promotion_name || '',
+    promotionDiscountPercent: checkout.promotion_discount_percent === null
+      ? null
+      : Number(checkout.promotion_discount_percent),
+    promotionDiscountAmount: checkout.promotion_discount_cents > 0
+      ? formatAmount(checkout.promotion_discount_cents)
+      : '',
+    // Checkout creation happens immediately before the Stripe Session is
+    // opened and stays immutable across retries, keeping the email payload
+    // compatible with Resend's idempotency key.
+    paymentDate: formatPaymentDate(checkout.created_at),
+    invoiceNumber: invoiceNumber(checkout.id),
+    receiptUrl,
     appUrl,
     supportEmail: OKAYNESS_SUPPORT_EMAIL,
   })
@@ -176,7 +162,7 @@ async function attemptCustomerEmail(supabaseAdmin, sessionId, emailType, request
         return { status: 'claim_changed' }
       }
 
-      const message = buildMessage(emailType, checkout, requestOrigin)
+      const message = buildMessage(checkout, requestOrigin)
       const { data, error } = await resend.emails.send(
         {
           from: OKAYNESS_EMAIL_FROM,
@@ -216,6 +202,31 @@ async function attemptCustomerEmail(supabaseAdmin, sessionId, emailType, request
   }
 }
 
+/**
+ * Durably records that a verified checkout needs a receipt. This operation is
+ * deliberately separate from delivery and is idempotent across webhook,
+ * success-page, and reconciliation retries.
+ */
+export async function enqueueCheckoutPaymentReceipt(supabaseAdmin, checkoutId) {
+  if (!supabaseAdmin || !checkoutId) return false
+
+  const { error } = await supabaseAdmin
+    .from('checkout_customer_emails')
+    .upsert(
+      {
+        checkout_id: checkoutId,
+        email_type: CHECKOUT_CUSTOMER_EMAIL_TYPES.PAYMENT_RECEIPT,
+      },
+      {
+        onConflict: 'checkout_id,email_type',
+        ignoreDuplicates: true,
+      },
+    )
+
+  if (error) throw new Error(`Unable to queue the payment receipt: ${error.message}`)
+  return true
+}
+
 export async function maybeSendCheckoutCustomerEmails(
   sessionId,
   emailTypes = Object.values(CHECKOUT_CUSTOMER_EMAIL_TYPES),
@@ -237,4 +248,80 @@ export async function maybeSendCheckoutCustomerEmails(
     console.error(`Unable to initialize customer emails for ${sessionId}:`, error.message)
     return selectedTypes.map(() => ({ status: 'failed' }))
   }
+}
+
+/**
+ * Retries receipts whose immediate post-response delivery did not run or
+ * failed. Claims and Resend idempotency keys prevent duplicate delivery when
+ * this overlaps a webhook or success-page attempt.
+ */
+export async function retryPendingCheckoutPaymentReceipts({
+  requestOrigin,
+  limit = 25,
+  maxAttempts = 5,
+  staleSeconds = 900,
+} = {}) {
+  const supabaseAdmin = await createAdminClient()
+  const safeLimit = Math.min(100, Math.max(1, Number.parseInt(limit, 10) || 25))
+  const safeMaxAttempts = Math.min(20, Math.max(1, Number.parseInt(maxAttempts, 10) || 5))
+  const safeStaleSeconds = Math.min(86400, Math.max(60, Number.parseInt(staleSeconds, 10) || 900))
+
+  const { data: deliveries, error: deliveryError } = await supabaseAdmin
+    .from('checkout_customer_emails')
+    .select('checkout_id, status, attempts, claimed_at, updated_at')
+    .eq('email_type', CHECKOUT_CUSTOMER_EMAIL_TYPES.PAYMENT_RECEIPT)
+    .in('status', ['pending', 'failed', 'processing'])
+    .lt('attempts', safeMaxAttempts)
+    .order('updated_at', { ascending: true })
+    .limit(safeLimit)
+
+  if (deliveryError) {
+    throw new Error(`Unable to load pending payment receipts: ${deliveryError.message}`)
+  }
+
+  const staleBefore = Date.now() - safeStaleSeconds * 1000
+  const due = (deliveries || []).filter((delivery) => (
+    delivery.status !== 'processing'
+      || !delivery.claimed_at
+      || new Date(delivery.claimed_at).getTime() <= staleBefore
+  ))
+
+  if (due.length === 0) {
+    return { due: 0, sent: 0, failed: 0, skipped: 0 }
+  }
+
+  const { data: checkouts, error: checkoutError } = await supabaseAdmin
+    .from('checkout_sessions')
+    .select('id, stripe_session_id')
+    .in('id', due.map((delivery) => delivery.checkout_id))
+
+  if (checkoutError) {
+    throw new Error(`Unable to load pending receipt checkouts: ${checkoutError.message}`)
+  }
+
+  const sessionsByCheckout = new Map(
+    (checkouts || []).map((checkout) => [checkout.id, checkout.stripe_session_id]),
+  )
+  const summary = { due: due.length, sent: 0, failed: 0, skipped: 0 }
+
+  for (const delivery of due) {
+    const sessionId = sessionsByCheckout.get(delivery.checkout_id)
+    if (!sessionId) {
+      summary.skipped += 1
+      continue
+    }
+
+    const result = await attemptCustomerEmail(
+      supabaseAdmin,
+      sessionId,
+      CHECKOUT_CUSTOMER_EMAIL_TYPES.PAYMENT_RECEIPT,
+      requestOrigin,
+    )
+
+    if (result.status === 'sent') summary.sent += 1
+    else if (result.status === 'failed') summary.failed += 1
+    else summary.skipped += 1
+  }
+
+  return summary
 }

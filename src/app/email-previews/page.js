@@ -1,9 +1,6 @@
 import { notFound } from 'next/navigation'
 import { buildWelcomeEmail } from '@/lib/email/templates/welcome'
-import {
-  buildCourseAccessEmail,
-  buildPaymentReceiptEmail,
-} from '@/lib/email/templates/purchase'
+import { buildPaymentReceiptEmail } from '@/lib/email/templates/purchase'
 import { buildCourseInactivityEmail } from '@/lib/email/templates/course-inactivity'
 import { buildPasswordSetupEmail } from '@/lib/email/templates/password-setup'
 import DownloadPdfButton from './DownloadPdfButton'
@@ -38,13 +35,6 @@ export default function EmailPreviewsPage() {
     paymentDate: 'September 3, 2026',
     invoiceNumber: 'ZT-81A32FDC29',
     receiptUrl: `${SAMPLE_APP_URL}/dashboard?section=purchases`,
-    appUrl: SAMPLE_APP_URL,
-    supportEmail: 'hello@okayness.com',
-  })
-  const courseAccessEmail = buildCourseAccessEmail({
-    recipientFirstName: 'Maya',
-    courseName: 'Interpersonal Communication Dynamics',
-    courseUrl: `${SAMPLE_APP_URL}/dashboard?section=courses`,
     appUrl: SAMPLE_APP_URL,
     supportEmail: 'hello@okayness.com',
   })
@@ -84,14 +74,6 @@ export default function EmailPreviewsPage() {
       from: 'Okayness Team <noreply@zaktalks.com>',
       height: 1390,
       ...paymentEmail,
-    },
-    {
-      id: 'course-access',
-      name: 'Course access granted email',
-      description: 'Sent only after the enrollment and course access have been finalized successfully.',
-      from: 'Okayness Team <noreply@zaktalks.com>',
-      height: 1660,
-      ...courseAccessEmail,
     },
     {
       id: 'course-inactivity',

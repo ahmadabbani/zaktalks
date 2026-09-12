@@ -7,6 +7,7 @@ import {
   resend,
 } from '@/lib/resend'
 import { buildCourseInactivityEmail } from '@/lib/email/templates/course-inactivity'
+import { retryPendingCheckoutPaymentReceipts } from '@/lib/payments/customer-emails'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -57,8 +58,21 @@ export async function GET(request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  let receiptEmails
+  try {
+    receiptEmails = await retryPendingCheckoutPaymentReceipts({
+      requestOrigin: request.nextUrl.origin,
+      limit: 25,
+    })
+  } catch (error) {
+    // Receipt retries are independent from course reminders and from the
+    // payment flow that originally queued them.
+    console.error('Unable to retry pending payment receipts:', error.message)
+    receiptEmails = { due: 0, sent: 0, failed: 1, skipped: 0 }
+  }
+
   if (process.env.COURSE_INACTIVITY_EMAILS_ENABLED !== 'true') {
-    return NextResponse.json({ success: true, disabled: true, sent: 0 })
+    return NextResponse.json({ success: true, disabled: true, sent: 0, receiptEmails })
   }
 
   const appUrl = applicationUrl()
@@ -67,7 +81,7 @@ export async function GET(request) {
     return NextResponse.json({ error: 'Reminder configuration is incomplete.' }, { status: 500 })
   }
 
-  const inactivityHours = configuredInteger('INACTIVITY_REMINDER_HOURS', 12, 1, 8760)
+  const inactivityHours = configuredInteger('INACTIVITY_REMINDER_HOURS', 168, 1, 8760)
   const batchSize = configuredInteger('INACTIVITY_REMINDER_BATCH_SIZE', 50, 1, 100)
   const supabase = await createAdminClient()
 
@@ -87,6 +101,7 @@ export async function GET(request) {
 
   const summary = {
     success: true,
+    receiptEmails,
     inactivityHours,
     claimed: reminders?.length || 0,
     sent: 0,

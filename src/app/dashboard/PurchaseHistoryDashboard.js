@@ -132,6 +132,9 @@ function purchaseStatus(order) {
   if (['refunded', 'dispute_lost'].includes(order.payment_state) || order.fulfillment_state === 'revoked') {
     return { key: 'refunded', label: 'Refunded', detail: 'This payment was returned and access is no longer active.', icon: FaUndoAlt }
   }
+  if (order.course_access_removed_at && ['paid', 'no_payment_required', 'partially_refunded'].includes(order.payment_state)) {
+    return { key: 'closed', label: 'Course removed', detail: 'Your payment record remains available, but this course is no longer accessible.', icon: FaBookOpen }
+  }
   if (order.payment_state === 'disputed') {
     return { key: 'review', label: 'Under review', detail: 'The payment is currently being reviewed.', icon: FaExclamationCircle }
   }
@@ -229,7 +232,7 @@ function OrderReceiptModal({ summary, order, loading, error, onClose }) {
               </div>
 
               <div className={styles.learnerReceiptCourse}>
-                <h3>{order.course?.title || 'Course purchase'}</h3>
+                <h3>{order.course?.title || order.course_title_snapshot || 'Course purchase'}</h3>
               </div>
 
               <dl className={styles.learnerReceiptFacts}>
@@ -292,7 +295,7 @@ function PurchaseCard({ order, index, onOpen }) {
       </div>
       <div className={styles.learnerPurchaseCopy}>
         <span>Course purchase</span>
-        <h2>{order.course?.title || 'Course purchase'}</h2>
+        <h2>{order.course?.title || order.course_title_snapshot || 'Course purchase'}</h2>
         <p>{status.detail}</p>
       </div>
       {benefits.length > 0 && <div className={styles.learnerPurchaseBenefits}>{benefits.map((benefit) => <span key={benefit}>{benefit.includes('points') ? <FaCoins /> : <FaTags />}{benefit}</span>)}</div>}

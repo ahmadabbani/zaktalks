@@ -10,6 +10,7 @@ import { dramaTriangleAssessment } from './definitions/drama-triangle-assessment
 import { codependencyAssessment } from './definitions/codependency-assessment';
 import { driverAssessment } from './definitions/driver-questionnaire';
 import { egoStateAnalysis } from './definitions/ego-state-analysis';
+import { fairytaleQuestionnaire } from './definitions/fairytale-questionnaire';
 import { getAssessmentStatementCount } from '@/lib/assessment-lesson-metadata';
 
 export const ASSESSMENTS = {
@@ -25,6 +26,7 @@ export const ASSESSMENTS = {
   [codependencyAssessment.id]: codependencyAssessment,
   [driverAssessment.id]: driverAssessment,
   [egoStateAnalysis.id]: egoStateAnalysis,
+  [fairytaleQuestionnaire.id]: fairytaleQuestionnaire,
 };
 
 const LEGACY_ASSESSMENT_IDS = {

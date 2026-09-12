@@ -2,16 +2,37 @@
 
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { FaChevronLeft, FaRedo } from 'react-icons/fa';
+import { FaChevronDown, FaChevronLeft, FaRedo } from 'react-icons/fa';
 import ResultScreenshotButton from '@/components/ResultScreenshotButton';
 import useDelayedAnswerAdvance from './useDelayedAnswerAdvance';
 import styles from './assessment.module.css';
 
 const DRAMA_ROLE_INTERPRETATIONS = {
-  rescuer: 'You may feel responsible for solving problems, easing discomfort, or carrying more than is yours. Helping can be generous. It becomes costly when it replaces another person’s responsibility or leaves no room for your own needs.',
-  victim: 'When your efforts are not recognized or situations feel beyond your control, you may sometimes feel stuck, overlooked, or unable to change what is happening.',
-  persecutor: 'Judging, blaming, controlling, or feeling others should do better.'
+  rescuer: 'You may feel responsible for solving problems, easing discomfort, or carrying more than is yours. Helping can be generous, but it becomes costly when you take over another person’s responsibility or leave no room for your own needs.',
+  victim: 'When your efforts are not recognized or situations feel beyond your control, you may sometimes feel stuck, overlooked, or unable to change what is happening. The support you need may then be harder to ask for directly.',
+  persecutor: 'You may judge, blame, criticize, or try to control when something feels wrong. A legitimate need for change or a clearer boundary can get lost when it comes through as blame.'
 };
+
+const DRAMA_WINNER_TRIANGLE = [
+  {
+    role: 'Victim',
+    alternative: 'Vulnerable',
+    action: 'Ask for support while recognizing your choices.',
+    example: 'I’m overwhelmed. Can you listen?'
+  },
+  {
+    role: 'Rescuer',
+    alternative: 'Caring',
+    action: 'Offer help without taking over.',
+    example: 'Would you like support, or would you prefer to think this through yourself?'
+  },
+  {
+    role: 'Persecutor',
+    alternative: 'Assertive',
+    action: 'Set a clear boundary without blame.',
+    example: 'This doesn’t work for me. Let’s find another way.'
+  }
+];
 
 const ENERGY_PATTERN_COLORS = {
   free: '#258C9B',
@@ -66,6 +87,24 @@ function DramaTriangleVisual({ categoryScores, primaryRoles, secondaryRoles, cat
         );
       })}
     </div>
+  );
+}
+
+function RelationalNeedDisclosure({ category, score, interpretation, initiallyOpen = false }) {
+  return (
+    <li>
+      <details className={styles.relationalNeedDisclosure} open={initiallyOpen}>
+        <summary>
+          <span>{category.label}</span>
+          <strong>{score}/25</strong>
+          <FaChevronDown aria-hidden="true" />
+        </summary>
+        <div className={styles.relationalNeedDisclosureBody}>
+          <p>{interpretation}</p>
+          <p><b>Possible reasons to reflect on:</b> {category.possibleReasons.join('; ')}.</p>
+        </div>
+      </details>
+    </li>
   );
 }
 
@@ -263,9 +302,9 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
                   ? definition.categories[dominantKey].label
                   : 'Mixed Top Needs'}
               </h3>
-              {dominantKey && definition.categories[dominantKey].description && (
-                <p>{definition.categories[dominantKey].description}</p>
-              )}
+              <p>{dominantKey
+                ? definition.categories[dominantKey].highScoreMeaning
+                : 'Several needs share your highest score. Explore the highest-ranked needs below to see what each may mean for you.'}</p>
             </div>
             <strong>
               {highest?.[1] || 0}
@@ -726,11 +765,14 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
             <div className={styles.cathNeedSummaryCard}>
               <h4>Top 3 Highest Totals</h4>
               <ul>
-                {topThree.map(([key, score]) => (
-                  <li key={`top-${key}`}>
-                    <span>{definition.categories[key]?.label || key}</span>
-                    <strong>{score}/25</strong>
-                  </li>
+                {topThree.map(([key, score], index) => (
+                  <RelationalNeedDisclosure
+                    key={`top-${key}`}
+                    category={definition.categories[key]}
+                    score={score}
+                    interpretation={definition.categories[key].highScoreMeaning}
+                    initiallyOpen={index === 0}
+                  />
                 ))}
               </ul>
             </div>
@@ -738,14 +780,36 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
               <h4>Top 3 Lowest Totals</h4>
               <ul>
                 {bottomThree.map(([key, score]) => (
-                  <li key={`bottom-${key}`}>
-                    <span>{definition.categories[key]?.label || key}</span>
-                    <strong>{score}/25</strong>
-                  </li>
+                  <RelationalNeedDisclosure
+                    key={`bottom-${key}`}
+                    category={definition.categories[key]}
+                    score={score}
+                    interpretation={definition.categories[key].lowScoreMeaning}
+                  />
                 ))}
               </ul>
             </div>
           </div>
+        )}
+
+        {rankedNeeds && (
+          <section className={styles.relationalNeedsReadingGuide} aria-labelledby="relational-needs-reading-guide">
+            <h3 id="relational-needs-reading-guide">How to read your scores</h3>
+            <div>
+              <article>
+                <h4>High scores</h4>
+                <p>High scores indicate relational needs that are especially important to your emotional well-being. When these needs are met, you are more likely to feel secure, valued, and connected. When they are unmet, they may become a source of stress, disappointment, or relational conflict.</p>
+              </article>
+              <article>
+                <h4>Low scores</h4>
+                <p>Low scores suggest that these needs may be less central to your sense of well-being, may already be consistently satisfied, or may have become less consciously important over time. In some cases, low scores can also reflect a tendency toward independence or emotional self-protection due to past experiences.</p>
+              </article>
+              <article>
+                <h4>Possible reasons</h4>
+                <p>Possible reasons provide examples of life experiences, personality traits, or relational patterns that may contribute to your scores. These are intended to encourage reflection and conversation rather than provide definitive explanations.</p>
+              </article>
+            </div>
+          </section>
         )}
 
         {roleRanges && (
@@ -778,6 +842,21 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
                   <p>No additional role currently falls within the assessment’s secondary range.</p>
                 </article>
               )}
+            </div>
+
+            <div className={styles.dramaChoiceSection}>
+              <h4>The Winner&apos;s Triangle: from drama to choice</h4>
+              <p>These are roles, not personalities, and you can move between them quickly. When a need is expressed indirectly, support can become taking over, or a boundary can come out as blame.</p>
+              <div className={styles.dramaChoiceGrid}>
+                {DRAMA_WINNER_TRIANGLE.map(({ role, alternative, action, example }) => (
+                  <article key={role}>
+                    <h5>{role} <span aria-hidden="true">→</span> {alternative}</h5>
+                    <p>{action}</p>
+                    <blockquote>“{example}”</blockquote>
+                  </article>
+                ))}
+              </div>
+              <p className={styles.dramaChoiceReflection}>The aim is Adult-to-Adult communication, where both people are respected as capable. Ask yourself: <strong>What is the most responsible response available to me now?</strong></p>
             </div>
           </section>
         )}

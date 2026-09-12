@@ -11,6 +11,7 @@ import BinaryScoredEngine from '@/assessments/BinaryScoredEngine'
 import DriverQuestionnaireEngine from '@/assessments/DriverQuestionnaireEngine'
 import EgoStateAnalysisEngine from '@/assessments/EgoStateAnalysisEngine'
 import ExternalFillableWorksheetEngine from '@/assessments/ExternalFillableWorksheetEngine'
+import FairytaleQuestionnaireEngine from '@/assessments/FairytaleQuestionnaireEngine'
 import { getAssessmentStatementCount } from '@/lib/assessment-lesson-metadata'
 import { FaArrowRight, FaClipboardCheck, FaShieldAlt } from 'react-icons/fa'
 import styles from '@/assessments/assessment.module.css'
@@ -47,6 +48,8 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
               <div className={styles.introHeroMeta}>
                 {definition.type === 'fillable-worksheet' ? (
                   <span>{displayDefinition.sections?.length || 0} archetypes</span>
+                ) : definition.type === 'free-text-questionnaire' ? (
+                  <span>{statementCount} questions</span>
                 ) : statementCount > 0 && (
                   <span>{statementCount} statements</span>
                 )}
@@ -254,6 +257,10 @@ export default function ExternalAssessmentRunner({ assessmentKey }) {
 
     if (definition.type === 'fillable-worksheet') {
       return <ExternalFillableWorksheetEngine {...engineProps} />
+    }
+
+    if (definition.type === 'free-text-questionnaire') {
+      return <FairytaleQuestionnaireEngine {...engineProps} />
     }
 
     return <LikertEngine {...engineProps} />

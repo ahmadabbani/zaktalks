@@ -23,7 +23,7 @@
 - [ ] `YOUTUBE_API_KEY`
 - [ ] `CRON_SECRET` using a newly generated random server-side secret
 - [ ] `COURSE_INACTIVITY_EMAILS_ENABLED=true`
-- [ ] `INACTIVITY_REMINDER_HOURS=12` while testing; change it to `168` for seven days
+- [ ] `INACTIVITY_REMINDER_HOURS=168` for seven days
 
 Optional: add `ZAKTALKS_ADMIN_EMAIL` only if alerts should go somewhere other than the existing default, `hello@zaktalks.com`.
 
@@ -139,16 +139,16 @@ The Resend email code is already implemented.
 
 ## 8. Course inactivity reminders
 
-- [ ] Keep `INACTIVITY_REMINDER_HOURS=12` for the initial test.
+- [ ] Set `INACTIVITY_REMINDER_HOURS=168` after the initial 12-hour test.
 - [ ] Deploy `vercel.json`; Vercel will register `/api/cron/course-inactivity-reminders` as a daily job.
 - [ ] In **Vercel > Project > Settings > Cron Jobs**, confirm the job is listed and enabled.
 - [ ] Confirm a learner can turn course check-ins on or off under **Dashboard > Profile & Security**.
 - [ ] Confirm one incomplete paid learner course receives one reminder after the threshold.
 - [ ] Confirm continuous inactivity does not send a second reminder.
 - [ ] Confirm returning to a course starts a new inactivity period.
-- [ ] After testing, change `INACTIVITY_REMINDER_HOURS` to `168` and redeploy.
+- [ ] After changing the Vercel variable, deploy a new production build so it takes effect.
 
-Vercel Hobby runs cron jobs at most once daily and may invoke them at any point within the configured hour. A 12-hour threshold therefore means "eligible after 12 hours and sent at the next daily run," not delivery at exactly 12 hours.
+Vercel Hobby runs cron jobs at most once daily and may invoke them at any point within the configured hour. A seven-day threshold therefore means "eligible after seven days and sent at the next daily run," not delivery at exactly seven days.
 
 ## 9. Final deployment check
 

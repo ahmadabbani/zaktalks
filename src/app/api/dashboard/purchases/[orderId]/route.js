@@ -29,6 +29,8 @@ export async function GET(_request, { params }) {
       checkout_status:status,
       payment_state,
       fulfillment_state,
+      course_title_snapshot,
+      course_access_removed_at,
       original_price_cents,
       expected_amount_cents,
       points_to_spend,

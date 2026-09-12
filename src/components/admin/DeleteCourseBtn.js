@@ -43,16 +43,14 @@ export default function DeleteCourseBtn({ courseId, courseName, iconOnly = false
               Are you sure you want to delete <strong>{courseName || 'this course'}</strong>?
             </p>
             <p className={styles.modalWarning}>
-              This will permanently delete:
+              This removes the course from every learner dashboard and permanently deletes:
             </p>
             <ul className={styles.deleteList}>
-              <li>The course and all its content</li>
-              <li>All lessons and assessments</li>
-              <li>Course images and certificate template</li>
-              <li>All related data</li>
+              <li>Modules, lessons, assessments, and learner progress</li>
+              <li>Course images, worksheet files, and certificate template</li>
             </ul>
             <p className={styles.modalWarning}>
-              <strong>This action cannot be undone!</strong>
+              Payment and enrollment records remain for receipts and refunds. <strong>Learning content and progress cannot be restored.</strong>
             </p>
             
             <div className={styles.modalActions}>

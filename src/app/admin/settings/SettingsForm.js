@@ -38,82 +38,86 @@ export default function SettingsForm({ initialSettings }) {
         </div>
       )}
       
-      {/* First Purchase Discount */}
-      <div className={styles.settingCard}>
-        <div className={styles.settingHeader}>
-          <FaGift className={styles.settingIcon} />
-          <h3 className={styles.settingTitle}>First Purchase Discount</h3>
+      <div className={styles.settingsGrid}>
+        {/* First Purchase Discount */}
+        <div className={styles.settingCard}>
+          <div className={styles.settingHeader}>
+            <span className={styles.settingIcon}><FaGift /></span>
+            <h3 className={styles.settingTitle}>First Purchase Discount</h3>
+          </div>
+          <p className={styles.settingDescription}>
+            Percentage discount applied to first-time buyers who have never purchased a course before.
+          </p>
+          <div className={styles.inputGroup}>
+            <input
+              type="number"
+              name="first_purchase_discount_percent"
+              defaultValue={initialSettings.first_purchase_discount_percent || 10}
+              min="0"
+              max="100"
+              className={styles.numberInput}
+              required
+            />
+            <span className={styles.inputSuffix}><FaPercentage /></span>
+          </div>
         </div>
-        <p className={styles.settingDescription}>
-          Percentage discount applied to first-time buyers who have never purchased a course before.
-        </p>
-        <div className={styles.inputGroup}>
-          <input
-            type="number"
-            name="first_purchase_discount_percent"
-            defaultValue={initialSettings.first_purchase_discount_percent || 10}
-            min="0"
-            max="100"
-            className={styles.numberInput}
-            required
-          />
-          <FaPercentage className={styles.percentIcon} />
+
+        {/* Points Per Purchase (Readonly) */}
+        <div className={`${styles.settingCard} ${styles.settingCardMuted}`}>
+          <div className={styles.settingHeader}>
+            <span className={styles.settingIcon}><FaCoins /></span>
+            <h3 className={styles.settingTitle}>Points Per Purchase</h3>
+          </div>
+          <p className={styles.settingDescription}>
+            Number of points earned after each successful course purchase. (Fixed value)
+          </p>
+          <div className={styles.inputGroup}>
+            <input
+              type="number"
+              value={1000}
+              disabled
+              className={styles.numberInput}
+            />
+            <span className={`${styles.inputSuffix} ${styles.inputSuffixText}`}>points</span>
+          </div>
         </div>
-      </div>
-      
-      {/* Points Per Purchase (Readonly) */}
-      <div className={styles.settingCard}>
-        <div className={styles.settingHeader}>
-          <FaCoins className={styles.settingIcon} />
-          <h3 className={styles.settingTitle}>Points Per Purchase</h3>
-        </div>
-        <p className={styles.settingDescription}>
-          Number of points earned after each successful course purchase. (Fixed value)
-        </p>
-        <div className={styles.inputGroup}>
-          <input
-            type="number"
-            value={1000}
-            disabled
-            className={styles.numberInput}
-          />
-          <span className={`${styles.label} ${styles.labelDisabled}`}>points</span>
-        </div>
-      </div>
-      
-      {/* Points Discount Value */}
-      <div className={styles.settingCard}>
-        <div className={styles.settingHeader}>
-          <FaPercentage className={styles.settingIcon} />
-          <h3 className={styles.settingTitle}>Points Discount Value</h3>
-        </div>
-        <p className={styles.settingDescription}>
-          Percentage discount when a user spends 1000 points on a purchase.
-        </p>
-        <div className={styles.inputGroup}>
-          <input
-            type="number"
-            name="points_discount_percent"
-            defaultValue={initialSettings.points_discount_percent || 10}
-            min="0"
-            max="100"
-            className={styles.numberInput}
-            required
-          />
-          <FaPercentage className={styles.percentIcon} />
-          <span className={styles.label}>= 1000 points</span>
+
+        {/* Points Discount Value */}
+        <div className={styles.settingCard}>
+          <div className={styles.settingHeader}>
+            <span className={styles.settingIcon}><FaPercentage /></span>
+            <h3 className={styles.settingTitle}>Points Discount Value</h3>
+          </div>
+          <p className={styles.settingDescription}>
+            Percentage discount when a user spends 1000 points on a purchase.
+          </p>
+          <div className={styles.inputGroup}>
+            <input
+              type="number"
+              name="points_discount_percent"
+              defaultValue={initialSettings.points_discount_percent || 10}
+              min="0"
+              max="100"
+              className={styles.numberInput}
+              required
+            />
+            <span className={styles.inputSuffix}><FaPercentage /></span>
+            <span className={styles.inputNote}>= 1000 points</span>
+          </div>
         </div>
       </div>
       
       {/* Save Button */}
-      <button
-        type="submit"
-        disabled={loading}
-        className={styles.saveButton}
-      >
-        <FaSave className={styles.saveIcon} />
-        {loading ? 'Saving...' : 'Save Settings'}
-      </button>
+      <div className={styles.formActions}>
+        <button
+          type="submit"
+          disabled={loading}
+          className={styles.saveButton}
+        >
+          <FaSave className={styles.saveIcon} />
+          {loading ? 'Saving...' : 'Save Settings'}
+        </button>
+      </div>
     </form>
   )
 }

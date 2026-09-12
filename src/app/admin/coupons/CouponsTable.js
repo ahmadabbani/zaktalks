@@ -102,19 +102,27 @@ export default function CouponsTable({ coupons: initialCoupons, courses }) {
   }
   
   return (
-    <div>
-      <button
-        onClick={handleCreate}
-        className={styles.createButton}
-      >
-        <FaPlus />
-        Create New Coupon
-      </button>
+    <div className={styles.panel}>
+      <div className={styles.toolbar}>
+        <div className={styles.couponCount}>
+          <strong>{coupons.length}</strong>
+          <span>{coupons.length === 1 ? 'coupon' : 'coupons'}</span>
+        </div>
+        <button
+          onClick={handleCreate}
+          className={styles.createButton}
+        >
+          <FaPlus />
+          New coupon
+        </button>
+      </div>
       
       {coupons.length === 0 ? (
         <div className={styles.emptyState}>
-          <FaTag className={styles.emptyIcon} />
-          <p className={styles.emptyText}>No coupons created yet. Create your first coupon to get started!</p>
+          <span className={styles.emptyIcon}><FaTag /></span>
+          <h3>No coupons yet</h3>
+          <p className={styles.emptyText}>Create your first coupon to get started.</p>
+          <button type="button" onClick={handleCreate} className={styles.emptyButton}><FaPlus />Create coupon</button>
         </div>
       ) : (
         <div className={styles.tableWrapper}>
@@ -137,12 +145,12 @@ export default function CouponsTable({ coupons: initialCoupons, courses }) {
                   key={coupon.id} 
                   className={`${styles.tableRow} ${!coupon.is_active ? styles.tableRowInactive : ''}`}
                 >
-                  <td className={styles.tableCell}>
+                  <td className={styles.tableCell} data-label="Code">
                     <code className={styles.codeBadge}>
                       {coupon.code}
                     </code>
                   </td>
-                  <td className={styles.tableCell}>
+                  <td className={styles.tableCell} data-label="Discount">
                     {(() => {
                       const disc = getDiscountDisplay(coupon)
                       return (
@@ -153,25 +161,25 @@ export default function CouponsTable({ coupons: initialCoupons, courses }) {
                       )
                     })()}
                   </td>
-                  <td className={styles.tableCell}>
+                  <td className={styles.tableCell} data-label="Total usage">
                     <div className={styles.usageDisplay}>
                       {coupon.uses_count || coupon.usage_count || 0} / {getMaxUses(coupon) || '∞'}
                       <span className={styles.usageLabel}>times used</span>
                     </div>
                   </td>
-                  <td className={styles.tableCell}>
+                  <td className={styles.tableCell} data-label="Per user limit">
                     <div className={styles.usageDisplay}>
                       {coupon.max_uses_per_user || 1}
                       <span className={styles.usageLabel}>per user</span>
                     </div>
                   </td>
-                  <td className={styles.tableCell}>
+                  <td className={styles.tableCell} data-label="Expires">
                     {formatExpiry(coupon)}
                   </td>
-                  <td className={`${styles.tableCell} ${styles.courseNames}`}>
+                  <td className={`${styles.tableCell} ${styles.courseNames}`} data-label="Courses">
                     {getCourseNames(coupon)}
                   </td>
-                  <td className={`${styles.tableCell} ${styles.tableCellCenter}`}>
+                  <td className={`${styles.tableCell} ${styles.tableCellCenter}`} data-label="Status">
                     <button
                       onClick={() => handleToggle(coupon)}
                       className={`${styles.toggleButton} ${coupon.is_active ? styles.toggleActive : styles.toggleInactive}`}
@@ -180,14 +188,14 @@ export default function CouponsTable({ coupons: initialCoupons, courses }) {
                       {coupon.is_active ? <FaToggleOn size={34} /> : <FaToggleOff size={34} />}
                     </button>
                   </td>
-                  <td className={`${styles.tableCell} ${styles.tableCellCenter}`}>
+                  <td className={`${styles.tableCell} ${styles.tableCellCenter}`} data-label="Actions">
                     <div className={styles.actionButtons}>
                       <button
                         onClick={() => handleEdit(coupon)}
                         className={`${styles.actionButton} ${styles.editButton}`}
                         title="Edit"
                       >
-                        <FaEdit size={32} />
+                        <FaEdit />
                       </button>
                       <button
                         onClick={() => openDeleteModal(coupon.id, coupon.code)}
@@ -195,7 +203,7 @@ export default function CouponsTable({ coupons: initialCoupons, courses }) {
                         className={`${styles.actionButton} ${styles.deleteButton}`}
                         title="Delete"
                       >
-                        <FaTrash size={28} />
+                        <FaTrash />
                       </button>
                     </div>
                   </td>
@@ -218,6 +226,7 @@ export default function CouponsTable({ coupons: initialCoupons, courses }) {
       {deleteModal.show && (
         <div className={styles.deleteModalOverlay} onClick={closeDeleteModal}>
           <div className={styles.deleteModalContent} onClick={(e) => e.stopPropagation()}>
+            <span className={styles.deleteModalIcon}><FaTrash /></span>
             <h2 className={styles.deleteModalTitle}>Delete Coupon?</h2>
             <p className={styles.deleteModalMessage}>
               Are you sure you want to delete coupon <strong>{deleteModal.couponCode}</strong>?
@@ -240,7 +249,6 @@ export default function CouponsTable({ coupons: initialCoupons, courses }) {
                 onClick={confirmDelete}
                 className={styles.deleteConfirmButton}
                 disabled={isDeleting}
-                style={{ opacity: isDeleting ? 0.6 : 1, cursor: isDeleting ? 'not-allowed' : 'pointer' }}
               >
                 {isDeleting ? 'Deleting...' : 'Yes, Delete'}
               </button>

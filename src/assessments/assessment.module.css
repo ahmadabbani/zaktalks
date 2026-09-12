@@ -5713,18 +5713,75 @@
 }
 
 .cathNeedSummaryCard li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
+    display: block;
     min-width: 0;
-    padding: 0.7rem 0.8rem;
     border-radius: 0.7rem;
     background: #ffffff;
     font-size: clamp(0.88rem, 1.3vw, 0.96rem);
     font-weight: 750;
     line-height: 1.3;
     color: var(--color-black);
+}
+
+.relationalNeedDisclosure {
+    width: 100%;
+}
+
+.relationalNeedDisclosure summary {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    padding: 0.7rem 0.8rem;
+    cursor: pointer;
+    list-style: none;
+}
+
+.relationalNeedDisclosure summary::-webkit-details-marker {
+    display: none;
+}
+
+.relationalNeedDisclosure summary:focus-visible {
+    outline: 2px solid var(--color-yellow);
+    outline-offset: 2px;
+    border-radius: 0.7rem;
+}
+
+.relationalNeedDisclosure summary > span {
+    flex: 1 1 auto;
+    font-size: clamp(1rem, 1.5vw, 1.1rem);
+    font-weight: 900;
+    line-height: 1.25;
+}
+
+.relationalNeedDisclosure summary > svg {
+    flex: 0 0 auto;
+    color: var(--color-dark-blue);
+    font-size: 0.8rem;
+    transition: transform 180ms ease;
+}
+
+.relationalNeedDisclosure[open] summary > svg {
+    transform: rotate(180deg);
+}
+
+.relationalNeedDisclosureBody {
+    padding: 0 0.8rem 0.85rem;
+    font-size: 0.87rem;
+    font-weight: 550;
+    line-height: 1.55;
+}
+
+.relationalNeedDisclosureBody p {
+    margin: 0;
+}
+
+.relationalNeedDisclosureBody p + p {
+    margin-top: 0.65rem;
+}
+
+.relationalNeedDisclosureBody b {
+    font-weight: 850;
 }
 
 .cathNeedSummaryCard li span {
@@ -5754,6 +5811,51 @@
 .relationalNeedsScoreGrid + .cathNeedSummaryGrid .cathNeedSummaryCard:first-child li strong {
     background: var(--color-yellow);
     color: var(--color-black);
+}
+
+.relationalNeedsScoreGrid + .cathNeedSummaryGrid .cathNeedSummaryCard:first-child .relationalNeedDisclosure summary > svg {
+    color: #ffffff;
+}
+
+.relationalNeedsReadingGuide {
+    margin: 0 0 var(--space-2xl);
+    padding: clamp(1rem, 2.4vw, 1.5rem);
+    border-radius: 1rem;
+    background: var(--color-gray-light);
+}
+
+.relationalNeedsReadingGuide > h3 {
+    margin: 0 0 1rem;
+    color: var(--color-black);
+    font-size: clamp(1.15rem, 2vw, 1.45rem);
+    font-weight: 900;
+}
+
+.relationalNeedsReadingGuide > div {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+    gap: 0.8rem;
+}
+
+.relationalNeedsReadingGuide article {
+    padding: 1rem;
+    border: 1px solid rgba(var(--color-dark-blue-rgb), 0.13);
+    border-radius: 0.8rem;
+    background: #ffffff;
+}
+
+.relationalNeedsReadingGuide h4 {
+    margin: 0 0 0.5rem;
+    color: var(--color-dark-blue);
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.relationalNeedsReadingGuide p {
+    margin: 0;
+    color: var(--color-black);
+    font-size: 0.9rem;
+    line-height: 1.6;
 }
 
 .cathRoleResultGrid {
@@ -6194,6 +6296,65 @@
     color: var(--color-black);
     font-size: clamp(0.9rem, 1vw, 0.98rem);
     line-height: 1.62;
+}
+
+.dramaChoiceSection {
+    margin-top: clamp(1.4rem, 2.5vw, 2rem);
+    padding-top: clamp(1.4rem, 2.5vw, 2rem);
+    border-top: 1px solid rgba(31, 42, 42, 0.12);
+}
+
+.dramaChoiceSection > h4 {
+    margin: 0 0 0.45rem;
+    color: var(--color-black);
+    font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+    font-weight: 900;
+}
+
+.dramaChoiceSection > p {
+    max-width: 70ch;
+}
+
+.dramaChoiceGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: 0.8rem;
+    margin-top: 1.15rem;
+}
+
+.dramaChoiceGrid article {
+    min-width: 0;
+    padding: clamp(0.95rem, 1.5vw, 1.2rem);
+    border-radius: 0.9rem;
+    background: color-mix(in srgb, var(--color-gray-light) 48%, white);
+}
+
+.dramaChoiceGrid h5 {
+    margin: 0 0 0.5rem;
+    color: var(--color-dark-blue);
+    font-size: 1rem;
+    font-weight: 900;
+    line-height: 1.4;
+}
+
+.dramaChoiceGrid h5 span {
+    padding-inline: 0.15rem;
+}
+
+.dramaChoiceGrid blockquote {
+    margin: 0.7rem 0 0;
+    color: var(--color-black);
+    font-size: clamp(0.9rem, 1vw, 0.98rem);
+    font-style: italic;
+    line-height: 1.55;
+}
+
+.dramaChoiceSection .dramaChoiceReflection {
+    max-width: none;
+    margin-top: 1rem;
+    padding: 1rem 1.15rem;
+    border-radius: 0.9rem;
+    background: color-mix(in srgb, var(--color-dark-blue) 9%, white);
 }
 
 /* Responsive - Cathexis */

@@ -887,6 +887,19 @@ export async function deleteCourse(id) {
     return { error: 'The course files could not be checked safely. Please try deleting the course again.' }
   }
 
+  // Learner-generated worksheet PDFs have their own storage paths. Their
+  // database rows cascade when lessons are removed, so capture paths first.
+  const { data: worksheetSubmissions, error: worksheetLookupError } = await supabase
+    .from('specific_assessment_submissions')
+    .select('generated_file_path, lesson:lessons!inner(course_id)')
+    .eq('lesson.course_id', id)
+    .not('generated_file_path', 'is', null)
+
+  if (worksheetLookupError) {
+    console.error('Unable to load worksheet files before course deletion:', worksheetLookupError.message)
+    return { error: 'The course files could not be checked safely. Please try deleting the course again.' }
+  }
+
   const explorePageImageUrls = Array.isArray(course.explore_more)
     ? course.explore_more.filter((item) => item?.target_type === 'page').map((item) => item?.image_url).filter(Boolean)
     : []
@@ -931,6 +944,18 @@ export async function deleteCourse(id) {
     if (resourceDeleteError) console.error('Unable to remove some lesson resource PDFs:', resourceDeleteError.message)
   }
 
+  const worksheetPaths = [...new Set((worksheetSubmissions || [])
+    .map((submission) => submission.generated_file_path)
+    .filter(Boolean))]
+  for (let index = 0; index < worksheetPaths.length; index += 100) {
+    const { error: worksheetDeleteError } = await supabase.storage
+      .from('specific-assessments')
+      .remove(worksheetPaths.slice(index, index + 100))
+    if (worksheetDeleteError) console.error('Unable to remove some learner worksheet PDFs:', worksheetDeleteError.message)
+  }
+
   revalidatePath('/admin/dashboard')
+  revalidatePath('/dashboard')
+  revalidatePath(`/courses/${course.slug}`)
   redirect('/admin/dashboard?view=courses&deleted=true')
 }

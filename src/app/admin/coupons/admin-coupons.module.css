@@ -1,10 +1,8 @@
-/* Admin Coupons Page Styles */
-
 .page {
-    background-color: var(--color-gray-light);
     min-height: 100vh;
-    padding: var(--space-2xl) var(--container-padding);
     margin-top: 80px;
+    padding: var(--space-2xl) var(--container-padding);
+    background: var(--color-gray-light);
 }
 
 .container {
@@ -20,118 +18,176 @@
 }
 
 .headerIcon {
-    color: var(--color-yellow);
+    color: var(--color-dark-blue);
     font-size: 2rem;
 }
 
 .backLink {
     display: inline-flex;
-    flex: 0 0 auto;
     align-items: center;
-    gap: 0.65rem;
+    gap: .65rem;
     min-height: 2.9rem;
-    padding: 0.75rem 1.1rem;
-    border: 1px solid rgba(33, 44, 45, 0.16);
+    margin-bottom: var(--space-md);
+    padding: .75rem 1.1rem;
+    border: 1px solid rgba(33, 44, 45, .16);
     border-radius: 999px;
     color: var(--color-black);
     background: var(--color-white);
+    font-size: .9rem;
+    font-weight: 750;
     text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin-bottom: var(--space-md);
-    transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
 }
 
 .backLink:hover {
-    border-color: var(--color-yellow);
+    border-color: var(--color-dark-blue);
     color: var(--color-white);
-    background: var(--color-yellow);
-    transform: translateY(-2px);
+    background: var(--color-dark-blue);
 }
 
 .pageTitle {
+    margin: 0;
+    color: var(--color-black);
     font-size: clamp(1.75rem, 3vw, 2.5rem);
     font-weight: 900;
-    color: var(--color-black);
-    margin: 0;
 }
 
 .description {
-    color: var(--color-gray-dark);
-    margin-bottom: var(--space-xl);
     max-width: 700px;
-    line-height: 1.6;
+    margin-bottom: var(--space-xl);
+    color: var(--color-gray-dark);
     font-size: 1rem;
+    line-height: 1.6;
 }
 
-/* Create Button */
-.createButton {
-    padding: var(--space-sm) var(--space-md);
-    background: var(--color-yellow);
+.panel {
+    display: grid;
+    gap: 1rem;
+    padding-top: 1.5rem;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .85rem 1rem;
+    border: 1px solid rgba(33, 44, 45, .09);
+    border-radius: 1rem;
+    background: var(--color-gray-light);
+}
+
+.couponCount {
+    display: flex;
+    align-items: baseline;
+    gap: .45rem;
+    color: var(--color-gray-dark);
+    font-size: .92rem;
+    font-weight: 750;
+}
+
+.couponCount strong {
     color: var(--color-black);
-    border: none;
-    border-radius: 0.75rem;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
+    font-size: 1.55rem;
+}
+
+.createButton,
+.emptyButton,
+.deleteCancelButton,
+.deleteConfirmButton {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-xl);
-    transition: all var(--transition-normal);
+    justify-content: center;
+    gap: .5rem;
+    min-height: 2.7rem;
+    padding: .7rem 1.1rem;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    font: inherit;
+    font-size: .9rem;
+    font-weight: 850;
+    transition: color .18s ease, background-color .18s ease, border-color .18s ease, opacity .18s ease, transform .18s ease;
 }
 
-.createButton:hover {
-    opacity: 0.85;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+.createButton,
+.emptyButton {
+    color: var(--color-white);
+    background: var(--color-dark-blue);
 }
 
-/* Empty State */
+.createButton:hover,
+.emptyButton:hover {
+    background: var(--color-black);
+    transform: translateY(-1px);
+}
+
 .emptyState {
-    background: white;
-    padding: 4rem 2rem;
-    border-radius: 1rem;
+    display: grid;
+    place-items: center;
+    min-height: 21rem;
+    padding: 2rem;
+    border: 1px dashed rgba(var(--color-dark-blue-rgb), .26);
+    border-radius: 1.2rem;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    background: linear-gradient(145deg, var(--color-white), rgba(var(--color-dark-blue-rgb), .055));
 }
 
 .emptyIcon {
-    font-size: 3rem;
-    color: var(--color-gray);
-    margin-bottom: var(--space-lg);
+    display: grid;
+    place-items: center;
+    width: 3.8rem;
+    aspect-ratio: 1;
+    margin-bottom: .85rem;
+    border-radius: 1rem;
+    color: var(--color-white);
+    background: var(--color-dark-blue);
+    font-size: 1.5rem;
+}
+
+.emptyState h3 {
+    margin: 0;
+    color: var(--color-black);
+    font-size: 1.4rem;
 }
 
 .emptyText {
+    margin: .4rem 0 1rem;
     color: var(--color-gray-dark);
-    font-size: 1rem;
+    font-size: .92rem;
 }
 
-/* Table Styles */
 .tableWrapper {
-    background: white;
-    border-radius: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
+    overflow-x: auto;
+    border: 1px solid rgba(33, 44, 45, .09);
+    border-radius: 1.1rem;
+    background: var(--color-white);
+    box-shadow: 0 .55rem 1.6rem rgba(33, 44, 45, .045);
 }
 
 .table {
     width: 100%;
+    min-width: 68rem;
     border-collapse: collapse;
 }
 
 .tableHead {
-    background: var(--color-black);
+    color: var(--color-white);
+    background: var(--color-dark-blue);
+}
+
+.tableHeadRow {
+    background: transparent;
 }
 
 .tableHeadCell {
-    padding: var(--space-md) var(--space-lg);
-    text-align: left;
-    font-weight: 800;
-    font-size: 0.875rem;
+    padding: .82rem .75rem;
     color: var(--color-white);
+    font-size: .74rem;
+    font-weight: 850;
+    letter-spacing: .055em;
+    text-align: left;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
 .tableHeadCellCenter {
@@ -139,255 +195,386 @@
 }
 
 .tableBody {
-    background: white;
+    background: var(--color-white);
 }
 
 .tableRow {
-    border-bottom: 1px solid var(--color-gray-light);
-    transition: all var(--transition-normal);
+    border-bottom: 1px solid rgba(33, 44, 45, .075);
+    transition: background-color .18s ease, opacity .18s ease;
+}
+
+.tableRow:last-child {
+    border-bottom: 0;
+}
+
+.tableRow:hover {
+    background: rgba(var(--color-dark-blue-rgb), .035);
 }
 
 .tableRowInactive {
-    opacity: 0.5;
+    opacity: .58;
 }
 
 .tableCell {
-    padding: var(--space-md) var(--space-lg);
+    max-width: 15rem;
+    padding: .8rem .75rem;
     color: var(--color-black);
+    font-size: .86rem;
+    line-height: 1.35;
+    vertical-align: middle;
 }
 
 .tableCellCenter {
     text-align: center;
 }
 
-/* Coupon Code Badge */
-.codebadge {
-    display: inline-block;
-    background: rgba(255, 215, 0, 0.15);
-    padding: var(--space-xs) var(--space-md);
-    border-radius: 0.5rem;
-    color: var(--color-black);
-    font-weight: 700;
-    font-family: 'Courier New', monospace;
-    font-size: 0.875rem;
-    border: 2px solid var(--color-yellow);
+.codeBadge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.9rem;
+    padding: .32rem .62rem;
+    border: 1px solid rgba(var(--color-dark-blue-rgb), .22);
+    border-radius: .55rem;
+    color: var(--color-dark-blue);
+    background: rgba(var(--color-dark-blue-rgb), .075);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: .82rem;
+    font-weight: 850;
+    letter-spacing: .035em;
 }
 
-/* Discount Display */
 .discountDisplay {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-xs);
-    font-weight: 600;
+    gap: .25rem;
+    color: var(--color-dark-blue);
+    font-size: 1.04rem;
+    font-weight: 900;
 }
 
 .discountIcon {
-    color: var(--color-yellow);
+    color: var(--color-dark-blue);
+    font-size: .82rem;
 }
 
-/* Usage Display */
 .usageDisplay {
-    font-weight: 600;
+    color: var(--color-black);
+    font-size: .88rem;
+    font-weight: 800;
 }
 
 .usageLabel {
-    font-size: 0.75rem;
-    color: var(--color-gray-dark);
     display: block;
-    margin-top: 2px;
+    margin-top: .12rem;
+    color: var(--color-gray-dark);
+    font-size: .71rem;
+    font-weight: 650;
 }
 
-/* Expiry Display */
 .expiryText {
-    font-size: 0.875rem;
+    font-size: .83rem;
+    font-weight: 700;
 }
 
 .expiryExpired {
-    color: var(--color-error);
-    font-weight: 600;
-}
-
-/* Course Names */
-.courseNames {
-    font-size: 0.875rem;
-    color: var(--color-gray-dark);
-}
-
-/* Toggle Button */
-.toggleButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: var(--space-xs);
-    transition: all var(--transition-normal);
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    padding: .23rem .48rem;
+    border-radius: 999px;
+    color: #922f2f;
+    background: rgba(181, 49, 49, .09);
+    font-size: .72rem;
+    font-weight: 850;
+}
+
+.courseNames {
+    overflow: hidden;
+    color: var(--color-gray-dark);
+    font-size: .82rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.toggleButton {
+    display: inline-grid;
+    place-items: center;
+    padding: .15rem;
+    border: 0;
+    color: var(--color-gray-dark);
+    background: transparent;
+    cursor: pointer;
+    transition: color .16s ease, transform .16s ease;
+}
+
+.toggleButton svg {
+    width: 2.2rem;
+    height: 2.2rem;
 }
 
 .toggleButton:hover {
-    opacity: 0.7;
+    transform: translateY(-1px);
 }
 
 .toggleActive {
-    color: var(--color-yellow);
+    color: var(--color-dark-blue);
 }
 
 .toggleInactive {
-    color: var(--color-gray);
+    color: rgba(33, 44, 45, .3);
 }
 
-/* Action Buttons */
 .actionButtons {
     display: flex;
     justify-content: center;
-    gap: var(--space-sm);
+    gap: .4rem;
 }
 
 .actionButton {
-    background: var(--color-gray-light);
-    border: none;
-    padding: var(--space-sm);
-    border-radius: 0.5rem;
+    display: grid;
+    place-items: center;
+    width: 2.65rem;
+    aspect-ratio: 1;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
     cursor: pointer;
-    transition: all var(--transition-normal);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    line-height: normal;
+    font-size: 1rem;
+    transition: color .16s ease, background-color .16s ease, opacity .16s ease, transform .16s ease;
 }
 
 .actionButton:hover:not(:disabled) {
-    opacity: 0.85;
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .actionButton:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
+    opacity: .35;
+    cursor: wait;
 }
 
 .editButton {
-    color: var(--color-yellow);
+    color: var(--color-dark-blue);
+    background: rgba(var(--color-dark-blue-rgb), .11);
+}
+
+.editButton:hover:not(:disabled) {
+    color: var(--color-white);
+    background: var(--color-dark-blue);
 }
 
 .deleteButton {
-    color: var(--color-error);
+    color: #a93434;
+    background: rgba(181, 49, 49, .09);
 }
 
-/* Delete Modal */
+.deleteButton:hover:not(:disabled) {
+    color: var(--color-white);
+    background: #a93434;
+}
+
 .deleteModalOverlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
+    z-index: 1300;
+    inset: 0;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    z-index: 1000;
-    padding: var(--space-md);
+    overflow-y: auto;
+    padding: 1rem;
+    background: rgba(21, 29, 30, .62);
+    backdrop-filter: blur(7px);
+    animation: layerIn .18s ease both;
 }
 
 .deleteModalContent {
-    background: white;
-    border-radius: 1rem;
-    padding: vaR(--space-2xl);
-    max-width: 450px;
-    width: 100%;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    display: grid;
+    place-items: center;
+    width: min(25rem, 100%);
+    margin: auto 0;
+    padding: 1.5rem;
+    border-radius: 1.2rem;
+    background: var(--color-white);
+    box-shadow: 0 1.5rem 5rem rgba(14, 25, 27, .3);
+    text-align: center;
+    animation: modalIn .24s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.deleteModalIcon {
+    display: grid;
+    place-items: center;
+    width: 3.2rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    color: #a93434;
+    background: rgba(181, 49, 49, .1);
 }
 
 .deleteModalTitle {
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: var(--color-error);
-    margin-bottom: var(--space-md);
+    margin: .8rem 0 .35rem;
+    color: var(--color-black);
+    font-size: 1.25rem;
+    font-weight: 850;
 }
 
-.deleteModalMessage {
-    font-size: 1rem;
-    color: var(--color-black);
-    margin-bottom: var(--space-md);
-    line-height: 1.5;
+.deleteModalMessage,
+.deleteModalWarning {
+    margin: 0;
+    color: var(--color-gray-dark);
+    font-size: .86rem;
+    line-height: 1.55;
 }
 
 .deleteModalMessage strong {
-    color: var(--color-error);
+    color: var(--color-black);
 }
 
 .deleteModalWarning {
-    font-size: 0.875rem;
-    color: var(--color-gray-dark);
-    margin-bottom: var(--space-lg);
-    font-weight: 600;
+    margin-top: .2rem;
+    color: #922f2f;
 }
 
 .deleteModalActions {
     display: flex;
-    gap: var(--space-md);
-    margin-top: var(--space-xl);
+    gap: .5rem;
+    margin-top: 1rem;
 }
 
 .deleteCancelButton {
-    flex: 1;
-    padding: 12px 24px;
-    background: transparent;
+    border: 1px solid rgba(33, 44, 45, .14);
     color: var(--color-black);
-    border: 2px solid var(--color-gray);
-    border-radius: 0.5rem;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all var(--transition-normal);
+    background: var(--color-white);
 }
 
 .deleteCancelButton:hover:not(:disabled) {
-    background: var(--color-gray-light);
-}
-
-.deleteCancelButton:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    border-color: var(--color-dark-blue);
+    color: var(--color-dark-blue);
 }
 
 .deleteConfirmButton {
-    flex: 1;
-    padding: 12px 24px;
-    background: var(--color-error);
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all var(--transition-normal);
+    color: var(--color-white);
+    background: #b63b3b;
 }
 
 .deleteConfirmButton:hover:not(:disabled) {
-    background: #c53030;
-    transform: translateY(-2px);
+    background: #922f2f;
 }
 
+.deleteCancelButton:disabled,
 .deleteConfirmButton:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
+    opacity: .55;
+    cursor: wait;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
+@keyframes layerIn {
+    from { opacity: 0; }
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: translateY(.7rem) scale(.98); }
+}
+
+@media (max-width: 900px) {
     .tableWrapper {
-        overflow-x: auto;
+        overflow: visible;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .table,
+    .tableBody {
+        display: block;
     }
 
     .table {
-        min-width: 1000px;
+        min-width: 0;
+    }
+
+    .tableHead {
+        display: none;
+    }
+
+    .tableBody {
+        display: grid;
+        gap: .75rem;
+    }
+
+    .tableRow {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: .45rem;
+        padding: .65rem;
+        border: 1px solid rgba(33, 44, 45, .09);
+        border-radius: 1rem;
+        background: var(--color-white);
+        box-shadow: 0 .55rem 1.6rem rgba(33, 44, 45, .045);
+    }
+
+    .tableCell {
+        display: grid;
+        max-width: none;
+        min-width: 0;
+        gap: .25rem;
+        padding: .62rem;
+        border-radius: .7rem;
+        background: var(--color-gray-light);
+        text-align: left;
+    }
+
+    .tableCell::before {
+        content: attr(data-label);
+        color: var(--color-gray-dark);
+        font-size: .66rem;
+        font-weight: 850;
+        letter-spacing: .055em;
+        text-transform: uppercase;
+    }
+
+    .courseNames {
+        white-space: normal;
+    }
+
+    .toggleButton,
+    .actionButtons {
+        justify-self: start;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
     .page {
         padding: var(--space-xl) var(--space-md);
+    }
+
+    .toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .couponCount {
+        justify-content: center;
+    }
+
+    .createButton {
+        width: 100%;
+    }
+
+    .tableRow {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .deleteModalActions,
+    .deleteCancelButton,
+    .deleteConfirmButton {
+        width: 100%;
+    }
+
+    .deleteModalActions {
+        flex-direction: column-reverse;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .deleteModalOverlay,
+    .deleteModalContent {
+        animation: none;
     }
 }
