@@ -1,7 +1,9 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
-import { FaAward, FaCheckCircle, FaChevronLeft, FaChevronRight, FaLock } from 'react-icons/fa'
+import { FaAward, FaCertificate, FaCheckCircle, FaChevronLeft, FaChevronRight, FaLock } from 'react-icons/fa'
+import CourseReviewModal from '@/components/CourseReviewModal'
 import { useCourseProgress } from '../CourseProgressContext'
 import styles from './lesson-player.module.css'
 
@@ -17,12 +19,7 @@ export function LessonCompletionBadge({ lessonId }) {
   )
 }
 
-export function CourseCompletionNotice({ lessonIds }) {
-  const { completedMap } = useCourseProgress()
-  const isComplete = lessonIds.length > 0 && lessonIds.every((lessonId) => completedMap[lessonId])
-
-  if (!isComplete) return null
-
+export function CourseCompletionCard({ hasCertificate }) {
   return (
     <div className={styles.congratsCard}>
       <div className={styles.congratsContent}>
@@ -31,13 +28,40 @@ export function CourseCompletionNotice({ lessonIds }) {
           Congratulations!
         </h3>
         <p className={styles.congratsMessage}>
-          You have completed all lessons in this course. Your certificate is ready!
+          You have completed all lessons in this course.
+          {hasCertificate && ' Your certificate is ready in your dashboard.'}
         </p>
       </div>
-      <Link href="/dashboard" className={styles.certificateButton}>
-        <FaAward /> Get Certificate
-      </Link>
+      {hasCertificate && (
+        <Link href="/dashboard?section=certificates" className={styles.certificateButton}>
+          <FaCertificate aria-hidden="true" /> View certificate
+        </Link>
+      )}
     </div>
+  )
+}
+
+export function CourseCompletionNotice({ lessonIds, courseId, courseName, learnerName, hasCertificate, canReview, hasReview }) {
+  const { completedMap } = useCourseProgress()
+  const [reviewModalOpen, setReviewModalOpen] = useState(true)
+  const isComplete = lessonIds.length > 0 && lessonIds.every((lessonId) => completedMap[lessonId])
+
+  if (!isComplete) return null
+
+  return (
+    <>
+      <CourseCompletionCard hasCertificate={hasCertificate} />
+      {canReview && !hasReview && (
+        <CourseReviewModal
+          open={reviewModalOpen}
+          onClose={() => setReviewModalOpen(false)}
+          courseId={courseId}
+          courseName={courseName}
+          learnerName={learnerName}
+          hasCertificate={hasCertificate}
+        />
+      )}
+    </>
   )
 }
 

@@ -1,0 +1,320 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(19, 35, 37, 0.72);
+  backdrop-filter: blur(5px);
+}
+
+.modal {
+  width: min(100%, 42rem);
+  min-width: 0;
+  max-height: min(90dvh, 54rem);
+  overflow: auto;
+  border: 1px solid rgba(33, 44, 45, 0.12);
+  border-radius: 1.25rem;
+  background: var(--color-white);
+  color: var(--color-black);
+  box-shadow: 0 24px 80px rgba(11, 29, 31, 0.28);
+  outline: none;
+}
+
+.topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.75rem;
+  padding: 0.75rem clamp(1.25rem, 4vw, 2rem);
+  color: var(--color-dark-blue);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.toplineRight {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  white-space: nowrap;
+}
+
+.closeButton {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 1px solid rgba(33, 44, 45, 0.12);
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-black);
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.closeButton:hover {
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+}
+
+.stepContent {
+  animation: stepEnter 270ms ease both;
+}
+
+.heroPanel,
+.compactHeader {
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+}
+
+.heroPanel {
+  min-height: 15.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.heroIcon {
+  display: grid;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 1.3rem;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.44);
+  border-radius: 1rem;
+  color: var(--color-white);
+  font-size: 1.65rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.65rem;
+  color: #e9f4f5;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.heroPanel h2,
+.compactHeader h2 {
+  max-width: 30rem;
+  margin: 0;
+  color: var(--color-white);
+  font-size: clamp(1.65rem, 4vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+}
+
+.heroPanel > p:last-child,
+.compactHeader > p:last-child {
+  max-width: 32rem;
+  margin: 0.8rem 0 0;
+  color: #f2f9f9;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.heroPanel strong {
+  color: var(--color-white);
+  font-weight: 800;
+}
+
+.body,
+.reviewForm {
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+}
+
+.lead {
+  max-width: 33rem;
+  margin: 0 0 1.75rem;
+  color: var(--color-black);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.primaryButton {
+  display: inline-flex;
+  min-height: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.3rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.primaryButton:hover:not(:disabled) {
+  background: #1e7581;
+  transform: translateY(-1px);
+}
+
+.primaryButton:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.primaryButton svg {
+  flex: none;
+}
+
+.reviewForm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 1.6rem;
+}
+
+.fieldLabel {
+  margin: 0 0 0.65rem;
+  color: var(--color-black);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.fieldHint {
+  margin: -0.25rem 0 0.8rem;
+  color: #4c5b5d;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.ratingControl {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.2rem;
+  margin-bottom: 1.8rem;
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.star {
+  position: relative;
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  flex: none;
+}
+
+.starOutline,
+.starFill svg {
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  max-width: none;
+}
+
+.starOutline {
+  color: #d4ddde;
+}
+
+.starFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  overflow: hidden;
+  color: var(--color-yellow);
+  pointer-events: none;
+}
+
+.starChoice {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.starChoiceLeft { left: 0; }
+.starChoiceRight { right: 0; }
+
+.starChoice:focus-visible,
+.primaryButton:focus-visible,
+.closeButton:focus-visible,
+.reviewForm textarea:focus-visible {
+  outline: 3px solid var(--color-yellow);
+  outline-offset: 3px;
+}
+
+.ratingReadout {
+  min-width: 6rem;
+  color: var(--color-dark-blue);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.reviewForm textarea {
+  width: 100%;
+  min-height: 8rem;
+  resize: vertical;
+  padding: 0.95rem 1rem;
+  border: 1px solid #becbcc;
+  border-radius: 0.85rem;
+  background: var(--color-white);
+  color: var(--color-black);
+  font: inherit;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.reviewForm textarea::placeholder { color: #687779; }
+.reviewForm textarea:focus { border-color: var(--color-dark-blue); }
+
+.characterCount {
+  align-self: flex-end;
+  margin: 0.4rem 0 1.35rem;
+  color: #617073;
+  font-size: 0.78rem;
+}
+
+.error {
+  margin: -0.5rem 0 1rem;
+  color: #ad3737;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.spinner { animation: spin 0.9s linear infinite; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes stepEnter {
+  from { opacity: 0; transform: translateY(0.6rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 540px) {
+  .backdrop { padding: 0.65rem; }
+  .modal { max-height: 94dvh; border-radius: 1rem; }
+  .topline { min-height: 3.25rem; font-size: 0.63rem; }
+  .heroPanel { min-height: 13.5rem; }
+  .star,
+  .starOutline,
+  .starFill svg { width: 3rem; height: 3rem; }
+  .stars { gap: 0.12rem; }
+  .primaryButton { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stepContent,
+  .spinner { animation: none; }
+  .primaryButton { transition: none; }
+}

@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import UserDashboardShell from './UserDashboardShell'
 import MyCoursesDashboard from './MyCoursesDashboard'
 import AssessmentResultsDashboard from './AssessmentResultsDashboard'
+import CertificatesDashboard from './CertificatesDashboard'
 import DiscoverCoursesDashboard from './DiscoverCoursesDashboard'
 import PurchaseHistoryDashboard from './PurchaseHistoryDashboard'
 import ProfileSecurityDashboard from './ProfileSecurityDashboard'
@@ -54,6 +55,7 @@ export default async function DashboardPage() {
           short_introduction,
           lesson_numbering_style,
           logo_url,
+          certificate_template_url,
           deleted_at,
           modules:course_modules (
             id,
@@ -167,6 +169,7 @@ export default async function DashboardPage() {
         description: course.short_introduction || course.promise || course.description,
         lesson_numbering_style: course.lesson_numbering_style,
         logo_url: course.logo_url,
+        hasCertificate: Boolean(course.certificate_template_url),
         enrolled_at: enrollment.created_at,
         last_activity_at: activityDates[0] || null,
         unlockAll,
@@ -225,6 +228,11 @@ export default async function DashboardPage() {
               attempts={assessmentAttempts || []}
               worksheetSubmissions={worksheetSubmissions || []}
             />
+          </div>
+        }
+        certificateContent={
+          <div className={styles.dashboardContent}>
+            <CertificatesDashboard courses={courses} />
           </div>
         }
         discoverContent={

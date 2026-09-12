@@ -9,30 +9,59 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
  */
 export async function generateCertificate(courseId) {
   const supabase = await createClient()
-  const adminSupabase = await createAdminClient() // Use admin for private storage access
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) throw new Error('Unauthorized')
 
-  // 1. Fetch User Profile
+  const { data: course, error: courseError } = await supabase
+    .from('courses')
+    .select('title, certificate_template_url')
+    .eq('id', courseId)
+    .is('deleted_at', null)
+    .maybeSingle()
+
+  if (courseError || !course?.certificate_template_url) {
+    return { success: false, error: 'No certificate is available for this course.' }
+  }
+
+  const [{ data: enrollment, error: enrollmentError }, { data: lessons, error: lessonsError }] = await Promise.all([
+    supabase
+      .from('user_enrollments')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('course_id', courseId)
+      .in('payment_status', ['completed', 'staff'])
+      .maybeSingle(),
+    supabase
+      .from('lessons')
+      .select('id')
+      .eq('course_id', courseId),
+  ])
+
+  if (enrollmentError || lessonsError || !enrollment || !lessons?.length) {
+    return { success: false, error: 'Certificate access is not available.' }
+  }
+
+  const { data: completedLessons, error: progressError } = await supabase
+    .from('lesson_progress')
+    .select('lesson_id')
+    .eq('user_id', user.id)
+    .eq('is_completed', true)
+    .in('lesson_id', lessons.map((lesson) => lesson.id))
+
+  const completedIds = new Set((completedLessons || []).map((lesson) => lesson.lesson_id))
+  if (progressError || !lessons.every((lesson) => completedIds.has(lesson.id))) {
+    return { success: false, error: 'Complete every lesson before downloading your certificate.' }
+  }
+
   const { data: profile } = await supabase
     .from('users')
     .select('first_name, last_name')
     .eq('id', user.id)
     .single()
 
-  // 2. Fetch Course & Template
-  const { data: course } = await supabase
-    .from('courses')
-    .select('title, certificate_template_url')
-    .eq('id', courseId)
-    .single()
-
-  if (!course?.certificate_template_url) {
-    throw new Error('No certificate template found for this course')
-  }
-
   try {
+    const adminSupabase = await createAdminClient() // Private template, after access is verified.
     // 4. Download Template from Storage
     // Extract everything after 'certificates/' to get the full path
     const certMarker = '/certificates/'

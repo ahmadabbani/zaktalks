@@ -23,7 +23,7 @@ const navigationGroups = [
     items: [
       { id: 'courses', label: 'My Courses', icon: FaBookOpen, available: true },
       { id: 'assessments', label: 'Assessment Results', icon: FaClipboardCheck, available: true },
-      { id: 'certificates', label: 'Certificates', icon: FaCertificate },
+      { id: 'certificates', label: 'Certificates', icon: FaCertificate, available: true },
     ],
   },
   {
@@ -56,7 +56,7 @@ const availableSections = new Set(
   navigationGroups.flatMap((group) => group.items.filter((item) => item.available).map((item) => item.id)),
 )
 
-export default function UserDashboardShell({ profile, coursesContent, assessmentContent, discoverContent, purchaseContent, profileContent }) {
+export default function UserDashboardShell({ profile, coursesContent, assessmentContent, certificateContent, discoverContent, purchaseContent, profileContent }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -167,6 +167,8 @@ export default function UserDashboardShell({ profile, coursesContent, assessment
       <main className={styles.dashboardMain}>
         {activeSection === 'assessments'
           ? assessmentContent
+          : activeSection === 'certificates'
+            ? certificateContent
           : activeSection === 'catalog'
             ? discoverContent
             : activeSection === 'purchases'

@@ -21,7 +21,7 @@ export default async function LessonPage({ params }) {
 
   const { data: profile } = await supabase
     .from('users')
-    .select('role')
+    .select('role, first_name, last_name')
     .eq('id', user.id)
     .single()
   const unlockAll = isStaffRole(profile?.role)
@@ -29,7 +29,7 @@ export default async function LessonPage({ params }) {
   // 1. Fetch Lesson
   const { data: lesson, error } = await supabase
     .from('lessons')
-    .select('*, course:courses(id, slug, lesson_numbering_style)')
+    .select('*, course:courses(id, slug, title, lesson_numbering_style, certificate_template_url)')
     .eq('id', lessonId)
     .single()
 
@@ -101,11 +101,21 @@ export default async function LessonPage({ params }) {
   const nextLesson = allLessons[currentIndex + 1]
 
   // 4. Fetch All Progress for this course to show completion message
-  const { data: allProgress } = await supabase
-    .from('lesson_progress')
-    .select('lesson_id, is_completed')
-    .eq('user_id', user.id)
-    .in('lesson_id', allLessons.map(l => l.id))
+  const [{ data: allProgress }, reviewLookup] = await Promise.all([
+    supabase
+      .from('lesson_progress')
+      .select('lesson_id, is_completed')
+      .eq('user_id', user.id)
+      .in('lesson_id', allLessons.map(l => l.id)),
+    unlockAll
+      ? Promise.resolve({ data: null, error: null })
+      : supabase
+          .from('course_reviews')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('course_id', lesson.course_id)
+          .maybeSingle(),
+  ])
 
   const completedMap = Object.fromEntries(
     (allProgress || []).map((row) => [row.lesson_id, row.is_completed])
@@ -222,7 +232,15 @@ export default async function LessonPage({ params }) {
       </div>
 
       {/* Course Completion Notice */}
-      <CourseCompletionNotice lessonIds={allLessons.map((item) => item.id)} />
+      <CourseCompletionNotice
+        lessonIds={allLessons.map((item) => item.id)}
+        courseId={lesson.course_id}
+        courseName={lesson.course.title}
+        learnerName={[profile?.first_name, profile?.last_name].filter(Boolean).join(' ')}
+        hasCertificate={Boolean(lesson.course?.certificate_template_url)}
+        canReview={!unlockAll && !reviewLookup.error}
+        hasReview={Boolean(reviewLookup.data)}
+      />
 
       {/* Navigation */}
       <LessonNavigation
