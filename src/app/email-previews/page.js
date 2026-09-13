@@ -1,41 +1,48 @@
 import { notFound } from 'next/navigation'
+import { headers } from 'next/headers'
 import { buildWelcomeEmail } from '@/lib/email/templates/welcome'
 import { buildPaymentReceiptEmail } from '@/lib/email/templates/purchase'
 import { buildCourseInactivityEmail } from '@/lib/email/templates/course-inactivity'
 import { buildPasswordSetupEmail } from '@/lib/email/templates/password-setup'
+import { AUTH_EMAIL_BUTTON_STYLE, buildConfirmationEmail, buildPasswordResetEmail } from '@/lib/email/templates/auth-notices'
+import { buildContactAdminHtml, buildEventBookingAdminHtml } from '@/lib/email/templates/admin-notices'
+import { secureActionLink } from '@/lib/email/action-link'
+import { emailLogoUrl } from '@/lib/email/branding'
+import { buildFulfillmentNoticePreview } from '@/lib/payments/fulfillment-emails'
 import DownloadPdfButton from './DownloadPdfButton'
 import styles from './email-previews.module.css'
 
 export const dynamic = 'force-dynamic'
 
-const SAMPLE_APP_URL = 'http://localhost:3000'
-
-export default function EmailPreviewsPage() {
+export default async function EmailPreviewsPage() {
   if (process.env.NODE_ENV !== 'development') notFound()
+
+  const requestHeaders = await headers()
+  const sampleAppUrl = `http://${requestHeaders.get('host') || 'localhost:3000'}`
 
   const welcomeEmail = buildWelcomeEmail({
     firstName: 'Maya',
-    appUrl: SAMPLE_APP_URL,
+    appUrl: sampleAppUrl,
     supportEmail: 'hello@okayness.com',
   })
   const passwordSetupEmail = buildPasswordSetupEmail({
     recipientName: 'Maya',
-    setupUrl: `${SAMPLE_APP_URL}/auth/update-password?preview=1`,
-    appUrl: SAMPLE_APP_URL,
+    setupUrl: `${sampleAppUrl}/auth/update-password?preview=1`,
+    appUrl: sampleAppUrl,
     supportEmail: 'hello@okayness.com',
   })
   const paymentEmail = buildPaymentReceiptEmail({
     recipientFirstName: 'Maya',
     courseName: 'Interpersonal Communication Dynamics',
-    amountPaid: '96.00 USD',
+    amountPaid: '105.00 USD',
     originalAmount: '120.00 USD',
     promotionName: 'September course offer',
     promotionDiscountPercent: 12.5,
     promotionDiscountAmount: '15.00 USD',
     paymentDate: 'September 3, 2026',
     invoiceNumber: 'ZT-81A32FDC29',
-    receiptUrl: `${SAMPLE_APP_URL}/dashboard?section=purchases`,
-    appUrl: SAMPLE_APP_URL,
+    receiptUrl: `${sampleAppUrl}/dashboard?section=purchases`,
+    appUrl: sampleAppUrl,
     supportEmail: 'hello@okayness.com',
   })
   const courseInactivityEmail = buildCourseInactivityEmail({
@@ -44,10 +51,63 @@ export default function EmailPreviewsPage() {
     lastLessonName: 'Listening Beyond the Words',
     nextLessonName: 'Recognising Communication Patterns',
     progressPercentage: 42,
-    resumeUrl: `${SAMPLE_APP_URL}/courses/interpersonal-communication-dynamics/player/00000000-0000-4000-8000-000000000000`,
-    preferencesUrl: `${SAMPLE_APP_URL}/dashboard?section=profile`,
-    appUrl: SAMPLE_APP_URL,
+    resumeUrl: `${sampleAppUrl}/courses/interpersonal-communication-dynamics/player/00000000-0000-4000-8000-000000000000`,
+    preferencesUrl: `${sampleAppUrl}/dashboard?section=profile`,
+    appUrl: sampleAppUrl,
     supportEmail: 'hello@okayness.com',
+  })
+  const confirmationEmail = buildConfirmationEmail({
+    firstName: 'Maya',
+    confirmationButton: secureActionLink(`${sampleAppUrl}/auth/callback?preview=1`, 'Confirm Email', AUTH_EMAIL_BUTTON_STYLE),
+    appUrl: sampleAppUrl,
+  })
+  const passwordResetEmail = buildPasswordResetEmail({
+    resetButton: secureActionLink(`${sampleAppUrl}/auth/update-password?preview=1`, 'Reset Password', AUTH_EMAIL_BUTTON_STYLE),
+    appUrl: sampleAppUrl,
+  })
+  const sampleCheckout = {
+    id: '00000000-0000-4000-8000-000000000001',
+    stripe_session_id: 'cs_sample_course_purchase',
+    first_name: 'Maya',
+    last_name: 'Nassar',
+    email: 'maya@example.com',
+    course_id: '00000000-0000-4000-8000-000000000002',
+    course: { title: 'Interpersonal Communication Dynamics' },
+    expected_amount_cents: 9600,
+    enrollment_id: '00000000-0000-4000-8000-000000000003',
+  }
+  const fulfillmentPreview = (type) => {
+    const message = buildFulfillmentNoticePreview(type, sampleCheckout)
+    return {
+      ...message,
+      html: message.html.replaceAll(
+        emailLogoUrl(process.env.NEXT_PUBLIC_APP_URL),
+        emailLogoUrl(sampleAppUrl),
+      ),
+    }
+  }
+  const contactAdminHtml = buildContactAdminHtml({
+    senderName: 'Maya Nassar',
+    values: {
+      firstName: 'Maya',
+      email: 'maya@example.com',
+      phone: '+961 70 123 456',
+      source: 'A friend',
+      message: 'I would like to learn more about your courses.',
+    },
+    appUrl: sampleAppUrl,
+  })
+  const eventAdminHtml = buildEventBookingAdminHtml({
+    contactName: 'Maya Nassar',
+    rows: [
+      ['Organisation', 'Sample organisation'],
+      ['Contact person', 'Maya Nassar'],
+      ['Email', 'maya@example.com'],
+      ['Event date or range', 'October 2026'],
+      ['Delivery setting', 'In person'],
+      ['Topic or desired outcome', 'A practical communication workshop'],
+    ],
+    appUrl: sampleAppUrl,
   })
 
   const previews = [
@@ -83,6 +143,72 @@ export default function EmailPreviewsPage() {
       height: 1770,
       ...courseInactivityEmail,
     },
+    {
+      id: 'email-confirmation',
+      name: 'Account email confirmation',
+      description: 'Sent when a new account needs its email address confirmed.',
+      from: 'ZakTalks <noreply@zaktalks.com>',
+      height: 690,
+      ...confirmationEmail,
+    },
+    {
+      id: 'password-reset',
+      name: 'Password reset',
+      description: 'Sent after a password reset is requested.',
+      from: 'ZakTalks <noreply@zaktalks.com>',
+      height: 690,
+      ...passwordResetEmail,
+    },
+    {
+      id: 'access-delay',
+      name: 'Course access delay',
+      description: 'Sent only if payment succeeded but access fulfillment is taking longer than expected.',
+      from: 'ZakTalks <noreply@zaktalks.com>',
+      height: 850,
+      ...fulfillmentPreview('customer_failure'),
+    },
+    {
+      id: 'access-recovery',
+      name: 'Course access recovered',
+      description: 'Sent if delayed course access is subsequently granted.',
+      from: 'ZakTalks <noreply@zaktalks.com>',
+      height: 740,
+      ...fulfillmentPreview('customer_recovery'),
+    },
+    {
+      id: 'access-delay-admin',
+      name: 'Admin access alert',
+      description: 'Sent to the admin if a paid order requires access reconciliation.',
+      from: 'ZakTalks <noreply@zaktalks.com>',
+      height: 900,
+      ...fulfillmentPreview('admin_failure'),
+    },
+    {
+      id: 'access-recovery-admin',
+      name: 'Admin access recovery',
+      description: 'Sent to the admin when delayed fulfillment is resolved.',
+      from: 'ZakTalks <noreply@zaktalks.com>',
+      height: 770,
+      ...fulfillmentPreview('admin_recovery'),
+    },
+    {
+      id: 'contact-admin',
+      name: 'Contact form notification',
+      description: 'Sent to the team when someone submits the public contact form.',
+      from: 'ZakTalks <noreply@zaktalks.com>',
+      subject: 'Contact message from Maya Nassar',
+      height: 750,
+      html: contactAdminHtml,
+    },
+    {
+      id: 'event-admin',
+      name: 'Event booking notification',
+      description: 'Sent to the team when someone submits an event request.',
+      from: 'ZakTalks <noreply@zaktalks.com>',
+      subject: 'Event request from Sample organisation',
+      height: 800,
+      html: eventAdminHtml,
+    },
   ]
 
   return (
@@ -107,7 +233,7 @@ export default function EmailPreviewsPage() {
               <dl>
                 <div><dt>From</dt><dd>{preview.from}</dd></div>
                 <div><dt>Subject</dt><dd>{preview.subject}</dd></div>
-                <div><dt>Preview</dt><dd>{preview.previewText}</dd></div>
+                <div><dt>Preview</dt><dd>{preview.previewText || 'Not set'}</dd></div>
               </dl>
             </div>
             <div className={styles.emailCanvas}>

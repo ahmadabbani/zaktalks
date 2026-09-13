@@ -7,7 +7,8 @@ import { createClient } from '@/lib/supabase/server'
 import { resend, ZAKTALKS_EMAIL_FROM } from '@/lib/resend'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { maybeSendWelcomeEmail } from '@/lib/auth/welcome-email'
-import { buildAuthCallbackUrl, escapeHtml, secureActionLink } from '@/lib/email/action-link'
+import { buildAuthCallbackUrl, secureActionLink } from '@/lib/email/action-link'
+import { AUTH_EMAIL_BUTTON_STYLE, buildConfirmationEmail, buildPasswordResetEmail } from '@/lib/email/templates/auth-notices'
 import { validateNewPassword } from '@/lib/auth/password-policy'
 import {
   clientIpFromServerAction,
@@ -19,7 +20,6 @@ import {
   verifyTurnstileToken,
 } from '@/lib/security/abuse-protection'
 
-const AUTH_EMAIL_BUTTON_STYLE = 'display:inline-block;padding:10px 20px;background-color:#f4c400;color:#212c2d;text-decoration:none;border-radius:999px;font-weight:bold;'
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 async function protectAuthAction(formData, action, email, limits, options = {}) {
@@ -216,18 +216,18 @@ export async function signup(formData) {
     'Confirm Email',
     AUTH_EMAIL_BUTTON_STYLE,
   )
+  const confirmationEmail = buildConfirmationEmail({
+    firstName,
+    confirmationButton,
+    appUrl: process.env.NEXT_PUBLIC_APP_URL,
+  })
   
   try {
     const { error: emailError } = await resend.emails.send({
       from: ZAKTALKS_EMAIL_FROM,
       to: email,
-      subject: 'Confirm your ZakTalks email',
-      html: `
-        <h1>Confirm your email, ${escapeHtml(firstName)}</h1>
-        <p>Please confirm your account by clicking the link below:</p>
-        <p>${confirmationButton}</p>
-        <p>This secure link is single-use. If the button does not work, request a new confirmation email.</p>
-      `
+      subject: confirmationEmail.subject,
+      html: confirmationEmail.html,
     })
 
     if (emailError) {
@@ -303,19 +303,17 @@ export async function resetPassword(formData) {
     'Reset Password',
     AUTH_EMAIL_BUTTON_STYLE,
   )
+  const resetEmail = buildPasswordResetEmail({
+    resetButton,
+    appUrl: process.env.NEXT_PUBLIC_APP_URL,
+  })
 
   try {
     const { error: emailError } = await resend.emails.send({
       from: ZAKTALKS_EMAIL_FROM,
       to: email,
-      subject: 'Reset your ZakTalks Password',
-      html: `
-        <h1>Password Reset Request</h1>
-        <p>Click the link below to set a new password:</p>
-        <p>${resetButton}</p>
-        <p>This secure link is single-use. If it has expired, request a new password reset.</p>
-        <p>If you didn't request this, please ignore this email.</p>
-      `
+      subject: resetEmail.subject,
+      html: resetEmail.html,
     })
 
     if (emailError) {

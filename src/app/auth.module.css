@@ -88,6 +88,9 @@
 .formShell {
   width: min(100%,43rem);
 }
+.mobileLoginLogo {
+  display: none;
+}
 
 .modeSwitch {
   display: grid;
@@ -168,8 +171,20 @@
     padding: clamp(1.6rem,6vw,3rem) clamp(1rem,5vw,3rem);
   }
 
+  .formPanel.loginFormPanel {
+    align-items: start;
+    padding-top: clamp(1.25rem,3vw,1.75rem);
+  }
+
   .formShell {
     width: min(100%,39rem);
+  }
+
+  .mobileLoginLogo {
+    display: block;
+    width: clamp(7rem,22vw,9rem);
+    height: auto;
+    margin: 0 auto clamp(1.5rem,5vw,2.5rem);
   }
 }
 

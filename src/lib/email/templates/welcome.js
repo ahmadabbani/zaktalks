@@ -1,6 +1,7 @@
+import { emailBrandMark } from '@/lib/email/branding'
+
 const BRAND_TEAL = '#258C9B'
 const BRAND_BLACK = '#212C2D'
-const BRAND_YELLOW = '#F4C400'
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -26,18 +27,8 @@ export function buildWelcomeEmail({
   const safeSupportEmail = escapeHtml(supportEmail)
   const safeAppUrl = normalizedBaseUrl(appUrl)
   const loginUrl = safeAppUrl ? `${safeAppUrl}/login` : ''
-  const safeLogoUrl = normalizedBaseUrl(logoUrl)
   const previewText = 'Your Okayness account is ready. Welcome in.'
   const subject = 'Welcome to Okayness'
-
-  const brandMark = safeLogoUrl
-    ? `<img src="${escapeHtml(safeLogoUrl)}" width="148" alt="Okayness" style="display:block;width:148px;max-width:100%;height:auto;border:0;outline:none;text-decoration:none;">`
-    : `<table role="presentation" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td width="10" style="width:10px;padding:0;vertical-align:middle;"><span style="display:block;width:10px;height:10px;border-radius:50%;background:${BRAND_YELLOW};font-size:0;line-height:10px;">&nbsp;</span></td>
-          <td style="padding-left:10px;color:${BRAND_TEAL};font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:800;letter-spacing:2.4px;line-height:1;text-transform:uppercase;">Okayness</td>
-        </tr>
-      </table>`
 
   const loginAction = loginUrl
     ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0 0;">
@@ -68,7 +59,7 @@ export function buildWelcomeEmail({
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:620px;background:#FFFFFF;border:1px solid #E5EBEA;border-radius:24px;overflow:hidden;box-shadow:0 14px 36px rgba(33,44,45,0.08);">
             <tr>
               <td style="padding:24px 38px;background:#EDF6F5;border-bottom:1px solid #DDEAE8;">
-                ${brandMark}
+                ${emailBrandMark({ appUrl, logoUrl })}
               </td>
             </tr>
             <tr>

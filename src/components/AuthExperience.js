@@ -75,13 +75,23 @@ export default function AuthExperience({ initialMode = 'login' }) {
           className={styles.visualArtwork}
         />
         <div className={styles.visualContent}>
-          <Image
-            src="/logowhite1.png"
-            alt="ZakTalks"
-            width={220}
-            height={132}
-            className={styles.visualLogo}
-          />
+          {isLogin ? (
+            <Image
+              src="/okayness-login-white.svg"
+              alt="Okayness"
+              width={168}
+              height={180}
+              className={styles.visualLogo}
+            />
+          ) : (
+            <Image
+              src="/logowhite1.png"
+              alt="ZakTalks"
+              width={220}
+              height={132}
+              className={styles.visualLogo}
+            />
+          )}
           <div className={styles.visualMessage}>
             <h1>Welcome to ZakTalks.</h1>
             <p>{isLogin ? 'Sign in to continue your journey.' : 'Create your account to continue.'}</p>
@@ -90,8 +100,17 @@ export default function AuthExperience({ initialMode = 'login' }) {
         </div>
       </section>
 
-      <section className={styles.formPanel}>
+      <section className={`${styles.formPanel} ${isLogin ? styles.loginFormPanel : ''}`}>
         <div className={styles.formShell}>
+          {isLogin && (
+            <Image
+              src="/okayness-login-color.svg"
+              alt="Okayness"
+              width={168}
+              height={180}
+              className={styles.mobileLoginLogo}
+            />
+          )}
           {PUBLIC_REGISTRATION_LINKS_ENABLED && (
             <div className={styles.modeSwitch} role="tablist" aria-label="Choose authentication mode">
               <button
