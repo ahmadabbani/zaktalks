@@ -17,6 +17,7 @@ import {
   FiX,
 } from 'react-icons/fi'
 import BecomingAgainTestimonials from './BecomingAgainTestimonials'
+import WaitingListModal from './WaitingListModal'
 import styles from './becoming-again.module.css'
 
 const DISCOVERY_CALL_URL =
@@ -252,6 +253,7 @@ function useReveal() {
 export default function BecomingAgainContent() {
   const [heroReady, setHeroReady] = useState(false)
   const [openFaq, setOpenFaq] = useState(-1)
+  const [waitingListOpen, setWaitingListOpen] = useState(false)
   const { register, cx } = useReveal()
 
   useEffect(() => {
@@ -296,13 +298,10 @@ export default function BecomingAgainContent() {
             </ul>
 
             <div className={styles.cohortActions}>
-              <Link
-                href="/contact"
-                className={styles.primaryCta}
-              >
+              <button type="button" className={styles.primaryCta} onClick={() => setWaitingListOpen(true)}>
                 <span>Join waiting list</span>
                 <FiArrowUpRight aria-hidden="true" />
-              </Link>
+              </button>
             </div>
           </aside>
         </div>
@@ -700,18 +699,16 @@ export default function BecomingAgainContent() {
               </h2>
 
               <div className={styles.finalActions}>
-                <Link
-                  href="/contact"
-                  className={styles.primaryCta}
-                >
+                <button type="button" className={styles.primaryCta} onClick={() => setWaitingListOpen(true)}>
                   <span>Join waiting list</span>
                   <FiArrowUpRight aria-hidden="true" />
-                </Link>
+                </button>
               </div>
             </div>
           </div>
         </div>
       </section>
+      <WaitingListModal open={waitingListOpen} onClose={() => setWaitingListOpen(false)} />
     </main>
   )
 }

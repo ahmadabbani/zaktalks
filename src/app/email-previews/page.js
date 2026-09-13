@@ -5,7 +5,7 @@ import { buildPaymentReceiptEmail } from '@/lib/email/templates/purchase'
 import { buildCourseInactivityEmail } from '@/lib/email/templates/course-inactivity'
 import { buildPasswordSetupEmail } from '@/lib/email/templates/password-setup'
 import { AUTH_EMAIL_BUTTON_STYLE, buildConfirmationEmail, buildPasswordResetEmail } from '@/lib/email/templates/auth-notices'
-import { buildContactAdminHtml, buildEventBookingAdminHtml } from '@/lib/email/templates/admin-notices'
+import { buildContactAdminHtml, buildEventBookingAdminHtml, buildWaitingListAdminHtml } from '@/lib/email/templates/admin-notices'
 import { secureActionLink } from '@/lib/email/action-link'
 import { emailLogoUrl } from '@/lib/email/branding'
 import { buildFulfillmentNoticePreview } from '@/lib/payments/fulfillment-emails'
@@ -109,6 +109,25 @@ export default async function EmailPreviewsPage() {
     ],
     appUrl: sampleAppUrl,
   })
+  const waitingListAdminHtml = buildWaitingListAdminHtml({
+    values: {
+      fullName: 'Maya Nassar',
+      email: 'maya@example.com',
+      phone: '+961 70 123 456',
+      location: 'Lebanon',
+      role: 'Professional in transition',
+      interest: 'I am ready to understand my patterns more clearly and approach this next chapter with intention.',
+      goal: 'I would like to feel more grounded in my decisions and build healthier ways of relating.',
+      commitment: 'Yes, I am ready to make the time',
+      participation: 'Hybrid: online and in-person',
+      waitingListAcknowledged: true,
+      themes: ['Self-awareness and identity', 'Communication and relationships'],
+      source: 'Instagram',
+      contactConsent: true,
+      additionalNotes: 'I would love to hear more about the next cohort schedule.',
+    },
+    appUrl: sampleAppUrl,
+  })
 
   const previews = [
     {
@@ -208,6 +227,15 @@ export default async function EmailPreviewsPage() {
       subject: 'Event request from Sample organisation',
       height: 800,
       html: eventAdminHtml,
+    },
+    {
+      id: 'becoming-again-waiting-list',
+      name: 'Becoming Again waiting-list request',
+      description: 'Sent to the team when someone joins the public waiting list.',
+      from: 'ZakTalks <noreply@zaktalks.com>',
+      subject: 'Becoming Again waiting list: Maya Nassar',
+      height: 1450,
+      html: waitingListAdminHtml,
     },
   ]
 

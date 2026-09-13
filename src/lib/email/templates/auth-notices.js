@@ -1,4 +1,5 @@
 import { emailBrandMark } from '@/lib/email/branding'
+import { emailFooterRow } from '@/lib/email/footer'
 import { escapeHtml } from '@/lib/email/action-link'
 
 const BRAND_TEAL = '#258C9B'
@@ -29,12 +30,7 @@ function emailDocument({ subject, previewText, title, body, appUrl }) {
                 ${body}
               </td>
             </tr>
-            <tr>
-              <td style="padding:22px 38px 26px;border-top:1px solid #E5EBEA;background:#F8FAF9;font-family:Arial,Helvetica,sans-serif;">
-                <p style="margin:0;color:#687273;font-size:13px;line-height:1.65;">This is an account email from Okayness.</p>
-                <p style="margin:8px 0 0;color:#687273;font-size:13px;line-height:1.65;">Need help? <a href="mailto:hello@okayness.com" style="color:${BRAND_TEAL};font-weight:700;text-decoration:none;">hello@okayness.com</a></p>
-              </td>
-            </tr>
+            ${emailFooterRow({ appUrl, notice: 'This is an account email from Okayness.' })}
           </table>
         </td>
       </tr>

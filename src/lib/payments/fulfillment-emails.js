@@ -6,6 +6,7 @@ import {
   ZAKTALKS_EMAIL_FROM,
 } from '@/lib/resend'
 import { emailBrandMark } from '@/lib/email/branding'
+import { emailFooterBlock } from '@/lib/email/footer'
 
 const FAILURE_NOTIFICATION_TYPES = ['customer_failure', 'admin_failure']
 const RECOVERY_NOTIFICATION_TYPES = ['customer_recovery', 'admin_recovery']
@@ -61,13 +62,13 @@ function applicationUrl() {
 function emailShell(content) {
   return `
     <div style="margin:0;padding:32px 16px;background:#f4f4f2;font-family:Arial,sans-serif;color:#212c2d;">
-      <div style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:24px;padding:32px;">
-        <div style="height:5px;width:72px;border-radius:999px;background:#f4c400;margin-bottom:24px;"></div>
-        <div style="margin:0 0 24px;">${emailBrandMark({ appUrl: applicationUrl() })}</div>
-        ${content}
-        <p style="margin:28px 0 0;color:#637071;font-size:13px;line-height:1.6;">
-          ZakTalks · This is an automated service message about a course purchase.
-        </p>
+      <div style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:24px;overflow:hidden;">
+        <div style="padding:32px;">
+          <div style="height:5px;width:72px;border-radius:999px;background:#f4c400;margin-bottom:24px;"></div>
+          <div style="margin:0 0 24px;">${emailBrandMark({ appUrl: applicationUrl() })}</div>
+          ${content}
+        </div>
+        ${emailFooterBlock({ appUrl: applicationUrl(), notice: 'ZakTalks · This is an automated service message about a course purchase.' })}
       </div>
     </div>
   `

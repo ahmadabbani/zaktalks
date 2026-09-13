@@ -1,4 +1,5 @@
 import { emailBrandMark } from '@/lib/email/branding'
+import { emailFooterRow } from '@/lib/email/footer'
 
 const BRAND_TEAL = '#258C9B'
 const BRAND_BLACK = '#212C2D'
@@ -40,25 +41,6 @@ function actionButton(url, label) {
       </td>
     </tr>
   </table>`
-}
-
-function emailFooter({ appUrl, supportEmail, notice }) {
-  const safeAppUrl = normalizedUrl(appUrl)
-  const safeSupportEmail = escapeHtml(supportEmail)
-  const websiteLink = safeAppUrl
-    ? `<a href="${escapeHtml(safeAppUrl)}" style="color:${BRAND_TEAL};text-decoration:none;font-weight:700;">Website</a><span style="padding:0 8px;color:#A5ADAD;">&middot;</span>`
-    : ''
-
-  return `<tr>
-    <td style="padding:24px 38px 28px;border-top:1px solid #E5EBEA;background:#F8FAF9;">
-      <p style="margin:0;color:#687273;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.65;">${escapeHtml(notice)}</p>
-      <p style="margin:8px 0 0;color:#687273;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.65;">Need help? <a href="mailto:${safeSupportEmail}" style="color:${BRAND_TEAL};font-weight:700;text-decoration:none;">${safeSupportEmail}</a></p>
-      <p style="margin:16px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;">
-        ${websiteLink}<a href="https://www.instagram.com/zak_talks/" style="color:${BRAND_TEAL};text-decoration:none;font-weight:700;">Instagram</a><span style="padding:0 8px;color:#A5ADAD;">&middot;</span><a href="https://www.youtube.com/@zak_talks" style="color:${BRAND_TEAL};text-decoration:none;font-weight:700;">YouTube</a>
-      </p>
-      <p style="margin:14px 0 0;color:#98A1A1;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.5;">&copy; ${new Date().getFullYear()} Okayness. All rights reserved.</p>
-    </td>
-  </tr>`
 }
 
 function emailDocument({ subject, previewText, body, footer, appUrl, logoUrl }) {
@@ -161,7 +143,7 @@ export function buildPaymentReceiptEmail({
     body,
     appUrl,
     logoUrl,
-    footer: emailFooter({
+    footer: emailFooterRow({
       appUrl,
       supportEmail,
       notice: `This is a transactional email related to your purchase. For billing or payment support, contact ${supportEmail}.`,
