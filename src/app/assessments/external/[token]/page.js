@@ -18,7 +18,7 @@ export default async function ExternalAssessmentPage({ params }) {
               ? 'Please ask the admin to generate a fresh assessment link.'
               : 'Please check the link or ask the admin to send a new one.'}
           </p>
-          <Link href="/">Back to website</Link>
+          <Link href="/">Back To Website</Link>
         </div>
       </main>
     )

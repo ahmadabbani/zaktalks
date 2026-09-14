@@ -65,7 +65,7 @@ export default function NewsletterSection() {
             </label>
 
             <button type="submit" className={styles.submitButton}>
-              <span>Join the newsletter</span>
+              <span>Join The Newsletter</span>
               <FiArrowUpRight aria-hidden="true" />
             </button>
 

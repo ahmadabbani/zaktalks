@@ -249,7 +249,7 @@ export default function ProfileSecurityDashboard({ profile }) {
         <div>
           <span>Profile &amp; security</span>
           <h1>Your account, clearly managed</h1>
-          <p>Keep your personal details current and manage the security of your ZakTalks account.</p>
+          <p>Keep your personal details current and manage the security of your account.</p>
         </div>
         <div className={styles.profileIdentityCard}>
           <span>{[profile.first_name, profile.last_name].filter(Boolean).map((value) => value.charAt(0)).join('').toUpperCase() || 'ZT'}</span>

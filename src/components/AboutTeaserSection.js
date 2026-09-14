@@ -107,7 +107,7 @@ export default function AboutTeaserSection() {
               </div>
 
               <Link href="/about" className={styles.storyLink}>
-                <span>Learn my story</span>
+                <span>Learn My Story</span>
                 <FiArrowUpRight aria-hidden="true" />
               </Link>
             </div>

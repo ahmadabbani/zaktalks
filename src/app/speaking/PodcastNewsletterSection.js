@@ -68,7 +68,7 @@ export default function PodcastNewsletterSection() {
             </label>
 
             <button type="submit" className={styles.submitButton}>
-              <span>Get episode alerts and reflections</span>
+              <span>Get Episode Alerts And Reflections</span>
               <FiArrowUpRight aria-hidden="true" />
             </button>
 

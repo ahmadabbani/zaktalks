@@ -243,7 +243,7 @@ export default function ContactPage() {
       }
 
       setStatus('success')
-      setStatusMessage('Your message has been sent. The ZakTalks team will be in touch.')
+      setStatusMessage('Your message has been sent. The Okayness team will be in touch.')
     } catch (error) {
       setStatus('error')
       setStatusMessage(error.message || 'Your message could not be sent. Please try again.')
@@ -283,7 +283,7 @@ export default function ContactPage() {
                   <h2>Thank you for reaching out.</h2>
                   <p>{statusMessage}</p>
                   <button type="button" className={styles.newMessageButton} onClick={resetForm}>
-                    Send another message
+                    Send Another Message
                   </button>
                 </div>
               ) : (
@@ -367,7 +367,7 @@ export default function ContactPage() {
         paragraphs={[
           'Get honest reflections, practical insights, and updates on new episodes, workshops, and courses.',
         ]}
-        cta="Join the newsletter"
+        cta="Join The Newsletter"
         idleNote="No noise. Just useful updates worth opening."
         successNote="Thank you. You are on the list."
       />

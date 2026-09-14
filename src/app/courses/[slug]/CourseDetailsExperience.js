@@ -165,7 +165,7 @@ function CourseIntroPlayer({ url, title }) {
           />
           <span className={styles.posterShade} />
           <span className={styles.playButton}><FaPlay /></span>
-          <span className={styles.playLabel}>Watch the introduction</span>
+          <span className={styles.playLabel}>Watch The Introduction</span>
         </button>
       )}
       <button type="button" className={styles.fullscreenButton} onClick={toggleFullscreen} aria-label={isFullscreen ? 'Exit fullscreen' : 'Open fullscreen'}>
@@ -320,7 +320,7 @@ function ExploreMoreCarousel({ items }) {
             <div>
               <h3>{item.title}</h3>
               {item.description && <p><RichText value={item.rich_description} fallback={item.description} maxLength={3000} /></p>}
-              <Link href={item.target_path} className={styles.relatedCta}>{item.cta_text || (item.target_type === 'page' ? 'Visit page' : 'View course')} <FaArrowRight /></Link>
+              <Link href={item.target_path} className={styles.relatedCta}>{item.cta_text || (item.target_type === 'page' ? 'Visit Page' : 'View Course')} <FaArrowRight /></Link>
             </div>
           </article>
         ))}
@@ -413,7 +413,7 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
   }, [course.logo_url])
 
   const renderPurchaseAction = () => isEnrolled ? (
-    <Link href="/dashboard" className={styles.continueButton}>Continue learning <FaArrowRight /></Link>
+    <Link href="/dashboard" className={styles.continueButton}>Continue Learning <FaArrowRight /></Link>
   ) : (
     <EnrollButton
       courseId={course.id}
@@ -444,7 +444,7 @@ export default function CourseDetailsExperience({ course, courseIntroductionLess
               <div className={styles.instructorLine}><span><Image src="/events-hero.jpg" alt={course.tutor_name || 'Zak Dakkash'} fill sizes="96px" quality={100} /></span><p><small>Instructor</small><strong>{course.tutor_name || 'Zak Dakkash'}</strong></p></div>
               <div className={styles.heroActions} id="course-action">
                 <div className={styles.heroEnroll}>{renderPurchaseAction()}</div>
-                <a href="#curriculum" className={styles.curriculumButton}>View curriculum <FaArrowRight /></a>
+                <a href="#curriculum" className={styles.curriculumButton}>View Curriculum <FaArrowRight /></a>
               </div>
             </div>
 

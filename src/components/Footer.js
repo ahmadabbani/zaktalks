@@ -19,6 +19,7 @@ const quickLinks = [
   { href: '/becoming-again', label: 'Becoming Again Program' },
   { href: '/courses', label: 'Online Courses', visible: PUBLIC_COURSE_CATALOG_ENABLED },
   { href: '/events', label: 'Events' },
+  { href: '/speaking', label: 'Podcast' },
 ]
 
 const visibleQuickLinks = quickLinks.filter((link) => link.visible !== false)

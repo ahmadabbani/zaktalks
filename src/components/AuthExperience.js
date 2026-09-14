@@ -74,14 +74,14 @@ export default function AuthExperience({ initialMode = 'login' }) {
           sizes="(max-width: 860px) 100vw, 50vw"
           className={styles.visualArtwork}
         />
-        <div className={styles.visualContent}>
+        <div className={`${styles.visualContent} ${isLogin ? styles.loginVisualContent : ''}`}>
           {isLogin ? (
             <Image
               src="/okayness-login-white.svg"
               alt="Okayness"
               width={168}
               height={180}
-              className={styles.visualLogo}
+              className={`${styles.visualLogo} ${styles.loginVisualLogo}`}
             />
           ) : (
             <Image
@@ -93,8 +93,8 @@ export default function AuthExperience({ initialMode = 'login' }) {
             />
           )}
           <div className={styles.visualMessage}>
-            <h1>Welcome to ZakTalks.</h1>
-            <p>{isLogin ? 'Sign in to continue your journey.' : 'Create your account to continue.'}</p>
+            <h1>{isLogin ? <>Welcome to <span>OKAYNESS.</span></> : 'Welcome to ZakTalks.'}</h1>
+            <p>{isLogin ? 'Personal Growth. Real Change.' : 'Create your account to continue.'}</p>
           </div>
           <p className={styles.visualFooter}>Learn at your own pace.</p>
         </div>

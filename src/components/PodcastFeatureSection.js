@@ -12,17 +12,17 @@ const waveformBars = [1, 2, 3, 4, 5, 6, 7, 8]
 
 const podcastPlatforms = [
   {
-    label: 'Watch on YouTube',
+    label: 'Watch On YouTube',
     href: 'https://www.youtube.com/@zak_talks',
     icon: FaYoutube,
   },
   {
-    label: 'Listen on Apple',
+    label: 'Listen On Apple',
     href: 'https://podcasts.apple.com/us/podcast/zak-talks/id1818978849?at=1000lHKX&ct=linktree_http&itsct=lt_p&itscg=30200&ls=1',
     icon: FaApple,
   },
   {
-    label: 'Listen on Spotify',
+    label: 'Listen On Spotify',
     href: 'https://open.spotify.com/show/7E5OWIxCjKRPnEsQaL5o44',
     icon: FaSpotify,
   },

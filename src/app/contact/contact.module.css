@@ -441,8 +441,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  color: var(--color-deep-slate);
-  background: var(--color-yellow);
+  color: var(--color-white);
+  background: var(--color-dark-blue);
 }
 
 .successIcon svg {

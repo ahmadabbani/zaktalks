@@ -54,6 +54,15 @@ const episodeThemeMap = {
   AzpVo4bkKDI: ['Acting', 'Self-love', 'Self-knowledge'],
   // Episode 13
   Eh8YHTW2gSg: ['AI', 'Education', 'Values'],
+
+  // Season 2 trailer
+  'BZPAzU-WMg0': ['Self-awareness', 'Personal growth', 'Real conversations'],
+  // Season 2, episode 1
+  '3coiYDE5xO4': ['Parenting', 'Childhood', 'Family relationships'],
+  // Season 2, episode 2
+  Z3Y5MbtnMVQ: ['Leadership', 'Management', 'Emotional intelligence'],
+  // Season 2, episode 3
+  f0A4pxe2zqc: ['Self-awareness', 'Unconscious patterns', 'Personal growth'],
 }
 
 function getEpisodeThemes(episode) {
@@ -316,7 +325,7 @@ function FeaturedEpisodeCard({ item, details, index, register, cx }) {
             onClick={() => setIsHookExpanded((current) => !current)}
             aria-expanded={isHookExpanded}
           >
-            {isHookExpanded ? 'Show less' : 'Learn more'}
+            {isHookExpanded ? 'Show Less' : 'Learn More'}
           </button>
         )}
 
@@ -335,7 +344,7 @@ function FeaturedEpisodeCard({ item, details, index, register, cx }) {
           className={styles.featuredWatch}
         >
           <FaYoutube aria-hidden="true" />
-          <span>Watch on YouTube</span>
+          <span>Watch On YouTube</span>
           <FiArrowUpRight aria-hidden="true" />
         </a>
       </div>
@@ -705,7 +714,7 @@ export default function PodcastArchiveSection({ episodes = [], seasonTwoEpisodes
               href="/courses/interpersonal-communication-dynamics"
               className={styles.featuredCourseCta}
             >
-              <span>Explore the course</span>
+              <span>Explore The Course</span>
               <FiArrowUpRight aria-hidden="true" />
             </Link>
           </div> */}

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
 import {
   FaCheck,
+  FaChevronDown,
   FaCompress,
   FaExpand,
   FaLock,
@@ -15,6 +16,11 @@ import {
 } from 'react-icons/fa'
 import { saveVideoProgress } from '@/app/courses/actions'
 import { useCourseProgress } from '@/app/courses/[slug]/player/CourseProgressContext'
+import {
+  formatPlaybackRate,
+  getAvailablePlaybackRates,
+  normalizePlaybackRate,
+} from '@/lib/video-playback-rate'
 import styles from './YouTubePlayer.module.css'
 
 const SAVE_INTERVAL_SECONDS = 10
@@ -84,7 +90,12 @@ export default function YouTubePlayer({
   const currentTimeRef = useRef(null)
   const durationTimeRef = useRef(null)
   const seekRef = useRef(null)
+  const speedControlRef = useRef(null)
   const durationRef = useRef(Number(durationSeconds) || 0)
+  const isPlayingRef = useRef(false)
+  const speedChangeRef = useRef(false)
+  const rateConfirmationRef = useRef(null)
+  const confirmedRateRef = useRef(1)
 
   const [isApiReady, setIsApiReady] = useState(
     () => typeof window !== 'undefined' && Boolean(window.YT?.Player)
@@ -92,6 +103,11 @@ export default function YouTubePlayer({
   const [isPlayerReady, setIsPlayerReady] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
+  const [playbackRate, setPlaybackRate] = useState(1)
+  const [availablePlaybackRates, setAvailablePlaybackRates] = useState([1])
+  const [isSpeedMenuOpen, setIsSpeedMenuOpen] = useState(false)
+  const [isSpeedChanging, setIsSpeedChanging] = useState(false)
+  const [speedError, setSpeedError] = useState('')
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [isCompleted, setIsCompleted] = useState(initiallyCompleted)
   const [duration, setDuration] = useState(Number(durationSeconds) || 0)
@@ -130,16 +146,9 @@ export default function YouTubePlayer({
       markLessonCompleted(lessonId)
     }
 
-    const player = playerRef.current
-    if (!allowUnrestrictedSeeking && !result.isCompleted && player?.getCurrentTime) {
-      const currentPosition = player.getCurrentTime()
-      if (currentPosition > Number(result.acceptedPosition) + 4) {
-        player.seekTo(Number(result.acceptedPosition), true)
-      }
-    }
-  }, [allowUnrestrictedSeeking, lessonId, markLessonCompleted, updateLessonWatchedProgress])
+  }, [lessonId, markLessonCompleted, updateLessonWatchedProgress])
 
-  const queueCheckpoint = useCallback((event, positionOverride = null) => {
+  const queueCheckpoint = useCallback((event, positionOverride = null, playbackRateOverride = null) => {
     // Completion is final. Replays are intentionally local-only so seeking,
     // pausing, or rewatching cannot rewrite resume/activity analytics.
     if (completedRef.current) {
@@ -155,10 +164,16 @@ export default function YouTubePlayer({
     const positionSeconds = hasPositionOverride
       ? Math.max(0, Number(positionOverride))
       : player.getCurrentTime()
+    const currentPlaybackRate = normalizePlaybackRate(
+      playbackRateOverride ?? player.getPlaybackRate?.()
+    )
 
     // Rewatching an already verified section must not move the learner's saved
     // resume point backwards. Saving resumes automatically at the frontier.
-    if (positionSeconds + REVIEW_TOLERANCE_SECONDS < verifiedMaxRef.current) {
+    if (
+      event !== 'rate_change_paused' &&
+      positionSeconds + REVIEW_TOLERANCE_SECONDS < verifiedMaxRef.current
+    ) {
       return Promise.resolve({ skipped: true })
     }
 
@@ -169,7 +184,8 @@ export default function YouTubePlayer({
         lessonId,
         positionSeconds,
         durationSeconds: reportedDuration,
-        event
+        event,
+        playbackRate: currentPlaybackRate,
       }))
       .then((result) => {
         applyCheckpointResult(result)
@@ -254,7 +270,11 @@ export default function YouTubePlayer({
               initialResumePosition(initialProgress),
               Math.max(0, playerDuration - 1)
             )
-            event.target.setPlaybackRate?.(1)
+            const playerRates = getAvailablePlaybackRates(event.target.getAvailablePlaybackRates?.())
+            const playerRate = normalizePlaybackRate(event.target.getPlaybackRate?.())
+            confirmedRateRef.current = playerRate
+            setAvailablePlaybackRates(playerRates)
+            setPlaybackRate(playerRates.includes(playerRate) ? playerRate : 1)
             if (resumeAt > 0 && !completedRef.current) event.target.seekTo(resumeAt, true)
             durationRef.current = playerDuration
             setDuration(playerDuration)
@@ -263,12 +283,22 @@ export default function YouTubePlayer({
           },
           onStateChange: (event) => {
             const state = event.data
+            if (speedChangeRef.current) {
+              if (state === window.YT.PlayerState.PLAYING) event.target.pauseVideo()
+              isPlayingRef.current = false
+              setIsPlaying(false)
+              stopPolling()
+              return
+            }
             if (state === window.YT.PlayerState.PLAYING) {
+              isPlayingRef.current = true
               setIsPlaying(true)
+              setAvailablePlaybackRates(getAvailablePlaybackRates(event.target.getAvailablePlaybackRates?.()))
               secondsSinceSaveRef.current = 0
               queueCheckpoint('start')
               startPolling()
             } else {
+              isPlayingRef.current = false
               setIsPlaying(false)
               stopPolling()
               if (state === window.YT.PlayerState.PAUSED) queueCheckpoint('pause')
@@ -276,7 +306,17 @@ export default function YouTubePlayer({
             }
           },
           onPlaybackRateChange: (event) => {
-            if (event.data !== 1) event.target.setPlaybackRate(1)
+            const nextRate = normalizePlaybackRate(event.data)
+            setPlaybackRate(nextRate)
+            setAvailablePlaybackRates(getAvailablePlaybackRates(event.target.getAvailablePlaybackRates?.()))
+            const confirmation = rateConfirmationRef.current
+            if (confirmation) {
+              clearTimeout(confirmation.timeout)
+              rateConfirmationRef.current = null
+              confirmation.resolve(nextRate === confirmation.rate)
+            } else if (!speedChangeRef.current && nextRate !== confirmedRateRef.current) {
+              event.target.setPlaybackRate(confirmedRateRef.current)
+            }
           },
           onError: () => setError('This video could not be loaded. Please try again shortly.')
         }
@@ -288,6 +328,11 @@ export default function YouTubePlayer({
 
     return () => {
       stopPolling()
+      if (rateConfirmationRef.current) {
+        clearTimeout(rateConfirmationRef.current.timeout)
+        rateConfirmationRef.current.resolve(false)
+        rateConfirmationRef.current = null
+      }
       playerRef.current?.destroy?.()
       playerRef.current = null
     }
@@ -302,6 +347,24 @@ export default function YouTubePlayer({
   }, [isPlaying, queueCheckpoint])
 
   useEffect(() => {
+    if (!isSpeedMenuOpen) return undefined
+
+    const closeMenu = (event) => {
+      if (!speedControlRef.current?.contains(event.target)) setIsSpeedMenuOpen(false)
+    }
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setIsSpeedMenuOpen(false)
+    }
+
+    document.addEventListener('pointerdown', closeMenu)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', closeMenu)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [isSpeedMenuOpen])
+
+  useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(document.fullscreenElement === shellRef.current)
     }
@@ -312,7 +375,7 @@ export default function YouTubePlayer({
 
   const togglePlayback = () => {
     const player = playerRef.current
-    if (!player) return
+    if (!player || speedChangeRef.current) return
     if (isPlaying) player.pauseVideo()
     else player.playVideo()
   }
@@ -326,6 +389,82 @@ export default function YouTubePlayer({
     } else {
       player.mute()
       setIsMuted(true)
+    }
+  }
+
+  const setConfirmedPlaybackRate = (player, rate) => new Promise((resolve) => {
+    const timeout = window.setTimeout(() => {
+      rateConfirmationRef.current = null
+      resolve(false)
+    }, 2000)
+
+    rateConfirmationRef.current = { rate, resolve, timeout }
+    try {
+      player.setPlaybackRate(rate)
+    } catch {
+      clearTimeout(timeout)
+      rateConfirmationRef.current = null
+      resolve(false)
+    }
+  })
+
+  const selectPlaybackRate = async (rate) => {
+    const nextRate = normalizePlaybackRate(rate)
+    const player = playerRef.current
+    if (
+      !player?.setPlaybackRate ||
+      !availablePlaybackRates.includes(nextRate) ||
+      speedChangeRef.current
+    ) return
+
+    setIsSpeedMenuOpen(false)
+    setSpeedError('')
+    if (nextRate === normalizePlaybackRate(player.getPlaybackRate?.())) return
+
+    const wasPlaying = isPlayingRef.current
+    const position = player.getCurrentTime?.() || 0
+    const previousRate = normalizePlaybackRate(player.getPlaybackRate?.())
+    speedChangeRef.current = true
+    setIsSpeedChanging(true)
+
+    try {
+      if (wasPlaying) {
+        player.pauseVideo()
+        isPlayingRef.current = false
+        setIsPlaying(false)
+        stopPolling()
+      }
+
+      // Freeze the old interval before asking YouTube to change speed.
+      const result = await queueCheckpoint('rate_change_paused', position, previousRate)
+      if (!result?.success && !result?.skipped) {
+        throw new Error('The playback speed could not be saved.')
+      }
+
+      if (playerRef.current !== player) return
+      const changed = await setConfirmedPlaybackRate(player, nextRate)
+      if (!changed) throw new Error('YouTube did not apply the selected speed.')
+
+      const newRateResult = await queueCheckpoint('rate_change_paused', position, nextRate)
+      if (!newRateResult?.success && !newRateResult?.skipped) {
+        throw new Error('The new playback speed could not be saved.')
+      }
+
+      if (playerRef.current !== player) return
+      confirmedRateRef.current = nextRate
+      speedChangeRef.current = false
+      if (wasPlaying) player.playVideo()
+    } catch (changeError) {
+      console.error('Failed to change playback speed:', changeError)
+      setSpeedError('Speed could not be changed. Please try again.')
+      if (playerRef.current === player && normalizePlaybackRate(player.getPlaybackRate?.()) !== previousRate) {
+        await setConfirmedPlaybackRate(player, previousRate)
+      }
+      speedChangeRef.current = false
+      if (wasPlaying && playerRef.current === player) player.playVideo()
+    } finally {
+      speedChangeRef.current = false
+      setIsSpeedChanging(false)
     }
   }
 
@@ -377,19 +516,8 @@ export default function YouTubePlayer({
               : <><FaLock /> Seeking unlocks at 97%</>}
         </span>
       </div>
-      <div
-        className={styles.progressTrack}
-        role="progressbar"
-        aria-label="Verified lesson progress"
-        aria-valuemin="0"
-        aria-valuemax="100"
-        aria-valuenow={progressPercent}
-      >
-        <div className={styles.progressFill} style={{ width: `${progressPercent}%` }} />
-      </div>
-
       <div className={styles.videoStage}>
-        <div className={styles.playerBrand}>ZAKTALKS · COURSE PLAYER</div>
+        <div className={styles.playerBrand}>Okayness</div>
         <div className={styles.iframeFrame}>
           <div ref={playerHostRef} className={styles.iframeHost} />
         </div>
@@ -428,6 +556,36 @@ export default function YouTubePlayer({
         <button type="button" className={styles.iconControl} onClick={toggleMute} aria-label={isMuted ? 'Unmute' : 'Mute'}>
           {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
         </button>
+        <div className={styles.speedControl} ref={speedControlRef}>
+          <button
+            type="button"
+            className={styles.speedTrigger}
+            onClick={() => setIsSpeedMenuOpen((open) => !open)}
+            disabled={!isPlayerReady || Boolean(error) || isSpeedChanging}
+            aria-label={`Playback speed: ${formatPlaybackRate(playbackRate)}`}
+            aria-expanded={isSpeedMenuOpen}
+            aria-haspopup="listbox"
+          >
+            <span>{formatPlaybackRate(playbackRate)}</span>
+            <FaChevronDown aria-hidden="true" />
+          </button>
+          {isSpeedMenuOpen && (
+            <div className={styles.speedMenu} role="listbox" aria-label="Playback speed">
+              {availablePlaybackRates.map((rate) => (
+                <button
+                  type="button"
+                  key={rate}
+                  role="option"
+                  aria-selected={playbackRate === rate}
+                  className={playbackRate === rate ? styles.speedOptionActive : ''}
+                  onClick={() => selectPlaybackRate(rate)}
+                >
+                  {formatPlaybackRate(rate)}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <button
           type="button"
           className={styles.iconControl}
@@ -438,6 +596,7 @@ export default function YouTubePlayer({
           {isFullscreen ? <FaCompress /> : <FaExpand />}
         </button>
       </div>
+      {speedError && <p className={styles.speedError} role="status">{speedError}</p>}
     </div>
   )
 }

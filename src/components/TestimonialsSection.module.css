@@ -4,7 +4,6 @@
   padding: clamp(5rem, 8vw, 9rem) 0;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0) 42%),
-    repeating-linear-gradient(90deg, rgba(var(--color-dark-blue-rgb), 0.045) 0 1px, transparent 1px 5.5rem),
     var(--color-gray-light);
 }
 
@@ -33,11 +32,18 @@
   font-weight: var(--home-headline-weight);
   letter-spacing: var(--home-headline-letter-spacing);
   line-height: var(--home-headline-line-height);
-  text-wrap: nowrap;
 }
 
 .titleLine {
   display: block;
+}
+
+.desktopTitleBreak {
+  display: inline;
+}
+
+.mobileTitleBreak {
+  display: none;
 }
 
 .intro {
@@ -390,8 +396,8 @@
     max-width: none;
   }
 
-  .title {
-    text-wrap: wrap;
+  .desktopTitleBreak {
+    display: none;
   }
 
   .intro,
@@ -428,6 +434,10 @@
 }
 
 @media (max-width: 760px) {
+  .mobileTitleBreak {
+    display: inline;
+  }
+
   .controls {
     justify-content: flex-start;
   }

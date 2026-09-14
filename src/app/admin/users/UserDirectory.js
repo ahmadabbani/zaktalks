@@ -199,7 +199,7 @@ function UserDetailDrawer({ user, onClose }) {
                       <span>{[course?.title, courseModule?.title, lesson?.type].filter(Boolean).join(' · ')}</span>
                       <div className={styles.progressMeta}>
                         <span>{entry.is_completed ? 'Completed' : entry.playback_status || 'Started'}</span>
-                        {lesson?.type === 'video' && <span>{duration(entry.watch_time_seconds)} watched</span>}
+                        {lesson?.type === 'video' && <span>{duration(entry.watch_time_seconds)} covered</span>}
                         {entry.score !== null && <span>{entry.score}% score</span>}
                       </div>
                     </div>
@@ -346,7 +346,7 @@ export default function UserDirectory() {
                 <strong>{user.completed_lessons}/{user.started_lessons}</strong>
                 <small>lessons completed</small>
               </span>
-              <span className={styles.directoryDate}><strong>{relativeDate(user.last_learning_activity)}</strong><small>{duration(user.watch_time_seconds)} watched</small></span>
+              <span className={styles.directoryDate}><strong>{relativeDate(user.last_learning_activity)}</strong><small>{duration(user.watch_time_seconds)} covered</small></span>
               <span className={styles.directoryDate}><strong>{formatDate(user.created_at)}</strong><small>{Number(user.points || 0).toLocaleString()} points</small></span>
               <span className={styles.directoryOpen}><FaEye aria-hidden="true" /></span>
             </button>

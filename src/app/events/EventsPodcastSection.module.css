@@ -262,7 +262,7 @@
   font-weight: 800;
   letter-spacing: 0.07em;
   line-height: 1.15;
-  text-transform: uppercase;
+  text-transform: none;
   transition: var(--home-cta-transition);
 }
 

@@ -33,11 +33,6 @@ Through this experience, I found myself again. I am now launching my own brand, 
     image: '/testimonials/1on1/Romy Bader.jpg',
   },
   {
-    quote: `I was often feeling upset and exhausted, and I struggled to communicate clearly and deal with certain situations. From my first session with Zak, I felt relaxed after speaking with him. I felt that he understood me and recognized what I was truly feeling.`,
-    name: 'Elie Saade',
-    image: '/testimonials/1on1/Elie Saadeh.jpeg',
-  },
-  {
     quote: `I began working with Zak during one of the most difficult periods of my life, while navigating major changes, motherhood, a demanding professional life, and the need to find balance again.
 
 What stood out was that he did not focus only on what I was facing in the present. He helped me explore where certain patterns, reactions, and beliefs came from, including experiences from childhood. Reconnecting with and healing my inner child was an important part of the process.
@@ -190,7 +185,7 @@ export default function OneOnOneTestimonials() {
                   <p className={styles.quoteText}>{isExpanded ? testimonial.quote : getPreviewQuote(testimonial.quote)}</p>
                   {canExpand && (
                     <button type="button" className={styles.quoteToggle} onClick={() => setExpandedIndex(isExpanded ? null : index)} aria-expanded={isExpanded}>
-                      {isExpanded ? 'See less' : 'See more'}
+                      {isExpanded ? 'See Less' : 'See More'}
                     </button>
                   )}
                   <div className={styles.person}>

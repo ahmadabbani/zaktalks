@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { verifyLessonProgressAccess } from '@/lib/course-progress.server'
 import { getYouTubeVideoDuration } from '@/lib/youtube'
+import { normalizePlaybackRate } from '@/lib/video-playback-rate'
 import { getAssessmentById } from '@/assessments/registry'
 import { calculateAssessmentResult } from '@/assessments/results'
 import { revalidatePath } from 'next/cache'
@@ -13,10 +14,18 @@ const HEARTBEAT_GRACE_SECONDS = 2
 const MAX_CREDITABLE_GAP_SECONDS = 20
 const REVIEW_TOLERANCE_SECONDS = 2
 const MAX_VIDEO_DURATION_SECONDS = 12 * 60 * 60
-const VALID_VIDEO_EVENTS = new Set(['start', 'heartbeat', 'pause', 'ended', 'seek'])
+const VALID_VIDEO_EVENTS = new Set([
+  'start',
+  'heartbeat',
+  'pause',
+  'ended',
+  'seek',
+  'rate_change',
+  'rate_change_paused',
+])
 
 function playbackStatusForEvent(event) {
-  if (event === 'pause') return 'paused'
+  if (event === 'pause' || event === 'rate_change_paused') return 'paused'
   if (event === 'ended') return 'ended'
   return 'playing'
 }
@@ -63,7 +72,13 @@ async function resolveTrustedDuration(adminSupabase, lesson, reportedDuration) {
  * its position, but the server caps forward movement by elapsed wall time so a
  * client-side seek cannot instantly complete a lesson.
  */
-export async function saveVideoProgress({ lessonId, positionSeconds, durationSeconds, event = 'heartbeat' }) {
+export async function saveVideoProgress({
+  lessonId,
+  positionSeconds,
+  durationSeconds,
+  event = 'heartbeat',
+  playbackRate = 1,
+}) {
   if (!VALID_VIDEO_EVENTS.has(event)) throw new Error('Invalid playback event.')
 
   const user = await getAuthenticatedUser()
@@ -90,6 +105,7 @@ export async function saveVideoProgress({ lessonId, positionSeconds, durationSec
 
   const duration = await resolveTrustedDuration(adminSupabase, lesson, durationSeconds)
   const reportedPosition = Math.min(finiteInteger(positionSeconds), duration)
+  const reportedPlaybackRate = normalizePlaybackRate(playbackRate)
   const now = new Date()
   const playbackStatus = playbackStatusForEvent(event)
 
@@ -103,10 +119,23 @@ export async function saveVideoProgress({ lessonId, positionSeconds, durationSec
     finiteInteger(existingProgress?.max_position_reached_seconds),
     legacyPosition
   )
+  const previousPlaybackRate = normalizePlaybackRate(existingProgress?.playback_rate)
 
   // Reviewing an already verified section does not alter the saved resume
   // point, playback status, timestamps, or accumulated progress.
   if (reportedPosition + REVIEW_TOLERANCE_SECONDS < previousMax) {
+    if (event === 'rate_change_paused' && existingProgress?.id) {
+      const { error: rateError } = await adminSupabase
+        .from('lesson_progress')
+        .update({
+          playback_rate: reportedPlaybackRate,
+          last_heartbeat_at: null,
+        })
+        .eq('id', existingProgress.id)
+
+      if (rateError) throw new Error('Failed to save playback speed.')
+    }
+
     const savedPercent = duration > 0 ? (previousMax / duration) * 100 : 0
     return {
       success: true,
@@ -129,8 +158,11 @@ export async function saveVideoProgress({ lessonId, positionSeconds, durationSec
     : 0
   const creditableAdvance = event === 'start'
     ? 0
-    : elapsedSeconds + (elapsedSeconds >= 5 ? HEARTBEAT_GRACE_SECONDS : 0)
-  const furthestAllowedPosition = Math.min(duration, previousMax + creditableAdvance)
+    : (elapsedSeconds + (elapsedSeconds >= 5 ? HEARTBEAT_GRACE_SECONDS : 0)) * previousPlaybackRate
+  const furthestAllowedPosition = Math.min(
+    duration,
+    Math.floor(previousMax + creditableAdvance)
+  )
   const acceptedPosition = hasStaffAccess
     ? reportedPosition
     : reportedPosition <= previousMax
@@ -147,7 +179,7 @@ export async function saveVideoProgress({ lessonId, positionSeconds, durationSec
   const completedAt = isCompleted
     ? existingProgress?.completed_at || now.toISOString()
     : existingProgress?.completed_at || null
-  const heartbeatAt = event === 'pause' || event === 'ended' || isCompleted
+  const heartbeatAt = event === 'pause' || event === 'ended' || event === 'rate_change_paused' || isCompleted
     ? null
     : now.toISOString()
 
@@ -161,6 +193,7 @@ export async function saveVideoProgress({ lessonId, positionSeconds, durationSec
     is_completed: isCompleted,
     completed_at: completedAt,
     playback_status: playbackStatus,
+    playback_rate: reportedPlaybackRate,
     last_accessed_at: now.toISOString(),
     last_heartbeat_at: heartbeatAt,
     updated_at: now.toISOString()

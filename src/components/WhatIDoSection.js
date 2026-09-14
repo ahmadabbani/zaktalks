@@ -10,7 +10,7 @@ const services = [
   {
     title: 'One-on-One Coaching',
     copy: 'A focused space for adults who want to work deeply on themselves, understand the root of their patterns, and make meaningful change in how they think, relate, and live.',
-    cta: 'Book a session',
+    cta: 'Book A Session',
     href: '/one-on-one',
     image: '/home-whatido-1on1.jpg',
     mobileImage: '/home-whatido-1on1-mobile.jpg',
@@ -30,7 +30,7 @@ const services = [
   {
     title: 'Online Courses',
     copy: 'Self-paced programs designed to turn insight into action. Start with Interpersonal Communication Dynamics or explore deeper work through Unlock Your Financial Frequency.',
-    cta: 'View courses',
+    cta: 'View Courses',
     href: '/courses',
     image: '/what-i-do/online-courses.webp',
     imageAlt: 'Abstract illustration of learning panels becoming a path forward',
@@ -40,7 +40,7 @@ const services = [
   {
     title: 'Events',
     copy: 'Live experiences for teams, organizations, and communities that want practical insight, emotional honesty, and conversations that lead to real change.',
-    cta: 'Inquire about events',
+    cta: 'Inquire About Events',
     href: '/events',
     image: '/home-whatido-events.jpg',
     mobileImage: '/home-whatido-events-mobile.jpg',

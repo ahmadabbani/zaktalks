@@ -114,7 +114,11 @@ function getCardsPerView() {
 
 export default function TestimonialsSection({
   items = DEFAULT_TESTIMONIALS,
-  heading = 'What changes when the work becomes real',
+  heading = <>
+    What changes{' '}<br className={styles.mobileTitleBreak} />
+    when the<br className={styles.desktopTitleBreak} /> work{' '}<br className={styles.mobileTitleBreak} />
+    becomes real
+  </>,
   subheading = (
     <>Transformation is not about fixing yourself. It is about starting from <strong>Okayness</strong>, unlearning what once helped you survive, and choosing more authentic ways of living and relating.</>
   ),
@@ -217,7 +221,7 @@ export default function TestimonialsSection({
                   <p className={styles.quoteText}>{isExpanded ? testimonial.quote : getPreviewQuote(testimonial.quote)}</p>
                   {canExpand && (
                     <button type="button" className={styles.quoteToggle} onClick={() => setExpandedIndex(isExpanded ? null : index)} aria-expanded={isExpanded}>
-                      {isExpanded ? 'See less' : 'See more'}
+                      {isExpanded ? 'See Less' : 'See More'}
                     </button>
                   )}
                   <div className={styles.person}>

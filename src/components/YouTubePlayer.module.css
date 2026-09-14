@@ -48,19 +48,6 @@
   color: var(--color-yellow);
 }
 
-.progressTrack {
-  height: 0.35rem;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.16);
-}
-
-.progressFill {
-  height: 100%;
-  border-radius: 0 999px 999px 0;
-  background: var(--color-yellow);
-  transition: width 500ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
 .videoStage {
   position: relative;
   flex: 1;
@@ -122,6 +109,90 @@
   border: 0;
   cursor: pointer;
   transition: color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.speedControl {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.speedError {
+  margin: 0;
+  padding: 0 1rem .55rem;
+  color: var(--color-white);
+  background: var(--color-black);
+  font-size: .68rem;
+  line-height: 1.25;
+}
+
+.speedTrigger {
+  display: inline-flex;
+  min-width: 3.45rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  gap: .28rem;
+  padding: 0 .42rem;
+  border: 0;
+  border-radius: .5rem;
+  color: rgba(255, 255, 255, .86);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: .72rem;
+  font-weight: 750;
+  transition: color 180ms ease, background 180ms ease;
+}
+
+.speedTrigger svg {
+  width: .62rem;
+  height: .62rem;
+}
+
+.speedTrigger:hover:not(:disabled),
+.speedTrigger[aria-expanded='true'] {
+  color: var(--color-yellow);
+  background: rgba(255, 255, 255, .1);
+}
+
+.speedTrigger:disabled {
+  cursor: wait;
+  opacity: .5;
+}
+
+.speedMenu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + .5rem);
+  z-index: 5;
+  display: grid;
+  min-width: 4.4rem;
+  overflow: hidden;
+  padding: .28rem;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: .65rem;
+  background: #182224;
+  box-shadow: 0 .85rem 1.8rem rgba(0, 0, 0, .32);
+}
+
+.speedMenu button {
+  min-height: 2rem;
+  padding: .35rem .5rem;
+  border: 0;
+  border-radius: .4rem;
+  color: rgba(255, 255, 255, .82);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: .74rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.speedMenu button:hover,
+.speedMenu button.speedOptionActive {
+  color: var(--color-black);
+  background: var(--color-yellow);
 }
 
 .primaryControl {

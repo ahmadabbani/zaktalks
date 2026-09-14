@@ -325,7 +325,7 @@ export default function EventsBookingSection() {
       }
 
       setStatus('success')
-      setSubmitMessage('Your event request has been sent. The ZakTalks team will be in touch.')
+      setSubmitMessage('Your event request has been sent. The Okayness team will be in touch.')
       setIsOpen(true)
     } catch (error) {
       setStatus('error')
@@ -544,7 +544,7 @@ export default function EventsBookingSection() {
                 <p>Tell us about your audience, event date, format, topic, and the kind of shift you want the session to create. We will explore whether Zak is the right fit.</p>
               </div>
               <button ref={openerRef} type="button" className={styles.cta} onClick={openDialog}>
-                <span>Start a Booking Request</span>
+                <span>Start A Booking Request</span>
                 <FiArrowUpRight aria-hidden="true" />
               </button>
             </div>

@@ -16,7 +16,7 @@ export default function NotFound() {
           </p>
           <div className={styles.actions}>
             <Link href="/" className={styles.primaryAction}>
-              <span>Back to home</span>
+              <span>Back To Home</span>
               <i aria-hidden="true"><FiArrowUpRight /></i>
             </Link>
             <Link href="/contact" className={styles.secondaryAction}>Contact Zak</Link>

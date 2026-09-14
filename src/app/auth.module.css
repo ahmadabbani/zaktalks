@@ -41,6 +41,18 @@
   object-fit: contain;
 }
 
+.loginVisualContent .loginVisualLogo {
+  justify-self: end;
+  width: clamp(6.75rem,8vw,9.25rem);
+}
+
+.loginVisualContent .visualMessage {
+  align-self: center;
+  width: 100%;
+  max-width: none;
+  transform: translateY(clamp(-3rem,-4vh,-1.5rem));
+}
+
 .visualMessage {
   align-self: center;
   max-width: min(37rem,85%);
@@ -52,8 +64,17 @@
   color: var(--color-white);
   font-size: clamp(3rem,5.1vw,7.4rem);
   font-weight: 780;
-  letter-spacing: -.055em;
+  letter-spacing: var(--home-headline-letter-spacing);
   line-height: .94;
+}
+
+.loginVisualContent .visualMessage h1 {
+  max-width: none;
+  line-height: 1.02;
+}
+
+.loginVisualContent .visualMessage h1 span {
+  font-weight: 860;
 }
 
 .visualMessage>p:last-child {
@@ -62,6 +83,10 @@
   color: rgba(255,255,255,.82);
   font-size: clamp(1rem,1.05vw,1.35rem);
   line-height: 1.55;
+}
+
+.loginVisualContent .visualMessage>p:last-child {
+  font-style: italic;
 }
 
 .visualFooter {
@@ -143,6 +168,10 @@
 
   .visualMessage {
     max-width: 95%;
+  }
+
+  .loginVisualContent .visualMessage {
+    transform: translateY(-2rem);
   }
 }
 

@@ -299,7 +299,7 @@ export default function BecomingAgainContent() {
 
             <div className={styles.cohortActions}>
               <button type="button" className={styles.primaryCta} onClick={() => setWaitingListOpen(true)}>
-                <span>Join waiting list</span>
+                <span>Join Waiting List</span>
                 <FiArrowUpRight aria-hidden="true" />
               </button>
             </div>
@@ -700,7 +700,7 @@ export default function BecomingAgainContent() {
 
               <div className={styles.finalActions}>
                 <button type="button" className={styles.primaryCta} onClick={() => setWaitingListOpen(true)}>
-                  <span>Join waiting list</span>
+                  <span>Join Waiting List</span>
                   <FiArrowUpRight aria-hidden="true" />
                 </button>
               </div>

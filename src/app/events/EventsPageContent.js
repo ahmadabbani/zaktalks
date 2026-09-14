@@ -179,7 +179,7 @@ export default function EventsPageContent({ galleryImages = [] }) {
                       className={styles.heroBookingCta}
                       onClick={() => window.dispatchEvent(new Event('events:open-booking'))}
                     >
-                      <span>Start a Booking Request</span>
+                      <span>Start A Booking Request</span>
                       <FiArrowUpRight aria-hidden="true" />
                     </button>
                   </div>

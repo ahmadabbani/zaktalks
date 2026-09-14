@@ -13,16 +13,16 @@ const CHANNEL_URL = 'https://www.youtube.com/@zak_talks'
 
 // Order matches the reference layout: YouTube, Apple, Spotify.
 const heroBadges = [
-  { id: 'youtube', label: 'Watch on YouTube', href: CHANNEL_URL, Icon: FaYoutube },
+  { id: 'youtube', label: 'Watch On YouTube', href: CHANNEL_URL, Icon: FaYoutube },
   {
     id: 'apple',
-    label: 'Listen on Apple',
+    label: 'Listen On Apple',
     href: 'https://podcasts.apple.com/us/podcast/zak-talks/id1818978849',
     Icon: FaApple,
   },
   {
     id: 'spotify',
-    label: 'Listen on Spotify',
+    label: 'Listen On Spotify',
     href: 'https://open.spotify.com/show/7E5OWIxCjKRPnEsQaL5o44',
     Icon: FaSpotify,
   },
@@ -36,7 +36,7 @@ const proofPoints = [
 const subscribePlatforms = [
   {
     id: 'youtube',
-    label: 'SUBSCRIBE ON YOUTUBE',
+    label: 'Subscribe On YouTube',
     href: CHANNEL_URL,
     Icon: FaYoutube,
   },
@@ -48,19 +48,19 @@ const subscribePlatforms = [
   },
   {
     id: 'anghami',
-    label: 'LISTEN ON ANGHAMI',
+    label: 'Listen On Anghami',
     href: 'https://play.anghami.com/podcast/1067932393',
     Icon: FaHeadphones,
   },
   {
     id: 'apple',
-    label: 'LISTEN ON APPLE',
+    label: 'Listen On Apple',
     href: 'https://podcasts.apple.com/us/podcast/zak-talks/id1818978849',
     Icon: FaApple,
   },
   {
     id: 'spotify',
-    label: 'LISTEN ON SPOTIFY',
+    label: 'Listen On Spotify',
     href: 'https://open.spotify.com/show/7E5OWIxCjKRPnEsQaL5o44',
     Icon: FaSpotify,
   },

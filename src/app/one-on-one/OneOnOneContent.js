@@ -262,7 +262,7 @@ export default function OneOnOneContent() {
               </Link>
 
               <Link href="#who-is-it-for" className={styles.secondaryCta}>
-                <span>Who is it for</span>
+                <span>Who Is It For</span>
                 <FiArrowDownRight aria-hidden="true" />
               </Link>
             </div>

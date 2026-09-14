@@ -14,17 +14,17 @@ const clips = [
 
 const platforms = [
   {
-    label: 'Watch on YouTube',
+    label: 'Watch On YouTube',
     href: 'https://www.youtube.com/@zak_talks',
     Icon: FaYoutube,
   },
   {
-    label: 'Listen on Apple',
+    label: 'Listen On Apple',
     href: 'https://podcasts.apple.com/us/podcast/zak-talks/id1818978849',
     Icon: FaApple,
   },
   {
-    label: 'Listen on Spotify',
+    label: 'Listen On Spotify',
     href: 'https://open.spotify.com/show/7E5OWIxCjKRPnEsQaL5o44',
     Icon: FaSpotify,
   },

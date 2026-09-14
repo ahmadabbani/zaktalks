@@ -190,7 +190,7 @@ export default function BecomingAgainTestimonials() {
                   <p className={styles.quoteText}>{isExpanded ? testimonial.quote : getPreviewQuote(testimonial.quote)}</p>
                   {canExpand && (
                     <button type="button" className={styles.quoteToggle} onClick={() => setExpandedIndex(isExpanded ? null : index)} aria-expanded={isExpanded}>
-                      {isExpanded ? 'See less' : 'See more'}
+                      {isExpanded ? 'See Less' : 'See More'}
                     </button>
                   )}
                   <div className={styles.person}>

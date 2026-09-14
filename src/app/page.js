@@ -26,10 +26,10 @@ export default async function Home() {
               </p>
               <div className={styles.heroActions}>
                 <Link href="/courses/interpersonal-communication-dynamics" className={`${styles.primaryHeroCta} ${styles.hiddenHeroCta}`}>
-                  <span className={styles.ctaLabel}>Enroll in Interpersonal Communication Dynamics</span>
+                  <span className={styles.ctaLabel}>Enroll In Interpersonal Communication Dynamics</span>
                 </Link>
                 <Link href="/contact" className={styles.secondaryHeroCta}>
-                  <span className={styles.ctaLabel}>Work with Zak</span>
+                  <span className={styles.ctaLabel}>Work With Zak</span>
                   <FiArrowUpRight aria-hidden="true" />
                 </Link>
               </div>
