@@ -674,3 +674,10 @@
     border-radius: var(--desktop-oval-radius);
   }
 }
+
+@media (min-width: 1025px) and (max-width: 1260px) {
+  .copy {
+    width: calc(100% - clamp(4.5rem, 7vw, 6.5rem));
+    max-width: calc(100% - clamp(4.5rem, 7vw, 6.5rem));
+  }
+}

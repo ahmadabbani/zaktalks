@@ -6487,3 +6487,154 @@
         text-align: left;
     }
 }
+
+/* Keep every result responsive to the space it actually receives. This is
+   especially important inside the course player when its sidebar is open. */
+.resultContainer,
+.binaryResultContainer,
+.driverResultContainer,
+.egoResultContainer,
+.strokeResultContainer,
+.cathResultContainer,
+.worksheetShell {
+    min-width: 0;
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+
+.resultContainer > *,
+.binaryResultContainer > *,
+.driverResultContainer > *,
+.egoResultContainer > *,
+.strokeResultContainer > *,
+.cathResultContainer > *,
+.worksheetShell > * {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.resultContainer h1,
+.resultContainer h2,
+.resultContainer h3,
+.resultContainer h4,
+.resultContainer p,
+.binaryResultContainer h1,
+.binaryResultContainer h2,
+.binaryResultContainer h3,
+.binaryResultContainer h4,
+.binaryResultContainer p,
+.driverResultContainer h1,
+.driverResultContainer h2,
+.driverResultContainer h3,
+.driverResultContainer h4,
+.driverResultContainer p,
+.egoResultContainer h1,
+.egoResultContainer h2,
+.egoResultContainer h3,
+.egoResultContainer h4,
+.egoResultContainer p,
+.strokeResultContainer h1,
+.strokeResultContainer h2,
+.strokeResultContainer h3,
+.strokeResultContainer h4,
+.strokeResultContainer p,
+.cathResultContainer h1,
+.cathResultContainer h2,
+.cathResultContainer h3,
+.cathResultContainer h4,
+.cathResultContainer p,
+.worksheetShell h1,
+.worksheetShell h2,
+.worksheetShell h3,
+.worksheetShell h4,
+.worksheetShell p {
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+.resultContainer button,
+.binaryResultContainer button,
+.driverResultContainer button,
+.egoResultContainer button,
+.strokeResultContainer button,
+.cathResultContainer button,
+.worksheetShell button {
+    max-width: 100%;
+    white-space: normal;
+}
+
+@container (max-width: 720px) {
+    .binaryResultOverview,
+    .driverTendencyDetails,
+    .egoStyleProfileSection,
+    .energyBalanceSection,
+    .financialPatternSection,
+    .dramaResultOverview,
+    .cathNeedSummaryGrid,
+    .cathRoleResultGrid,
+    .egoStateDetails {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .driverTotalsGrid,
+    .cathScoreOnlyList.egoStyleScoreCards {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .egoTotalsGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cathScoreOnlyRow,
+    .relationalNeedsTopNeed,
+    .cathRoleScoreGuideList {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .relationalNeedsTopNeed > strong,
+    .cathScoreOnlyValue {
+        justify-content: flex-start;
+    }
+
+    .worksheetToolbar,
+    .worksheetActions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .worksheetProgress {
+        min-width: 0;
+    }
+
+    .worksheetDownloadBtn,
+    .worksheetSubmitBtn,
+    .worksheetEditBtn,
+    .worksheetActions .screenshotBtn {
+        width: 100%;
+    }
+}
+
+@container (max-width: 560px) {
+    .driverTotalsGrid,
+    .cathScoreOnlyList.egoStyleScoreCards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dramaScoreList {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .egoChart {
+        grid-template-columns: repeat(7, minmax(32px, 1fr));
+        overflow-x: auto;
+    }
+}
+
+@container (max-width: 390px) {
+    .driverTotalsGrid,
+    .cathScoreOnlyList.egoStyleScoreCards,
+    .egoTotalsGrid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

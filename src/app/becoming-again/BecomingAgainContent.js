@@ -572,7 +572,8 @@ export default function BecomingAgainContent() {
               className={cx(styles.instructorStory, 'instructor-story')}
             >
               <h2 id="ba-instructor-heading" className={styles.instructorTitle}>
-                Meet the person guiding the room
+                Meet the person
+                <br className={styles.instructorDesktopBreak} /> guiding the room
               </h2>
 
               <div className={styles.instructorBio}>

@@ -2,7 +2,7 @@
 
 .lessonPage {
     padding: var(--space-xl);
-    max-width: 1200px;
+    max-width: none;
     margin: 0 auto;
 }
 
@@ -513,6 +513,18 @@
     .contextLesson {
         border-top: 1px solid rgba(33, 44, 45, 0.1);
         border-left: 0;
+    }
+}
+
+@media (max-width: 580px) {
+    .videoContainer {
+        aspect-ratio: 3 / 2;
+    }
+}
+
+@media (max-width: 445px) {
+    .videoContainer {
+        aspect-ratio: 7 / 5;
     }
 }
 

@@ -56,18 +56,8 @@
   background: #111;
 }
 
-.playerBrand {
-  display: flex;
-  align-items: center;
-  height: 1.9rem;
-  color: rgba(255, 255, 255, 0.52);
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-}
-
 .iframeFrame {
-  height: calc(100% - 1.9rem);
+  height: 100%;
   overflow: hidden;
   background: #000;
 }
@@ -82,7 +72,7 @@
 
 .errorMessage {
   position: absolute;
-  inset: 1.9rem 1rem 0;
+  inset: 0 1rem;
   display: grid;
   place-items: center;
   padding: 2rem;
@@ -191,8 +181,8 @@
 
 .speedMenu button:hover,
 .speedMenu button.speedOptionActive {
-  color: var(--color-black);
-  background: var(--color-yellow);
+  color: var(--color-yellow);
+  background: transparent;
 }
 
 .primaryControl {
@@ -246,47 +236,190 @@
   opacity: 0.78;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .progressHeader {
-    align-items: flex-start;
-    padding: 0.72rem 0.8rem 0.62rem;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.65rem 0.45rem;
   }
 
   .progressHeader > div {
-    display: grid;
-    gap: 0.15rem;
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    align-items: baseline;
+    gap: 0.4rem;
+    white-space: nowrap;
+  }
+
+  .progressEyebrow {
+    font-size: 0.58rem;
+    letter-spacing: 0.09em;
+  }
+
+  .progressHeader strong {
+    font-size: 0.76rem;
   }
 
   .progressState {
-    max-width: 8.5rem;
+    flex: 0 0 auto;
+    max-width: none;
     justify-content: flex-end;
+    gap: 0.25rem;
+    font-size: 0.62rem;
     text-align: right;
+    white-space: nowrap;
+  }
+
+  .progressState svg {
+    width: 0.62rem;
+    height: 0.62rem;
   }
 
   .videoStage {
     padding-inline: 0;
   }
 
-  .playerBrand {
-    padding-inline: 0.75rem;
+  .errorMessage {
+    inset: 0;
+    padding: 1rem;
+    font-size: 0.75rem;
   }
 
   .controls {
-    gap: 0.48rem;
-    padding: 0.65rem 0.7rem;
+    gap: 0.35rem;
+    padding: 0.42rem 0.55rem;
   }
 
   .primaryControl {
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 1.9rem;
+    height: 1.9rem;
+  }
+
+  .primaryControl svg {
+    width: 0.68rem;
+    height: 0.68rem;
   }
 
   .time {
-    min-width: 5.4rem;
-    font-size: 0.67rem;
+    gap: 0.2rem;
+    min-width: 4.65rem;
+    font-size: 0.6rem;
   }
 
   .iconControl {
-    width: 1.75rem;
+    width: 1.45rem;
+    height: 1.45rem;
+  }
+
+  .iconControl svg {
+    width: 0.72rem;
+    height: 0.72rem;
+  }
+
+  .speedTrigger {
+    min-width: 2.8rem;
+    height: 1.5rem;
+    gap: 0.2rem;
+    padding-inline: 0.3rem;
+    font-size: 0.62rem;
+  }
+
+  .speedTrigger svg {
+    width: 0.48rem;
+    height: 0.48rem;
+  }
+
+  .speedMenu button {
+    min-height: 1.75rem;
+    font-size: 0.68rem;
+  }
+
+  .speedError {
+    padding: 0 0.65rem 0.4rem;
+    font-size: 0.62rem;
+  }
+}
+
+@media (max-width: 580px) {
+  .controls {
+    position: relative;
+    z-index: 20;
+  }
+
+  .speedMenu {
+    bottom: calc(100% + 0.15rem);
+    z-index: 50;
+    min-width: 3.55rem;
+    padding: 0.14rem;
+    border-radius: 0.5rem;
+  }
+
+  .speedMenu button {
+    min-height: 1.18rem;
+    padding: 0.08rem 0.3rem;
+    border-radius: 0.3rem;
+    font-size: 0.58rem;
+    line-height: 1;
+  }
+}
+
+@media (max-width: 445px) {
+  .controls {
+    gap: 0.24rem;
+    padding: 0.3rem 0.4rem;
+  }
+
+  .primaryControl {
+    width: 1.65rem;
+    height: 1.65rem;
+  }
+
+  .primaryControl svg {
+    width: 0.58rem;
+    height: 0.58rem;
+  }
+
+  .time {
+    min-width: 4.25rem;
+    font-size: 0.56rem;
+  }
+
+  .iconControl {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .iconControl svg {
+    width: 0.62rem;
+    height: 0.62rem;
+  }
+
+  .speedTrigger {
+    min-width: 2.5rem;
+    height: 1.3rem;
+    font-size: 0.57rem;
+  }
+
+  .speedTrigger svg {
+    width: 0.42rem;
+    height: 0.42rem;
+  }
+
+  .speedMenu {
+    min-width: 3.35rem;
+    padding: 0.1rem;
+  }
+
+  .speedMenu button {
+    min-height: 1.05rem;
+    padding-block: 0.05rem;
+    font-size: 0.54rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .progressStateRestricted {
+    display: none;
   }
 }

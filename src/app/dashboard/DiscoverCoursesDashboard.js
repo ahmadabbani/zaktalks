@@ -36,7 +36,14 @@ function CourseCard({ course }) {
     <div className={styles.learnerDiscoverCardBody}>
       <div className={styles.learnerDiscoverCardTopline}>
         <span>Course</span>
-        <strong>{formatPrice(course.price_cents)}</strong>
+        {course.promotion?.applied ? (
+          <span className={styles.learnerDiscoverPrice}>
+            <s>{formatPrice(course.price_cents)}</s>
+            <strong>{formatPrice(course.promotion.priceAfterPromotionCents)}</strong>
+          </span>
+        ) : (
+          <strong>{formatPrice(course.price_cents)}</strong>
+        )}
       </div>
       <div className={styles.learnerDiscoverCardCopy}>
         <h2>{course.title}</h2>

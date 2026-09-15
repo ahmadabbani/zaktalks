@@ -1206,9 +1206,10 @@
 
   .learnerCourseAction {
     position: absolute;
+    left: calc(41.1764705882% + 1.4rem);
     right: 1.4rem;
     bottom: 0;
-    width: calc(58.8% - 2.8rem);
+    width: auto;
   }
 }
 
@@ -1230,6 +1231,14 @@
 
   .learnerCourseDropdown {
     width: 100%;
+  }
+
+  .learnerCourseDropdownMenu {
+    left: 0;
+    right: auto;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .learnerModuleHeader {
@@ -1259,6 +1268,12 @@
   }
 }
 
+@media (min-width: 641px) and (max-width: 890px) {
+  .learnerCourseVisual img {
+    object-position: 62% center;
+  }
+}
+
 @media (max-width: 640px) {
   .learnerCoursesIntro h1 {
     font-size: 2rem;
@@ -1281,8 +1296,8 @@
   }
 
   .learnerCourseVisual {
-    height: 12.5rem;
-    min-height: 12.5rem;
+    height: 15rem;
+    min-height: 15rem;
   }
 
   .learnerCourseAction {
@@ -3116,6 +3131,75 @@
   }
 }
 
+@media (max-width: 540px) {
+  .dashboardMain,
+  .dashboardContent,
+  .learnerAssessmentsDashboard,
+  .learnerAssessmentsDashboard > *,
+  .learnerAssessmentCourseHeader,
+  .learnerAssessmentCourseHeader > div,
+  .learnerAssessmentCards,
+  .learnerAssessmentCard,
+  .learnerAssessmentCardCopy,
+  .learnerAssessmentDetail,
+  .learnerAssessmentDetailHeader,
+  .learnerAssessmentDetailHeader > div:first-child,
+  .learnerAttemptHistory,
+  .learnerAttemptRail,
+  .learnerAttemptRail > div,
+  .learnerAttemptResult,
+  .learnerAttemptResult > header,
+  .learnerResultBreakdown,
+  .learnerResultBreakdown > div,
+  .learnerResultBreakdown > div > span,
+  .learnerMeaningSection,
+  .learnerResultGroups,
+  .learnerResultGroups > article,
+  .learnerWorksheetResult,
+  .learnerWrongAnswerReview,
+  .learnerWrongAnswerReview > summary,
+  .learnerWrongAnswerReview article,
+  .learnerWrongAnswerReview article > div {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .learnerAssessmentPickerMenu button > span,
+  .learnerWrongAnswerReview > summary > span,
+  .learnerWrongAnswerReview article > div > div > span {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .learnerAssessmentCourseHeader h2,
+  .learnerAssessmentCardCopy h3,
+  .learnerAttemptResult h3,
+  .learnerAssessmentPickerMenu strong,
+  .learnerAssessmentPickerMenu small,
+  .learnerResultBreakdown strong,
+  .learnerResultBreakdown span small,
+  .learnerResultGroups article > div > span > strong,
+  .learnerWrongAnswerReview article p,
+  .learnerWrongAnswerReview article > div > div > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .learnerResultGroups article > div > span {
+    flex-wrap: wrap;
+  }
+
+  .learnerWrongAnswerReview > summary {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .learnerWrongAnswerReview > summary > small {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .learnerAssessmentDetail {
     animation: none;
@@ -3286,6 +3370,24 @@
 }
 
 .learnerDiscoverCardTopline > strong {
+  color: var(--color-dark-blue);
+  font-size: 1.18rem;
+}
+
+.learnerDiscoverPrice {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  white-space: nowrap;
+}
+
+.learnerDiscoverPrice s {
+  color: var(--color-gray-dark);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.learnerDiscoverPrice strong {
   color: var(--color-dark-blue);
   font-size: 1.18rem;
 }
@@ -3567,7 +3669,7 @@
 
 .learnerPurchaseCard {
   display: grid;
-  grid-template-columns: clamp(7.5rem, 10vw, 9.5rem) minmax(0, 1fr) minmax(10rem, auto);
+  grid-template-columns: clamp(10rem, 12vw, 12rem) minmax(0, 1fr) minmax(10rem, auto);
   min-height: 10rem;
   overflow: hidden;
   border: 1px solid rgba(33, 44, 45, 0.1);
@@ -3841,19 +3943,30 @@
   opacity: 0.55;
 }
 
-@media (max-width: 1050px) {
+@media (max-width: 1200px) {
   .learnerPurchaseCard {
-    grid-template-columns: 7.5rem minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .learnerPurchaseVisual {
+    display: none;
+  }
+
+  .learnerPurchaseMain {
+    grid-column: 1;
+    grid-row: 1;
   }
 
   .learnerPurchasePrice {
-    grid-column: 2;
-    grid-template-columns: repeat(2, auto);
+    grid-column: 1;
+    grid-row: 2;
+    grid-template-columns: minmax(0, 1fr) auto;
+    min-width: 0;
     justify-content: space-between;
     justify-items: start;
     border-top: 1px solid rgba(33, 44, 45, 0.09);
     border-left: 0;
-    padding-top: 0.9rem;
+    padding: 1rem;
     text-align: left;
   }
 
@@ -3865,6 +3978,7 @@
   .learnerPurchasePrice > button {
     grid-column: 2;
     grid-row: 1 / span 3;
+    width: auto;
     align-self: center;
     margin: 0;
   }
@@ -4230,7 +4344,7 @@
   }
 
   .learnerPurchaseCard {
-    grid-template-columns: 5.75rem minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .learnerPurchaseTopline {
@@ -4240,12 +4354,25 @@
   }
 
   .learnerPurchaseMain {
+    grid-column: 1;
+    grid-row: auto;
     padding: 0.9rem;
   }
 
   .learnerPurchasePrice {
     grid-column: 1 / -1;
+    grid-row: auto;
+    grid-template-columns: repeat(2, auto);
+    justify-content: space-between;
     padding: 0.85rem 0.9rem;
+  }
+
+  .learnerPurchasePrice > button {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    width: auto;
+    align-self: center;
+    margin: 0;
   }
 
   .learnerPurchaseFooter {

@@ -1284,3 +1284,16 @@
     border-radius: var(--desktop-oval-radius);
   }
 }
+
+@media (min-width: 1025px) and (max-width: 1400px) {
+  .heroSubheading,
+  .heroText,
+  .heroNote {
+    width: calc(100% - clamp(3.5rem, 8vw, 7rem));
+    max-width: none;
+  }
+
+  .heroSubheading {
+    text-wrap: wrap;
+  }
+}

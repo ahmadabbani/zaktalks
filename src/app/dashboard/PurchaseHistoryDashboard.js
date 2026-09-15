@@ -69,7 +69,7 @@ function couponDescription(order) {
 }
 
 function receiptFileName(order) {
-  return `zaktalks-receipt-${String(order?.order_reference || 'order').toLowerCase()}.pdf`
+  return `okayness-receipt-${String(order?.order_reference || 'order').toLowerCase()}.pdf`
 }
 
 async function downloadReceiptPdf(target, order) {
@@ -111,10 +111,10 @@ async function downloadReceiptPdf(target, order) {
     width: renderedWidth,
     height: finalHeight,
   })
-  pdf.setTitle(`ZakTalks receipt ${order.order_reference}`)
+  pdf.setTitle(`Okayness receipt ${order.order_reference}`)
   pdf.setSubject('Course purchase receipt')
-  pdf.setCreator('ZakTalks')
-  pdf.setProducer('ZakTalks')
+  pdf.setCreator('Okayness')
+  pdf.setProducer('Okayness')
 
   const bytes = await pdf.save()
   const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }))
@@ -189,7 +189,7 @@ function OrderReceiptModal({ summary, order, loading, error, onClose }) {
   const savings = originalPrice !== null && originalPrice !== undefined && paidPrice !== null && paidPrice !== undefined
     ? Math.max(0, number(originalPrice) - number(paidPrice))
     : 0
-  const purchaserName = order?.purchaser_name || 'ZakTalks learner'
+  const purchaserName = order?.purchaser_name || 'Okayness learner'
   const discountRows = [
     order?.promotion_applied && { icon: FaBolt, label: promotionLabel(order), value: `-${formatMoney(order.promotion_discount_cents)}` },
     order?.first_purchase_discount_applied && { icon: FaPercent, label: 'First-purchase offer', value: 'Applied' },
@@ -216,7 +216,7 @@ function OrderReceiptModal({ summary, order, loading, error, onClose }) {
     <div className={styles.learnerReceiptLayer} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
       <section className={styles.learnerReceiptModal} role="dialog" aria-modal="true" aria-labelledby="learner-receipt-title">
         <header className={styles.learnerReceiptModalHeader}>
-          <div><h2 id="learner-receipt-title">Receipt</h2><small>ZakTalks</small></div>
+          <div><h2 id="learner-receipt-title">Receipt</h2><small>Okayness</small></div>
           <button ref={closeRef} type="button" onClick={onClose} aria-label="Close purchase receipt"><FaTimes /></button>
         </header>
 
@@ -227,7 +227,7 @@ function OrderReceiptModal({ summary, order, loading, error, onClose }) {
           <div className={styles.learnerReceiptScroll}>
             <article className={styles.learnerReceipt} id={receiptId}>
               <div className={styles.learnerReceiptBrand}>
-                <div><strong>ZakTalks</strong><span>{order.order_reference}</span></div>
+                <div><strong>Okayness</strong><span>{order.order_reference}</span></div>
                 <span className={`${styles.learnerPurchaseStatus} ${styles[`learnerPurchaseStatus${status.key}`]}`}><StatusIcon />{status.label}</span>
               </div>
 

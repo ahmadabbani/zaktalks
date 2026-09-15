@@ -188,7 +188,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
-  margin-top: clamp(1.4rem, 2.2vw, 1.85rem);
+  margin-top: clamp(0.35rem, 0.65vw, 0.55rem);
   padding-top: clamp(1.25rem, 2vw, 1.6rem);
   border-top: 1px solid rgba(33, 44, 45, 0.1);
 }
@@ -1179,6 +1179,10 @@
   line-height: var(--home-headline-line-height);
 }
 
+.instructorDesktopBreak {
+  display: none;
+}
+
 .instructorBio {
   display: flex;
   flex-direction: column;
@@ -1235,6 +1239,10 @@
 }
 
 @media (min-width: 1025px) {
+  .instructorDesktopBreak {
+    display: block;
+  }
+
   .instructorSection {
     --instructor-image-overlap: clamp(10rem, 12vw, 14rem);
 
@@ -1242,7 +1250,7 @@
   }
 
   .instructorLayout {
-    grid-template-columns: clamp(13rem, 16vw, 18rem) minmax(0, 1fr);
+    grid-template-columns: var(--desktop-oval-width) minmax(0, 1fr);
     align-items: start;
     justify-content: space-between;
     column-gap: clamp(2.5rem, 4.5vw, 6rem);
@@ -1259,7 +1267,7 @@
   .instructorPortraitStage {
     align-self: start;
     justify-content: flex-start;
-    margin-top: calc(var(--instructor-image-overlap) * -1);
+    margin-top: calc((var(--instructor-image-overlap) * -1) + clamp(0.5rem, 1vw, 1rem));
   }
 
   .instructorPortraitFrame {
@@ -1578,6 +1586,26 @@
 }
 
 /* ============================================================ RESPONSIVE == */
+
+@media (min-width: 1025px) and (max-width: 1600px) {
+  .cohortCard {
+    padding-block: clamp(1rem, 1.3vw, 1.2rem);
+    padding-inline: clamp(1rem, 1.3vw, 1.2rem);
+  }
+
+  .cohortList {
+    margin-top: clamp(0.9rem, 1.1vw, 1rem);
+  }
+
+  .cohortRow {
+    padding-block: clamp(0.5rem, 0.7vw, 0.6rem);
+  }
+
+  .cohortActions {
+    margin-top: clamp(0.2rem, 0.35vw, 0.3rem);
+    padding-top: clamp(1rem, 1.3vw, 1.2rem);
+  }
+}
 
 @media (max-width: 1024px) {
   .instructorPortraitDesktop {

@@ -508,16 +508,15 @@ export default function YouTubePlayer({
           <span className={styles.progressEyebrow}>Lesson progress</span>
           <strong>{progressPercent}% watched</strong>
         </div>
-        <span className={`${styles.progressState} ${isCompleted ? styles.progressStateComplete : ''}`}>
+        <span className={`${styles.progressState} ${isCompleted ? styles.progressStateComplete : ''} ${!isCompleted && !allowUnrestrictedSeeking ? styles.progressStateRestricted : ''}`}>
           {isCompleted
             ? <><FaCheck /> Complete</>
-            : allowUnrestrictedSeeking
+          : allowUnrestrictedSeeking
               ? <><FaUnlock /> Seeking enabled</>
               : <><FaLock /> Seeking unlocks at 97%</>}
         </span>
       </div>
       <div className={styles.videoStage}>
-        <div className={styles.playerBrand}>Okayness</div>
         <div className={styles.iframeFrame}>
           <div ref={playerHostRef} className={styles.iframeHost} />
         </div>

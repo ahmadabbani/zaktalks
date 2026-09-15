@@ -3236,7 +3236,7 @@
   }
 }
 
-@media (max-width: 1340px) and (min-width: 1025px) {
+@media (max-width: 1480px) and (min-width: 1025px) {
   .finalCtaLayout {
     grid-template-columns: minmax(0, 1fr) minmax(14rem, 17rem);
     gap: clamp(1.25rem, 2.2vw, 2rem);
@@ -3247,12 +3247,20 @@
     width: min(100%, 17rem);
   }
 
-  .finalCtaActions {
-    flex-wrap: nowrap;
-  }
-
   .finalCtaActions .storyCta {
     white-space: nowrap;
+  }
+}
+
+@media (max-width: 1270px) and (min-width: 1025px) {
+  .finalCtaLayout {
+    grid-template-columns: minmax(0, 1fr) minmax(10rem, 12rem);
+    gap: clamp(1rem, 1.8vw, 1.4rem);
+  }
+
+  .finalCtaVisual,
+  .finalCtaImageFrame {
+    width: min(100%, 12rem);
   }
 }
 
@@ -3489,7 +3497,7 @@
     order: 1;
     height: auto;
     min-height: 0;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 16 / 11;
   }
 
   .storyNarrative:not(.storyPhilosophy) .storyDesktopImage {
@@ -3498,7 +3506,13 @@
 
   .storyNarrative:not(.storyPhilosophy) .storyMobileImage {
     display: block;
-    object-position: 50% 25%;
+    object-position: 70% 25%;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .storyNarrative:not(.storyPhilosophy) .storyDesktopImage {
+    object-position: 70% center;
   }
 }
 
@@ -3515,6 +3529,29 @@
   }
 }
 
+/* The final CTA has a narrower content column than the shared oval sections. */
+@media (min-width: 1271px) and (max-width: 1480px) {
+  .finalCtaVisual {
+    width: min(100%, 17rem);
+  }
+
+  .finalCtaImageFrame {
+    height: auto;
+    aspect-ratio: 18 / 34;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1270px) {
+  .finalCtaVisual {
+    width: min(100%, 12rem);
+  }
+
+  .finalCtaImageFrame {
+    height: auto;
+    aspect-ratio: 18 / 37;
+  }
+}
+
 @media (max-width: 700px) {
   .storyNarrative:not(.storyPhilosophy) > .storyImageWrap {
     aspect-ratio: 4 / 3;
@@ -3523,6 +3560,6 @@
 
 @media (max-width: 768px) {
   .storyNarrative:not(.storyPhilosophy) .storyMobileImage {
-    object-position: 50% 35%;
+    object-position: 70% 35%;
   }
 }
