@@ -159,6 +159,11 @@ function CountrySelector({ value, options, onChange, onFocus, onBlur, disabled, 
                 role="option"
                 aria-selected={value === option.value}
                 className={`${styles.countryOption} ${value === option.value ? styles.countryOptionSelected : ''}`}
+                onPointerDown={(event) => {
+                  if (event.pointerType !== 'touch' && event.pointerType !== 'pen') return
+                  event.preventDefault()
+                  chooseCountry(option.value)
+                }}
                 onClick={() => chooseCountry(option.value)}
               >
                 <span className={styles.optionFlag} aria-hidden="true">

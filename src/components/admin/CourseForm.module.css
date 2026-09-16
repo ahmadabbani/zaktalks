@@ -8,6 +8,8 @@
 }
 
 .formWrapper {
+    width: 100%;
+    min-width: 0;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -47,6 +49,10 @@
 }
 
 .form {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
     background: white;
     padding: var(--space-2xl);
     border-radius: 1rem;
@@ -66,11 +72,12 @@
 /* Form Grid */
 .gridTwo {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-lg);
 }
 
 .formGroup {
+    min-width: 0;
     margin-bottom: var(--space-lg);
 }
 
@@ -116,6 +123,14 @@
 .formGroup textarea {
     resize: vertical;
     min-height: 100px;
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .form > .formSection + .formGroup,
@@ -309,6 +324,9 @@
 
 .formSection,
 .builderSection {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
     margin-top: var(--space-xl);
     padding: clamp(1.15rem, 2vw, 1.75rem);
     border: 1px solid rgba(33, 44, 45, 0.13);
@@ -322,6 +340,7 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: var(--space-lg);
+    flex-wrap: wrap;
     margin-bottom: var(--space-lg);
 }
 
@@ -340,6 +359,7 @@
 .sectionHeading > div,
 .builderHeader > div {
     flex: 1;
+    min-width: min(100%, 18rem);
 }
 
 .sectionHeading h2,
@@ -365,6 +385,9 @@
 }
 
 .compositeField {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
     margin: 0 0 var(--space-lg);
     padding: clamp(1rem, 1.5vw, 1.3rem);
     border: 1px solid rgba(33, 44, 45, 0.15);
@@ -394,7 +417,7 @@
 
 .infoBarGrid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
     gap: var(--space-md);
 }
 
@@ -404,6 +427,9 @@
 }
 
 .builderItem {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
     padding: clamp(1rem, 1.6vw, 1.35rem);
     border: 1px solid rgba(33, 44, 45, 0.14);
     border-radius: 0.85rem;
@@ -416,6 +442,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--space-md);
+    flex-wrap: wrap;
     margin-bottom: var(--space-md);
 }
 
@@ -511,6 +538,8 @@
 /* File Inputs */
 .fileInput {
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
     box-sizing: border-box;
     padding: var(--space-md);
     border-radius: 0.5rem;
@@ -582,6 +611,7 @@
 /* New Gallery Image Slot with Preview */
 .imageSlot {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-sm);
     align-items: flex-start;
     margin-bottom: var(--space-sm);
@@ -596,7 +626,8 @@
 }
 
 .imageSlotInput {
-    flex: 1;
+    flex: 1 1 15rem;
+    min-width: 0;
 }
 
 .recommendationImageField {
@@ -620,6 +651,7 @@
 
 .recommendationImagePreview {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--space-sm);
     margin-bottom: var(--space-sm);
@@ -652,6 +684,12 @@
     padding: clamp(1rem, 1.5vw, 1.3rem);
     border-radius: 0.85rem;
     background: var(--color-gray-light);
+}
+
+.testimonialSectionFields > *,
+.gridTwo > *,
+.infoBarGrid > * {
+    min-width: 0;
 }
 
 .testimonialSectionFields .formGroup {
@@ -748,6 +786,7 @@
 
 .listHeader {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     margin-bottom: var(--space-md);
@@ -761,6 +800,7 @@
 
 .listItem {
     display: flex;
+    min-width: 0;
     gap: var(--space-sm);
     align-items: center;
 }
@@ -870,6 +910,7 @@
 /* Toggle Switch */
 .toggleGroup {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-2xl);
     margin-top: var(--space-xl);
     padding: var(--space-lg);
@@ -946,6 +987,7 @@
 
 .actionButtons {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-md);
 }
 
@@ -1020,6 +1062,8 @@
     color: rgba(33, 44, 45, 0.55);
     font-size: 0.86rem;
     font-weight: 700;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .progressStepActive {
@@ -1109,10 +1153,6 @@
         grid-template-columns: 1fr;
     }
 
-    .infoBarGrid {
-        grid-template-columns: 1fr 1fr;
-    }
-
     .sectionHeading,
     .builderHeader {
         align-items: stretch;
@@ -1151,10 +1191,6 @@
 }
 
 @media (max-width: 520px) {
-    .infoBarGrid {
-        grid-template-columns: 1fr;
-    }
-
     .builderItemTopline,
     .nestedListHeader {
         align-items: stretch;

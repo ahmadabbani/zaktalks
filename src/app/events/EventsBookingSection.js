@@ -129,6 +129,11 @@ function CustomSelect({ id, name, value, options, placeholder, error, onChange, 
               role="option"
               aria-selected={value === option}
               className={`${styles.selectOption} ${value === option ? styles.selectOptionSelected : ''}`}
+              onPointerDown={(event) => {
+                if (event.pointerType !== 'touch' && event.pointerType !== 'pen') return
+                event.preventDefault()
+                chooseOption(option)
+              }}
               onClick={() => chooseOption(option)}
               onKeyDown={(event) => handleOptionKeyDown(event, index)}
             >

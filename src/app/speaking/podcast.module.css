@@ -1053,8 +1053,8 @@
   }
 
   .audiencePhotoFrame {
-    width: clamp(18rem, 72vw, 44rem);
-    aspect-ratio: 6 / 5;
+    width: min(clamp(19rem, 76vw, 46rem), calc(100% - 1rem));
+    aspect-ratio: 1.12;
     height: auto;
     justify-self: center;
   }

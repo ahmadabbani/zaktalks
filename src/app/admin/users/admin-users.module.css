@@ -601,14 +601,23 @@
 @media (max-width: 1180px) {
   .overviewToolbar { align-items: stretch; flex-direction: column; }
   .overviewPrimaryGrid { grid-template-columns: minmax(0, 1.4fr) minmax(15rem, 0.7fr); }
-  .recentUsersTable { overflow-x: auto; }
-  .recentUsersHead, .recentUserRow { min-width: 46rem; }
+}
+
+@media (min-width: 769px) {
+  .recentUsersCard {
+    width: calc(100% + 19rem);
+    margin-left: -19rem;
+  }
 }
 
 @media (max-width: 1024px) {
   .page { padding-top: 8rem; }
   .workspaceGrid { grid-template-columns: 15rem minmax(0, 1fr); }
   .mainPanel { padding: 1.8rem; }
+  .recentUsersCard {
+    width: calc(100% + 15rem);
+    margin-left: -15rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -653,6 +662,9 @@
   .growthChart { height: 13rem; }
   .healthRing { width: min(100%, 7rem); }
   .healthRing::before { width: 5.2rem; }
+  .recentUsersCard { width: 100%; margin-left: 0; }
+  .recentUsersTable { overflow-x: auto; }
+  .recentUsersHead, .recentUserRow { min-width: 46rem; }
 }
 
 @media (max-width: 480px) {
@@ -694,7 +706,7 @@
 .directorySearch input::placeholder { color: rgba(33,44,45,.52); }
 .directorySearch button { display: grid; place-items: center; width: 1.8rem; height: 1.8rem; border: 0; border-radius: 50%; color: var(--color-gray-dark); background: transparent; cursor: pointer; }
 .directorySearch button:hover { color: var(--color-white); background: var(--color-dark-blue); }
-.directoryFilterGrid { display: grid; grid-template-columns: repeat(5,minmax(8.5rem,1fr)); gap: .65rem; }
+.directoryFilterGrid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,13rem),1fr)); gap: .65rem; }
 .directorySelectLabel { display: grid; min-width: 0; gap: .35rem; color: var(--color-gray-dark); font-size: .58rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
 .directorySelectShell { position: relative; display: block; min-width: 0; }
 .directorySelectShell select,.directoryPagination select { width: 100%; appearance: none; border: 1px solid rgba(33,44,45,.12); outline: 0; color: var(--color-black); background: var(--color-white); cursor: pointer; font: inherit; font-weight: 700; }
@@ -704,7 +716,7 @@
 .directoryToolbarBottom { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 1.75rem; }
 .directoryToolbarBottom>span { color: var(--color-gray-dark); font-size: .62rem; font-weight: 700; }
 .directoryToolbarBottom button { border: 0; color: var(--color-dark-blue); background: transparent; cursor: pointer; font: inherit; font-size: .62rem; font-weight: 850; text-decoration: underline; text-underline-offset: .2rem; }
-.directoryTableShell { min-width: 0; overflow: hidden; border: 1px solid rgba(33,44,45,.09); border-radius: 1.2rem; background: var(--color-white); }
+.directoryTableShell { min-width: 0; overflow-x: auto; overflow-y: hidden; border: 1px solid rgba(33,44,45,.09); border-radius: 1.2rem; background: var(--color-white); }
 .directoryTableHeader,.directoryRow { display: grid; grid-template-columns: minmax(13rem,1.7fr) minmax(8rem,.82fr) minmax(7rem,.7fr) minmax(8rem,.88fr) minmax(7.5rem,.8fr) 2rem; align-items: center; gap: .8rem; }
 .directoryTableHeader { min-width: 52rem; padding: .7rem 1rem; color: var(--color-gray-dark); background: var(--color-gray-light); font-size: .55rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
 .directoryRows,.directoryRowsLoading { min-width: 52rem; }
@@ -762,9 +774,8 @@
 .drawerEmpty { margin: 0; padding: 1.25rem; color: var(--color-gray-dark); background: var(--color-white); border-radius: .75rem; font-size: .63rem; text-align: center; }.drawerLoading { display: grid; gap: .7rem; padding: 1.25rem; }.drawerLoading span { height: 6rem; border-radius: 1rem; background: linear-gradient(90deg,var(--color-gray-light),#fff,var(--color-gray-light)); background-size: 220% 100%; animation: directoryShimmer 1.2s linear infinite; }
 @keyframes directoryRowIn { from { opacity: 0; transform: translateY(.45rem); } to { opacity: 1; transform: translateY(0); } }@keyframes directoryShimmer { to { background-position: -220% 0; } }@keyframes drawerFadeIn { from { opacity: 0; } }@keyframes drawerSlideIn { from { opacity: 0; transform: translateX(3rem); } }
 
-@media (max-width:1180px) { .directoryFilterGrid { grid-template-columns: repeat(3,minmax(9rem,1fr)); }.directoryTableShell { overflow-x: auto; } }
-@media (max-width:768px) { .directoryFilterGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }.directoryPagination { grid-template-columns: auto 1fr; }.directoryPagination>span { display: none; }.directoryPagination>div { justify-self: end; }.drawerLayer { padding: 0; }.userDrawer { border-radius: 0; } }
-@media (max-width:480px) { .directoryFilterGrid { grid-template-columns: minmax(0,1fr); }.directoryToolbarBottom { align-items: flex-start; flex-direction: column; gap: .35rem; }.detailGrid { grid-template-columns: minmax(0,1fr); }.drawerHeader,.drawerContent { padding: 1rem; }.drawerIdentity .directoryAvatar { display: none; } }
+@media (max-width:768px) { .directoryPagination { grid-template-columns: auto 1fr; }.directoryPagination>span { display: none; }.directoryPagination>div { justify-self: end; }.drawerLayer { padding: 0; }.userDrawer { border-radius: 0; } }
+@media (max-width:480px) { .directoryToolbarBottom { align-items: flex-start; flex-direction: column; gap: .35rem; }.detailGrid { grid-template-columns: minmax(0,1fr); }.drawerHeader,.drawerContent { padding: 1rem; }.drawerIdentity .directoryAvatar { display: none; } }
 @media (prefers-reduced-motion:reduce) { .directoryRow,.drawerLayer,.userDrawer,.directorySkeleton span,.drawerLoading span { animation: none; } }
 
 /* Enrollments */
@@ -837,14 +848,14 @@
 .enrollmentSectionHeading>div { display: grid; gap: .15rem; }
 .enrollmentSectionHeading p { max-width: 30rem; margin: 0; color: var(--color-gray-dark); font-size: .57rem; line-height: 1.45; text-align: right; }
 .enrollmentToolbar { display: grid; gap: .85rem; padding: 1rem; border: 1px solid rgba(33,44,45,.09); border-radius: 1.15rem; background: var(--color-gray-light); }
-.enrollmentFilterGrid { display: grid; grid-template-columns: repeat(4,minmax(9rem,1fr)); gap: .6rem; }
+.enrollmentFilterGrid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,13rem),1fr)); gap: .6rem; }
 .enrollmentSelectLabel { display: grid; min-width: 0; gap: .35rem; color: var(--color-gray-dark); font-size: .54rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
 .enrollmentSelectShell { position: relative; display: block; min-width: 0; }
 .enrollmentSelectShell select { width: 100%; min-height: 2.5rem; padding: .58rem 2rem .58rem .68rem; appearance: none; border: 1px solid rgba(33,44,45,.12); border-radius: .72rem; outline: 0; color: var(--color-black); background: var(--color-white); cursor: pointer; font: inherit; font-size: .62rem; font-weight: 700; }
 .enrollmentSelectShell select:focus { border-color: var(--color-dark-blue); box-shadow: 0 0 0 3px rgba(var(--color-dark-blue-rgb), .12); }
 .enrollmentSelectShell svg { position: absolute; top: 50%; right: .68rem; pointer-events: none; color: var(--color-dark-blue); font-size: .55rem; transform: translateY(-50%); }
 
-.enrollmentTableShell { min-width: 0; overflow: hidden; border: 1px solid rgba(33,44,45,.09); border-radius: 1.15rem; background: var(--color-white); }
+.enrollmentTableShell { min-width: 0; overflow-x: auto; overflow-y: hidden; border: 1px solid rgba(33,44,45,.09); border-radius: 1.15rem; background: var(--color-white); }
 .enrollmentTableHeader,.enrollmentRow { display: grid; grid-template-columns: minmax(13rem,1.55fr) minmax(11rem,1.2fr) minmax(8rem,.8fr) minmax(8.5rem,.9fr) minmax(8rem,.75fr) 2rem; align-items: center; gap: .75rem; }
 .enrollmentTableHeader { min-width: 58rem; padding: .68rem 1rem; color: var(--color-gray-dark); background: var(--color-gray-light); font-size: .52rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
 .enrollmentRows,.enrollmentRowsLoading { min-width: 58rem; }
@@ -891,8 +902,6 @@
 
 @media (max-width: 1180px) {
   .enrollmentMetricGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .enrollmentFilterGrid { grid-template-columns: repeat(2,minmax(9rem,1fr)); }
-  .enrollmentTableShell { overflow-x: auto; }
 }
 
 @media (max-width: 900px) {
@@ -911,7 +920,7 @@
 }
 
 @media (max-width: 480px) {
-  .enrollmentMetricGrid,.enrollmentFilterGrid { grid-template-columns: minmax(0,1fr); }
+  .enrollmentMetricGrid { grid-template-columns: minmax(0,1fr); }
   .enrollmentMetricCard { padding: .85rem; }
   .enrollmentInsightsGrid { margin-inline: -.15rem; }
   .enrollmentInsightCard,.enrollmentToolbar { padding: .85rem; border-radius: 1rem; }
@@ -952,8 +961,8 @@
 .learningModuleHealth small { overflow: hidden; color: var(--color-gray-dark); font-size: .45rem; text-overflow: ellipsis; white-space: nowrap; }
 .learningModuleHealth b { color: var(--color-dark-blue); font-size: .56rem; }
 
-.learningFilterGrid { display: grid; grid-template-columns: repeat(4,minmax(9rem,1fr)); gap: .6rem; }
-.learningTableShell { min-width: 0; overflow: hidden; border: 1px solid rgba(33,44,45,.09); border-radius: 1.15rem; background: var(--color-white); }
+.learningFilterGrid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,13rem),1fr)); gap: .6rem; }
+.learningTableShell { min-width: 0; overflow-x: auto; overflow-y: hidden; border: 1px solid rgba(33,44,45,.09); border-radius: 1.15rem; background: var(--color-white); }
 .learningTableHeader,.learningRow { display: grid; grid-template-columns: minmax(12rem,1.35fr) minmax(11rem,1.2fr) minmax(9rem,.95fr) minmax(7.5rem,.72fr) minmax(10rem,1fr) 2rem; align-items: center; gap: .75rem; }
 .learningTableHeader { min-width: 62rem; padding: .68rem 1rem; color: var(--color-gray-dark); background: var(--color-gray-light); font-size: .52rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
 .learningRows,.learningRowsLoading { min-width: 62rem; }
@@ -1002,10 +1011,6 @@
   .learningInsightsGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .learningInsightsGrid>.enrollmentInsightCard:first-child { grid-column: 1/-1; }
 }
-@media (max-width: 1180px) {
-  .learningFilterGrid { grid-template-columns: repeat(2,minmax(9rem,1fr)); }
-  .learningTableShell { overflow-x: auto; }
-}
 @media (max-width: 768px) {
   .learningDashboard { padding-top: 1.1rem; }
   .learningInsightsGrid { grid-template-columns: minmax(0,1fr); }
@@ -1013,7 +1018,6 @@
   .learningDrawer { border-radius: 0; }
 }
 @media (max-width: 480px) {
-  .learningFilterGrid { grid-template-columns: minmax(0,1fr); }
   .learningDrawerStats { grid-template-columns: repeat(3,minmax(0,1fr)); }
   .learningModule>button { grid-template-columns: auto minmax(0,1fr) auto; }
   .learningModule>button>svg { display: none; }
@@ -1037,7 +1041,7 @@
 
 .coursePortfolioSection { display: grid; gap: .9rem; padding-top: .2rem; }
 .coursePortfolioToolbar { display: grid; gap: .8rem; padding: 1rem; border: 1px solid rgba(33,44,45,.09); border-radius: 1.15rem; background: var(--color-gray-light); }
-.coursePortfolioToolbar>div { display: grid; grid-template-columns: repeat(3,minmax(9rem,1fr)); gap: .6rem; }
+.coursePortfolioToolbar>div { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,13rem),1fr)); gap: .6rem; }
 .coursePortfolioToolbar>span,.courseLearnerToolbar>span { display: flex; align-items: center; justify-content: space-between; gap: .75rem; color: var(--color-gray-dark); font-size: .55rem; font-weight: 700; }
 .coursePortfolioToolbar>span>button,.courseLearnerToolbar>span>button { padding: .3rem .55rem; border: 0; border-radius: 999px; color: var(--color-dark-blue); background: rgba(var(--color-dark-blue-rgb), .12); cursor: pointer; font: inherit; font-size: .52rem; font-weight: 850; }
 .coursePortfolioToolbar>span>button:hover,.courseLearnerToolbar>span>button:hover { color: var(--color-white); background: var(--color-yellow); }
@@ -1138,7 +1142,7 @@
 .courseDetailSectionHeading h3 { margin: 0; color: var(--color-black); font-size: .8rem; }
 .courseDetailSectionHeading p { margin: 0; color: var(--color-gray-dark); font-size: .48rem; }
 
-.courseModuleTable { min-width: 0; overflow: hidden; border: 1px solid rgba(33,44,45,.08); border-radius: .8rem; }
+.courseModuleTable { min-width: 0; overflow-x: auto; overflow-y: hidden; border: 1px solid rgba(33,44,45,.08); border-radius: .8rem; }
 .courseModuleHeader,.courseModuleTable article { display: grid; grid-template-columns: minmax(12rem,1.5fr) minmax(10rem,1fr) minmax(5rem,.5fr) minmax(5rem,.5fr); align-items: center; gap: .75rem; }
 .courseModuleHeader { min-width: 38rem; padding: .55rem .7rem; color: var(--color-gray-dark); background: var(--color-gray-light); font-size: .46rem; font-weight: 850; letter-spacing: .07em; text-transform: uppercase; }
 .courseModuleTable article { min-width: 38rem; padding: .6rem .7rem; border-bottom: 1px solid rgba(33,44,45,.07); }
@@ -1152,7 +1156,7 @@
 
 .courseLearnersSection { display: grid; gap: .75rem; padding: .9rem; border-radius: 1rem; background: var(--color-gray-light); }
 .courseLearnerToolbar { display: grid; gap: .65rem; }
-.courseLearnerToolbar>div { display: grid; grid-template-columns: repeat(2,minmax(10rem,1fr)); gap: .55rem; }
+.courseLearnerToolbar>div { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,13rem),1fr)); gap: .55rem; }
 .courseLearnerTable { min-width: 0; overflow-x: auto; border: 1px solid rgba(33,44,45,.08); border-radius: .8rem; background: var(--color-white); }
 .courseLearnerHeader,.courseLearnerTable>div>article { display: grid; grid-template-columns: minmax(12rem,1.25fr) minmax(9rem,.8fr) minmax(10rem,1fr) minmax(8rem,.7fr) minmax(11rem,1fr); align-items: center; gap: .7rem; min-width: 58rem; }
 .courseLearnerHeader { padding: .55rem .7rem; color: var(--color-gray-dark); background: rgba(var(--color-dark-blue-rgb), .08); font-size: .46rem; font-weight: 850; letter-spacing: .07em; text-transform: uppercase; }
@@ -1173,16 +1177,13 @@
 }
 @media (max-width: 900px) {
   .coursePortfolioInsights { grid-template-columns: minmax(0,1fr); }
-  .coursePortfolioToolbar>div { grid-template-columns: minmax(0,1fr); }
   .courseModal { width: 100%; height: 100%; border-radius: 0; }
   .courseDetailMetrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .courseModuleTable { overflow-x: auto; }
 }
 @media (max-width: 768px) {
   .coursePerformanceDashboard { padding-top: 1.1rem; }
   .courseModalHeader,.courseModalContent,.courseModalContentUpdating { padding-inline: .85rem; }
   .courseDetailSectionHeading { align-items: flex-start; flex-direction: column; gap: .3rem; }
-  .courseLearnerToolbar>div { grid-template-columns: minmax(0,1fr); }
 }
 @media (max-width: 560px) {
   .courseDetailMetrics { grid-template-columns: minmax(0,1fr); }
@@ -1276,7 +1277,7 @@
 
 .videoLessonSection { display: grid; gap: .8rem; }
 .videoToolbar { display: grid; gap: .72rem; padding: .9rem; border: 1px solid rgba(33,44,45,.085); border-radius: 1rem; background: var(--color-gray-light); }
-.videoToolbar>div { display: grid; grid-template-columns: repeat(3,minmax(9rem,1fr)); gap: .55rem; }
+.videoToolbar>div { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,13rem),1fr)); gap: .55rem; }
 .videoToolbar>span { display: flex; align-items: center; justify-content: space-between; gap: .7rem; color: var(--color-gray-dark); font-size: .62rem; font-weight: 750; }
 .videoToolbar>span>button { padding: .34rem .6rem; border: 0; border-radius: 999px; color: var(--color-dark-blue); background: rgba(var(--color-dark-blue-rgb), .12); cursor: pointer; font: inherit; font-size: .58rem; font-weight: 850; }
 .videoToolbar>span>button:hover { color: var(--color-white); background: var(--color-yellow); }
@@ -1322,8 +1323,8 @@
 .videoMeasurementNote p { margin: 0; color: var(--color-gray-dark); font-size: .57rem; line-height: 1.48; }
 .videoDrawerToolbar { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .52rem; }
 .videoViewerSection { display: grid; gap: .55rem; }
-.videoViewerList { overflow: hidden; border: 1px solid rgba(33,44,45,.08); border-radius: .82rem; }
-.videoViewerList article { display: grid; grid-template-columns: auto minmax(9rem,.8fr) minmax(12rem,1.2fr) minmax(10rem,.9fr); align-items: center; gap: .65rem; min-width: 0; padding: .68rem; border-bottom: 1px solid rgba(33,44,45,.07); }
+.videoViewerList { overflow-x: auto; overflow-y: hidden; border: 1px solid rgba(33,44,45,.08); border-radius: .82rem; }
+.videoViewerList article { display: grid; grid-template-columns: auto minmax(9rem,.8fr) minmax(12rem,1.2fr) minmax(10rem,.9fr); align-items: center; gap: .65rem; min-width: 43rem; padding: .68rem; border-bottom: 1px solid rgba(33,44,45,.07); }
 .videoViewerList article:last-child { border-bottom: 0; }
 .videoViewerIdentity,.videoViewerReach,.videoViewerDates { display: grid; min-width: 0; gap: .18rem; }
 .videoViewerIdentity strong,.videoViewerDates strong { overflow: hidden; color: var(--color-black); font-size: .62rem; text-overflow: ellipsis; white-space: nowrap; }
@@ -1340,13 +1341,10 @@
   .videoMetricGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .videoCourseComparison article { grid-template-columns: minmax(10rem,1fr) repeat(2,minmax(5rem,.42fr)); }
   .videoCourseComparison article>.videoProgressTrack { grid-column: 1/-1; }
-  .videoToolbar>div { grid-template-columns: minmax(0,1fr); }
 }
 @media (max-width: 900px) {
   .videoInsightsGrid { grid-template-columns: minmax(0,1fr); }
   .videoInsightsGrid>.enrollmentInsightCard:first-child { grid-column: auto; }
-  .videoViewerList { overflow-x: auto; }
-  .videoViewerList article { grid-template-columns: auto minmax(9rem,.8fr) minmax(12rem,1.2fr) minmax(10rem,.9fr); min-width: 43rem; }
 }
 @media (max-width: 768px) {
   .videoAnalyticsDashboard { padding-top: 1.1rem; }
@@ -1673,11 +1671,11 @@
 .assessmentLensSwitch button:active { transform: scale(.98); }
 
 .assessmentToolbar { display: grid; grid-template-columns: minmax(15rem,1fr) minmax(24rem,1.45fr); gap: .75rem; padding: 1rem; border: 1px solid rgba(33,44,45,.08); border-radius: 1.05rem; background: var(--color-gray-light); }
-.assessmentToolbar>div { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .6rem; }
+.assessmentToolbar>div { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,13rem),1fr)); gap: .6rem; }
 .assessmentToolbar>span { display: flex; align-items: center; gap: .65rem; grid-column: 1/-1; color: var(--color-gray-dark); font-size: 0.87rem; font-weight: 720; }
 .assessmentToolbar>span>button { border: 0; color: var(--color-dark-blue); background: transparent; cursor: pointer; font: inherit; font-size: 0.86rem; font-weight: 850; text-decoration: underline; text-underline-offset: .18rem; }
 
-.assessmentTable { overflow: hidden; border: 1px solid rgba(33,44,45,.08); border-radius: 1.08rem; background: var(--color-white); transition: opacity .18s ease; }
+.assessmentTable { overflow-x: auto; overflow-y: hidden; border: 1px solid rgba(33,44,45,.08); border-radius: 1.08rem; background: var(--color-white); transition: opacity .18s ease; }
 .assessmentTableUpdating { opacity: .5; pointer-events: none; }
 .assessmentLearnerHeader,.assessmentRecordHeader,.assessmentLearnerRow,.assessmentRecordRow { display: grid; align-items: center; gap: .65rem; min-width: 0; padding: .72rem .8rem; }
 .assessmentLearnerHeader,.assessmentLearnerRow { grid-template-columns: minmax(12rem,1.5fr) repeat(3,minmax(4.4rem,.48fr)) minmax(7.5rem,.82fr) minmax(9rem,.9fr) 2.2rem; }
@@ -1802,7 +1800,6 @@
 @media (max-width: 1100px) {
   .assessmentMetricGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .assessmentActivityLegend { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .assessmentTable { overflow-x: auto; }
   .assessmentLearnerHeader,.assessmentLearnerRow { min-width: 54rem; }
   .assessmentRecordHeader,.assessmentRecordRow { min-width: 56rem; }
 }
@@ -1811,7 +1808,6 @@
   .assessmentMetricGrid { grid-template-columns: minmax(0,1fr); }
   .assessmentMetricGrid>article { min-height: 5.4rem; }
   .assessmentLensSwitch { width: 100%; }
-  .assessmentToolbar>div { grid-template-columns: minmax(0,1fr); }
   .assessmentDrawer { border-radius: 0; }
   .assessmentDrawerHeader,.assessmentDrawerBody { padding-inline: .88rem; }
   .assessmentDrawerMetrics,.assessmentResultSummary { grid-template-columns: repeat(2,minmax(0,1fr)); }
@@ -2017,7 +2013,7 @@
 .paymentToolbarTitle>div { display: grid; gap: .08rem; }
 .paymentToolbarTitle strong { color: var(--color-black); font-size: 0.95rem; }
 .paymentToolbarTitle small { color: var(--color-gray-dark); font-size: 0.82rem; }
-.paymentFilterGrid { display: grid; grid-template-columns: repeat(5,minmax(8.5rem,1fr)); gap: .65rem; }
+.paymentFilterGrid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,13rem),1fr)); gap: .65rem; }
 .paymentSelectLabel { display: grid; gap: .35rem; min-width: 0; }
 .paymentSelectLabel>span:first-child { color: var(--color-gray-dark); font-size: 0.8rem; font-weight: 830; letter-spacing: .045em; text-transform: uppercase; }
 .paymentSelectShell { position: relative; display: block; min-width: 0; }
@@ -2140,14 +2136,12 @@
   .paymentMetricGrid { grid-template-columns: repeat(3,minmax(0,1fr)); }
   .paymentInsightsGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .paymentInsightWide { grid-column: 1/-1; }
-  .paymentFilterGrid { grid-template-columns: repeat(3,minmax(0,1fr)); }
 }
 @media (max-width: 1100px) {
   .paymentRangeBar { align-items: flex-start; flex-direction: column; }
   .paymentRangeBar>div:last-child { justify-content: flex-start; }
   .paymentMetricGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .paymentInsightsGrid { grid-template-columns: minmax(0,1fr); }
-  .paymentFilterGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
 @media (max-width: 760px) {
   .paymentsDashboard { padding-top: 1rem; }
@@ -2156,7 +2150,6 @@
   .paymentMetricGrid>article { min-height: 6.8rem; }
   .paymentSectionHeading { align-items: flex-start; flex-direction: column; }
   .paymentSectionHeading>p { text-align: left; }
-  .paymentFilterGrid { grid-template-columns: minmax(0,1fr); }
   .paymentResetButton { position: static; justify-self: start; }
   .paymentLoadMore { align-items: stretch; flex-direction: column; }
   .paymentLoadMore button { width: 100%; }

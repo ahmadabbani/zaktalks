@@ -560,8 +560,8 @@ export default function BecomingAgainContent() {
                   alt="Zak Dakkash, founder of ZakTalks"
                   width={1000}
                   height={1333}
-                  sizes="(max-width: 1024px) min(70vw, 18rem), 1px"
-                  quality={86}
+                  sizes="(max-width: 620px) 70vw, (max-width: 700px) 65vw, (max-width: 1024px) 15rem, 1px"
+                  quality={100}
                   className={`${styles.instructorPortrait} ${styles.instructorPortraitMobile}`}
                 />
               </div>

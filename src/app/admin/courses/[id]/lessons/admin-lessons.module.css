@@ -8,6 +8,8 @@
 }
 
 .container {
+    width: 100%;
+    min-width: 0;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -109,6 +111,9 @@
 
 .numberingCard {
     display: grid;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
     grid-template-columns: auto minmax(0, 1fr) minmax(18rem, 25rem);
     align-items: center;
     gap: 1rem;
@@ -159,6 +164,7 @@
 
 .numberingControl {
     display: grid;
+    min-width: 0;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 0.65rem;
@@ -195,6 +201,9 @@
 
 .introductionCard {
     display: grid;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: 1.15rem;
@@ -278,6 +287,7 @@
 
 .introductionActions {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
     gap: 0.55rem;
@@ -341,6 +351,10 @@
 
 /* Form Styles */
 .formCard {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
     background: white;
     padding: var(--space-2xl);
     border-radius: 1rem;
@@ -358,16 +372,19 @@
 
 .formGrid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-md);
 }
 
 .formSection {
+    min-width: 0;
+    max-width: 100%;
     margin-bottom: var(--space-lg);
 }
 
 .formGroup {
     display: flex;
+    min-width: 0;
     flex-direction: column;
     gap: var(--space-sm);
 }
@@ -410,6 +427,10 @@
 .formGroup input,
 .formGroup textarea,
 .formGroup select {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
     padding: var(--space-sm) var(--space-md);
     border: 2px solid var(--color-gray);
     border-radius: 0.5rem;
@@ -453,6 +474,8 @@
 .customSelect {
     position: relative;
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .customSelectTrigger {
@@ -506,6 +529,8 @@
     top: calc(100% + 0.45rem);
     left: 0;
     right: 0;
+    max-width: 100%;
+    box-sizing: border-box;
     display: grid;
     gap: 0.3rem;
     max-height: 18rem;
@@ -609,6 +634,9 @@
 
 .resourceSection {
     display: grid;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
     gap: var(--space-md);
     margin-top: var(--space-xl);
     padding: var(--space-lg);
@@ -633,6 +661,7 @@
 
 .resourceHeading {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-lg);
@@ -689,6 +718,9 @@
 
 .resourceEditorCard {
     display: grid;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
     gap: var(--space-md);
     padding: var(--space-lg);
     border: 1px solid rgba(33, 44, 45, 0.12);
@@ -698,6 +730,7 @@
 
 .resourceEditorHeader {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
@@ -732,6 +765,8 @@
 
 .currentResourceFile {
     display: flex;
+    min-width: 0;
+    max-width: 100%;
     align-items: center;
     gap: 0.65rem;
     padding: 0.75rem 0.9rem;
@@ -762,6 +797,7 @@
 
 .formActions {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-md);
     margin-top: var(--space-2xl);
 }
@@ -1101,6 +1137,8 @@
 
 .formHeadingRow {
     display: flex;
+    min-width: 0;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--space-sm);
     margin-bottom: var(--space-lg);
@@ -1108,7 +1146,9 @@
 }
 
 .formHeadingRow .formTitle {
+    min-width: 0;
     margin: 0;
+    overflow-wrap: anywhere;
 }
 
 .formHeadingRow svg {
@@ -1119,6 +1159,10 @@
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(180px, 0.8fr) minmax(180px, 0.8fr);
     gap: var(--space-md);
+}
+
+.formGridThree > * {
+    min-width: 0;
 }
 
 .formGroup label span {

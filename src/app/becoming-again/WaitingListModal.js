@@ -29,6 +29,12 @@ function CustomSelect({ id, value, options, placeholder, invalid, onChange, onBl
   const [open, setOpen] = useState(false)
   const currentIndex = options.indexOf(value)
 
+  const selectOption = (option) => {
+    onChange(option)
+    setOpen(false)
+    requestAnimationFrame(() => triggerRef.current?.focus({ preventScroll: true }))
+  }
+
   const openAt = (index) => {
     setOpen(true)
     requestAnimationFrame(() => optionRefs.current[index]?.focus())
@@ -72,11 +78,12 @@ function CustomSelect({ id, value, options, placeholder, invalid, onChange, onBl
         role="option"
         aria-selected={value === option}
         className={`${styles.selectOption} ${value === option ? styles.selected : ''}`}
-        onClick={() => {
-          onChange(option)
-          setOpen(false)
-          requestAnimationFrame(() => triggerRef.current?.focus())
+        onPointerDown={(event) => {
+          if (event.pointerType !== 'touch' && event.pointerType !== 'pen') return
+          event.preventDefault()
+          selectOption(option)
         }}
+        onClick={() => selectOption(option)}
         onKeyDown={(event) => {
           if (event.key === 'Escape') {
             event.preventDefault()

@@ -129,6 +129,11 @@ function SourceSelect({ value, error, onChange, onValidate }) {
               role="option"
               aria-selected={value === option}
               className={`${styles.selectOption} ${value === option ? styles.selectOptionSelected : ''}`}
+              onPointerDown={(event) => {
+                if (event.pointerType !== 'touch' && event.pointerType !== 'pen') return
+                event.preventDefault()
+                choose(option)
+              }}
               onClick={() => choose(option)}
               onKeyDown={(event) => handleOptionKeyDown(event, index)}
             >
