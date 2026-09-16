@@ -7,9 +7,9 @@ import { FiArrowUpRight, FiPlay } from 'react-icons/fi'
 import styles from './EventsPodcastSection.module.css'
 
 const clips = [
-  { id: '01', image: '/podcast1.png', alt: 'ZakTalks short clip placeholder with a podcast waveform' },
-  { id: '02', image: '/podcast2.png', alt: 'ZakTalks short clip placeholder with a podcast microphone' },
-  { id: '03', image: '/podcast3.png', alt: 'ZakTalks short clip placeholder with an audio waveform' },
+  { id: '01', videoId: 'cndxxHBBTG8', thumbnail: 'maxresdefault' },
+  { id: '02', videoId: 'hrTVwEwXhJw', thumbnail: 'maxresdefault' },
+  { id: '03', videoId: 'c_OPfa3PNIQ', thumbnail: 'sddefault' },
 ]
 
 const platforms = [
@@ -79,6 +79,7 @@ function usePodcastReveal() {
 
 export default function EventsPodcastSection() {
   const { register, classFor } = usePodcastReveal()
+  const [activeClipId, setActiveClipId] = useState(null)
 
   return (
     <section className={styles.section} aria-labelledby="events-podcast-heading">
@@ -119,19 +120,38 @@ export default function EventsPodcastSection() {
                     className={classFor(styles.clip, revealId)}
                     style={{ '--clip-delay': `${index * 85}ms` }}
                   >
-                    <Image
-                      src={clip.image}
-                      alt={clip.alt}
-                      fill
-                      sizes="(max-width: 680px) 88vw, (max-width: 1024px) 29vw, 19vw"
-                      className={styles.clipImage}
-                    />
-                    <span className={styles.clipShade} aria-hidden="true" />
-                    <span className={styles.clipNumber}>Short {clip.id}</span>
-                    <span className={styles.playButton} aria-hidden="true">
-                      <FiPlay />
-                    </span>
-                    <span className={styles.clipDuration}>Preview</span>
+                    {activeClipId === clip.videoId ? (
+                      <iframe
+                        className={styles.clipFrame}
+                        src={`https://www.youtube.com/embed/${clip.videoId}?autoplay=1&playsinline=1&rel=0`}
+                        title={`ZakTalks Short ${clip.id}`}
+                        loading="lazy"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <button
+                        type="button"
+                        className={styles.clipTrigger}
+                        onClick={() => setActiveClipId(clip.videoId)}
+                        aria-label={`Play ZakTalks Short ${clip.id}`}
+                      >
+                        <Image
+                          src={`https://i.ytimg.com/vi/${clip.videoId}/${clip.thumbnail}.jpg`}
+                          alt=""
+                          fill
+                          quality={100}
+                          sizes="(max-width: 680px) 88vw, (max-width: 1024px) 29vw, 19vw"
+                          className={styles.clipImage}
+                        />
+                        <span className={styles.clipShade} aria-hidden="true" />
+                        <span className={styles.clipNumber}>Short {clip.id}</span>
+                        <span className={styles.playButton} aria-hidden="true">
+                          <FiPlay />
+                        </span>
+                        <span className={styles.clipDuration}>YouTube</span>
+                      </button>
+                    )}
                   </div>
                 )
               })}
