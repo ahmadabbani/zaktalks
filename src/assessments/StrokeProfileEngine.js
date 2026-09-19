@@ -283,14 +283,15 @@ export default function StrokeProfileEngine({ definition, onComplete, embeddedIn
           <p className={styles.strokeInterpretationClosing}>The goal is awareness, flexibility, and choice.</p>
         </section>
 
-        {enableResultScreenshot && (
-          <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} format={resultDownloadFormat} />
-        )}
-
-        <button className={styles.retakeBtn} onClick={handleRetake} data-screenshot-exclude="true">
-          <FaRedo style={{ marginRight: '8px' }} />
-          Retake Assessment
-        </button>
+        <div className={styles.resultActions}>
+          {enableResultScreenshot && (
+            <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} format={resultDownloadFormat} />
+          )}
+          <button className={styles.retakeBtn} onClick={handleRetake} data-screenshot-exclude="true">
+            <FaRedo />
+            Retake Assessment
+          </button>
+        </div>
       </div>
     );
   }

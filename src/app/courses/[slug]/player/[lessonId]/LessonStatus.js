@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { FaAward, FaCertificate, FaCheckCircle, FaChevronLeft, FaChevronRight, FaLock } from 'react-icons/fa'
 import CourseReviewModal from '@/components/CourseReviewModal'
+import DownloadCertificateBtn from '@/components/DownloadCertificateBtn'
 import { useCourseProgress } from '../CourseProgressContext'
 import styles from './lesson-player.module.css'
 
@@ -19,7 +20,7 @@ export function LessonCompletionBadge({ lessonId }) {
   )
 }
 
-export function CourseCompletionCard({ hasCertificate }) {
+export function CourseCompletionCard() {
   return (
     <div className={styles.congratsCard}>
       <div className={styles.congratsContent}>
@@ -29,15 +30,49 @@ export function CourseCompletionCard({ hasCertificate }) {
         </h3>
         <p className={styles.congratsMessage}>
           You have completed all lessons in this course.
-          {hasCertificate && ' Your certificate is ready in your dashboard.'}
         </p>
       </div>
-      {hasCertificate && (
-        <Link href="/dashboard?section=certificates" className={styles.certificateButton}>
-          <FaCertificate aria-hidden="true" /> View certificate
-        </Link>
-      )}
     </div>
+  )
+}
+
+export function CourseCertificateCard({ courseId, courseName, isComplete }) {
+  if (!isComplete) {
+    return (
+      <section className={`${styles.certificateCard} ${styles.certificateCardLocked}`} aria-label="Certificate locked">
+        <span className={styles.certificateStatusIcon}><FaLock aria-hidden="true" /></span>
+        <div className={styles.certificateCardCopy}>
+          <span className={styles.certificateEyebrow}>Certification</span>
+          <h3>Your certificate is locked</h3>
+          <p>Complete every lesson in {courseName || 'this course'} to unlock your personalized certificate.</p>
+        </div>
+        <span className={styles.certificateLockedStatus}><FaLock aria-hidden="true" /> Complete course to unlock</span>
+      </section>
+    )
+  }
+
+  return (
+    <section className={`${styles.certificateCard} ${styles.certificateCardReady}`} aria-label="Certificate ready">
+      <span className={styles.certificateStatusIcon}><FaAward aria-hidden="true" /></span>
+      <div className={styles.certificateCardCopy}>
+        <span className={styles.certificateEyebrow}>Certification</span>
+        <h3>Congratulations! Your certificate is ready.</h3>
+        <p>You have completed every lesson in {courseName || 'this course'} and can download your personalized certificate now.</p>
+        <p className={styles.certificateDashboardHint}>You can also find this and your other certificates anytime in your Certificates dashboard.</p>
+      </div>
+      <div className={styles.certificateActions}>
+        <DownloadCertificateBtn
+          courseId={courseId}
+          buttonClassName={styles.certificateButton}
+          controlClassName={styles.certificateDownloadControl}
+          errorClassName={styles.certificateDownloadError}
+          spinnerClassName={styles.certificateSpinner}
+        />
+        <Link href="/dashboard?section=certificates" className={styles.certificateDashboardButton}>
+          <FaCertificate aria-hidden="true" /> View all certificates
+        </Link>
+      </div>
+    </section>
   )
 }
 
@@ -46,12 +81,14 @@ export function CourseCompletionNotice({ lessonIds, courseId, courseName, learne
   const [reviewModalOpen, setReviewModalOpen] = useState(true)
   const isComplete = lessonIds.length > 0 && lessonIds.every((lessonId) => completedMap[lessonId])
 
-  if (!isComplete) return null
-
   return (
     <>
-      <CourseCompletionCard hasCertificate={hasCertificate} />
-      {canReview && !hasReview && (
+      {hasCertificate ? (
+        <CourseCertificateCard courseId={courseId} courseName={courseName} isComplete={isComplete} />
+      ) : isComplete ? (
+        <CourseCompletionCard />
+      ) : null}
+      {isComplete && canReview && !hasReview && (
         <CourseReviewModal
           open={reviewModalOpen}
           onClose={() => setReviewModalOpen(false)}

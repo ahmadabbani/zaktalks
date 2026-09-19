@@ -55,26 +55,27 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 1.5vw, 1.5rem);
 }
 
 .card {
+  display: grid;
+  min-width: 0;
   overflow: hidden;
   border: 1px solid rgba(var(--color-dark-blue-rgb), 0.15);
-  border-radius: 1.15rem;
+  border-radius: 1.25rem;
   background: var(--color-white);
   box-shadow: 0 0.65rem 1.8rem rgba(33, 44, 45, 0.05);
 }
 
 .artwork {
   display: grid;
-  height: 12rem;
+  height: clamp(16.5rem, 21vw, 19.5rem);
   place-items: center;
   overflow: hidden;
-  background: #e7f0f1;
+  background: linear-gradient(145deg, #edf6f6 0%, #dbeaec 100%);
   color: var(--color-dark-blue);
-  font-size: 3.5rem;
 }
 
 .artwork img {
@@ -84,7 +85,68 @@
   object-fit: cover;
 }
 
-.cardBody { padding: 1.45rem; }
+.certificateArtwork {
+  display: block;
+  width: min(9.5rem, 62%);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0.65rem 0.8rem rgba(var(--color-dark-blue-rgb), 0.12));
+}
+
+.certificatePaper {
+  fill: var(--color-white);
+  stroke: var(--color-dark-blue);
+  stroke-width: 4;
+}
+
+.certificateAccent,
+.certificateLineStrong,
+.certificateLine {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.certificateAccent {
+  stroke: #f5bd22;
+  stroke-width: 4;
+}
+
+.certificateLineStrong {
+  stroke: var(--color-black);
+  stroke-width: 5;
+}
+
+.certificateLine {
+  stroke: #9ab9bd;
+  stroke-width: 3;
+}
+
+.certificateSeal {
+  fill: #f5bd22;
+  stroke: var(--color-white);
+  stroke-width: 4;
+}
+
+.certificateCheck {
+  fill: none;
+  stroke: var(--color-black);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+}
+
+.certificateRibbon {
+  fill: var(--color-dark-blue);
+  stroke: var(--color-white);
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.cardBody {
+  display: grid;
+  align-content: start;
+  padding: 1.35rem 1.4rem;
+}
 
 .ready {
   display: inline-flex;
@@ -187,7 +249,38 @@
 @media (max-width: 600px) {
   .header { align-items: flex-start; }
   .count { min-width: 4rem; }
-  .artwork { height: 10rem; }
+}
+
+@media (max-width: 1180px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .card {
+    grid-template-columns: minmax(12rem, 0.7fr) minmax(16rem, 1fr);
+    min-height: 21.5rem;
+  }
+
+  .artwork {
+    height: 100%;
+    min-height: 17rem;
+  }
+
+  .cardBody {
+    align-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .card {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .artwork {
+    height: 16.5rem;
+    min-height: 16.5rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

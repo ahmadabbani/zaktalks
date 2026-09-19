@@ -21,11 +21,16 @@ export default function DownloadCertificateBtn({
       const result = await generateCertificate(courseId)
       
       if (result.success && result.pdf) {
-        const linkSource = `data:application/pdf;base64,${result.pdf}`
+        const binary = window.atob(result.pdf)
+        const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0))
+        const objectUrl = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }))
         const downloadLink = document.createElement('a')
-        downloadLink.href = linkSource
+        downloadLink.href = objectUrl
         downloadLink.download = result.fileName
+        document.body.appendChild(downloadLink)
         downloadLink.click()
+        downloadLink.remove()
+        window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1_000)
       } else {
         setError(result.error || 'Could not generate certificate. Please try again.')
       }
@@ -45,6 +50,7 @@ export default function DownloadCertificateBtn({
         disabled={loading}
         className={buttonClassName}
         aria-busy={loading}
+        aria-describedby={error ? `certificate-error-${courseId}` : undefined}
       >
         {loading ? (
           <><FaSpinner className={spinnerClassName} /> Preparing certificate...</>
@@ -52,7 +58,7 @@ export default function DownloadCertificateBtn({
           <><FaCertificate /> Download Certificate</>
         )}
       </button>
-      {error && <p role="alert" className={errorClassName}>{error}</p>}
+      {error && <p id={`certificate-error-${courseId}`} role="alert" className={errorClassName}>{error}</p>}
     </div>
   )
 }

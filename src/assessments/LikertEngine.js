@@ -87,13 +87,15 @@ export default function LikertEngine({ definition, onComplete, embeddedInCourseP
           <h3 className={styles.resultLabel}>Your Result: {result?.label}</h3>
           <p className={styles.resultMessage}>{result?.message}</p>
         </div>
-        {enableResultScreenshot && (
-          <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} format={resultDownloadFormat} />
-        )}
-        <button className={styles.retakeBtn} onClick={handleRetake} data-screenshot-exclude="true">
-          <FaRedo style={{ marginRight: '8px' }} />
-          Retake Assessment
-        </button>
+        <div className={styles.resultActions}>
+          {enableResultScreenshot && (
+            <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} format={resultDownloadFormat} />
+          )}
+          <button className={styles.retakeBtn} onClick={handleRetake} data-screenshot-exclude="true">
+            <FaRedo />
+            Retake Assessment
+          </button>
+        </div>
       </div>
     );
   }

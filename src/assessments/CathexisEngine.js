@@ -861,14 +861,15 @@ export default function CathexisEngine({ definition, onComplete, embeddedInCours
           </section>
         )}
 
-        {enableResultScreenshot && (
-          <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} format={resultDownloadFormat} />
-        )}
-
-        <button className={styles.retakeBtn} onClick={handleRetake} data-screenshot-exclude="true">
-          <FaRedo style={{ marginRight: '8px' }} />
-          Retake Assessment
-        </button>
+        <div className={styles.resultActions}>
+          {enableResultScreenshot && (
+            <ResultScreenshotButton targetId={resultCaptureId} fileName={definition.title} format={resultDownloadFormat} />
+          )}
+          <button className={styles.retakeBtn} onClick={handleRetake} data-screenshot-exclude="true">
+            <FaRedo />
+            Retake Assessment
+          </button>
+        </div>
       </div>
     );
   }

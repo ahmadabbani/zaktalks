@@ -1,9 +1,28 @@
 'use client'
 
 import Link from 'next/link'
-import { FaArrowRight, FaCertificate, FaCheckCircle, FaGraduationCap } from 'react-icons/fa'
+import { FaArrowRight, FaCertificate, FaCheckCircle } from 'react-icons/fa'
 import DownloadCertificateBtn from '@/components/DownloadCertificateBtn'
 import styles from './certificates.module.css'
+
+function CertificateArtwork() {
+  return (
+    <svg
+      className={styles.certificateArtwork}
+      viewBox="0 0 180 140"
+      role="img"
+      aria-label="Course certificate"
+    >
+      <rect className={styles.certificatePaper} x="22" y="14" width="136" height="96" rx="11" />
+      <path className={styles.certificateAccent} d="M34 27h112" />
+      <path className={styles.certificateLineStrong} d="M42 44h69" />
+      <path className={styles.certificateLine} d="M42 57h91M42 69h77M42 81h52" />
+      <circle className={styles.certificateSeal} cx="126" cy="91" r="22" />
+      <path className={styles.certificateCheck} d="m116 91 7 7 14-17" />
+      <path className={styles.certificateRibbon} d="m114 109-4 23 16-9 16 9-4-23" />
+    </svg>
+  )
+}
 
 function completedCertificateCourses(courses) {
   return courses.flatMap((course) => {
@@ -54,7 +73,7 @@ export default function CertificatesDashboard({ courses = [] }) {
                   // Course artwork is managed remotely and may not match Next image host rules.
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={course.logo_url} alt="" loading="lazy" />
-                ) : <FaGraduationCap aria-hidden="true" />}
+                ) : <CertificateArtwork />}
               </div>
               <div className={styles.cardBody}>
                 <span className={styles.ready}><FaCheckCircle aria-hidden="true" /> Ready to download</span>

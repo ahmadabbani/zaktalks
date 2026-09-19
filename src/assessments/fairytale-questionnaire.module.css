@@ -56,7 +56,7 @@
 .questionPanel h2 {
     max-width: 40ch;
     margin: 0;
-    color: var(--color-black);
+    color: var(--color-dark-blue);
     font-size: clamp(1.4rem, 3vw, 2rem);
     font-weight: 900;
     line-height: 1.3;
@@ -93,13 +93,18 @@
     border: 1.5px solid color-mix(in srgb, var(--color-dark-blue) 27%, white);
     border-radius: 0.85rem;
     outline: none;
-    background: #ffffff;
+    background: rgba(var(--color-dark-blue-rgb), 0.08);
     color: var(--color-black);
     font: inherit;
     font-size: 1rem;
     font-weight: 500;
     line-height: 1.6;
-    transition: border-color 180ms ease, box-shadow 180ms ease;
+    transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.answerFields textarea:hover {
+    border-color: color-mix(in srgb, var(--color-dark-blue) 48%, white);
+    background: rgba(var(--color-dark-blue-rgb), 0.14);
 }
 
 .answerFields textarea::placeholder {
@@ -109,6 +114,7 @@
 
 .answerFields textarea:focus-visible {
     border-color: var(--color-dark-blue);
+    background: rgba(var(--color-dark-blue-rgb), 0.14);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-dark-blue) 14%, transparent);
 }
 

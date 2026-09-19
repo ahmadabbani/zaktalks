@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import CourseReviewModal from '@/components/CourseReviewModal'
-import { CourseCompletionCard } from '@/app/courses/[slug]/player/[lessonId]/LessonStatus'
+import { CourseCertificateCard, CourseCompletionCard } from '@/app/courses/[slug]/player/[lessonId]/LessonStatus'
 import styles from './preview.module.css'
 
 export default function ReviewPreview({ courses = [], learnerName }) {
@@ -29,7 +29,9 @@ export default function ReviewPreview({ courses = [], learnerName }) {
             Open review modal
           </button>
         </div>
-        {run > 0 && <CourseCompletionCard hasCertificate={course?.hasCertificate} />}
+        {run > 0 && (course?.hasCertificate
+          ? <CourseCertificateCard courseId={course.id} courseName={course.title} isComplete />
+          : <CourseCompletionCard />)}
       </div>
       {open && <CourseReviewModal
         key={run}

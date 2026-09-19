@@ -199,7 +199,7 @@
     font-size: clamp(1.25rem, 5vw, 1.75rem);
     font-weight: 800;
     line-height: 1.4;
-    color: var(--color-black);
+    color: var(--color-dark-blue);
     margin: 0;
 }
 
@@ -261,7 +261,7 @@
     padding: 0.7rem 1rem;
     font-size: 1.05rem;
     font-weight: 700;
-    background: white;
+    background: rgba(var(--color-dark-blue-rgb), 0.08);
     border: 2px solid var(--color-gray);
     color: var(--color-black);
     border-radius: 0.75rem;
@@ -271,7 +271,7 @@
 
 .scaleBtn:hover {
     border-color: rgba(37, 140, 155, 0.48);
-    background: rgba(37, 140, 155, 0.08);
+    background: rgba(var(--color-dark-blue-rgb), 0.14);
     color: var(--color-black);
     transform: translateY(-1px);
 }
@@ -566,6 +566,36 @@
     color: var(--color-white);
 }
 
+.resultActions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 0.75rem;
+    margin-top: var(--space-xl);
+}
+
+.resultActions .screenshotBtn,
+.resultActions .retakeBtn {
+    flex: 0 0 auto;
+    width: auto;
+    min-height: 3.15rem;
+    margin: 0;
+    padding: 0.8rem 1.3rem;
+    border-radius: 0.85rem;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: none;
+    white-space: nowrap;
+}
+
+.resultActions .retakeBtn {
+    display: inline-flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
 .externalAssessmentPage {
     min-height: 100vh;
     padding: clamp(8rem, 9vw, 9.5rem) var(--container-padding) var(--space-3xl);
@@ -732,7 +762,7 @@
     padding: 0.7rem 1rem;
     border: 2px solid rgba(0, 0, 0, 0.14);
     border-radius: 0.9rem;
-    background: white;
+    background: rgba(var(--color-dark-blue-rgb), 0.08);
     color: var(--color-black);
     font-size: 1rem;
     font-weight: 900;
@@ -743,7 +773,7 @@
 .binaryOptionBtn:hover {
     transform: translateY(-1px);
     border-color: rgba(37, 140, 155, 0.48);
-    background: rgba(37, 140, 155, 0.08);
+    background: rgba(var(--color-dark-blue-rgb), 0.14);
     color: var(--color-black);
     box-shadow: 0 7px 16px rgba(15, 23, 42, 0.07);
 }
@@ -1051,7 +1081,7 @@
     padding: 0.7rem 1rem;
     border: 2px solid rgba(0, 0, 0, 0.14);
     border-radius: 0.9rem;
-    background: white;
+    background: rgba(var(--color-dark-blue-rgb), 0.08);
     color: var(--color-black);
     font-size: 1rem;
     font-weight: 700;
@@ -1083,7 +1113,7 @@
 .driverOptionBtn:hover {
     transform: translateY(-1px);
     border-color: rgba(37, 140, 155, 0.48);
-    background: rgba(37, 140, 155, 0.08);
+    background: rgba(var(--color-dark-blue-rgb), 0.14);
     color: var(--color-black);
     box-shadow: 0 7px 16px rgba(15, 23, 42, 0.07);
 }
@@ -1594,14 +1624,14 @@
 }
 
 .egoRankBtn {
-    background: #f8fafc;
+    background: rgba(var(--color-dark-blue-rgb), 0.08);
     color: var(--color-black);
 }
 
 .egoRankBtn:hover {
     transform: translateY(-1px);
     border-color: rgba(37, 140, 155, 0.48);
-    background: rgba(37, 140, 155, 0.08);
+    background: rgba(var(--color-dark-blue-rgb), 0.14);
     color: var(--color-black);
 }
 
@@ -1860,7 +1890,7 @@
     padding: 0.7rem 1rem;
     font-size: 1rem;
     font-weight: 700;
-    background: white;
+    background: rgba(var(--color-dark-blue-rgb), 0.08);
     border: 2px solid var(--color-gray);
     color: var(--color-black);
     border-radius: 0.75rem;
@@ -1871,7 +1901,7 @@
 
 .ciOptionBtn:hover {
     border-color: rgba(37, 140, 155, 0.48);
-    background: rgba(37, 140, 155, 0.08);
+    background: rgba(var(--color-dark-blue-rgb), 0.14);
     color: var(--color-black);
     transform: translateY(-1px);
 }
@@ -3423,7 +3453,7 @@
 .externalSharedAssessment .ciOptionBtn:hover:not(:disabled),
 .externalSharedAssessment .egoRankBtn:hover:not(:disabled) {
     border-color: rgba(37, 140, 155, 0.48);
-    background: rgba(37, 140, 155, 0.08);
+    background: rgba(var(--color-dark-blue-rgb), 0.14);
     color: var(--color-black);
     box-shadow: none;
     transform: translateY(-1px);
@@ -6636,5 +6666,15 @@
     .cathScoreOnlyList.egoStyleScoreCards,
     .egoTotalsGrid {
         grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .resultActions .screenshotBtn,
+    .resultActions .resultDownloadBtn,
+    .resultActions .retakeBtn {
+        flex: 0 0 auto;
+        width: auto;
+        white-space: nowrap;
     }
 }

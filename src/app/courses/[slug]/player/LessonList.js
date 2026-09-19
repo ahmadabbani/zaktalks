@@ -62,8 +62,6 @@ export default function LessonList({ modules, introductionLesson, numberingStyle
       })()}
       {modules?.map((module, moduleIndex) => {
         const completedInModule = module.lessons.filter((lesson) => completedMap[lesson.id]).length
-        const videoLessonsInModule = module.lessons.filter((lesson) => lesson.type === 'video')
-        const completedVideosInModule = videoLessonsInModule.filter((lesson) => completedMap[lesson.id]).length
         const moduleIsComplete = module.lessons.length > 0 && completedInModule === module.lessons.length
         const moduleProgress = module.lessons.length > 0
           ? Math.round((completedInModule / module.lessons.length) * 100)
@@ -86,7 +84,7 @@ export default function LessonList({ modules, introductionLesson, numberingStyle
             <div className={styles.lessonModuleHeadingCopy}>
               <div className={styles.lessonModuleEyebrow}>
                 <span>MODULE {String(moduleIndex + 1).padStart(2, '0')}</span>
-                <small>{completedVideosInModule}/{videoLessonsInModule.length}</small>
+                <small>{completedInModule}/{module.lessons.length}</small>
               </div>
               <h3>{module.title}</h3>
               <div className={styles.lessonModuleProgressRow}>

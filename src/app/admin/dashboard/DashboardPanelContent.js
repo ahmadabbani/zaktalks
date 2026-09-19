@@ -19,11 +19,13 @@ import CoursePromotionsPanel from '../promotions/CoursePromotionsPanel'
 import ExternalAssessmentLinks from './ExternalAssessmentLinks'
 import CreationActivityDashboard from './CreationActivityDashboard'
 import CourseReviewsDashboard from './CourseReviewsDashboard'
+import AdminCertificatesDashboard from './AdminCertificatesDashboard'
 import { getAdminSettings } from '../settings/settings.actions'
 import { getAllCourses, getCoupons } from '../coupons/coupons.actions'
 import { getCoursePromotions } from '../promotions/promotions.actions'
 import userStyles from '../users/admin-users.module.css'
 import courseStyles from '../courses/admin-courses.module.css'
+import { isStaffRole } from '@/lib/auth-utils'
 
 const PAGE_SIZE = 1000
 
@@ -177,8 +179,87 @@ async function RolesPanel() {
   return <RolesAccessDashboard initialAccounts={accounts || []} initialPermissions={permissions || []} />
 }
 
-function CertificatesPanel() {
-  return <div className={userStyles.workspaceComingSoon}><FaGraduationCap aria-hidden="true" /><strong>Certificate management</strong><p>Issued certificate records will appear here as learners complete eligible courses.</p></div>
+async function CertificatesPanel() {
+  const supabase = await createAdminClient()
+  let records = []
+  let errorMessage = ''
+
+  try {
+    const [courses, enrollments, progressRows] = await Promise.all([
+      fetchAllRows(
+        supabase,
+        'courses',
+        'id, title, slug, logo_url, certificate_template_url, deleted_at, lessons:lessons(id)',
+        'created_at',
+        'deleted_at'
+      ),
+      fetchAllRows(
+        supabase,
+        'user_enrollments',
+        'id, user_id, course_id, payment_status, created_at, user:users(id, email, first_name, last_name, role)',
+        'created_at'
+      ),
+      fetchAllRows(
+        supabase,
+        'lesson_progress',
+        'enrollment_id, user_id, lesson_id, is_completed, completed_at',
+        'completed_at'
+      ),
+    ])
+
+    const courseById = new Map(
+      courses
+        .filter((course) => course.certificate_template_url && course.lessons?.length)
+        .map((course) => [course.id, course])
+    )
+    const progressByEnrollment = new Map()
+
+    progressRows.forEach((progress) => {
+      if (!progress.is_completed || !progress.enrollment_id) return
+      const rows = progressByEnrollment.get(progress.enrollment_id) || []
+      rows.push(progress)
+      progressByEnrollment.set(progress.enrollment_id, rows)
+    })
+
+    records = enrollments.flatMap((enrollment) => {
+      if (!['completed', 'staff'].includes(enrollment.payment_status)) return []
+      const course = courseById.get(enrollment.course_id)
+      const account = enrollment.user
+      if (!course || !account) return []
+      if (enrollment.payment_status === 'staff' && !isStaffRole(account.role)) return []
+
+      const lessonIds = course.lessons.map((lesson) => lesson.id)
+      const completedRows = (progressByEnrollment.get(enrollment.id) || [])
+        .filter((progress) => progress.user_id === enrollment.user_id && lessonIds.includes(progress.lesson_id))
+      const completedIds = new Set(completedRows.map((progress) => progress.lesson_id))
+      if (!lessonIds.every((lessonId) => completedIds.has(lessonId))) return []
+
+      const completionDates = completedRows
+        .map((progress) => progress.completed_at)
+        .filter(Boolean)
+        .map((value) => new Date(value))
+        .filter((value) => !Number.isNaN(value.getTime()))
+      if (!completionDates.length) return []
+
+      return [{
+        enrollment_id: enrollment.id,
+        user_id: enrollment.user_id,
+        course_id: enrollment.course_id,
+        first_name: account.first_name || '',
+        last_name: account.last_name || '',
+        email: account.email || '',
+        course_title: course.title,
+        course_slug: course.slug,
+        logo_url: course.logo_url,
+        completed_at: new Date(Math.max(...completionDates.map((date) => date.getTime()))).toISOString(),
+      }]
+    }).sort((left, right) => new Date(right.completed_at) - new Date(left.completed_at))
+  } catch (error) {
+    console.error('Unable to load certificate records:', error)
+    errorMessage = 'Certificate records could not be loaded.'
+  }
+
+  return <AdminCertificatesDashboard initialRecords={records} error={errorMessage} />
 }
 
 export default async function DashboardPanelContent({ viewId, access }) {

@@ -136,7 +136,22 @@ export default async function LessonPage({ params }) {
       : `/courses/${slug}`)
   }
 
-  const learningContext = lesson.is_course_introduction ? (
+  const moduleContext = !lesson.is_course_introduction && currentModule ? (
+    <section className={`${styles.learningContext} ${styles.moduleLearningContext}`} aria-label="Current module">
+      <article className={styles.contextItem}>
+        <div className={styles.contextEyebrow}>
+          <span className={styles.contextIcon}><FaLayerGroup /></span>
+          <span>Module {String(currentModuleIndex + 1).padStart(2, '0')}</span>
+        </div>
+        <h2>{currentModule.title}</h2>
+        {currentModule.description && (
+          <p><RichText value={currentModule.rich_content?.description} fallback={currentModule.description} maxLength={500} /></p>
+        )}
+      </article>
+    </section>
+  ) : null
+
+  const lessonContext = lesson.is_course_introduction ? (
     <section className={`${styles.learningContext} ${styles.introductionContext}`} aria-label="Course introduction">
       <article className={`${styles.contextItem} ${styles.contextLesson}`}>
         <div className={styles.contextEyebrow}>
@@ -149,20 +164,9 @@ export default async function LessonPage({ params }) {
         )}
       </article>
     </section>
-  ) : currentModule ? (
-    <section className={`${styles.learningContext} ${lesson.type === 'assessment' ? styles.assessmentLearningContext : ''}`} aria-label="Current module and lesson">
-      <article className={styles.contextItem}>
-        <div className={styles.contextEyebrow}>
-          <span className={styles.contextIcon}><FaLayerGroup /></span>
-          <span>Module {String(currentModuleIndex + 1).padStart(2, '0')}</span>
-        </div>
-        <h2>{currentModule.title}</h2>
-        {currentModule.description && (
-          <p><RichText value={currentModule.rich_content?.description} fallback={currentModule.description} maxLength={500} /></p>
-        )}
-      </article>
-
-      {lesson.type !== 'assessment' && <article className={`${styles.contextItem} ${styles.contextLesson}`}>
+  ) : currentModule && lesson.type !== 'assessment' ? (
+    <section className={`${styles.learningContext} ${styles.lessonLearningContext}`} aria-label="Current lesson">
+      <article className={`${styles.contextItem} ${styles.contextLesson}`}>
         <div className={styles.contextEyebrow}>
           <span className={styles.contextIcon}><FaBookOpen /></span>
           <span>{lessonDisplayLabel}</span>
@@ -171,7 +175,7 @@ export default async function LessonPage({ params }) {
         {lesson.description && (
           <p><RichText value={lesson.rich_content?.description} fallback={lesson.description} maxLength={2000} /></p>
         )}
-      </article>}
+      </article>
     </section>
   ) : null
 
@@ -179,6 +183,7 @@ export default async function LessonPage({ params }) {
     <div className={styles.lessonPage}>
       <CourseActivityTracker lessonId={lesson.id} />
       <div className={styles.lessonStage}>
+      {moduleContext}
       {/* Lesson Header */}
       {lesson.type === 'video' && <div className={styles.lessonHeader}>
         <h1 className={styles.lessonTitle}>{lesson.title}</h1>
@@ -229,7 +234,7 @@ export default async function LessonPage({ params }) {
           initiallyCompleted={Boolean(progress?.is_completed && !initialResourcesError)}
         />
       )}
-      {learningContext}
+      {lessonContext}
       </div>
 
       {/* Course Completion Notice */}

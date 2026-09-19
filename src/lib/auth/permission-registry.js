@@ -24,7 +24,7 @@ export const PERMISSION_GROUPS = [
       { key: 'users.course_performance', label: 'Course performance', description: 'View course-level learning health and engagement.', href: '/admin/dashboard?view=course-performance', viewId: 'course-performance' },
       { key: 'users.video_analytics', label: 'Video analytics', description: 'Inspect lesson viewing and playback activity.', href: '/admin/dashboard?view=video-analytics', viewId: 'video-analytics' },
       { key: 'users.assessments', label: 'Assessment results', description: 'Review assessment attempts, results, and worksheets.', href: '/admin/dashboard?view=assessments', viewId: 'assessments' },
-      { key: 'users.certificates', label: 'Certificates', description: 'View and manage issued learner certificates.', href: '/admin/dashboard?view=certificates', viewId: 'certificates' },
+      { key: 'users.certificates', label: 'Certificates', description: 'View and manage earned certificates across all account types.', href: '/admin/dashboard?view=certificates', viewId: 'certificates' },
       { key: 'users.purchases', label: 'Payments', description: 'Review payments, discounts, fulfillment, and reconciliation.', href: '/admin/dashboard?view=purchases', viewId: 'purchases' },
     ],
   },

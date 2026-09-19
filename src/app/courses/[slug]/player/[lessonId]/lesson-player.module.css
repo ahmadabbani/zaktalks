@@ -42,13 +42,26 @@
     border: 0;
 }
 
-.assessmentLearningContext {
+.moduleLearningContext,
+.lessonLearningContext {
     grid-template-columns: 1fr;
+}
+
+.moduleLearningContext {
+    background: var(--color-white);
+}
+
+.lessonLearningContext {
     background: color-mix(in srgb, var(--color-gray-light) 58%, white);
 }
 
-.assessmentLearningContext .contextItem {
+.moduleLearningContext .contextItem,
+.lessonLearningContext .contextItem {
     padding: clamp(1.1rem, 2vw, 1.45rem);
+}
+
+.lessonLearningContext .contextLesson {
+    border-left: 0;
 }
 
 .contextEyebrow {
@@ -332,12 +345,120 @@
     font-weight: 600;
 }
 
+/* Persistent final certificate section */
+.certificateCard {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    margin-bottom: var(--space-xl);
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+    border-radius: 1rem;
+}
+
+.certificateCardReady {
+    border: 1px solid rgba(170, 128, 0, 0.18);
+    background: linear-gradient(135deg, var(--color-yellow) 0%, #ffd700 100%);
+    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3);
+}
+
+.certificateCardLocked {
+    border: 1px dashed rgba(33, 44, 45, 0.24);
+    background: linear-gradient(135deg, #eef2f2 0%, #e5eaea 100%);
+    box-shadow: 0 7px 20px rgba(33, 44, 45, 0.07);
+}
+
+.certificateStatusIcon {
+    display: grid;
+    width: 3.75rem;
+    height: 3.75rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 50%;
+    font-size: 1.45rem;
+}
+
+.certificateCardReady .certificateStatusIcon {
+    background: var(--color-black);
+    color: var(--color-yellow);
+}
+
+.certificateCardLocked .certificateStatusIcon {
+    background: rgba(33, 44, 45, 0.09);
+    color: #697475;
+}
+
+.certificateCardCopy {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.certificateEyebrow {
+    display: block;
+    margin-bottom: 0.32rem;
+    color: var(--color-black);
+    font-size: 0.72rem;
+    font-weight: 850;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.certificateCardLocked .certificateEyebrow {
+    color: #697475;
+}
+
+.certificateCardCopy h3 {
+    margin: 0 0 0.45rem;
+    color: var(--color-black);
+    font-size: clamp(1.25rem, 2vw, 1.65rem);
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.certificateCardLocked .certificateCardCopy h3 {
+    color: #4f5a5b;
+}
+
+.certificateCardCopy p {
+    max-width: 72ch;
+    margin: 0;
+    color: var(--color-black);
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.55;
+}
+
+.certificateCardLocked .certificateCardCopy p {
+    color: #657071;
+}
+
+.certificateDashboardHint {
+    margin-top: 0.55rem !important;
+    font-size: 0.84rem !important;
+    opacity: 0.78;
+}
+
+.certificateActions {
+    display: grid;
+    min-width: min(15rem, 100%);
+    gap: 0.65rem;
+}
+
+.certificateDownloadControl {
+    display: grid;
+    gap: 0.45rem;
+}
+
 .certificateButton {
+    width: 100%;
+    min-height: 3rem;
     padding: var(--space-md) var(--space-2xl);
     background: var(--color-black);
     color: var(--color-yellow);
     border: none;
     border-radius: 0.75rem;
+    font: inherit;
     font-weight: 700;
     font-size: 1.125rem;
     cursor: pointer;
@@ -345,6 +466,7 @@
     text-decoration: none;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: var(--space-sm);
     white-space: nowrap;
 }
@@ -352,6 +474,73 @@
 .certificateButton:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.certificateButton:disabled {
+    cursor: wait;
+    opacity: 0.78;
+    transform: none;
+}
+
+.certificateDashboardButton {
+    display: inline-flex;
+    width: 100%;
+    min-height: 2.8rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid rgba(33, 44, 45, 0.42);
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.34);
+    color: var(--color-black);
+    font-size: 0.88rem;
+    font-weight: 800;
+    line-height: 1.1;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color var(--transition-normal), transform var(--transition-normal);
+}
+
+.certificateDashboardButton:hover {
+    background: rgba(255, 255, 255, 0.62);
+    transform: translateY(-1px);
+}
+
+.certificateLockedStatus {
+    display: inline-flex;
+    width: max-content;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    max-width: 100%;
+    padding: 0.72rem 0.9rem;
+    border: 1px solid rgba(33, 44, 45, 0.17);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.52);
+    color: #697475;
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.certificateDownloadError {
+    margin: 0;
+    color: #8a2d2d;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.35;
+    text-align: center;
+}
+
+.certificateSpinner {
+    animation: certificateSpin 0.9s linear infinite;
+}
+
+@keyframes certificateSpin {
+    to { transform: rotate(360deg); }
 }
 
 /* Navigation */
@@ -473,7 +662,32 @@
 
     .certificateButton {
         width: 100%;
+        min-height: 2.8rem;
         justify-content: center;
+        padding: 0.7rem 1rem;
+        font-size: 0.88rem;
+        line-height: 1.1;
+    }
+
+    .certificateButton svg,
+    .certificateDashboardButton svg {
+        width: 0.9rem;
+        height: 0.9rem;
+        flex: 0 0 0.9rem;
+    }
+
+    .certificateCard {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+    }
+
+    .certificateActions {
+        width: min(100%, 22rem);
+    }
+
+    .certificateLockedStatus {
+        max-width: 100%;
     }
 
     .navigation {
@@ -591,9 +805,15 @@
         font-size: 1.5rem;
     }
 
-    .certificateButton {
-        padding: var(--space-sm) var(--space-lg);
-        font-size: 1rem;
+    .certificateCard {
+        padding: var(--space-lg);
+        border-radius: 0.75rem;
+    }
+
+    .certificateStatusIcon {
+        width: 3.2rem;
+        height: 3.2rem;
+        font-size: 1.2rem;
     }
 
     .navButton {
