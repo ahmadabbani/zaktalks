@@ -1,9 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { isValidPhoneNumber } from 'libphonenumber-js'
 import { createPortal } from 'react-dom'
 import { FaArrowRight, FaLock, FaTimes } from 'react-icons/fa'
 import DiscountSection from './DiscountSection'
+import PaymentMethodChoice from './PaymentMethodChoice'
+import WhishCheckoutFields from './WhishCheckoutFields'
 import styles from './CheckoutModal.module.css'
 
 /**
@@ -18,6 +21,11 @@ export default function CheckoutModal({
 }) {
   const [loading, setLoading] = useState(false)
   const [checkoutError, setCheckoutError] = useState('')
+  const [method, setMethod] = useState('stripe')
+  const [phone, setPhone] = useState('')
+  const [pricingReady, setPricingReady] = useState(false)
+  const [pricingRefresh, setPricingRefresh] = useState(0)
+  const requestKey = useRef(null)
   const [discountOptions, setDiscountOptions] = useState({
     couponCode: null,
     pointsToUse: 0
@@ -41,22 +49,30 @@ export default function CheckoutModal({
   const handleDiscountsCalculated = (discounts) => {
     setDiscountOptions({
       couponCode: discounts.couponCode,
-      pointsToUse: discounts.pointsToUse || 0
+      pointsToUse: discounts.pointsToUse || 0,
+      quotedAmountCents: discounts.finalPrice
     })
   }
 
   const handleProceed = async () => {
+    if (method === 'whish' && !isValidPhoneNumber(phone)) {
+      setCheckoutError('Enter a valid Whish phone number including country code.')
+      return
+    }
+    if (!pricingReady) return
+    if (method === 'whish' && !requestKey.current) requestKey.current = crypto.randomUUID()
     setLoading(true)
     setCheckoutError('')
 
     try {
-      const res = await fetch('/api/checkout', {
+      const res = await fetch(method === 'whish' ? '/api/checkout/whish' : '/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           courseId,
           couponCode: discountOptions.couponCode,
-          pointsToUse: discountOptions.pointsToUse
+          pointsToUse: discountOptions.pointsToUse,
+          ...(method === 'whish' ? { phone, requestKey: requestKey.current, quotedAmountCents: discountOptions.quotedAmountCents } : {})
         }),
       })
 
@@ -65,6 +81,7 @@ export default function CheckoutModal({
       if (data.url) {
         window.location.href = data.url
       } else {
+        if (data.refreshPricing) setPricingRefresh(value => value + 1)
         setCheckoutError(data.error || 'Unable to start payment. Please try again.')
         setLoading(false)
       }
@@ -111,7 +128,12 @@ export default function CheckoutModal({
           onDiscountsCalculated={handleDiscountsCalculated}
           disabled={loading}
           variant="checkout"
+          onPricingStateChange={setPricingReady}
+          refreshKey={pricingRefresh}
         />
+
+        <PaymentMethodChoice value={method} onChange={value => { setMethod(value); setCheckoutError('') }} disabled={loading} />
+        {method === 'whish' && <WhishCheckoutFields phone={phone} onChange={setPhone} disabled={loading} />}
 
         {checkoutError && <p className={styles.checkoutError} role="alert">{checkoutError}</p>}
 
@@ -128,10 +150,10 @@ export default function CheckoutModal({
           <button
             type="button"
             onClick={handleProceed}
-            disabled={loading}
+            disabled={loading || !pricingReady}
             className={`${styles.proceedButton} ${loading ? styles.loading : ''}`}
           >
-            {loading ? <><span className={styles.spinner} /> Preparing payment...</> : <>Proceed to payment <FaArrowRight /></>}
+            {loading ? <><span className={styles.spinner} /> {method === 'whish' ? 'Saving your request...' : 'Preparing payment...'}</> : <>{method === 'whish' ? 'Send Payment Instructions' : 'Proceed to payment'} <FaArrowRight /></>}
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
+import { enrichPaymentHistory } from '@/lib/payments/history'
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
@@ -17,10 +18,13 @@ export async function GET(_request, { params }) {
     return NextResponse.json({ error: 'Please sign in to view this order.' }, { status: 401 })
   }
 
-  const { data: order, error: orderError } = await supabase
-    .from('checkout_sessions')
+  const admin = await createAdminClient()
+  const { data: order, error: orderError } = await admin
+    .from('payment_orders')
     .select(`
       id,
+      course_id,
+      payment_provider,
       email,
       first_name,
       last_name,
@@ -40,15 +44,7 @@ export async function GET(_request, { params }) {
       promotion_name,
       promotion_discount_percent,
       promotion_discount_cents,
-      refunded_at,
-      account:users (
-        first_name,
-        last_name
-      ),
-      course:courses (
-        title,
-        slug
-      )
+      refunded_at
     `)
     .eq('id', orderId)
     .eq('user_id', user.id)
@@ -79,12 +75,14 @@ export async function GET(_request, { params }) {
     }
   }
 
-  const { coupon_id: _couponId, account, ...safeOrder } = order
+  const { data: account } = await supabase.from('users').select('first_name,last_name').eq('id', user.id).single()
+  const [enriched] = await enrichPaymentHistory(admin, [order])
+  const { coupon_id: _couponId, ...safeOrder } = enriched
 
   return NextResponse.json({
     order: {
       ...safeOrder,
-      order_reference: `ZT-${order.id.replaceAll('-', '').slice(0, 10).toUpperCase()}`,
+      order_reference: `${order.payment_provider === 'whish' ? 'WH' : 'ZT'}-${order.id.replaceAll('-', '').slice(0, order.payment_provider === 'whish' ? 12 : 10).toUpperCase()}`,
       purchaser_name: [order.first_name || account?.first_name, order.last_name || account?.last_name].filter(Boolean).join(' ') || null,
       coupon_applied: Boolean(order.coupon_id),
       promotion_applied: Number(order.promotion_discount_cents) > 0,

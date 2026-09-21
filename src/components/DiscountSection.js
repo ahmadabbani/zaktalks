@@ -12,6 +12,8 @@ export default function DiscountSection({
   courseId, 
   email = null, 
   onDiscountsCalculated,
+  onPricingStateChange,
+  refreshKey = 0,
   disabled = false,
   variant = 'default'
 }) {
@@ -21,13 +23,16 @@ export default function DiscountSection({
   const [discountData, setDiscountData] = useState(null)
   const [error, setError] = useState(null)
   const lastEmailRef = useRef(null)
+  const requestVersion = useRef(0)
 
   // Check if email looks valid
   const isValidEmail = (e) => e && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)
 
   // Fetch discounts - called on mount and when dependencies change
-  const fetchDiscounts = async (emailToUse) => {
+  const fetchDiscounts = async (emailToUse, couponOverride = couponCode) => {
+    const version = ++requestVersion.current
     setLoading(true)
+    onPricingStateChange?.(false)
     setError(null)
 
     try {
@@ -37,12 +42,13 @@ export default function DiscountSection({
         body: JSON.stringify({
           courseId,
           email: emailToUse || null,
-          couponCode: couponCode || null,
+          couponCode: couponOverride || null,
           pointsToUse: pointsToUse || 0
         })
       })
 
       const data = await res.json()
+      if (version !== requestVersion.current) return
       
       // Check if email already exists (guest trying to use a registered email)
       if (data.emailExists) {
@@ -60,17 +66,19 @@ export default function DiscountSection({
         if (onDiscountsCalculated) {
           onDiscountsCalculated({
             couponCode: data.discounts.coupon.valid ? data.discounts.coupon.couponCode : null,
-            pointsToUse: pointsToUse,
+            pointsToUse: data.discounts.points.pointsToUse || 0,
             ...data.discounts
           })
         }
+        onPricingStateChange?.(true)
       } else {
         setError(data.error || 'Failed to calculate discounts')
       }
     } catch (err) {
+      if (version !== requestVersion.current) return
       setError('Failed to fetch discount preview')
     } finally {
-      setLoading(false)
+      if (version === requestVersion.current) setLoading(false)
     }
   }
 
@@ -78,7 +86,7 @@ export default function DiscountSection({
   useEffect(() => {
     fetchDiscounts(email)
     lastEmailRef.current = email
-  }, [courseId])
+  }, [courseId, refreshKey])
 
   // Refetch when email changes (debounced)
   useEffect(() => {
@@ -114,7 +122,7 @@ export default function DiscountSection({
 
   const handleRemoveCoupon = () => {
     setCouponCode('')
-    setTimeout(() => fetchDiscounts(lastEmailRef.current), 0)
+    fetchDiscounts(lastEmailRef.current, '')
   }
 
   const formatPrice = (cents) => `$${(cents / 100).toFixed(2)}`
@@ -132,7 +140,7 @@ export default function DiscountSection({
   }
 
   if (!discountData) {
-    return null
+    return error ? <p className={styles.errorText} role="alert">{error} <button type="button" onClick={() => fetchDiscounts(email)}>Try Again</button></p> : null
   }
 
   const { course, userPoints, discounts } = discountData
@@ -243,6 +251,7 @@ export default function DiscountSection({
       )}
 
       {/* Coupon Input */}
+      {error && <p className={styles.errorText} role="alert">{error} <button type="button" disabled={disabled || loading} onClick={() => fetchDiscounts(email)}>Refresh Price</button></p>}
       <div className={styles.couponSection}>
         <label className={styles.couponLabel}>
           Have a coupon?

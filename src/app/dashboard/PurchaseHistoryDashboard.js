@@ -126,6 +126,15 @@ async function downloadReceiptPdf(target, order) {
 }
 
 function purchaseStatus(order) {
+  if (order.payment_provider === 'whish' && order.course_access_removed_at && order.payment_state === 'paid') {
+    return { key: 'closed', label: 'Course removed', detail: 'Your payment record remains available, but this course is no longer accessible.', icon: FaBookOpen }
+  }
+  if (order.payment_provider === 'whish' && order.payment_state === 'failed') {
+    return { key: 'closed', label: 'Request closed', detail: 'This Whish request was closed without granting access. Contact us if you made a transfer.', icon: FaClock }
+  }
+  if (order.payment_provider === 'whish' && order.payment_state === 'pending') {
+    return { key: 'pending', label: 'Awaiting verification', detail: 'Follow the Whish instructions in your email. Course access follows payment verification.', icon: FaClock }
+  }
   if (order.payment_state === 'partially_refunded') {
     return { key: 'refunded', label: 'Partially refunded', detail: 'Part of this payment was returned.', icon: FaUndoAlt }
   }
@@ -190,10 +199,11 @@ function OrderReceiptModal({ summary, order, loading, error, onClose }) {
     ? Math.max(0, number(originalPrice) - number(paidPrice))
     : 0
   const purchaserName = order?.purchaser_name || 'Okayness learner'
+  const unconfirmedWhish = order?.payment_provider === 'whish' && order?.payment_state !== 'paid'
   const discountRows = [
     order?.promotion_applied && { icon: FaBolt, label: promotionLabel(order), value: `-${formatMoney(order.promotion_discount_cents)}` },
-    order?.first_purchase_discount_applied && { icon: FaPercent, label: 'First-purchase offer', value: 'Applied' },
-    number(order?.points_to_spend) > 0 && { icon: FaCoins, label: 'Points redeemed', value: `${number(order.points_to_spend).toLocaleString()} points` },
+    order?.first_purchase_discount_applied && { icon: FaPercent, label: 'First-purchase offer', value: unconfirmedWhish ? 'Quoted' : 'Applied' },
+    number(order?.points_to_spend) > 0 && { icon: FaCoins, label: unconfirmedWhish ? 'Points selected' : 'Points redeemed', value: `${number(order.points_to_spend).toLocaleString()} points` },
     order?.coupon_applied && { icon: FaTags, label: 'Coupon', value: couponDescription(order) },
   ].filter(Boolean)
 
@@ -216,7 +226,7 @@ function OrderReceiptModal({ summary, order, loading, error, onClose }) {
     <div className={styles.learnerReceiptLayer} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
       <section className={styles.learnerReceiptModal} role="dialog" aria-modal="true" aria-labelledby="learner-receipt-title">
         <header className={styles.learnerReceiptModalHeader}>
-          <div><h2 id="learner-receipt-title">Receipt</h2><small>Okayness</small></div>
+          <div><h2 id="learner-receipt-title">{(order || summary).payment_provider === 'whish' && (order || summary).payment_state !== 'paid' ? 'Payment Request' : 'Receipt'}</h2><small>Okayness</small></div>
           <button ref={closeRef} type="button" onClick={onClose} aria-label="Close purchase receipt"><FaTimes /></button>
         </header>
 
@@ -238,6 +248,7 @@ function OrderReceiptModal({ summary, order, loading, error, onClose }) {
               <dl className={styles.learnerReceiptFacts}>
                 <div><dt>Order date</dt><dd>{formatDate(order.completed_at || order.created_at)}</dd></div>
                 <div><dt>Purchased by</dt><dd>{purchaserName}</dd></div>
+                <div><dt>Payment method</dt><dd>{order.payment_provider === 'whish' ? 'Whish' : 'Stripe'}</dd></div>
                 <div className={styles.learnerReceiptEmail}><dt>Email</dt><dd>{order.email}</dd></div>
               </dl>
 
@@ -249,7 +260,8 @@ function OrderReceiptModal({ summary, order, loading, error, onClose }) {
                   return <div className={styles.learnerReceiptDiscount} key={row.label}><span><Icon />{row.label}</span><strong>{row.value}</strong></div>
                 })}
                 {savings > 0 && <div className={styles.learnerReceiptSavings}><span>Total savings</span><strong>−{formatMoney(savings)}</strong></div>}
-                <div className={styles.learnerReceiptTotal}><span>Amount paid</span><strong>{formatMoney(paidPrice)}</strong></div>
+                <div className={styles.learnerReceiptTotal}><span>{order.payment_provider === 'whish' && order.payment_state !== 'paid' ? 'Quoted amount' : 'Amount paid'}</span><strong>{formatMoney(paidPrice)}</strong></div>
+                {order.payment_provider === 'whish' && order.payment_state !== 'paid' && <p>Payment has not been confirmed. Selected discounts and points are applied only after approval.</p>}
               </section>
 
             </article>
@@ -257,7 +269,7 @@ function OrderReceiptModal({ summary, order, loading, error, onClose }) {
 
           <div className={styles.learnerReceiptActions}>
             <div>{downloadError && <span>{downloadError}</span>}</div>
-            <button type="button" onClick={handleDownload} disabled={downloading}><FaDownload />{downloading ? 'Preparing receipt...' : 'Download receipt'}</button>
+            {!(order.payment_provider === 'whish' && order.payment_state !== 'paid') && <button type="button" onClick={handleDownload} disabled={downloading}><FaDownload />{downloading ? 'Preparing receipt...' : 'Download receipt'}</button>}
           </div>
         </>}
       </section>
@@ -294,7 +306,7 @@ function PurchaseCard({ order, index, onOpen }) {
         <time dateTime={order.created_at}>{formatDate(order.completed_at || order.created_at)}</time>
       </div>
       <div className={styles.learnerPurchaseCopy}>
-        <span>Course purchase</span>
+        <span>{order.payment_provider === 'whish' ? 'Whish' : 'Stripe'} · Course purchase</span>
         <h2>{order.course?.title || order.course_title_snapshot || 'Course purchase'}</h2>
         <p>{status.detail}</p>
       </div>
@@ -302,9 +314,9 @@ function PurchaseCard({ order, index, onOpen }) {
     </div>
 
     <div className={styles.learnerPurchasePrice}>
-      <span>Amount paid</span>
+      <span>{order.payment_provider === 'whish' && order.payment_state !== 'paid' ? 'Quoted amount' : 'Amount paid'}</span>
       <strong>{formatMoney(paidPrice)}</strong>
-      {saved > 0 && <small className={styles.learnerPurchaseSaving}><s>Original {formatMoney(originalPrice)}</s><span>You saved {formatMoney(saved)}</span></small>}
+      {saved > 0 && <small className={styles.learnerPurchaseSaving}><s>Original {formatMoney(originalPrice)}</s><span>{order.payment_provider === 'whish' && order.payment_state !== 'paid' ? 'Quoted savings' : 'You saved'} {formatMoney(saved)}</span></small>}
       {!saved && paidPrice !== null && <small>Recorded purchase total</small>}
       <button type="button" onClick={() => onOpen(order)}><FaEye />Order details</button>
     </div>

@@ -10,6 +10,7 @@ import CoursePerformanceDashboard from '../users/CoursePerformanceDashboard'
 import VideoAnalyticsDashboard from '../users/VideoAnalyticsDashboard'
 import AssessmentResultsDashboard from '../users/AssessmentResultsDashboard'
 import PaymentsDashboard from '../users/PaymentsDashboard'
+import WhishPaymentsDashboard from './WhishPaymentsDashboard'
 import RolesAccessDashboard from '../users/RolesAccessDashboard'
 import CoursesTableRow from '../courses/CoursesTableRow'
 import CourseSuccessToast from '../courses/CourseSuccessToast'
@@ -273,6 +274,7 @@ export default async function DashboardPanelContent({ viewId, access }) {
     case 'assessments': return <AssessmentResultsDashboard />
     case 'certificates': return <CertificatesPanel />
     case 'purchases': return <PaymentsDashboard />
+    case 'whish': return access.role === 'admin' ? <WhishPaymentsDashboard /> : null
     case 'courses': return <CoursesPanel access={access} />
     case 'assessment-links': return <AssessmentLinksPanel />
     case 'creation-activity': return <CreationActivityPanel />

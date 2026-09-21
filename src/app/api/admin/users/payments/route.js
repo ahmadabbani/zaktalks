@@ -46,8 +46,8 @@ async function addPromotionSnapshots(supabase, rows) {
   if (checkoutIds.length === 0) return rows
 
   const { data: snapshots, error } = await supabase
-    .from('checkout_sessions')
-    .select('id, promotion_id, promotion_name, promotion_discount_percent, promotion_discount_cents')
+    .from('payment_orders')
+    .select('id, payment_provider, promotion_id, promotion_name, promotion_discount_percent, promotion_discount_cents')
     .in('id', checkoutIds)
 
   if (error) throw error
@@ -63,6 +63,7 @@ async function addPromotionSnapshots(supabase, rows) {
     }
     return {
       ...row,
+      payment_provider: snapshot?.payment_provider || 'stripe',
       promotion_id: snapshot?.promotion_id || null,
       promotion_name: snapshot?.promotion_name || null,
       promotion_discount_percent: snapshot?.promotion_discount_percent === null || snapshot?.promotion_discount_percent === undefined
@@ -111,7 +112,7 @@ export async function GET(request) {
 
   try {
     const [{ data, error }, { data: promotionStatsRows, error: promotionStatsError }] = await Promise.all([
-      supabase.rpc('admin_payments_dashboard', {
+      supabase.rpc('admin_payments_dashboard_with_whish', {
         p_course_id: courseId,
         p_range: range,
         p_payment: payment,
@@ -123,7 +124,7 @@ export async function GET(request) {
         p_cursor_id: cursor?.id || null,
         p_cursor_amount: cursor?.amount ?? null,
       }),
-      supabase.rpc('admin_course_promotion_payment_stats', {
+      supabase.rpc('admin_course_promotion_payment_stats_with_whish', {
         p_course_id: courseId,
         p_range: range,
         p_payment: payment,

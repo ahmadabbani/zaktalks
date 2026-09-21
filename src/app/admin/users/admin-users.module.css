@@ -231,7 +231,11 @@
   align-items: flex-start;
   gap: 1.1rem;
   padding-bottom: 1.6rem;
-  border-bottom: 1px solid rgba(33, 44, 45, 0.1);
+    border-bottom: 1px solid rgba(33, 44, 45, 0.1);
+}
+
+.panelHeadingNoDivider {
+    border-bottom: 0;
 }
 
 .panelIcon {
@@ -772,6 +776,21 @@
 .progressTimelineItem>div { display: grid; min-width: 0; gap: .22rem; }.progressTimelineTop { display: flex; justify-content: space-between; gap: .75rem; }.progressTimelineTop strong { overflow: hidden; color: var(--color-black); font-size: .66rem; text-overflow: ellipsis; white-space: nowrap; }.progressTimelineTop time,.progressTimelineItem>div>span { color: var(--color-gray-dark); font-size: .54rem; }.progressTimelineTop time { flex: 0 0 auto; }
 .progressMeta { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .18rem; }.progressMeta span { padding: .24rem .4rem; border-radius: 999px; color: var(--color-dark-blue); background: rgba(var(--color-dark-blue-rgb), .12); font-size: .5rem; font-weight: 800; text-transform: capitalize; }
 .drawerEmpty { margin: 0; padding: 1.25rem; color: var(--color-gray-dark); background: var(--color-white); border-radius: .75rem; font-size: .63rem; text-align: center; }.drawerLoading { display: grid; gap: .7rem; padding: 1.25rem; }.drawerLoading span { height: 6rem; border-radius: 1rem; background: linear-gradient(90deg,var(--color-gray-light),#fff,var(--color-gray-light)); background-size: 220% 100%; animation: directoryShimmer 1.2s linear infinite; }
+.accountDangerZone { border-color: rgba(157,61,61,.22); background: #fff8f8; }
+.accountDangerZone .drawerSectionTitle { color: #9d3d3d; }
+.accountDangerZone>p { margin: 0 0 1rem; color: var(--color-black); font-size: .67rem; line-height: 1.65; }
+.accountDeleteButton,.accountDeleteConfirmButton,.accountDeleteCancel { min-height: 2.7rem; padding: .65rem 1rem; border-radius: 999px; font: inherit; font-size: .68rem; font-weight: 850; cursor: pointer; }
+.accountDeleteButton,.accountDeleteConfirmButton { border: 1px solid #9d3d3d; color: var(--color-white); background: #9d3d3d; }
+.accountDeleteButton:hover,.accountDeleteConfirmButton:hover:not(:disabled) { background: #7f2f2f; }
+.accountDeleteConfirm { display: grid; gap: .8rem; padding: .9rem; border-radius: .85rem; background: var(--color-white); }
+.accountDeleteConfirm label { display: grid; gap: .5rem; color: var(--color-black); font-size: .66rem; line-height: 1.5; }
+.accountDeleteConfirm input { width: 100%; min-height: 2.7rem; padding: .65rem .8rem; border: 1px solid rgba(157,61,61,.28); border-radius: .75rem; outline: 0; color: var(--color-black); background: var(--color-white); font: inherit; font-size: .72rem; }
+.accountDeleteConfirm input:focus { border-color: #9d3d3d; box-shadow: 0 0 0 3px rgba(157,61,61,.1); }
+.accountDeleteConfirm>div:last-child { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: .55rem; }
+.accountDeleteCancel { border: 1px solid rgba(33,44,45,.18); color: var(--color-dark-blue); background: var(--color-white); }
+.accountDeleteCancel:hover:not(:disabled) { background: var(--color-gray-light); }
+.accountDeleteConfirm button:disabled { cursor: not-allowed; opacity: .45; }
+.accountDeleteError { padding: .7rem .8rem; border-radius: .65rem; color: #842d2d; background: #fff0f0; font-size: .65rem; line-height: 1.5; }
 @keyframes directoryRowIn { from { opacity: 0; transform: translateY(.45rem); } to { opacity: 1; transform: translateY(0); } }@keyframes directoryShimmer { to { background-position: -220% 0; } }@keyframes drawerFadeIn { from { opacity: 0; } }@keyframes drawerSlideIn { from { opacity: 0; transform: translateX(3rem); } }
 
 @media (max-width:768px) { .directoryPagination { grid-template-columns: auto 1fr; }.directoryPagination>span { display: none; }.directoryPagination>div { justify-self: end; }.drawerLayer { padding: 0; }.userDrawer { border-radius: 0; } }

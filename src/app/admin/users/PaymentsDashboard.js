@@ -325,8 +325,11 @@ function PaymentDrawer({ payment, onClose }) {
   }, [payment.checkout_id])
 
   const order = data?.order || payment
+  const isWhish = order.payment_provider === 'whish'
   const paymentInfo = statusInfo(order.payment_group, paymentDetails, { label: order.payment_state || 'Recorded', tone: 'neutral', description: 'A payment state is recorded.' })
-  const accessInfo = statusInfo(order.fulfillment_group, fulfillmentDetails, { label: order.fulfillment_state || 'Recorded', tone: 'neutral', description: 'A fulfillment state is recorded.' })
+  const accessInfo = isWhish && order.fulfillment_group === 'processing'
+    ? { label: 'Awaiting approval', tone: 'neutral', description: 'Access remains locked until an administrator verifies the transfer.' }
+    : statusInfo(order.fulfillment_group, fulfillmentDetails, { label: order.fulfillment_state || 'Recorded', tone: 'neutral', description: 'A fulfillment state is recorded.' })
   const methods = Array.isArray(order.discount_methods) ? order.discount_methods : []
   const hasNotificationHistory = Boolean(
     order.password_setup_email_sent_at || order.password_setup_email_error
@@ -353,10 +356,11 @@ function PaymentDrawer({ payment, onClose }) {
             <StatusPill group={order.payment_group} />
             <StatusPill group={order.fulfillment_group} type="fulfillment" />
             <span className={styles.paymentSourcePill}>{order.customer_source === 'guest' ? 'Guest checkout' : 'Account checkout'}</span>
+            <span className={styles.paymentSourcePill}>{isWhish ? 'Whish' : 'Stripe'}</span>
           </div>
 
           <section className={styles.paymentHeroDetail}>
-            <div><span>Amount paid</span><strong>{money(order.expected_amount_cents)}</strong><small>{paymentInfo.description}</small></div>
+            <div><span>{isWhish && order.payment_group !== 'paid' ? 'Quoted amount' : 'Amount paid'}</span><strong>{money(order.expected_amount_cents)}</strong><small>{isWhish ? (order.payment_group === 'paid' ? 'Whish transfer verified by an administrator.' : 'No verified Whish payment recorded.') : paymentInfo.description}</small></div>
             <div><span>Original price</span><strong>{money(order.original_price_cents)}</strong><small>{order.discount_cents ? `${money(order.discount_cents)} saved` : 'No recorded savings'}</small></div>
             <div><span>Course access</span><strong>{accessInfo.label}</strong><small>{accessInfo.description}</small></div>
           </section>
@@ -380,15 +384,16 @@ function PaymentDrawer({ payment, onClose }) {
 
               <section className={styles.paymentDrawerSection}>
                 <header><span><FaTags /></span><div><small>Pricing</small><h4>Discounts and rewards</h4></div></header>
+                {isWhish && order.payment_group !== 'paid' && <p className={styles.paymentAccuracyNote}>These are the requested discounts. Points and offers are only consumed after approval.</p>}
                 <div className={styles.paymentDiscountCards}>
                   <article><span><FaWallet /></span><div><small>Total savings</small><strong>{money(order.discount_cents, '$0.00')}</strong></div></article>
                   <article className={number(order.promotion_discount_cents) > 0 ? styles.paymentDiscountActive : ''}><span><FaBolt /></span><div><small>Course promotion</small><strong>{number(order.promotion_discount_cents) > 0 ? `${promotionLabel(order)} · -${money(order.promotion_discount_cents, '$0.00')}` : 'Not used'}</strong></div></article>
-                  <article className={order.first_purchase_discount_applied ? styles.paymentDiscountActive : ''}><span><FaShoppingBag /></span><div><small>First-purchase offer</small><strong>{order.first_purchase_discount_applied ? 'Applied' : 'Not used'}</strong></div></article>
-                  <article className={order.points_to_spend ? styles.paymentDiscountActive : ''}><span><FaCoins /></span><div><small>Points spent</small><strong>{number(order.points_to_spend).toLocaleString()}</strong></div></article>
+                  <article className={order.first_purchase_discount_applied ? styles.paymentDiscountActive : ''}><span><FaShoppingBag /></span><div><small>First-purchase offer</small><strong>{order.first_purchase_discount_applied ? (isWhish && order.payment_group !== 'paid' ? 'Quoted' : 'Applied') : 'Not used'}</strong></div></article>
+                  <article className={order.points_to_spend ? styles.paymentDiscountActive : ''}><span><FaCoins /></span><div><small>{isWhish && order.payment_group !== 'paid' ? 'Points selected' : 'Points spent'}</small><strong>{number(order.points_to_spend).toLocaleString()}</strong></div></article>
                   <article className={order.coupon_id ? styles.paymentDiscountActive : ''}><span><FaTags /></span><div><small>Coupon</small><strong>{order.coupon_code || 'Not used'}</strong></div></article>
                 </div>
                 {methods.length > 0 && <div className={styles.paymentMethodTags}>{methods.map((method) => <span key={method}>{discountLabels[method] || method}</span>)}</div>}
-                {number(order.discount_cents) > 0 && <p className={styles.paymentAccuracyNote}><FaInfoCircle />The paid total and total savings are exact. Older orders may not preserve a separate dollar amount for every discount source.</p>}
+                {!isWhish && number(order.discount_cents) > 0 && <p className={styles.paymentAccuracyNote}><FaInfoCircle />The paid total and total savings are exact. Older orders may not preserve a separate dollar amount for every discount source.</p>}
               </section>
 
               <section className={styles.paymentDrawerSection}>
@@ -400,8 +405,8 @@ function PaymentDrawer({ payment, onClose }) {
                   <div><dt>Password status</dt><dd>{order.password_set ? 'Ready' : 'Setup pending'}</dd></div>
                   <div><dt>Enrollment</dt><dd>{order.enrollment_id ? order.enrollment_payment_status || 'Linked' : 'Not linked'}</dd></div>
                   <div><dt>Access created</dt><dd>{formatDate(order.access_created_at, true)}</dd></div>
-                  <div><dt>Fulfillment attempts</dt><dd>{number(order.fulfillment_attempts)}</dd></div>
-                  <div><dt>Last fulfillment try</dt><dd>{formatDate(order.last_fulfillment_attempt_at, true)}</dd></div>
+                  {!isWhish && <div><dt>Fulfillment attempts</dt><dd>{number(order.fulfillment_attempts)}</dd></div>}
+                  {!isWhish && <div><dt>Last fulfillment try</dt><dd>{formatDate(order.last_fulfillment_attempt_at, true)}</dd></div>}
                 </dl>
                 {order.last_fulfillment_error && <div className={styles.paymentFailureBox}><FaExclamationTriangle /><div><strong>Latest fulfillment error</strong><p>{order.last_fulfillment_error}</p></div></div>}
               </section>
@@ -419,7 +424,25 @@ function PaymentDrawer({ payment, onClose }) {
                 </div>
               </section>}
 
-              <section className={styles.paymentDrawerSection}>
+              {isWhish && <section className={styles.paymentDrawerSection}>
+                <header><span><FaWallet /></span><div><small>Whish transfer</small><h4>Manual verification</h4></div></header>
+                <dl className={styles.paymentDetailGrid}>
+                  <div><dt>Sender number</dt><dd>{order.whish?.phone}</dd></div>
+                  <div><dt>Recipient number</dt><dd>{order.whish?.recipient_number}</dd></div>
+                  <div><dt>Quoted price</dt><dd>{money(order.whish?.quoted_amount_cents)}</dd></div>
+                  <div><dt>Verified amount</dt><dd>{order.whish?.amount_received_cents == null ? 'Not confirmed' : money(order.whish.amount_received_cents)}</dd></div>
+                  <div><dt>Transfer reference</dt><dd>{order.whish?.transfer_reference || 'Not recorded'}</dd></div>
+                  <div><dt>Reviewed</dt><dd>{formatDate(order.whish?.reviewed_at, true)}</dd></div>
+                  <div><dt>Admin note</dt><dd>{order.whish?.admin_note || '—'}</dd></div>
+                </dl>
+                <div className={styles.paymentNoticeList}>{(data.whishEmails || []).map(email => <NoticeState key={email.kind} label={email.kind === 'password' ? 'Account setup' : email.kind === 'approved' ? 'Payment confirmation' : 'Payment instructions'} sentAt={email.sent_at} error={email.last_error} idleText={email.state} />)}</div>
+                <div className={styles.paymentReferenceList}>
+                  <div><strong>Whish order</strong><CopyValue value={order.checkout_id} label="Whish order ID" /></div>
+                  <div><strong>Enrollment</strong><CopyValue value={order.enrollment_id} label="enrollment ID" /></div>
+                </div>
+              </section>}
+
+              {!isWhish && <section className={styles.paymentDrawerSection}>
                 <header><span><FaCreditCard /></span><div><small>Stripe references</small><h4>Payment identifiers</h4></div></header>
                 <div className={styles.paymentReferenceList}>
                   <div><strong>Checkout Session</strong><CopyValue value={order.stripe_session_id} label="Checkout Session ID" /></div>
@@ -427,9 +450,9 @@ function PaymentDrawer({ payment, onClose }) {
                   <div><strong>Internal order</strong><CopyValue value={order.checkout_id} label="internal order ID" /></div>
                   <div><strong>Enrollment</strong><CopyValue value={order.enrollment_id} label="enrollment ID" /></div>
                 </div>
-              </section>
+              </section>}
 
-              <section className={styles.paymentDrawerSection}>
+              {!isWhish && <section className={styles.paymentDrawerSection}>
                 <header><span><FaShieldAlt /></span><div><small>Webhook health</small><h4>Related Stripe events</h4></div></header>
                 {!data.webhookEvents.length ? <p className={styles.paymentEmptyDetail}>No related webhook event is preserved for this order. Older records may predate event tracking.</p> : <div className={styles.paymentEventList}>
                   {data.webhookEvents.map((event) => <article key={event.id}>
@@ -438,7 +461,7 @@ function PaymentDrawer({ payment, onClose }) {
                     <em>{event.processing_status}</em>
                   </article>)}
                 </div>}
-              </section>
+              </section>}
 
               {data.pointTransactions.length > 0 && <section className={styles.paymentDrawerSection}>
                 <header><span><FaCoins /></span><div><small>Points ledger</small><h4>Purchase-related points</h4></div></header>
@@ -560,7 +583,7 @@ export default function PaymentsDashboard() {
       <section className={styles.paymentRecordsSection}>
         <div className={styles.paymentSectionHeading}>
           <div><span>Payment records</span><h3>Orders and fulfillment</h3></div>
-          <p>One row per checkout order. Open a row to inspect Stripe references, access, discounts, notifications, and webhook health.</p>
+          <p>Open an order to review its payment method, course access, discounts, and delivery details.</p>
         </div>
 
         <div className={styles.paymentToolbar}>
@@ -581,7 +604,7 @@ export default function PaymentsDashboard() {
         <div className={loading ? styles.paymentTableUpdating : styles.paymentTable}>
           <div className={styles.paymentTableHeader}><span>Customer</span><span>Course</span><span>Payment</span><span>Paid / saved</span><span>Course access</span><span>Created</span><span>Open</span></div>
           {(data?.rows || []).map((row, index) => <article style={{ '--payment-row-delay': `${Math.min(index, 20) * 28}ms` }} key={row.checkout_id}>
-            <span className={styles.paymentCustomer}><i>{initials(row)}</i><span><strong>{row.customer_name}</strong><small>{row.email}</small><em>{row.customer_source === 'guest' ? 'Guest checkout' : 'Account checkout'}</em></span></span>
+            <span className={styles.paymentCustomer}><i>{initials(row)}</i><span><strong>{row.customer_name}</strong><small>{row.email}</small><em>{row.payment_provider === 'whish' ? 'Whish' : 'Stripe'} · {row.customer_source === 'guest' ? 'Guest checkout' : 'Account checkout'}</em></span></span>
             <span className={styles.paymentCourse}><strong>{row.course_title}</strong><small>/{row.course_slug}</small></span>
             <span className={styles.paymentStatusCell}><StatusPill group={row.payment_group} /><small>{row.payment_state.replaceAll('_', ' ')}</small></span>
             <span className={styles.paymentAmountCell}><strong>{money(row.expected_amount_cents)}</strong><small>{number(row.discount_cents) > 0 ? `${money(row.discount_cents)} saved` : row.expected_amount_cents === null ? 'Legacy total unavailable' : 'Full price'}</small>{number(row.promotion_discount_cents) > 0 && <small className={styles.paymentPromotionLine}><FaBolt />{promotionLabel(row)} · -{money(row.promotion_discount_cents)}</small>}</span>
@@ -597,7 +620,7 @@ export default function PaymentsDashboard() {
         </div>}
       </section>
 
-      <div className={styles.paymentMethodNote}><FaShieldAlt /><p><strong>How to read this report:</strong> Stripe verification and payment state come from the durable checkout record. Course access is reported separately, so a paid order with delayed or failed fulfillment cannot be mistaken for a completed enrollment.</p></div>
+      <div className={styles.paymentMethodNote}><FaShieldAlt /><p><strong>Payment records:</strong> Stripe payments are verified automatically; Whish transfers are verified by an administrator. Pending requests do not count toward settled sales. Course access is shown separately.</p></div>
 
       {selectedPayment && <PaymentDrawer payment={selectedPayment} onClose={() => setSelectedPayment(null)} />}
     </div>

@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdminClient } from '@/lib/supabase/admin'
+import { enrichPaymentHistory } from '@/lib/payments/history'
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 const PAGE_SIZE = 10
@@ -31,12 +33,15 @@ export async function GET(request) {
   }
 
   const cursor = decodeCursor(new URL(request.url).searchParams.get('cursor'))
+  const admin = await createAdminClient()
 
   try {
-    let historyQuery = supabase
-      .from('checkout_sessions')
+    let historyQuery = admin
+      .from('payment_orders')
       .select(`
         id,
+        course_id,
+        payment_provider,
         created_at,
         completed_at,
         checkout_status:status,
@@ -53,12 +58,7 @@ export async function GET(request) {
         promotion_name,
         promotion_discount_percent,
         promotion_discount_cents,
-        refunded_at,
-        course:courses (
-          title,
-          slug,
-          logo_url
-        )
+        refunded_at
       `)
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
@@ -73,8 +73,8 @@ export async function GET(request) {
 
     const [{ data: rows, error: historyError }, { count, error: countError }] = await Promise.all([
       historyQuery,
-      supabase
-        .from('checkout_sessions')
+      admin
+        .from('payment_orders')
         .select('id', { count: 'exact', head: true })
         .eq('user_id', user.id),
     ])
@@ -82,7 +82,8 @@ export async function GET(request) {
     if (historyError) throw historyError
     if (countError) throw countError
 
-    const visibleRows = (rows || []).slice(0, PAGE_SIZE).map(({ coupon_id: couponId, ...row }) => ({
+    const enrichedRows = await enrichPaymentHistory(admin, (rows || []).slice(0, PAGE_SIZE))
+    const visibleRows = enrichedRows.map(({ coupon_id: couponId, ...row }) => ({
       ...row,
       coupon_applied: Boolean(couponId),
       promotion_applied: Number(row.promotion_discount_cents) > 0,

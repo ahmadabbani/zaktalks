@@ -131,7 +131,7 @@ export default function AdminWorkspaceShell({ access, activeView, accessDenied =
 
           <section className={styles.mainPanel} aria-live="polite">
             {activeView ? <>
-              <div className={styles.panelHeading}>
+              <div className={`${styles.panelHeading} ${activeView.id === 'whish' ? styles.panelHeadingNoDivider : ''}`}>
                 <span className={styles.panelIcon}><DashboardIcon name={activeView.icon} /></span>
                 <div>
                   <h2>{activeView.label}</h2>

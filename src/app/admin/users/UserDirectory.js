@@ -10,6 +10,7 @@ import {
   FaEye,
   FaGraduationCap,
   FaSearch,
+  FaTrashAlt,
   FaTimes,
   FaUser,
 } from 'react-icons/fa'
@@ -96,9 +97,13 @@ function StatusPill({ children, tone = 'neutral' }) {
   return <span className={`${styles.directoryPill} ${styles[`directoryPill${tone}`]}`}>{children}</span>
 }
 
-function UserDetailDrawer({ user, onClose }) {
+function UserDetailDrawer({ user, onClose, onDeleted }) {
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [confirmEmail, setConfirmEmail] = useState('')
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
   const closeButton = useRef(null)
 
   useEffect(() => {
@@ -130,6 +135,25 @@ function UserDetailDrawer({ user, onClose }) {
   const profile = data?.profile || user
   const enrollments = data?.enrollments || []
   const progress = data?.recentProgress || []
+
+  const deleteAccount = async () => {
+    setDeleting(true)
+    setDeleteError('')
+    try {
+      const response = await fetch(`/api/admin/users/${profile.id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirmEmail }),
+      })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'The account could not be deleted.')
+      onDeleted(profile.id)
+    } catch (requestError) {
+      setDeleteError(requestError.message)
+    } finally {
+      setDeleting(false)
+    }
+  }
 
   return (
     <div className={styles.drawerLayer} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
@@ -207,6 +231,22 @@ function UserDetailDrawer({ user, onClose }) {
                 })}
               </div> : <p className={styles.drawerEmpty}>No learning activity yet.</p>}
             </section>
+
+            {profile.role === 'user' && <section className={`${styles.drawerSection} ${styles.accountDangerZone}`}>
+              <div className={styles.drawerSectionTitle}><FaTrashAlt /><h4>Delete learner account</h4></div>
+              <p>This permanently removes the account, course access, progress, assessments, reviews, points, reminders, and other learner records. Completed payment records remain in financial reporting.</p>
+              {!deleteOpen ? <button type="button" className={styles.accountDeleteButton} onClick={() => setDeleteOpen(true)}>Delete Account</button> : <div className={styles.accountDeleteConfirm}>
+                <label>
+                  <span>Enter <strong>{profile.email}</strong> to confirm</span>
+                  <input type="email" value={confirmEmail} onChange={(event) => setConfirmEmail(event.target.value)} autoComplete="off" disabled={deleting} />
+                </label>
+                {deleteError && <div className={styles.accountDeleteError} role="alert">{deleteError}</div>}
+                <div>
+                  <button type="button" className={styles.accountDeleteCancel} onClick={() => { setDeleteOpen(false); setConfirmEmail(''); setDeleteError('') }} disabled={deleting}>Cancel</button>
+                  <button type="button" className={styles.accountDeleteConfirmButton} onClick={deleteAccount} disabled={deleting || confirmEmail.trim().toLowerCase() !== profile.email.toLowerCase()}>{deleting ? 'Deleting Account…' : 'Permanently Delete'}</button>
+                </div>
+              </div>}
+            </section>}
           </div>
         )}
       </aside>
@@ -225,6 +265,15 @@ export default function UserDirectory() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [selectedUser, setSelectedUser] = useState(null)
+
+  const removeDeletedUser = useCallback((userId) => {
+    setSelectedUser(null)
+    setPage((current) => current ? {
+      ...current,
+      rows: (current.rows || []).filter((row) => row.id !== userId),
+      totalCount: Math.max(0, Number(current.totalCount || 0) - 1),
+    } : current)
+  }, [])
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -364,7 +413,7 @@ export default function UserDirectory() {
         </div>
       </div>
 
-      {selectedUser && <UserDetailDrawer user={selectedUser} onClose={() => setSelectedUser(null)} />}
+      {selectedUser && <UserDetailDrawer user={selectedUser} onClose={() => setSelectedUser(null)} onDeleted={removeDeletedUser} />}
     </div>
   )
 }

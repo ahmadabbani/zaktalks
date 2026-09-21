@@ -12,6 +12,7 @@ export const ADMIN_DASHBOARD_GROUPS = [
       { id: 'assessments', permission: 'users.assessments', label: 'Assessment Results', description: 'Review attempts, results, and submitted worksheets.', icon: 'assessments' },
       { id: 'certificates', permission: 'users.certificates', label: 'Certificates', description: 'Review earned and issued certificates.', icon: 'certificates' },
       { id: 'purchases', permission: 'users.purchases', label: 'Payments', description: 'Review payments, discounts, fulfillment, and orders.', icon: 'payments' },
+      { id: 'whish', adminOnly: true, label: 'Whish Payments', description: 'Verify transfers, review requests, and grant course access.', icon: 'payments' },
     ],
   },
   {

@@ -1,11 +1,13 @@
 'use client'
 
-import { useState, Suspense, useEffect } from 'react'
+import { useState, Suspense, useEffect, useRef, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { FaArrowRight, FaLock } from 'react-icons/fa'
 import DiscountSection from '@/components/DiscountSection'
 import TurnstileWidget from '@/components/TurnstileWidget'
+import PaymentMethodChoice from '@/components/PaymentMethodChoice'
+import WhishGuestModal from '@/components/WhishGuestModal'
 import styles from './guest.module.css'
 
 function GuestForm() {
@@ -21,6 +23,15 @@ function GuestForm() {
   const [courseName, setCourseName] = useState('')
   const [captchaToken, setCaptchaToken] = useState('')
   const [captchaReset, setCaptchaReset] = useState(0)
+  const [method, setMethod] = useState('stripe')
+  const [whishOpen, setWhishOpen] = useState(false)
+  const [checkoutError, setCheckoutError] = useState('')
+  const [pricingReady, setPricingReady] = useState(false)
+  const [pricingRefresh, setPricingRefresh] = useState(0)
+  const [pricing, setPricing] = useState(null)
+  const pendingDetails = useRef(null)
+  const requestKey = useRef(null)
+  const closeWhish = useCallback(() => setWhishOpen(false), [])
 
   // Fetch course name on load
   useEffect(() => {
@@ -48,6 +59,7 @@ function GuestForm() {
       return
     }
     setEmailExists(false)
+    setPricing(discounts)
     setDiscountOptions({
       couponCode: discounts.couponCode,
       pointsToUse: discounts.pointsToUse || 0
@@ -56,7 +68,7 @@ function GuestForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setLoading(true)
+    if (!pricingReady) return
 
     const formData = new FormData(e.target)
     const payload = {
@@ -71,8 +83,21 @@ function GuestForm() {
       captchaToken,
     }
 
+    if (method === 'whish') {
+      pendingDetails.current = payload
+      setCheckoutError('')
+      setWhishOpen(true)
+      return
+    }
+    await submitCheckout(payload, '/api/checkout')
+  }
+
+  const submitCheckout = async (payload, endpoint) => {
+    setLoading(true)
+    setCheckoutError('')
+
     try {
-      const res = await fetch('/api/checkout', {
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -82,13 +107,16 @@ function GuestForm() {
       if (data.url) {
         window.location.href = data.url
       } else {
+        if (data.refreshPricing) setPricingRefresh(value => value + 1)
         setCaptchaReset(value => value + 1)
-        alert(data.error || 'Something went wrong')
+        setCheckoutError(data.error || 'Something went wrong')
+        if (endpoint.endsWith('/whish')) setWhishOpen(false)
       }
     } catch (error) {
       console.error('Checkout error:', error)
       setCaptchaReset(value => value + 1)
-      alert('Failed to initiate checkout')
+      setCheckoutError('Unable to continue. Please try again.')
+      if (endpoint.endsWith('/whish')) setWhishOpen(false)
     } finally {
       setLoading(false)
     }
@@ -164,7 +192,11 @@ function GuestForm() {
             onDiscountsCalculated={handleDiscountsCalculated}
             disabled={loading}
             variant="checkout"
+            onPricingStateChange={setPricingReady}
+            refreshKey={pricingRefresh}
           />
+
+          <PaymentMethodChoice value={method} onChange={value => { setMethod(value); setCheckoutError('') }} disabled={loading} />
 
           {emailExists && (
             <div className={styles.emailExistsWarning}>
@@ -182,17 +214,23 @@ function GuestForm() {
 
           <button 
             type="submit" 
-            disabled={loading || emailExists || !captchaToken}
+            disabled={loading || emailExists || !captchaToken || !pricingReady}
             className={styles.submitButton}
           >
             {loading ? (
               <><span className={styles.spinner} aria-hidden="true" /> Preparing payment...</>
             ) : (
-              <>Proceed to Payment <FaArrowRight aria-hidden="true" /></>
+              <>{method === 'whish' ? 'Continue With Whish' : 'Proceed to Payment'} <FaArrowRight aria-hidden="true" /></>
             )}
           </button>
+          {checkoutError && <p role="alert" style={{ color: '#a32e2e', lineHeight: 1.6 }}>{checkoutError}</p>}
         </form>
       </section>
+      {whishOpen && <WhishGuestModal courseName={courseName} pricing={pricing} loading={loading} error={checkoutError} onClose={closeWhish}
+        onConfirm={phone => {
+          if (!requestKey.current) requestKey.current = crypto.randomUUID()
+          submitCheckout({ ...pendingDetails.current, phone, captchaToken, requestKey: requestKey.current, quotedAmountCents: pricing?.finalPrice }, '/api/checkout/whish')
+        }} />}
     </main>
   )
 }

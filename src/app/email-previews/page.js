@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { headers } from 'next/headers'
 import { buildWelcomeEmail } from '@/lib/email/templates/welcome'
+import { buildWhishEmail } from '@/lib/email/templates/whish'
 import { buildPaymentReceiptEmail } from '@/lib/email/templates/purchase'
 import { buildCourseInactivityEmail } from '@/lib/email/templates/course-inactivity'
 import { buildPasswordSetupEmail } from '@/lib/email/templates/password-setup'
@@ -19,6 +20,12 @@ export default async function EmailPreviewsPage() {
 
   const requestHeaders = await headers()
   const sampleAppUrl = `http://${requestHeaders.get('host') || 'localhost:3000'}`
+  const whishSample = {
+    id: '00000000-0000-4000-8000-000000000001', first_name: 'Maya', course_title: 'Interpersonal Communication Dynamics',
+    phone: '+961 XX XXX XXX', recipient_number: '+961 XX XXX XXX', original_price_cents: 20000,
+    quoted_amount_cents: 15300, amount_received_cents: 15300, transfer_reference: 'SAMPLE-TRANSFER',
+    points_to_spend: 0, discounts: { promotion: { applied: true, name: 'Course promotion', discountCents: 3000 }, firstPurchase: { eligible: true, discountCents: 1700 } },
+  }
 
   const welcomeEmail = buildWelcomeEmail({
     firstName: 'Maya',
@@ -130,6 +137,12 @@ export default async function EmailPreviewsPage() {
   })
 
   const previews = [
+    ...['instructions', 'password', 'approved'].map(kind => ({
+      id: `whish-${kind}`, name: kind === 'instructions' ? 'Whish payment instructions' : kind === 'password' ? 'Whish account setup' : 'Whish payment approved',
+      description: kind === 'approved' ? 'Sent after an administrator verifies the transfer and grants access.' : 'Sent after a Whish payment request is saved.',
+      from: 'Okayness Team <noreply@zaktalks.com>', height: kind === 'instructions' ? 1500 : 1000,
+      ...buildWhishEmail({kind,order:whishSample,appUrl:sampleAppUrl,setupUrl:`${sampleAppUrl}/auth/update-password?preview=1`}),
+    })),
     {
       id: 'password-setup',
       name: 'Guest password setup email',
