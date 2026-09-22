@@ -8,7 +8,7 @@ import styles from './BecomingAgainTestimonials.module.css'
 
 const testimonials = [
   {
-    quote: `In brief, I was totally lost, in a very high anger state almost every day. I used to look and think badly of myself. I wanted to change but did not know how. Then Gilbert, a friend of mine, told me about the unrepeatable creature we are talking about, Zak Dakkash. We also cannot forget Ramy and Michel. Since then, life is easy, simple, beautiful. I am stronger, calmer, smarter, and the best change I made since then. I am always and ever grateful.`,
+    quote: `In brief, I was totally lost, in a very high anger state almost every day. I used to look and think badly of myself. I wanted to change but did not know how. Then Gilbert, a friend of mine, told me about the unrepeatable creature we are talking about, Zak Dakkash. Since then, life is easy, simple, beautiful. I am stronger, calmer, smarter, and the best change I made since then. I am always and ever grateful.`,
     name: 'Rony Charbel Nakhle',
     image: '/testimonials/becomingagain/Rony Nakhle.png',
   },
