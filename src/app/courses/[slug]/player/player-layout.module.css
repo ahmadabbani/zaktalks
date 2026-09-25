@@ -350,6 +350,80 @@
     line-height: 1.5;
 }
 
+.sidebarCertificate {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 1rem;
+    padding: 1rem;
+    overflow: hidden;
+    border-radius: 0.9rem;
+}
+
+.sidebarCertificateLocked {
+    border: 1px dashed rgba(33, 44, 45, 0.2);
+    background: #eef2f2;
+    color: #697475;
+}
+
+.sidebarCertificateReady {
+    border: 1px solid rgba(37, 140, 155, 0.22);
+    background: rgba(37, 140, 155, 0.09);
+    color: var(--color-dark-blue);
+}
+
+.sidebarCertificateIcon {
+    display: grid;
+    width: 2.35rem;
+    height: 2.35rem;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(33, 44, 45, 0.09);
+    font-size: 0.92rem;
+}
+
+.sidebarCertificateReady .sidebarCertificateIcon {
+    background: var(--color-dark-blue);
+    color: var(--color-white);
+}
+
+.sidebarCertificateCopy {
+    display: grid;
+    min-width: 0;
+    gap: 0.18rem;
+}
+
+.sidebarCertificateCopy small {
+    color: inherit;
+    font-size: 0.61rem;
+    font-weight: 850;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.sidebarCertificateCopy strong {
+    color: inherit;
+    font-size: 0.85rem;
+    font-weight: 850;
+    line-height: 1.2;
+}
+
+.sidebarCertificateCopy span {
+    color: inherit;
+    font-size: 0.68rem;
+    font-weight: 600;
+    line-height: 1.4;
+    opacity: 0.82;
+}
+
+.sidebarCertificateCheck {
+    color: #168247;
+    font-size: 0.9rem;
+}
+
 .lessonItem {
     display: flex;
     align-items: center;

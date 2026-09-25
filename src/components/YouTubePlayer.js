@@ -4,9 +4,11 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
 import {
   FaCheck,
+  FaBackward,
   FaChevronDown,
   FaCompress,
   FaExpand,
+  FaForward,
   FaLock,
   FaPause,
   FaPlay,
@@ -26,6 +28,7 @@ import styles from './YouTubePlayer.module.css'
 const SAVE_INTERVAL_SECONDS = 10
 const COMPLETION_THRESHOLD = 97
 const REVIEW_TOLERANCE_SECONDS = 2
+const SEEK_STEP_SECONDS = 10
 
 function extractVideoId(value) {
   const input = String(value || '').trim()
@@ -468,19 +471,38 @@ export default function YouTubePlayer({
     }
   }
 
-  const handleSeek = (event) => {
-    const requestedPosition = Number(event.target.value)
-    const position = isCompleted || allowUnrestrictedSeeking
-      ? requestedPosition
-      : Math.min(requestedPosition, verifiedMaxRef.current)
+  const seekToGuardedPosition = (requestedPosition) => {
+    const player = playerRef.current
+    if (!player?.seekTo || !player?.getCurrentTime) return null
 
-    event.target.value = String(Math.max(0, Math.floor(position)))
+    const total = player.getDuration?.() || durationRef.current || duration
+    const boundedRequest = Math.min(
+      Math.max(0, Number(requestedPosition) || 0),
+      Math.max(0, total)
+    )
+    const position = isCompleted || allowUnrestrictedSeeking
+      ? boundedRequest
+      : Math.min(boundedRequest, verifiedMaxRef.current)
+
     playerRef.current?.seekTo?.(position, true)
-    updateTimeDisplay(position, duration)
+    updateTimeDisplay(position, total)
 
     if (allowUnrestrictedSeeking && !completedRef.current) {
       queueCheckpoint('seek', position)
     }
+
+    return position
+  }
+
+  const handleSeek = (event) => {
+    const position = seekToGuardedPosition(event.target.value)
+    if (position !== null) event.target.value = String(Math.max(0, Math.floor(position)))
+  }
+
+  const seekBy = (offsetSeconds) => {
+    const position = playerRef.current?.getCurrentTime?.()
+    if (!Number.isFinite(position)) return
+    seekToGuardedPosition(position + offsetSeconds)
   }
 
   const toggleFullscreen = async () => {
@@ -526,12 +548,32 @@ export default function YouTubePlayer({
       <div className={styles.controls}>
         <button
           type="button"
+          className={`${styles.iconControl} ${styles.seekStepControl}`}
+          onClick={() => seekBy(-SEEK_STEP_SECONDS)}
+          disabled={!isPlayerReady || Boolean(error)}
+          aria-label={`Rewind ${SEEK_STEP_SECONDS} seconds`}
+          title={`Rewind ${SEEK_STEP_SECONDS} seconds`}
+        >
+          <FaBackward />
+        </button>
+        <button
+          type="button"
           className={styles.primaryControl}
           onClick={togglePlayback}
           disabled={!isPlayerReady || Boolean(error)}
           aria-label={isPlaying ? 'Pause video' : 'Play video'}
         >
           {isPlaying ? <FaPause /> : <FaPlay />}
+        </button>
+        <button
+          type="button"
+          className={`${styles.iconControl} ${styles.seekStepControl}`}
+          onClick={() => seekBy(SEEK_STEP_SECONDS)}
+          disabled={!isPlayerReady || Boolean(error)}
+          aria-label={`Forward ${SEEK_STEP_SECONDS} seconds`}
+          title={`Forward ${SEEK_STEP_SECONDS} seconds`}
+        >
+          <FaForward />
         </button>
 
         <span className={styles.time}>

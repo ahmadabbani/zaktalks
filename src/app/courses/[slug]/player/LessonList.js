@@ -3,14 +3,20 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { FaPlayCircle, FaClipboardList, FaCheckCircle, FaChevronDown, FaLock } from 'react-icons/fa'
+import { FaPlayCircle, FaClipboardList, FaCheckCircle, FaChevronDown, FaCertificate, FaLock } from 'react-icons/fa'
 import { useCourseProgress } from './CourseProgressContext'
 import { getLessonDisplayNumber } from '@/lib/lesson-numbering'
 import styles from './player-layout.module.css'
 
-export default function LessonList({ modules, introductionLesson, numberingStyle, slug }) {
+export default function LessonList({ modules, introductionLesson, numberingStyle, slug, hasCertificate = false }) {
   const pathname = usePathname()
   const { completedMap, watchedMap, accessMap } = useCourseProgress()
+  const courseLessonIds = [
+    ...(introductionLesson ? [introductionLesson.id] : []),
+    ...(modules || []).flatMap((module) => module.lessons.map((lesson) => lesson.id)),
+  ]
+  const courseIsComplete = courseLessonIds.length > 0
+    && courseLessonIds.every((lessonId) => Boolean(completedMap[lessonId]))
   const activeModuleId = modules?.find((module) =>
     module.lessons.some((lesson) => pathname.includes(`/player/${lesson.id}`))
   )?.id || null
@@ -184,6 +190,22 @@ export default function LessonList({ modules, introductionLesson, numberingStyle
       })}
       {(!modules || modules.length === 0) && (
         <div className={styles.emptyModuleMessage}>No course modules are available yet.</div>
+      )}
+      {hasCertificate && (
+        <section
+          className={`${styles.sidebarCertificate} ${courseIsComplete ? styles.sidebarCertificateReady : styles.sidebarCertificateLocked}`}
+          aria-label={courseIsComplete ? 'Course certificate ready' : 'Course certificate locked'}
+        >
+          <span className={styles.sidebarCertificateIcon}>
+            {courseIsComplete ? <FaCertificate aria-hidden="true" /> : <FaLock aria-hidden="true" />}
+          </span>
+          <span className={styles.sidebarCertificateCopy}>
+            <small>Certification</small>
+            <strong>{courseIsComplete ? 'Certificate ready' : 'Certificate locked'}</strong>
+            {!courseIsComplete && <span>Complete the course to unlock it.</span>}
+          </span>
+          {courseIsComplete && <FaCheckCircle className={styles.sidebarCertificateCheck} aria-hidden="true" />}
+        </section>
       )}
     </div>
   )

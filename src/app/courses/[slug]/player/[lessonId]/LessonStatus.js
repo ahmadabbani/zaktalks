@@ -83,9 +83,9 @@ export function CourseCompletionNotice({ lessonIds, courseId, courseName, learne
 
   return (
     <>
-      {hasCertificate ? (
-        <CourseCertificateCard courseId={courseId} courseName={courseName} isComplete={isComplete} />
-      ) : isComplete ? (
+      {hasCertificate && isComplete ? (
+        <CourseCertificateCard courseId={courseId} courseName={courseName} isComplete />
+      ) : !hasCertificate && isComplete ? (
         <CourseCompletionCard />
       ) : null}
       {isComplete && (

@@ -183,7 +183,6 @@ export default async function LessonPage({ params }) {
     <div className={styles.lessonPage}>
       <CourseActivityTracker lessonId={lesson.id} />
       <div className={styles.lessonStage}>
-      {moduleContext}
       {/* Lesson Header */}
       {lesson.type === 'video' && <div className={styles.lessonHeader}>
         <h1 className={styles.lessonTitle}>{lesson.title}</h1>
@@ -194,6 +193,7 @@ export default async function LessonPage({ params }) {
           </div>
         </div>
       </div>}
+      {moduleContext}
 
       {/* Lesson Content */}
       {lesson.type === 'video' ? (
@@ -226,6 +226,7 @@ export default async function LessonPage({ params }) {
           </div>
         </div>
       )}
+      {lessonContext}
       {!lesson.is_course_introduction && (
         <LessonResource
           key={lesson.id}
@@ -234,7 +235,6 @@ export default async function LessonPage({ params }) {
           initiallyCompleted={Boolean(progress?.is_completed && !initialResourcesError)}
         />
       )}
-      {lessonContext}
       </div>
 
       {/* Course Completion Notice */}

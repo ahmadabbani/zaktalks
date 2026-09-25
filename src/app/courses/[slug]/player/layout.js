@@ -25,7 +25,7 @@ export default async function PlayerLayout({ children, params }) {
   // 1. Fetch Course & Lessons
   const { data: course, error: courseError } = await supabase
     .from('courses')
-    .select('id, title, slug, lesson_numbering_style')
+    .select('id, title, slug, lesson_numbering_style, certificate_template_url')
     .eq('slug', slug)
     .is('deleted_at', null)
     .single()
@@ -117,6 +117,7 @@ export default async function PlayerLayout({ children, params }) {
           introductionLesson={introductionLesson}
           numberingStyle={course.lesson_numbering_style}
           slug={slug}
+          hasCertificate={Boolean(course.certificate_template_url)}
         />
       </SidebarWrapper>
 

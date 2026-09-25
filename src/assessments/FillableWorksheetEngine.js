@@ -82,9 +82,10 @@ export default function FillableWorksheetEngine({ definition, lessonId, onComple
       if (!mounted) return
 
       if (result.success && result.submission) {
+        const savedAnswers = buildInitialAnswers(definition, result.submission.answers)
         setSubmission(result.submission)
-        setAnswers(buildInitialAnswers(definition, result.submission.answers))
-        setIsEditing(false)
+        setAnswers(savedAnswers)
+        setIsEditing(!isComplete(definition, savedAnswers))
       } else if (!result.success) {
         toast.error(result.error || 'Could not load saved worksheet.')
       }

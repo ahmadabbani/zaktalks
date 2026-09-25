@@ -214,6 +214,15 @@
   color: var(--color-yellow);
 }
 
+.iconControl:disabled {
+  cursor: wait;
+  opacity: 0.45;
+}
+
+.seekStepControl {
+  color: rgba(255, 255, 255, 0.88);
+}
+
 .time {
   display: inline-flex;
   gap: 0.35rem;
@@ -381,8 +390,12 @@
   }
 
   .time {
-    min-width: 4.25rem;
+    min-width: 3.95rem;
     font-size: 0.56rem;
+  }
+
+  .seek {
+    min-width: 1.5rem;
   }
 
   .iconControl {

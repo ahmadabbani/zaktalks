@@ -8,6 +8,13 @@ import { getAssessmentById } from '@/assessments/registry'
 import { verifyLessonProgressAccess } from '@/lib/course-progress.server'
 
 const BUCKET = 'specific-assessments'
+const ARCHETYPE_REFRAMING_ID = 'archetype-script-reframing-worksheet-v1'
+const PDF_BRAND = {
+  teal: rgb(37 / 255, 140 / 255, 155 / 255),
+  yellow: rgb(241 / 255, 196 / 255, 15 / 255),
+  black: rgb(33 / 255, 44 / 255, 45 / 255),
+  muted: rgb(92 / 255, 108 / 255, 110 / 255),
+}
 
 function sanitizeText(value) {
   return String(value || '').replace(/\s+/g, ' ').trim()
@@ -57,6 +64,18 @@ function renderLineText(line, answers) {
       return answers?.[part.id] || '__________'
     })
     .join('')
+}
+
+function renderLineSegments(line, answers) {
+  if (line.text) return [{ text: line.text, isAnswer: false }]
+
+  return (line.parts || []).map((part) => {
+    if (typeof part === 'string') return { text: part, isAnswer: false }
+    return {
+      text: answers?.[part.id] || '__________',
+      isAnswer: true,
+    }
+  })
 }
 
 function wrapText(text, font, size, maxWidth) {
@@ -114,18 +133,87 @@ function createPdfWriter(pdfDoc, fonts) {
     y -= options.after || 0
   }
 
-  const drawRule = () => {
+  const drawRichWrapped = (segments, options = {}) => {
+    const regularFont = options.font || fonts.regular
+    const answerFont = options.answerFont || fonts.bold
+    const size = options.size || 10
+    const lineHeight = options.lineHeight || size + 5
+    const maxWidth = options.maxWidth || pageWidth - margin * 2
+    const startX = options.x || margin
+    const defaultColor = options.color || PDF_BRAND.black
+    const answerColor = options.answerColor || PDF_BRAND.teal
+    const spaceWidth = regularFont.widthOfTextAtSize(' ', size)
+    const lines = [[]]
+    let lineWidth = 0
+    let pendingGap = 0
+
+    for (const segment of segments || []) {
+      const segmentFont = segment.isAnswer ? answerFont : regularFont
+      const tokens = String(segment.text || '').match(/\s+|[^\s]+/g) || []
+
+      for (const token of tokens) {
+        if (/^\s+$/.test(token)) {
+          pendingGap = spaceWidth
+          continue
+        }
+
+        const tokenWidth = segmentFont.widthOfTextAtSize(token, size)
+        const currentLine = lines[lines.length - 1]
+        const gap = currentLine.length ? pendingGap : 0
+
+        if (currentLine.length && lineWidth + gap + tokenWidth > maxWidth) {
+          lines.push([])
+          lineWidth = 0
+        }
+
+        const activeLine = lines[lines.length - 1]
+        const activeGap = activeLine.length ? pendingGap : 0
+        const renderedText = activeGap ? ` ${token}` : token
+        const renderedWidth = segmentFont.widthOfTextAtSize(renderedText, size)
+        activeLine.push({
+          text: renderedText,
+          isAnswer: segment.isAnswer,
+          font: segmentFont,
+          width: renderedWidth,
+          gap: 0,
+        })
+        lineWidth += renderedWidth
+        pendingGap = 0
+      }
+    }
+
+    ensureSpace(lines.length * lineHeight + (options.after || 0))
+    for (const line of lines) {
+      let x = startX
+
+      for (const item of line) {
+        x += item.gap
+        page.drawText(item.text, {
+          x,
+          y,
+          size,
+          font: item.font,
+          color: item.isAnswer ? answerColor : defaultColor,
+        })
+        x += item.width
+      }
+      y -= lineHeight
+    }
+    y -= options.after || 0
+  }
+
+  const drawRule = (options = {}) => {
     ensureSpace(18)
     page.drawLine({
       start: { x: margin, y },
       end: { x: pageWidth - margin, y },
-      thickness: 1,
-      color: rgb(0.82, 0.82, 0.82)
+      thickness: options.thickness || 1,
+      color: options.color || rgb(0.82, 0.82, 0.82)
     })
-    y -= 18
+    y -= options.after ?? 18
   }
 
-  return { drawWrapped, drawRule, ensureSpace, get y() { return y }, set y(value) { y = value } }
+  return { drawWrapped, drawRichWrapped, drawRule, ensureSpace, get y() { return y }, set y(value) { y = value } }
 }
 
 async function generateWorksheetPdf(definition, answers, profile) {
@@ -136,6 +224,7 @@ async function generateWorksheetPdf(definition, answers, profile) {
     italic: await pdfDoc.embedFont(StandardFonts.HelveticaOblique)
   }
   const writer = createPdfWriter(pdfDoc, fonts)
+  const isArchetypeReframing = definition.id === ARCHETYPE_REFRAMING_ID
   const name = `${profile?.first_name || 'Student'} ${profile?.last_name || ''}`.trim()
   const date = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
@@ -143,70 +232,131 @@ async function generateWorksheetPdf(definition, answers, profile) {
     day: 'numeric'
   })
 
+  if (isArchetypeReframing) {
+    writer.drawWrapped('OKAYNESS  /  REFLECTION WORKSHEET', {
+      font: fonts.bold,
+      size: 8,
+      color: PDF_BRAND.yellow,
+      after: 14
+    })
+  }
+
   writer.drawWrapped(definition.title, {
     font: fonts.bold,
-    size: 22,
-    lineHeight: 28,
-    color: rgb(0.05, 0.05, 0.05),
+    size: isArchetypeReframing ? 24 : 22,
+    lineHeight: isArchetypeReframing ? 30 : 28,
+    color: isArchetypeReframing ? PDF_BRAND.teal : rgb(0.05, 0.05, 0.05),
     after: 10
   })
-  writer.drawWrapped(`Completed by: ${name || 'Student'}    Date: ${date}`, {
+  writer.drawWrapped(isArchetypeReframing
+    ? `Completed by: ${name || 'Student'}    |    Date: ${date}`
+    : `Completed by: ${name || 'Student'}    Date: ${date}`, {
     font: fonts.bold,
     size: 10,
-    color: rgb(0.35, 0.35, 0.35),
+    color: isArchetypeReframing ? PDF_BRAND.muted : rgb(0.35, 0.35, 0.35),
     after: 12
   })
   writer.drawWrapped(definition.intro, {
     size: 10,
     lineHeight: 15,
-    color: rgb(0.22, 0.22, 0.22),
+    color: isArchetypeReframing ? PDF_BRAND.black : rgb(0.22, 0.22, 0.22),
     after: 16
   })
-  writer.drawRule()
+  writer.drawRule(isArchetypeReframing
+    ? { color: PDF_BRAND.yellow, thickness: 2.5, after: 27 }
+    : undefined)
 
   for (const section of definition.sections || []) {
     writer.ensureSpace(96)
     writer.drawWrapped(section.title, {
       font: fonts.bold,
-      size: 16,
-      lineHeight: 20,
-      color: rgb(0.05, 0.05, 0.05),
+      size: isArchetypeReframing ? 17 : 16,
+      lineHeight: isArchetypeReframing ? 22 : 20,
+      color: isArchetypeReframing ? PDF_BRAND.teal : rgb(0.05, 0.05, 0.05),
       after: 8
     })
 
     writer.drawWrapped('Old Story', {
       font: fonts.bold,
       size: 12,
-      color: rgb(0.75, 0.24, 0.16),
+      color: isArchetypeReframing ? PDF_BRAND.black : rgb(0.75, 0.24, 0.16),
       after: 5
     })
 
     for (const line of section.oldStory || []) {
-      writer.drawWrapped(renderLineText(line, answers?.[section.id]?.oldStory), {
-        size: 10,
-        lineHeight: 14,
-        color: rgb(0.05, 0.05, 0.05),
-        after: 6
-      })
+      if (isArchetypeReframing) {
+        writer.drawRichWrapped(renderLineSegments(line, answers?.[section.id]?.oldStory), {
+          size: 10.5,
+          lineHeight: 16,
+          color: PDF_BRAND.black,
+          answerColor: PDF_BRAND.teal,
+          after: 7
+        })
+      } else {
+        writer.drawWrapped(renderLineText(line, answers?.[section.id]?.oldStory), {
+          size: 10,
+          lineHeight: 14,
+          color: rgb(0.05, 0.05, 0.05),
+          after: 6
+        })
+      }
     }
 
     writer.drawWrapped('New Story', {
       font: fonts.bold,
       size: 12,
-      color: rgb(0.13, 0.48, 0.27),
+      color: isArchetypeReframing ? PDF_BRAND.teal : rgb(0.13, 0.48, 0.27),
       after: 5
     })
 
     for (const line of section.newStory || []) {
-      writer.drawWrapped(renderLineText(line, answers?.[section.id]?.newStory), {
-        size: 10,
-        lineHeight: 14,
-        color: rgb(0.05, 0.05, 0.05),
-        after: 6
-      })
+      if (isArchetypeReframing) {
+        writer.drawRichWrapped(renderLineSegments(line, answers?.[section.id]?.newStory), {
+          size: 10.5,
+          lineHeight: 16,
+          color: PDF_BRAND.black,
+          answerColor: PDF_BRAND.teal,
+          after: 7
+        })
+      } else {
+        writer.drawWrapped(renderLineText(line, answers?.[section.id]?.newStory), {
+          size: 10,
+          lineHeight: 14,
+          color: rgb(0.05, 0.05, 0.05),
+          after: 6
+        })
+      }
     }
 
-    writer.drawRule()
+    writer.drawRule(isArchetypeReframing
+      ? { color: PDF_BRAND.teal, thickness: 1.2 }
+      : undefined)
+  }
+
+  if (isArchetypeReframing) {
+    pdfDoc.getPages().forEach((page, index, pages) => {
+      page.drawLine({
+        start: { x: 48, y: 30 },
+        end: { x: 564, y: 30 },
+        thickness: 1.5,
+        color: PDF_BRAND.yellow,
+      })
+      page.drawText('OKAYNESS', {
+        x: 48,
+        y: 17,
+        size: 7,
+        font: fonts.bold,
+        color: PDF_BRAND.teal,
+      })
+      const pageLabel = `${index + 1} / ${pages.length}`
+      page.drawText(pageLabel, {
+        x: 564 - fonts.bold.widthOfTextAtSize(pageLabel, 7),
+        y: 17,
+        size: 7,
+        font: fonts.bold,
+        color: PDF_BRAND.muted,
+      })
+    })
   }
 
   return pdfDoc.save()
