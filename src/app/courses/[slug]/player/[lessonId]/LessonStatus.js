@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { FaAward, FaCertificate, FaCheckCircle, FaChevronLeft, FaChevronRight, FaLock } from 'react-icons/fa'
+import { FaArrowRight, FaAward, FaCertificate, FaCheckCircle, FaChevronLeft, FaChevronRight, FaLock } from 'react-icons/fa'
 import CourseReviewModal from '@/components/CourseReviewModal'
 import DownloadCertificateBtn from '@/components/DownloadCertificateBtn'
 import { useCourseProgress } from '../CourseProgressContext'
@@ -88,6 +88,19 @@ export function CourseCompletionNotice({ lessonIds, courseId, courseName, learne
       ) : isComplete ? (
         <CourseCompletionCard />
       ) : null}
+      {isComplete && (
+        <div className={styles.completionSessionCtaWrap}>
+          <a
+            href="https://calendly.com/zaktalks/1-1-session-with-zak"
+            target="_blank"
+            rel="noreferrer"
+            className={styles.completionSessionCta}
+          >
+            <span>Book A Session With Zak</span>
+            <FaArrowRight aria-hidden="true" />
+          </a>
+        </div>
+      )}
       {isComplete && canReview && !hasReview && (
         <CourseReviewModal
           open={reviewModalOpen}
