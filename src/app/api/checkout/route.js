@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { calculateAllDiscounts } from '@/lib/discount-utils'
+import { isValidPointsSelection } from '@/lib/points-rules'
 import { fulfillCheckoutSession, markCheckoutTerminal } from '@/lib/payments/fulfillment'
 import { trustedAppUrl } from '@/lib/payments/urls'
 import { stripe } from '@/lib/stripe'
@@ -37,7 +38,7 @@ function escapeLikePattern(value) {
 function pointsValue(value) {
   if (value === undefined || value === null || value === '') return 0
   const parsed = Number(value)
-  if (!Number.isSafeInteger(parsed) || parsed < 0) throw new CheckoutError('Invalid points amount.')
+  if (!isValidPointsSelection(parsed)) throw new CheckoutError('Use at least 5,000 points, in steps of 1,000.')
   return parsed
 }
 
@@ -199,10 +200,13 @@ export async function POST(req) {
       couponCode: couponCode || null, pointsToUse: requestedPoints,
     })
     if (couponCode && !discounts.coupon.valid) throw new CheckoutError(discounts.coupon.error || 'This coupon cannot be used.')
+    if (requestedPoints !== discounts.points.pointsToUse) {
+      throw new CheckoutError('Your points balance or discount has changed. Refresh the price before continuing.', 409)
+    }
 
     const expiresAtUnix = Math.floor(Date.now() / 1000) + CHECKOUT_LIFETIME_SECONDS
     const expiresAt = new Date(expiresAtUnix * 1000).toISOString()
-    const { data: orderId, error: orderError } = await supabaseAdmin.rpc('create_checkout_order', {
+    const { data: orderId, error: orderError } = await supabaseAdmin.rpc('create_checkout_order_with_points_policy', {
       p_email: email, p_first_name: user ? null : firstName, p_last_name: user ? null : lastName,
       p_course_id: courseId, p_user_id: user?.id || null,
       p_coupon_id: discounts.coupon.couponId || null,

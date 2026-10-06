@@ -202,6 +202,7 @@ function OrderReceiptModal({ summary, order, loading, error, onClose }) {
   const unconfirmedWhish = order?.payment_provider === 'whish' && order?.payment_state !== 'paid'
   const discountRows = [
     order?.promotion_applied && { icon: FaBolt, label: promotionLabel(order), value: `-${formatMoney(order.promotion_discount_cents)}` },
+    order?.whish_promotion?.applied && { icon: FaBolt, label: `${order.whish_promotion.name} (${order.whish_promotion.discountPercent}%)`, value: `-${formatMoney(order.whish_promotion.discountCents)}` },
     order?.first_purchase_discount_applied && { icon: FaPercent, label: 'First-purchase offer', value: unconfirmedWhish ? 'Quoted' : 'Applied' },
     number(order?.points_to_spend) > 0 && { icon: FaCoins, label: unconfirmedWhish ? 'Points selected' : 'Points redeemed', value: `${number(order.points_to_spend).toLocaleString()} points` },
     order?.coupon_applied && { icon: FaTags, label: 'Coupon', value: couponDescription(order) },
@@ -288,6 +289,7 @@ function PurchaseCard({ order, index, onOpen }) {
     : 0
   const benefits = [
     order.promotion_applied && `${promotionLabel(order)} · ${formatMoney(order.promotion_discount_cents)} off`,
+    order.whish_promotion?.applied && `${order.whish_promotion.name} (${order.whish_promotion.discountPercent}%) · ${formatMoney(order.whish_promotion.discountCents)} off`,
     order.first_purchase_discount_applied && 'First-purchase offer',
     number(order.points_to_spend) > 0 && `${number(order.points_to_spend).toLocaleString()} points used`,
     order.coupon_applied && 'Coupon applied',

@@ -4,6 +4,28 @@ import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { requirePermission } from '@/lib/auth-utils'
 
+export async function getPointsExpiryUsers() {
+  await requirePermission('settings.manage')
+  const admin = await createAdminClient()
+  const users=[]
+  for(let offset=0;;offset+=1000){
+    const {data,error}=await admin.from('users').select('id,first_name,last_name,email,points')
+      .gt('points',0).order('id').range(offset,offset+999)
+    if(error)return {success:false,error:'Unable to load points balances.'}
+    users.push(...(data||[]))
+    if((data||[]).length<1000)break
+  }
+  if(!users.length) return {success:true,users:[]}
+  const byUser=new Map()
+  for(let offset=0;offset<users.length;offset+=200){
+    const {data:cycles,error}=await admin.from('user_points_cycles')
+      .select('user_id,first_earned_at,cycle_started_at,resets_at,last_reset_at').in('user_id',users.slice(offset,offset+200).map(user=>user.id))
+    if(error)return {success:false,error:'Unable to load points reset dates.'}
+    for(const cycle of cycles||[])byUser.set(cycle.user_id,cycle)
+  }
+  return {success:true,users:users.sort((a,b)=>b.points-a.points).map(user=>({...user,...byUser.get(user.id)}))}
+}
+
 /**
  * Fetch all admin settings
  */
@@ -49,6 +71,31 @@ export async function updateAdminSetting(key, value) {
   
   revalidatePath('/admin/dashboard')
   return { success: true }
+}
+
+export async function setFirstPurchaseDiscountEnabled(enabled) {
+  await requirePermission('settings.manage')
+  if (typeof enabled !== 'boolean') {
+    return { success: false, error: 'Invalid first-purchase discount setting.' }
+  }
+
+  const supabaseAdmin = await createAdminClient()
+  const { error } = await supabaseAdmin
+    .from('admin_settings')
+    .upsert({
+      key: 'first_purchase_discount_enabled',
+      value: String(enabled),
+      description: 'Whether the first-purchase discount is offered on new checkouts',
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'key' })
+
+  if (error) {
+    console.error('Error updating first-purchase discount availability:', error)
+    return { success: false, error: 'Failed to update the first-purchase discount.' }
+  }
+
+  revalidatePath('/admin/dashboard')
+  return { success: true, enabled }
 }
 
 /**

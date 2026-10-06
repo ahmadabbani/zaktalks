@@ -1,0 +1,2262 @@
+{
+  "privacy": {
+    "title": "Privacy Policy",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Okayness respects your privacy and is committed to handling personal information responsibly."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "This Privacy Policy explains how Okayness, operated by Zak Dakkash and based in Jbeil (Byblos), Lebanon, collects, uses, stores, shares, and protects personal information when you visit our website, create an account, purchase a course, join our mailing list, contact us, participate in coaching or group programs, or otherwise use our services."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "In this Privacy Policy, “Okayness,” “we,” “us,” and “our” refer to Zak Dakkash and the Okayness platform. “You” refers to a visitor, subscriber, customer, learner, participant, or other person whose information we process."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "1. Information we collect",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may collect the following categories of information."
+          }
+        ]
+      },
+      {
+        "type": "subheading",
+        "runs": [
+          {
+            "text": "Information you provide directly",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "This may include:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Name"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Email address"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Phone number"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Billing address"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Country or location information"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Company name, where provided"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Account credentials and other basic account details"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Course enrolment information"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Messages, contact-form submissions, support requests, and feedback"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Survey responses"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Information you choose to provide in coaching, group-program, event, or community communications"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Please avoid sharing highly sensitive personal information unless it is necessary for the purpose of your communication with us. If you choose to share personal information in a community setting, group conversation, comments area, WhatsApp group, or similar space, you are responsible for the information you choose to disclose."
+          }
+        ]
+      },
+      {
+        "type": "subheading",
+        "runs": [
+          {
+            "text": "Learning and participation information",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "When you use the course platform, we may collect information such as:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Course enrolment and access history"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Course progress and completion status"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Quiz results and participation data"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Attendance information"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Certificates issued"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Survey and feedback responses"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Technical-support interactions"
+          }
+        ]
+      },
+      {
+        "type": "subheading",
+        "runs": [
+          {
+            "text": "Payment information",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Payments are processed through Stripe. We do not store your full payment-card details on our own servers. Stripe may collect and process payment information according to its own privacy policy and security procedures."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may receive limited payment-related information, such as transaction status, payment amount, payment date, customer name, email address, and billing information needed to confirm the purchase, provide support, prevent fraud, keep records, or process refunds. "
+          }
+        ]
+      },
+      {
+        "type": "subheading",
+        "runs": [
+          {
+            "text": "Information collected automatically",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "When you visit the website or use the platform, we may automatically collect information such as:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "IP address"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Browser type and version"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Device type and operating system"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "General location based on IP address"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Referring pages or websites"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Pages viewed and actions taken on our website or platform"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Dates, times, and duration of visits"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Cookie identifiers and analytics data"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Error reports, security logs, and technical performance information"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "2. How we use your information",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may use personal information to:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Create, manage, and secure your account"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Process purchases and issue receipts"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Provide course access, certificates, and platform features"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Deliver requested services, including coaching, programs, workshops, or events"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Respond to support, billing, refund, privacy, and general enquiries"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Monitor course participation and improve learner experience"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Maintain records, prevent fraud, troubleshoot technical problems, and protect our platform"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Send purchase confirmations, administrative notices, service updates, and important policy information"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Send marketing emails, newsletters, offers, and relevant content where permitted by law or with your consent"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Measure advertising effectiveness and improve marketing activity"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Comply with legal obligations, resolve disputes, and enforce our Terms and policies"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "You can unsubscribe from non-essential marketing emails at any time by using the unsubscribe link in the email or contacting hello@okayness.com. Even if you unsubscribe from marketing messages, we may still send necessary transactional or service-related communications, such as purchase receipts, access notifications, refund updates, security alerts, or policy changes. "
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "3. Legal basis for processing",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Where applicable data-protection laws require a legal basis, we process personal information because:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "It is necessary to provide the Services you request or to perform our agreement with you."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "It is necessary for our legitimate interests, such as running and improving the platform, preventing fraud, ensuring security, and communicating with users, provided those interests do not override your rights."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "You have given consent, including for certain cookies, marketing communications, or optional data uses."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "We need to comply with a legal obligation or respond to a lawful request."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "4. Cookies, analytics, and advertising technologies",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We use cookies and similar technologies to make our website and platform work, remember preferences, keep users signed in, understand site usage, improve performance, and support relevant advertising."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may use:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Essential cookies for login, security, payment flow, website functionality, and saved preferences"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Analytics tools, including Google Analytics, to understand website traffic and user behaviour"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Advertising and measurement tools, including the Meta Pixel, to assess campaign performance, create audiences, and show or measure relevant advertising"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Cookies or tools set by service providers, such as Stripe, YouTube, or embedded third-party content"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "You can manage or block cookies through your browser settings. However, disabling essential cookies may prevent parts of the website or platform from working properly."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Where required by applicable law, we will request consent before placing non-essential cookies or similar technologies. "
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "5. How we share information",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We do not sell your personal information."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may share information only, when necessary, with trusted service providers that help us operate the business and deliver the Services, including:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Stripe, for payment processing and refund processing"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Supabase, for database and platform-related data storage"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Our CRM and email communication tools"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "WhatsApp, where you choose to communicate or participate through WhatsApp"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Analytics and advertising providers, including Google Analytics and Meta"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "YouTube, where video content is embedded, hosted, or delivered through the course experience"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Technology, hosting, customer-support, security, or operational providers used to run the platform"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Professional advisers, insurers, regulators, law-enforcement bodies, courts, or other authorities where required or permitted by law"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We require service providers to handle information only as needed to provide their services to us and in accordance with their own applicable legal and contractual obligations."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may also share information if we believe disclosure is necessary to protect the rights, safety, or property of Okayness, our users, or others; investigate fraud or security incidents; enforce our Terms; or comply with legal requirements."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "6. International data transfers",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Okayness operates from Lebanon, while some of our service providers may process or store information in other countries."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "By using the Services, you understand that your information may be transferred to, stored in, or processed in countries outside Lebanon or outside your country of residence. Data-protection laws in those countries may differ from those in your country. Where appropriate, we will take reasonable steps to protect information transferred internationally."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "7. Data retention",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We retain personal information for as long as reasonably necessary to operate the Services, maintain learner records, provide ongoing course access, meet legal, accounting, tax, security, and dispute-resolution obligations, and enforce our agreements."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Because eligible course purchases include ongoing access, we may retain account, purchase, and course-progress information for the operational lifetime of the business or platform, unless you request deletion and we are not required or permitted to retain specific information."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may retain certain information after a deletion request where necessary to comply with legal obligations, maintain financial and tax records, prevent fraud, resolve disputes, enforce our agreements, or protect the security and integrity of our Services. "
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "8. Your privacy choices and rights",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Depending on your location and applicable law, you may have the right to:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Request access to the personal information we hold about you"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Request correction of inaccurate or incomplete information"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Request deletion of your information in certain circumstances"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Request a copy or export of certain personal information"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Object to, or request restriction of, certain processing"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Withdraw consent where processing is based on consent"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Opt out of marketing communications"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Complain to a relevant data-protection authority, where applicable"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "To submit a privacy request, email "
+          },
+          {
+            "text": "hello@okayness.com",
+            "bold": true
+          },
+          {
+            "text": " with the subject line “Privacy Request.” Please describe your request clearly and provide enough information for us to verify your identity and locate the relevant records."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We aim to respond within a reasonable timeframe and, where possible, within 30 days. We may need to retain some information for legal, legitimate business, fraud-prevention, security, or record-keeping purposes."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "9. Data security",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We use reasonable technical, organisational, and administrative measures designed to protect personal information from unauthorised access, loss, misuse, alteration, or disclosure."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "However, no online system, data transmission, or method of storage can be guaranteed to be completely secure. You are responsible for protecting your account password and for notifying us promptly if you suspect unauthorized access to your account."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "10. Third-party links and services",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Our website or platform may include links to, integrations with, or embedded content from third-party services. This may include Stripe, YouTube, WhatsApp, Google, Meta, social-media platforms, or other external tools."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We do not control the privacy practices of these third parties. We encourage you to review their privacy policies before submitting information or using their services."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "11. Children’s privacy",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Okayness Services are intended for adults aged 20 and over. We do not knowingly collect personal information from anyone under 20 years old."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "If you believe a person under 20 has provided us with personal information, please contact hello@okayness.com so that we can investigate and, where appropriate, delete the information."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "12. Changes to this Privacy Policy",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may update this Privacy Policy from time to time to reflect changes in our practices, platform, legal obligations, or services."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "The updated policy will be posted on this page with a revised “Last updated” date. Where a change is material, we may also notify you by email or through the platform. We encourage you to review this policy periodically."
+          }
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Welcome to Okayness. These Terms of Service (“Terms”) govern your use of the Okayness website, online learning platform, courses, coaching services, workshops, events, content, and related services (collectively, the “Services”)."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Okayness is operated by Zak Dakkash, based in Jbeil (Byblos), Lebanon. In these Terms, “Okayness,” “we,” “us,” and “our” refer to Zak Dakkash and the Okayness platform. “You” and “your” refer to any person who visits, registers for, purchases, or uses the Services."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "By accessing the website, creating an account, purchasing a course, booking a service, or otherwise using the Services, you agree to these Terms and to our Privacy Policy and Refund Policy. If you do not agree, please do not use the Services."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "1. Who may use the Services",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Our online courses and platform are intended for adults aged 20 and over."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "By using or purchasing the Services, you confirm that:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "You are at least 20 years old."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "The information you provide is accurate, current, and complete."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "You have the legal authority to enter into this agreement."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "You will use the Services only for lawful, personal, and non-commercial purposes."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may refuse, suspend, or terminate access where we reasonably believe that these requirements have not been met."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "2. Our Services",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Okayness offers personal-development education and services, which may include:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Self-paced online courses, including "
+          },
+          {
+            "text": "Interpersonal Communication Dynamics",
+            "italic": true
+          },
+          {
+            "text": " and "
+          },
+          {
+            "text": "Unlock Your Financial Frequency",
+            "italic": true
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "One-on-one coaching"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Group coaching programs, including "
+          },
+          {
+            "text": "Becoming Again",
+            "italic": true
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Workshops, speaking engagements, community experiences, and related educational content"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Course descriptions, available features, bonuses, community access, prices, and access periods are shown on the relevant sales or checkout page. We may improve, update, replace, pause, or retire any course, feature, or service when reasonably necessary. Where a material change affects enrolled learners, we will aim to notify them by email. "
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "3. Educational and personal-development disclaimer",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Okayness provides educational, reflective, and personal-development content. Our courses, coaching, workshops, and materials are not therapy, psychotherapy, psychiatric care, medical treatment, crisis support, legal advice, financial advice, investment advice, or a substitute for qualified professional care."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "You remain responsible for your own choices, actions, wellbeing, relationships, finances, and decisions."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "If you are experiencing a mental-health crisis, are at risk of harming yourself or others, or need urgent support, contact local emergency services or a qualified health professional immediately. Do not rely on the Services as emergency, clinical, or crisis care."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Any examples, stories, frameworks, opinions, or discussions about money, health, relationships, work, or personal change are provided for general educational purposes only."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "4. No guaranteed results",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Personal growth requires individual effort, honesty, reflection, participation, and application. Results vary from person to person."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We do not guarantee any specific personal, emotional, professional, financial, relationship, business, employment, or other outcome from using our Services. Testimonials and examples represent individual experiences and do not promise that you will achieve the same or similar results. "
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "5. Accounts and access",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "You may need to create an account to purchase or access a course."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "You are responsible for:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Keeping your login credentials confidential and secure"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "All activity that occurs through your account"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Providing accurate registration and contact information"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Updating your account details when they change"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Contacting us promptly if you believe your account has been accessed without permission"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Each course purchase grants access to one individual user only. You may not share your login details, permit another person to use your account, or make the course available to anyone else."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Access to purchased self-paced courses begins after payment has been successfully processed and your purchase has been confirmed by email. Unless the relevant sales page states otherwise, eligible self-paced course purchasers receive lifetime access to the purchased course. “Lifetime access” means access for the operational lifetime of the Okayness platform or the relevant course, not the lifetime of the purchaser. "
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "6. Course access and permitted use",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "You may use course materials only for your own personal learning and development."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "You may not, without our prior written permission:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Share, sell, sublicense, transfer, reproduce, distribute, publish, upload, or commercially exploit any course or platform content"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Share account credentials or permit shared access"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Record, download, screen-capture, copy, extract, or reproduce course videos or platform content where downloading or recording has not been expressly permitted"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Remove copyright, branding, ownership notices, or restrictions from any materials"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Use our content to create or deliver competing content, training, products, or services"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Use bots, scrapers, automated tools, or other means to access, extract, copy, or interfere with the website or platform"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Attempt to reverse engineer, disrupt, compromise, or gain unauthorized access to any part of the platform"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Where worksheets, files, or certificates are expressly made available for download, you may use them for your own personal educational use only. You may not redistribute, resell, modify for commercial use, or present them as your own. Course videos and other protected content may not be downloaded unless we expressly state otherwise. "
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "7. Intellectual property",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "All content made available through Okayness—including videos, lessons, course structures, worksheets, written materials, graphics, logos, designs, audio, website content, trade names, and other materials—is owned by or licensed to Okayness and is protected by applicable intellectual-property laws."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Purchasing a course gives you a limited, personal, non-exclusive, non-transferable, revocable licence to access the purchased content in accordance with these Terms. It does not transfer ownership of any intellectual-property rights to you."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "8. Prices, payments, and promotions",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "All prices are shown and charged in United States dollars (USD), unless otherwise stated. Taxes and VAT, where applicable, are included in the displayed price."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Payments are due in full at checkout. We currently use Stripe as our primary payment processor and may offer payment methods supported by Stripe, such as Visa, Mastercard, Google Pay, Amazon Pay, and other available methods. Payment information is processed directly by Stripe; Okayness does not receive or store your full card details. "
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may offer launch pricing, coupons, promotional pricing, bundles, or other limited offers. Any promotion is subject to the terms displayed at the time it is offered and may be changed or withdrawn where permitted by law. Promotions cannot normally be combined unless we expressly state otherwise."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "If a payment fails, is declined, or is flagged for fraud or security review, access will not be granted until payment is successfully completed and confirmed."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "9. Refunds",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Refunds are governed by our Refund Policy, which forms part of these Terms. Please read it carefully before purchasing."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Where a refund is approved, access to the refunded course will be removed. Your general Okayness account may remain active, but you will no longer be able to access the refunded content. "
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "10. Community and respectful conduct",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Where the platform includes a community space, live interaction, group program, or communications channel, you agree to participate respectfully."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "You must not:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Harass, threaten, shame, discriminate against, or abuse another person"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Share another person’s private information, story, image, or communication without permission"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Post unlawful, harmful, deceptive, hateful, explicit, or infringing content"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Promote unrelated products, services, solicitations, or spam"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Disrupt the learning environment or interfere with another participant’s experience"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Present yourself as Okayness, Zak Dakkash, a representative, or another user without authorization"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may remove content, restrict participation, or suspend or terminate access where conduct breaches these Terms or undermines the safety, integrity, or learning environment of the platform."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "11. Suspension and termination",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may suspend or terminate your access, with or without prior notice where reasonably necessary, if you:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Breach these Terms or applicable law"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Share your account or course materials"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Engage in piracy, fraud, abusive conduct, harassment, or unauthorized commercial use"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Attempt to interfere with the platform’s security or operations"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Initiate an unjustified chargeback without first giving us a reasonable opportunity to resolve the issue"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Termination does not remove any rights or obligations that, by their nature, should continue after termination, including intellectual-property protections, disclaimers, limitations of liability, and dispute provisions."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "12. Availability and technical support",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We aim to keep the platform available and functioning reliably. However, we cannot guarantee uninterrupted, error-free, or fully secure access at all times. Access may occasionally be interrupted because of maintenance, updates, third-party services, technical issues, internet failures, or circumstances beyond our reasonable control."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "For account, login, course-access, or playback issues, contact us at hello@okayness.com. We aim to respond within 48 hours, although response times may vary during weekends, holidays, high-volume periods, or exceptional circumstances. "
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "13. Third-party services and links",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "The Services may rely on or link to third-party services, including Stripe, YouTube, WhatsApp, analytics providers, advertising platforms, and other tools. These services have their own terms and privacy practices."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We are not responsible for third-party websites, content, availability, policies, or actions. Your use of third-party services is governed by their own terms and policies."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "14. Limitation of liability",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "To the fullest extent permitted by applicable law, Okayness, Zak Dakkash, and any representatives, contractors, or service providers involved in delivering the Services will not be liable for indirect, incidental, special, consequential, exemplary, or punitive damages; loss of profits, income, business, data, goodwill, or opportunity; or personal, emotional, financial, professional, or relationship outcomes arising from or connected with your use of the Services."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "To the fullest extent permitted by law, our total liability arising from or related to a particular purchase or claim will not exceed the amount you paid to Okayness for the specific Service giving rise to that claim."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Nothing in these Terms excludes liability that cannot lawfully be excluded or limited."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "15. Indemnity",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "To the extent permitted by law, you agree to indemnify and hold Okayness, Zak Dakkash, and our representatives harmless from claims, losses, liabilities, damages, and reasonable costs arising from your misuse of the Services, your breach of these Terms, your violation of applicable law, or your infringement of another person’s rights."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "16. Changes to the Services or Terms",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may update these Terms, our Services, course content, pricing, platform features, policies, or procedures from time to time."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "The updated Terms will be posted on this page with a revised “Last updated” date. Where changes are material, we may also notify registered users by email or through the platform. Continued use of the Services after the updated Terms take effect means you accept the revised Terms."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "17. Governing law and dispute resolution",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "These Terms are governed by the laws of Lebanon."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "If you have a complaint or dispute, please contact us first at hello@okayness.com with sufficient details for us to understand and investigate the matter. We will seek to resolve concerns directly and in good faith before either party begins formal legal proceedings."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "If a dispute cannot be resolved directly, it will be subject to the competent courts of Lebanon, unless mandatory law requires otherwise."
+          }
+        ]
+      }
+    ]
+  },
+  "refund": {
+    "title": "Refund Policy",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "At Okayness, we want participants to make a considered decision before purchasing an online course. Because our courses are digital educational products that provide access to proprietary content, refunds are available only under the specific conditions below."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "This Refund Policy applies to self-paced online courses purchased directly through the Okayness platform. It should be read together with our Terms of Service."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "1. Refund eligibility",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "You may request a refund within "
+          },
+          {
+            "text": "24 hours of your purchase",
+            "bold": true
+          },
+          {
+            "text": ", provided that you have not progressed beyond the course section listed below for the course you purchased:"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "headers": [
+          [
+            {
+              "text": "Course",
+              "bold": true
+            }
+          ],
+          [
+            {
+              "text": "Refund request deadline",
+              "bold": true
+            }
+          ],
+          [
+            {
+              "text": "Maximum permitted progress",
+              "bold": true
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "text": "Interpersonal Communication Dynamics",
+                "italic": true
+              }
+            ],
+            [
+              {
+                "text": "Within 24 hours of purchase"
+              }
+            ],
+            [
+              {
+                "text": "Up to and including the "
+              },
+              {
+                "text": "Course Introduction",
+                "bold": true
+              },
+              {
+                "text": " only"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "text": "Unlock Your Financial Frequency",
+                "italic": true
+              }
+            ],
+            [
+              {
+                "text": "Within 24 hours of purchase"
+              }
+            ],
+            [
+              {
+                "text": "Up to and including "
+              },
+              {
+                "text": "Lesson 1: Introduction to Feelings",
+                "bold": true
+              },
+              {
+                "text": " only"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "To be eligible, both conditions must be met:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Your request must be received within 24 hours of the purchase time shown in your confirmation or receipt."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Your course progress must remain within the relevant permitted section above."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "If you progress beyond the stated section, access substantial course content, download resources, or continue using the course after the refund-eligibility point, you are no longer eligible for a refund except where required by applicable law."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "2. Other eligible situations",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may also approve a refund where:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "You were charged more than once for the same purchase."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "You were charged incorrectly due to a technical or payment-processing error."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "You cannot access the purchased course because of a technical problem that we are unable to resolve within a reasonable time."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "We determine, in our reasonable discretion, that a refund is appropriate in exceptional circumstances."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "3. Non-refundable circumstances",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Except where required by applicable law, refunds will not be available where:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "The 24-hour refund period has expired."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "You have progressed beyond the refund-eligibility point for your course."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "You have accessed a substantial portion of the course."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "You have downloaded or used course materials beyond the permitted refund stage."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "You changed your mind after receiving and using course access."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "You purchased the wrong course but had access to the course content."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "You did not use the course, did not complete it, or did not achieve a particular result."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Your technical issue is caused by your own device, browser, internet connection, email settings, or failure to follow reasonable access instructions, and we are able to provide reasonable support."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Your account was suspended or terminated because you breached the Terms of Service."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "The request relates to a chargeback, payment dispute, or fraud claim already under review by Stripe, your bank, or another payment provider."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "4. How to request a refund",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "To request a refund, email "
+          },
+          {
+            "text": "hello@okayness.com",
+            "bold": true
+          },
+          {
+            "text": " within the 24-hour eligibility period."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Please include:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Your full name"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "The email address used for the purchase"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "The name of the course purchased"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Your order number or payment receipt, if available"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "The reason for your request"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Any relevant screenshots if the request concerns a technical or payment issue"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We aim to acknowledge refund-related emails within 48 hours. Submitting a request does not automatically mean that a refund has been approved."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "5. Refund review and processing",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "If your request is approved:"
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "We will issue the full approved refund amount."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Refunds will be initiated through Stripe and returned to the original payment method used for the purchase, where possible."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Access to the refunded course will be removed."
+          }
+        ]
+      },
+      {
+        "type": "listItem",
+        "runs": [
+          {
+            "text": "Your Okayness account may remain active, but access to the refunded course will end."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Once we initiate the refund, it normally takes approximately "
+          },
+          {
+            "text": "5–10 business days",
+            "bold": true
+          },
+          {
+            "text": " for funds to appear, depending on your bank, card provider, Stripe, or other payment method. We cannot control external processing times."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "If a payment dispute, chargeback, reclaim, or investigation has been initiated, processing may take longer—potentially around "
+          },
+          {
+            "text": "2–3 weeks",
+            "bold": true
+          },
+          {
+            "text": " or longer—because the payment provider may hold funds while reviewing the matter. "
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "6. Chargebacks and payment disputes",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "If there is a problem with your purchase, please contact us at hello@okayness.com before initiating a chargeback or payment dispute. We will make a good-faith effort to investigate and resolve the issue directly."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Initiating a chargeback does not guarantee a refund. Where a chargeback is opened, we may provide the payment provider with relevant evidence, including purchase records, account-access records, course-progress data, communications, acceptance of these policies, and technical logs, as permitted by applicable law."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "Unjustified or fraudulent chargebacks may result in suspension or termination of account access."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "runs": [
+          {
+            "text": "7. Changes to this Refund Policy",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "runs": [
+          {
+            "text": "We may revise this Refund Policy from time to time. The version in effect at the time of your purchase will generally apply to that purchase, unless a change is required by law or clearly benefits you."
+          }
+        ]
+      }
+    ]
+  }
+}

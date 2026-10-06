@@ -82,7 +82,7 @@
     min-width: 0;
     min-height: 15.5rem;
     flex: 1 1 16rem;
-    max-width: calc((100% - 1.8rem) / 3);
+    max-width: calc((100% - .9rem) / 2);
     padding: 1.3rem 1.1rem;
     border: 1px solid rgba(33, 44, 45, .09);
     border-radius: 1.1rem;
@@ -157,6 +157,65 @@
 .settingCard:first-child .settingDescription {
     color: rgba(255, 255, 255, .76);
     font-size: .84rem;
+}
+
+.toggleRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .75rem;
+    width: 100%;
+    margin: 0 0 .85rem;
+}
+
+.toggleStatus {
+    min-width: 4.4rem;
+    color: var(--color-white);
+    font-size: .82rem;
+    font-weight: 800;
+    text-align: right;
+}
+
+.toggleSwitch {
+    display: inline-flex;
+    align-items: center;
+    width: 3.1rem;
+    height: 1.8rem;
+    padding: .2rem;
+    border: 1px solid rgba(255, 255, 255, .5);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .22);
+    cursor: pointer;
+    transition: background-color .18s ease;
+}
+
+.toggleSwitchOn {
+    background: var(--color-yellow);
+    border-color: var(--color-yellow);
+}
+
+.toggleSwitch:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
+}
+
+.toggleSwitch:disabled {
+    opacity: .65;
+    cursor: wait;
+}
+
+.toggleThumb {
+    width: 1.3rem;
+    height: 1.3rem;
+    border-radius: 50%;
+    background: var(--color-white);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .18);
+    transition: transform .18s ease, background-color .18s ease;
+}
+
+.toggleSwitchOn .toggleThumb {
+    transform: translateX(1.3rem);
+    background: var(--color-black);
 }
 
 .inputGroup {
@@ -330,3 +389,11 @@
         width: 100%;
     }
 }
+.pointsExpiryPanel { min-width: 0; padding: 1.5rem; background: #fff; border: 1px solid #dce8e7; border-radius: 20px; }
+.pointsExpiryPanel h3 { margin: 0 0 .75rem; color: var(--color-dark-blue); font-size: 1.3rem; }
+.pointsExpiryPanel p { margin: 0 0 1rem; line-height: 1.6; }
+.pointsExpiryScroll { width: 100%; overflow-x: auto; }
+.pointsExpiryScroll table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.pointsExpiryScroll th, .pointsExpiryScroll td { text-align: left; padding: .9rem; border-bottom: 1px solid #e2eceb; white-space: nowrap; }
+.pointsExpiryScroll th { background: #edf6f5; color: var(--color-dark-blue); font-weight: 750; }
+.pointsExpiryScroll small { display: block; margin-top: .3rem; color: var(--color-gray-dark); }

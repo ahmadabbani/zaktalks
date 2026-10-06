@@ -23,17 +23,12 @@ begin
   assert aid is not null, 'An administrator is required for this test';
   perform set_config('request.jwt.claims', jsonb_build_object('sub',aid,'role','service_role')::text,true);
   perform set_config('request.jwt.claim.sub',aid::text,true);
-  original_report := public.admin_payments_dashboard(p_range=>'all');
-  report := public.admin_payments_dashboard_with_whish(p_range=>'all');
-  -- Course options with identical titles have no secondary order in the
-  -- existing report; compare their set rather than that incidental ordering.
-  assert original_report - 'courses' = report - 'courses', 'Baseline reports differ before test requests';
-  assert (select jsonb_agg(item order by item->>'course_id') from jsonb_array_elements(original_report->'courses') item)
-    = (select jsonb_agg(item order by item->>'course_id') from jsonb_array_elements(report->'courses') item), 'Course filter options differ';
+  -- Include genuine existing Whish sales in the baseline.
+  original_report := public.admin_payments_dashboard_with_whish(p_range=>'all');
   select count(*) into n from public.checkout_sessions;
 
   insert into auth.users(id,email,raw_user_meta_data) values(uid,uid||'@example.invalid','{"first_name":"Whish","last_name":"Rollback Test"}');
-  update public.users set points=3000 where id=uid;
+  update public.users set points=7000 where id=uid;
   insert into public.courses(id,slug,title,price_cents,is_published) values
     (cid,'whish-test-'||cid,'Whish rollback test',10000,true),
     (cid2,'whish-test-'||cid2,'Whish rollback conflict test',10000,true);
@@ -42,9 +37,9 @@ begin
   insert into public.whish_orders(id,request_key,user_id,course_id,email,first_name,last_name,phone,course_title,
     recipient_number,original_price_cents,quoted_amount_cents,points_to_spend,first_purchase_discount_applied,coupon_id,discounts)
   values(oid,gen_random_uuid(),uid,cid,uid||'@example.invalid','Whish','Rollback Test','+96171123456','Whish rollback test',
-    '+961 XX XXX XXX',10000,7000,1000,true,coupon,'{"coupon":{"valid":true},"promotion":{"applied":false}}');
+    '+961 XX XXX XXX',10000,7000,5000,true,coupon,'{"coupon":{"valid":true},"promotion":{"applied":false}}');
   assert not exists(select 1 from public.user_enrollments where user_id=uid), 'Pending grants access';
-  assert (select points=3000 from public.users where id=uid), 'Pending consumes points';
+  assert (select points=7000 from public.users where id=uid), 'Pending consumes points';
   report := public.admin_payments_dashboard_with_whish(p_range=>'all');
   assert report#>>'{summary,settled_sales_cents}'=original_report#>>'{summary,settled_sales_cents}', 'Pending counted as sales';
   insert into whish_test_results values('Pending request: no access, points, or sales','PASS');
@@ -61,7 +56,8 @@ begin
 
   eid := public.review_whish_order(oid,aid,'confirm',7000,'ROLLBACK-ONE');
   assert exists(select 1 from public.user_enrollments where id=eid and payment_status='completed' and amount_paid_cents=7000 and stripe_payment_intent_id is null), 'Enrollment mismatch';
-  assert (select points=3000 and first_purchase_discount_used from public.users where id=uid), 'Benefits mismatch';
+  assert (select points=2070 and first_purchase_discount_used from public.users where id=uid), 'Benefits mismatch';
+  assert (select points_earned=70 from public.user_enrollments where id=eid), 'Reward must equal actual paid dollars';
   assert (select count(*)=2 from public.point_transactions where user_id=uid), 'Missing points ledger';
   assert (select usage_count=1 from public.coupons where id=coupon), 'Coupon counter mismatch';
   assert exists(select 1 from public.coupon_usages where user_id=uid and coupon_id=coupon), 'Coupon use missing';
@@ -88,7 +84,7 @@ begin
   insert into public.whish_orders(id,request_key,user_id,course_id,email,first_name,last_name,phone,course_title,
     recipient_number,original_price_cents,quoted_amount_cents,points_to_spend)
   values(oid2,gen_random_uuid(),uid,cid2,uid||'@example.invalid','Whish','Rollback Test','+96171123456','Whish conflict test',
-    '+961 XX XXX XXX',10000,7000,4000);
+    '+961 XX XXX XXX',10000,7000,5000);
   fail:=false;
   begin perform public.review_whish_order(oid2,aid,'confirm',7000,'ROLLBACK-TWO');
   exception when raise_exception then fail:=position('points balance' in sqlerrm)>0; end;
@@ -119,7 +115,7 @@ begin
   begin perform public.review_whish_order(oid2,aid,'confirm',7000,'ROLLBACK-ONE');
   exception when unique_violation then fail:=true; end;
   assert fail, 'Reused transfer accepted';
-  assert (select points=3000 from public.users where id=uid), 'Failed transfer changed benefits';
+  assert (select points=2070 from public.users where id=uid), 'Failed transfer changed benefits';
   insert into whish_test_results values('Insufficient points and duplicate transfer roll back completely','PASS');
 
   insert into public.user_enrollments(user_id,course_id,payment_status,amount_paid_cents,original_price_cents,stripe_payment_intent_id)

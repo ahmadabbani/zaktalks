@@ -103,6 +103,7 @@ const fulfillmentDetails = {
 
 const discountLabels = {
   course_promotion: 'Course promotion',
+  whish_promotion: 'Whish-only promotion',
   first_purchase: 'First-purchase offer',
   points: 'Points',
   coupon: 'Coupon',
@@ -388,6 +389,7 @@ function PaymentDrawer({ payment, onClose }) {
                 <div className={styles.paymentDiscountCards}>
                   <article><span><FaWallet /></span><div><small>Total savings</small><strong>{money(order.discount_cents, '$0.00')}</strong></div></article>
                   <article className={number(order.promotion_discount_cents) > 0 ? styles.paymentDiscountActive : ''}><span><FaBolt /></span><div><small>Course promotion</small><strong>{number(order.promotion_discount_cents) > 0 ? `${promotionLabel(order)} · -${money(order.promotion_discount_cents, '$0.00')}` : 'Not used'}</strong></div></article>
+                  {order.whish_promotion?.applied && <article className={styles.paymentDiscountActive}><span><FaBolt /></span><div><small>Whish-only promotion</small><strong>{order.whish_promotion.name} · {order.whish_promotion.discountPercent}% · -{money(order.whish_promotion.discountCents, '$0.00')}</strong></div></article>}
                   <article className={order.first_purchase_discount_applied ? styles.paymentDiscountActive : ''}><span><FaShoppingBag /></span><div><small>First-purchase offer</small><strong>{order.first_purchase_discount_applied ? (isWhish && order.payment_group !== 'paid' ? 'Quoted' : 'Applied') : 'Not used'}</strong></div></article>
                   <article className={order.points_to_spend ? styles.paymentDiscountActive : ''}><span><FaCoins /></span><div><small>{isWhish && order.payment_group !== 'paid' ? 'Points selected' : 'Points spent'}</small><strong>{number(order.points_to_spend).toLocaleString()}</strong></div></article>
                   <article className={order.coupon_id ? styles.paymentDiscountActive : ''}><span><FaTags /></span><div><small>Coupon</small><strong>{order.coupon_code || 'Not used'}</strong></div></article>
@@ -607,7 +609,7 @@ export default function PaymentsDashboard() {
             <span className={styles.paymentCustomer}><i>{initials(row)}</i><span><strong>{row.customer_name}</strong><small>{row.email}</small><em>{row.payment_provider === 'whish' ? 'Whish' : 'Stripe'} · {row.customer_source === 'guest' ? 'Guest checkout' : 'Account checkout'}</em></span></span>
             <span className={styles.paymentCourse}><strong>{row.course_title}</strong><small>/{row.course_slug}</small></span>
             <span className={styles.paymentStatusCell}><StatusPill group={row.payment_group} /><small>{row.payment_state.replaceAll('_', ' ')}</small></span>
-            <span className={styles.paymentAmountCell}><strong>{money(row.expected_amount_cents)}</strong><small>{number(row.discount_cents) > 0 ? `${money(row.discount_cents)} saved` : row.expected_amount_cents === null ? 'Legacy total unavailable' : 'Full price'}</small>{number(row.promotion_discount_cents) > 0 && <small className={styles.paymentPromotionLine}><FaBolt />{promotionLabel(row)} · -{money(row.promotion_discount_cents)}</small>}</span>
+            <span className={styles.paymentAmountCell}><strong>{money(row.expected_amount_cents)}</strong><small>{number(row.discount_cents) > 0 ? `${money(row.discount_cents)} saved` : row.expected_amount_cents === null ? 'Legacy total unavailable' : 'Full price'}</small>{number(row.promotion_discount_cents) > 0 && <small className={styles.paymentPromotionLine}><FaBolt />{promotionLabel(row)} · -{money(row.promotion_discount_cents)}</small>}{row.whish_promotion?.applied && <small className={styles.paymentPromotionLine}><FaBolt />{row.whish_promotion.name} · {row.whish_promotion.discountPercent}% · -{money(row.whish_promotion.discountCents)}</small>}</span>
             <span className={styles.paymentStatusCell}><StatusPill group={row.fulfillment_group} type="fulfillment" /><small>{row.enrollment_id ? 'Enrollment linked' : 'No linked enrollment'}</small></span>
             <span className={styles.paymentDateCell}><strong>{formatDate(row.created_at)}</strong><small>{row.completed_at ? `Paid ${formatDate(row.completed_at)}` : 'Not completed'}</small></span>
             <button type="button" className={styles.paymentOpenButton} onClick={() => setSelectedPayment(row)} aria-label={`Open payment for ${row.customer_name}`}><FaEye /></button>

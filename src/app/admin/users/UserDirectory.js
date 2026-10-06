@@ -189,7 +189,7 @@ function UserDetailDrawer({ user, onClose, onDeleted }) {
                 <div><dt>Last sign-in</dt><dd>{formatDate(data.auth?.lastSignInAt, true)}</dd></div>
                 <div><dt>Sign-in provider</dt><dd>{data.auth?.providers?.join(', ') || 'Email'}</dd></div>
                 <div><dt>Points balance</dt><dd>{Number(profile.points || 0).toLocaleString()}</dd></div>
-                <div><dt>First-purchase discount</dt><dd>{profile.first_purchase_discount_used ? 'Used' : 'Available'}</dd></div>
+                <div><dt>First-purchase offer used</dt><dd>{profile.first_purchase_discount_used ? 'Yes' : 'No'}</dd></div>
               </dl>
             </section>
 

@@ -39,6 +39,7 @@ export default function WhishGuestModal({courseName,pricing,onClose,onConfirm,lo
       <h3>{courseName}</h3>
       <div className={styles.summary}>
         {pricing?.promotion?.applied&&<p><span>{pricing.promotion.name}</span><strong>−{money(pricing.promotion.discountCents)}</strong></p>}
+        {pricing?.whishPromotion?.applied&&<p><span>{pricing.whishPromotion.name} ({pricing.whishPromotion.discountPercent}%)</span><strong>−{money(pricing.whishPromotion.discountCents)}</strong></p>}
         {pricing?.firstPurchase?.eligible&&<p><span>First-purchase offer</span><strong>−{money(pricing.firstPurchase.discountCents)}</strong></p>}
         {pricing?.coupon?.valid&&<p><span>Coupon {pricing.coupon.couponCode}</span><strong>−{money(pricing.coupon.discountCents)}</strong></p>}
         <p><span>Amount To Transfer</span><strong>{money(pricing?.finalPrice)} USD</strong></p>

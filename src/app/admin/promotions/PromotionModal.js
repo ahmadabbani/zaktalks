@@ -5,6 +5,7 @@ import { FaBolt, FaCheck, FaGlobe, FaSave, FaTimes } from 'react-icons/fa'
 import toast from 'react-hot-toast'
 import { saveCoursePromotion } from './promotions.actions'
 import PromotionDateTimePicker from './PromotionDateTimePicker'
+import { WhishIcon } from '@/components/PaymentMethodChoice'
 import styles from './admin-promotions.module.css'
 
 function localDateTimeValue(date) {
@@ -24,7 +25,7 @@ function storedDateToLocal(value, fallbackHours) {
   return Number.isNaN(date.getTime()) ? initialDate(fallbackHours) : localDateTimeValue(date)
 }
 
-export default function PromotionModal({ promotion, courses, onClose, onSaved }) {
+export default function PromotionModal({ promotion, paymentScope = 'all', courses, onClose, onSaved }) {
   const [form, setForm] = useState(() => ({
     name: promotion?.name || '',
     discountPercent: promotion ? String(Number(promotion.discount_percent)) : '',
@@ -69,6 +70,7 @@ export default function PromotionModal({ promotion, courses, onClose, onSaved })
     setSaving(true)
     const payload = new FormData()
     payload.set('promotion_id', promotion?.id || '')
+    payload.set('payment_scope', paymentScope)
     payload.set('name', form.name.trim())
     payload.set('discount_percent', form.discountPercent)
     payload.set('starts_at', new Date(form.startsAt).toISOString())
@@ -97,15 +99,16 @@ export default function PromotionModal({ promotion, courses, onClose, onSaved })
     <div className={styles.modalLayer} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && !saving && onClose()}>
       <section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="promotion-modal-title">
         <header className={styles.modalHeader}>
-          <span className={styles.modalIcon}><FaBolt aria-hidden="true" /></span>
+          <span className={styles.modalIcon}>{paymentScope === 'whish' ? <WhishIcon /> : <FaBolt aria-hidden="true" />}</span>
           <div>
             <span>{promotion ? 'Edit promotion' : 'New promotion'}</span>
-            <h3 id="promotion-modal-title">{promotion ? promotion.name : 'Schedule a course promotion'}</h3>
+            <h3 id="promotion-modal-title">{promotion ? promotion.name : paymentScope === 'whish' ? 'Schedule a Whish promotion' : 'Schedule a course promotion'}</h3>
           </div>
           <button type="button" className={styles.closeButton} onClick={onClose} disabled={saving} aria-label="Close"><FaTimes /></button>
         </header>
 
         <form className={styles.form} onSubmit={submit} noValidate>
+          {paymentScope === 'whish' && <p>Only applies to Whish payments, after any active general course promotion and before account discounts.</p>}
           <div className={styles.formGrid}>
             <label className={styles.field}>
               <span className={styles.fieldLabel}>Promotion name</span>

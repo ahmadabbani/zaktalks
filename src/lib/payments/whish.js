@@ -20,6 +20,12 @@ export async function sendWhishEmail(orderId, kind, requestOrigin) {
     }
     const {data:order,error}=await admin.from('whish_orders').select('*').eq('id',orderId).single()
     if(error) throw error
+    if(kind==='approved') {
+      const {data:enrollment,error:rewardError}=await admin.from('user_enrollments')
+        .select('points_earned').eq('id',order.enrollment_id).single()
+      if(rewardError) throw rewardError
+      order.points_earned=enrollment.points_earned
+    }
     const appUrl=trustedAppUrl(requestOrigin)
     let setupUrl=''
     if(kind==='password') {

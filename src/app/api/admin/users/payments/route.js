@@ -52,17 +52,30 @@ async function addPromotionSnapshots(supabase, rows) {
 
   if (error) throw error
   const byCheckout = new Map((snapshots || []).map((snapshot) => [snapshot.id, snapshot]))
+  const whishIds = (snapshots || []).filter(item => item.payment_provider === 'whish').map(item => item.id)
+  let whishOffers = new Map()
+  if (whishIds.length) {
+    const result = await supabase.from('whish_orders').select('id,discounts').in('id', whishIds)
+    if (result.error) throw result.error
+    whishOffers = new Map((result.data || []).map(item => [item.id, item.discounts?.whishPromotion || null]))
+  }
 
   return rows.map((row) => {
     const snapshot = byCheckout.get(row.checkout_id)
     const promotionApplied = Number(snapshot?.promotion_discount_cents) > 0
+    const whishPromotion = whishOffers.get(row.checkout_id) || null
     let discountMethods = Array.isArray(row.discount_methods) ? row.discount_methods : []
     if (promotionApplied) {
       discountMethods = discountMethods.filter((method) => method !== 'recorded_discount')
       if (!discountMethods.includes('course_promotion')) discountMethods = [...discountMethods, 'course_promotion']
     }
+    if (whishPromotion?.applied) {
+      discountMethods = discountMethods.filter(method => method !== 'recorded_discount')
+      if (!discountMethods.includes('whish_promotion')) discountMethods = [...discountMethods, 'whish_promotion']
+    }
     return {
       ...row,
+      whish_promotion: whishPromotion,
       payment_provider: snapshot?.payment_provider || 'stripe',
       promotion_id: snapshot?.promotion_id || null,
       promotion_name: snapshot?.promotion_name || null,
@@ -111,7 +124,7 @@ export async function GET(request) {
   const supabase = await createAdminClient()
 
   try {
-    const [{ data, error }, { data: promotionStatsRows, error: promotionStatsError }] = await Promise.all([
+    const [{ data, error }, { data: promotionStatsRows, error: promotionStatsError }, { data: whishStatsRows, error: whishStatsError }] = await Promise.all([
       supabase.rpc('admin_payments_dashboard_with_whish', {
         p_course_id: courseId,
         p_range: range,
@@ -131,16 +144,27 @@ export async function GET(request) {
         p_fulfillment: fulfillment,
         p_discount: discount,
       }),
+      supabase.rpc('admin_whish_only_promotion_payment_stats', {
+        p_course_id: courseId, p_range: range, p_payment: payment,
+        p_fulfillment: fulfillment, p_discount: discount,
+      }),
     ])
 
     if (error) throw error
     if (promotionStatsError) throw promotionStatsError
+    if (whishStatsError) throw whishStatsError
 
     const rows = await addPromotionSnapshots(supabase, Array.isArray(data?.rows) ? data.rows : [])
     const discountMix = addPromotionToDiscountMix(
       Array.isArray(data?.discount_mix) ? data.discount_mix : [],
       promotionStatsRows?.[0]
     )
+    const whishStats = whishStatsRows?.[0]
+    if (Number(whishStats?.promotion_records) > 0) {
+      const generic = discountMix.find(entry => entry.method === 'recorded_discount')
+      if (generic) generic.records = Math.max(0, Number(generic.records) - Number(whishStats.promotion_only_records || 0))
+      discountMix.push({ method: 'whish_promotion', records: Number(whishStats.promotion_records) })
+    }
 
     return NextResponse.json({
       rows,
@@ -148,7 +172,7 @@ export async function GET(request) {
       trend: Array.isArray(data?.trend) ? data.trend : [],
       statusMix: Array.isArray(data?.status_mix) ? data.status_mix : [],
       sourceMix: Array.isArray(data?.source_mix) ? data.source_mix : [],
-      discountMix,
+      discountMix: discountMix.filter(entry => Number(entry.records) > 0),
       courses: Array.isArray(data?.courses) ? data.courses : [],
       totalCount: Number(data?.total_count || 0),
       hasMore: Boolean(data?.has_more),

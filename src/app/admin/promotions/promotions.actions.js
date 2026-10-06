@@ -52,16 +52,26 @@ export async function getCoursePromotions() {
     coursesByPromotion.set(assignment.promotion_id, current)
   }
 
-  return (promotions || []).map((promotion) => ({
+  const [{ data: whish, error: whishError }, { data: whishAssignments, error: whishAssignmentsError }] = await Promise.all([
+    supabase.from('whish_promotions').select('*').order('created_at', { ascending: false }),
+    supabase.from('whish_promotion_courses').select('promotion_id, course_id'),
+  ])
+  if (whishError || whishAssignmentsError) throw whishError || whishAssignmentsError
+  return [...(promotions || []).map((promotion) => ({
     ...promotion,
+    payment_scope: 'all',
     course_ids: coursesByPromotion.get(promotion.id) || [],
-  }))
+  })), ...(whish || []).map(promotion => ({ ...promotion, payment_scope: 'whish',
+    course_ids: (whishAssignments || []).filter(item => item.promotion_id === promotion.id).map(item => item.course_id),
+  }))].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 }
 
 export async function saveCoursePromotion(formData) {
   await requirePermission('coupons.manage')
 
   const promotionId = String(formData.get('promotion_id') || '').trim() || null
+  const scope = String(formData.get('payment_scope') || 'all')
+  if (!['all', 'whish'].includes(scope)) return { success: false, error: 'Invalid payment scope.' }
   const name = String(formData.get('name') || '').trim()
   const discountPercent = parsePercentage(formData.get('discount_percent'))
   const startsAt = parseIsoDate(formData.get('starts_at'))
@@ -87,7 +97,7 @@ export async function saveCoursePromotion(formData) {
   }
 
   const supabase = await createAdminClient()
-  const { data, error } = await supabase.rpc('save_course_promotion', {
+  const { data, error } = await supabase.rpc(scope === 'whish' ? 'save_whish_promotion' : 'save_course_promotion', {
     p_promotion_id: promotionId,
     p_name: name,
     p_discount_percent: discountPercent,
@@ -110,15 +120,15 @@ export async function saveCoursePromotion(formData) {
   return { success: true, promotionId: data }
 }
 
-export async function toggleCoursePromotion(promotionId, isActive) {
+export async function toggleCoursePromotion(promotionId, isActive, scope = 'all') {
   await requirePermission('coupons.manage')
-  if (!UUID_PATTERN.test(String(promotionId || ''))) {
+  if (!['all', 'whish'].includes(scope) || !UUID_PATTERN.test(String(promotionId || ''))) {
     return { success: false, error: 'This promotion could not be identified.' }
   }
 
   const supabase = await createAdminClient()
   const { error } = await supabase
-    .from('course_promotions')
+    .from(scope === 'whish' ? 'whish_promotions' : 'course_promotions')
     .update({ is_active: Boolean(isActive), updated_at: new Date().toISOString() })
     .eq('id', promotionId)
 
@@ -131,14 +141,14 @@ export async function toggleCoursePromotion(promotionId, isActive) {
   return { success: true }
 }
 
-export async function deleteCoursePromotion(promotionId) {
+export async function deleteCoursePromotion(promotionId, scope = 'all') {
   await requirePermission('coupons.manage')
-  if (!UUID_PATTERN.test(String(promotionId || ''))) {
+  if (!['all', 'whish'].includes(scope) || !UUID_PATTERN.test(String(promotionId || ''))) {
     return { success: false, error: 'This promotion could not be identified.' }
   }
 
   const supabase = await createAdminClient()
-  const { error } = await supabase.from('course_promotions').delete().eq('id', promotionId)
+  const { error } = await supabase.from(scope === 'whish' ? 'whish_promotions' : 'course_promotions').delete().eq('id', promotionId)
 
   if (error) {
     console.error('Unable to delete course promotion:', error)

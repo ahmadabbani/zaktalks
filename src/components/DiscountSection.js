@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { FaTag, FaGift, FaCoins, FaBolt } from 'react-icons/fa'
 import styles from './DiscountSection.module.css'
+import { MIN_POINTS_REDEMPTION, pointsSelectionOptions } from '@/lib/points-rules'
 
 /**
  * Discount Section Component
@@ -15,7 +16,8 @@ export default function DiscountSection({
   onPricingStateChange,
   refreshKey = 0,
   disabled = false,
-  variant = 'default'
+  variant = 'default',
+  paymentMethod = 'stripe'
 }) {
   const [couponCode, setCouponCode] = useState('')
   const [pointsToUse, setPointsToUse] = useState(0)
@@ -41,6 +43,7 @@ export default function DiscountSection({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           courseId,
+          paymentMethod,
           email: emailToUse || null,
           couponCode: couponOverride || null,
           pointsToUse: pointsToUse || 0
@@ -63,6 +66,7 @@ export default function DiscountSection({
 
       if (res.ok) {
         setDiscountData(data)
+        setPointsToUse(data.discounts.points.pointsToUse || 0)
         if (onDiscountsCalculated) {
           onDiscountsCalculated({
             couponCode: data.discounts.coupon.valid ? data.discounts.coupon.couponCode : null,
@@ -86,7 +90,7 @@ export default function DiscountSection({
   useEffect(() => {
     fetchDiscounts(email)
     lastEmailRef.current = email
-  }, [courseId, refreshKey])
+  }, [courseId, refreshKey, paymentMethod])
 
   // Refetch when email changes (debounced)
   useEffect(() => {
@@ -170,6 +174,13 @@ export default function DiscountSection({
           </div>
         )}
 
+        {discounts.whishPromotion?.applied && (
+          <div className={`${styles.row} ${styles.rowDiscount}`}>
+            <span className={styles.discountLabel}><FaBolt /> {discounts.whishPromotion.name} ({discounts.whishPromotion.discountPercent}%)</span>
+            <span>-{formatPrice(discounts.whishPromotion.discountCents)}</span>
+          </div>
+        )}
+
         {/* First Purchase Discount */}
         {discounts.firstPurchase.eligible && (
           <div className={`${styles.row} ${styles.rowDiscount}`}>
@@ -184,7 +195,7 @@ export default function DiscountSection({
         {discounts.points.eligible && pointsToUse > 0 && (
           <div className={`${styles.row} ${styles.rowDiscount}`}>
             <span className={styles.discountLabel}>
-              <FaCoins /> Points ({pointsToUse} pts = {discounts.points.discountPercent}%)
+              <FaCoins /> Points ({pointsToUse.toLocaleString()} pts)
             </span>
             <span>-{formatPrice(discounts.points.discountCents)}</span>
           </div>
@@ -216,8 +227,7 @@ export default function DiscountSection({
         )}
       </div>
 
-      {/* Points Selector - only show if user has 1000+ points */}
-      {userPoints >= 1000 && (
+      {discountData.isAuthenticated && (
         <div className={styles.pointsSection}>
           <div className={styles.pointsHeader}>
             <span className={styles.discountLabel}>
@@ -225,24 +235,25 @@ export default function DiscountSection({
               Use Your Points
             </span>
             <p className={styles.pointsHint}>
-              You can use your points to get a discount on this course!
+              {userPoints >= MIN_POINTS_REDEMPTION
+                ? 'Use at least 5,000 points, then choose in steps of 1,000.'
+                : 'Collect at least 5,000 points to unlock a points discount.'}
             </p>
           </div>
           <div className={styles.pointsWrapper}>
-            <select
+            {userPoints >= MIN_POINTS_REDEMPTION && <select
               value={pointsToUse}
               onChange={(e) => setPointsToUse(parseInt(e.target.value))}
-              disabled={disabled}
+              disabled={disabled || loading}
               className={styles.pointsSelect}
             >
               <option value={0}>Don&apos;t use points</option>
-              {/* Generate options for 1000, 2000, 3000, etc. up to user's balance */}
-              {Array.from({ length: Math.floor(userPoints / 1000) }, (_, i) => (i + 1) * 1000).map(pts => (
+              {pointsSelectionOptions(userPoints).map(pts => (
                 <option key={pts} value={pts}>
                   Use {pts.toLocaleString()} points
                 </option>
               ))}
-            </select>
+            </select>}
             <span className={styles.pointsBalance}>
               Balance: {userPoints.toLocaleString()} pts
             </span>

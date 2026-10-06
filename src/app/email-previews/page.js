@@ -23,8 +23,8 @@ export default async function EmailPreviewsPage() {
   const whishSample = {
     id: '00000000-0000-4000-8000-000000000001', first_name: 'Maya', course_title: 'Interpersonal Communication Dynamics',
     phone: '+961 XX XXX XXX', recipient_number: '+961 XX XXX XXX', original_price_cents: 20000,
-    quoted_amount_cents: 15300, amount_received_cents: 15300, transfer_reference: 'SAMPLE-TRANSFER',
-    points_to_spend: 0, discounts: { promotion: { applied: true, name: 'Course promotion', discountCents: 3000 }, firstPurchase: { eligible: true, discountCents: 1700 } },
+    quoted_amount_cents: 13770, amount_received_cents: 13770, transfer_reference: 'SAMPLE-TRANSFER',
+    points_to_spend: 0, discounts: { promotion: { applied: true, name: 'Course promotion', discountCents: 3000 }, whishPromotion: { applied: true, name: 'Transfer Special', discountPercent: 10, discountCents: 1700 }, firstPurchase: { eligible: true, discountCents: 1530 } },
   }
 
   const welcomeEmail = buildWelcomeEmail({

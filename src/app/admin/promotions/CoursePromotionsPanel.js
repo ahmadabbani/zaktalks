@@ -5,6 +5,7 @@ import { FaBolt, FaCalendarAlt, FaEdit, FaGlobe, FaPlus, FaPowerOff, FaTrash } f
 import toast from 'react-hot-toast'
 import { deleteCoursePromotion, toggleCoursePromotion } from './promotions.actions'
 import PromotionModal from './PromotionModal'
+import { WhishIcon } from '@/components/PaymentMethodChoice'
 import styles from './admin-promotions.module.css'
 
 function formatPercent(value) {
@@ -30,16 +31,17 @@ export default function CoursePromotionsPanel({ initialPromotions, courses }) {
   const [promotions, setPromotions] = useState(initialPromotions)
   const [editing, setEditing] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
+  const [paymentScope, setPaymentScope] = useState('all')
   const [deleting, setDeleting] = useState(null)
   const [busyId, setBusyId] = useState(null)
 
-  const openCreate = () => { setEditing(null); setModalOpen(true) }
-  const openEdit = (promotion) => { setEditing(promotion); setModalOpen(true) }
+  const openCreate = (scope = 'all') => { setPaymentScope(scope); setEditing(null); setModalOpen(true) }
+  const openEdit = (promotion) => { setPaymentScope(promotion.payment_scope); setEditing(promotion); setModalOpen(true) }
 
   const toggle = async (promotion) => {
     setBusyId(promotion.id)
     try {
-      const result = await toggleCoursePromotion(promotion.id, !promotion.is_active)
+      const result = await toggleCoursePromotion(promotion.id, !promotion.is_active, promotion.payment_scope)
       if (!result.success) return toast.error(result.error || 'Unable to update promotion')
       setPromotions((current) => current.map((item) => item.id === promotion.id ? { ...item, is_active: !item.is_active } : item))
       toast.success(promotion.is_active ? 'Promotion disabled' : 'Promotion enabled')
@@ -52,7 +54,7 @@ export default function CoursePromotionsPanel({ initialPromotions, courses }) {
     if (!deleting) return
     setBusyId(deleting.id)
     try {
-      const result = await deleteCoursePromotion(deleting.id)
+      const result = await deleteCoursePromotion(deleting.id, deleting.payment_scope)
       if (!result.success) return toast.error(result.error || 'Unable to delete promotion')
       setPromotions((current) => current.filter((item) => item.id !== deleting.id))
       setDeleting(null)
@@ -72,24 +74,28 @@ export default function CoursePromotionsPanel({ initialPromotions, courses }) {
   return <div className={styles.panel}>
     <div className={styles.toolbar}>
       <div><strong>{promotions.length}</strong><span>promotions</span></div>
-      <button type="button" className={styles.createButton} onClick={openCreate}><FaPlus />New promotion</button>
+      <div className={styles.createActions}>
+        <button type="button" className={styles.createButton} onClick={() => openCreate()}><FaPlus />New promotion</button>
+        <button type="button" className={`${styles.createButton} ${styles.whishCreateButton}`} onClick={() => openCreate('whish')}><WhishIcon />New Whish promotion</button>
+      </div>
     </div>
 
     {promotions.length === 0 ? <div className={styles.emptyState}>
       <span><FaBolt /></span>
       <h3>No course promotions yet</h3>
       <p>Schedule your first automatic course offer.</p>
-      <button type="button" className={styles.primaryButton} onClick={openCreate}><FaPlus />Create promotion</button>
+      <button type="button" className={styles.primaryButton} onClick={() => openCreate()}><FaPlus />Create promotion</button>
     </div> : <div className={styles.promotionGrid}>
       {promotions.map((promotion) => {
         const status = promotionStatus(promotion)
-        return <article className={styles.promotionCard} key={promotion.id}>
+        return <article className={`${styles.promotionCard} ${promotion.payment_scope === 'whish' ? styles.whishPromotionCard : ''}`} key={promotion.id}>
           <header>
-            <span className={styles.cardIcon}><FaBolt /></span>
+            <span className={styles.cardIcon}>{promotion.payment_scope === 'whish' ? <WhishIcon /> : <FaBolt />}</span>
             <div><span className={`${styles.status} ${styles[`status${status.tone}`]}`}>{status.label}</span><h3>{promotion.name}</h3></div>
             <strong className={styles.amount}>{formatPercent(promotion.discount_percent)}% off</strong>
           </header>
           <div className={styles.cardDetails}>
+            <div><FaBolt /><span><small>Payment methods</small><strong>{promotion.payment_scope === 'whish' ? 'Whish only · additional offer' : 'Stripe and Whish'}</strong></span></div>
             <div><FaCalendarAlt /><span><small>Starts</small><strong>{formatDate(promotion.starts_at)}</strong></span></div>
             <div><FaCalendarAlt /><span><small>Ends</small><strong>{formatDate(promotion.ends_at)}</strong></span></div>
             <div><FaGlobe /><span><small>Applies to</small><strong>{courseNames(promotion)}</strong></span></div>
@@ -105,7 +111,7 @@ export default function CoursePromotionsPanel({ initialPromotions, courses }) {
       })}
     </div>}
 
-    {modalOpen && <PromotionModal promotion={editing} courses={courses} onClose={() => setModalOpen(false)} onSaved={() => window.location.reload()} />}
+    {modalOpen && <PromotionModal promotion={editing} paymentScope={paymentScope} courses={courses} onClose={() => setModalOpen(false)} onSaved={() => window.location.reload()} />}
 
     {deleting && <div className={styles.confirmLayer} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && !busyId && setDeleting(null)}>
       <div className={styles.confirmModal} role="alertdialog" aria-modal="true" aria-labelledby="delete-promotion-title">

@@ -40,7 +40,7 @@ Open **Admin Dashboard → Whish Payments** (`/admin/dashboard?view=whish`). Rev
 4. Add a note if it differs from the quote. Check the verification switch.
 5. Confirm payment and grant access.
 
-Approval atomically records the payment, creates normal completed enrollment, applies benefits, and awards 1,000 purchase points. Repeated approval does not award twice. Its confirmation email is separate: a failed send cannot undo access, and the admin can retry it. A request can instead be closed without access. This does not refund money; resolve any real transfer separately.
+Approval atomically records the payment, creates normal completed enrollment, applies benefits, and awards one point per whole USD actually received (rounded down, after discounts). Repeated approval does not award twice. Its confirmation email reads the recorded enrollment reward: a failed send cannot undo access, and the admin can retry it. A request can instead be closed without access. This does not refund money; resolve any real transfer separately.
 
 Confirmed transfers appear in the existing Payments report and learner Purchase History, identified as Whish, using the actual amount. Pending totals are labeled quotes. Stripe identifiers/webhook sections are not shown for Whish.
 

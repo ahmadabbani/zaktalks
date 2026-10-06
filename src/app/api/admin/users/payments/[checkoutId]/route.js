@@ -48,12 +48,17 @@ export async function GET(_request, { params }) {
       discountMethods = discountMethods.filter((method) => method !== 'recorded_discount')
       if (!discountMethods.includes('course_promotion')) discountMethods.push('course_promotion')
     }
+    if (extras?.discounts?.whishPromotion?.applied) {
+      discountMethods = discountMethods.filter(method => method !== 'recorded_discount')
+      if (!discountMethods.includes('whish_promotion')) discountMethods.push('whish_promotion')
+    }
 
     return NextResponse.json({
       order: data?.order ? {
         ...data.order,
         payment_provider: promotionSnapshot?.payment_provider || 'stripe',
         whish: extras,
+        whish_promotion: extras?.discounts?.whishPromotion || null,
         ...(isWhish ? {
           payment_group: extras?.status === 'confirmed' ? 'paid' : extras?.status === 'cancelled' ? 'failed' : 'processing',
           fulfillment_group: data.order.fulfillment_state === 'revoked' ? 'revoked' : extras?.status === 'confirmed' ? 'fulfilled' : extras?.status === 'cancelled' ? 'not_required' : 'processing',

@@ -124,6 +124,7 @@ export default function CheckoutModal({
 
         {/* Discount Section */}
         <DiscountSection
+          paymentMethod={method}
           courseId={courseId}
           onDiscountsCalculated={handleDiscountsCalculated}
           disabled={loading}
@@ -132,7 +133,7 @@ export default function CheckoutModal({
           refreshKey={pricingRefresh}
         />
 
-        <PaymentMethodChoice value={method} onChange={value => { setMethod(value); setCheckoutError('') }} disabled={loading} />
+        <PaymentMethodChoice value={method} onChange={value => { setPricingReady(false); setMethod(value); setCheckoutError('') }} disabled={loading} />
         {method === 'whish' && <WhishCheckoutFields phone={phone} onChange={setPhone} disabled={loading} />}
 
         {checkoutError && <p className={styles.checkoutError} role="alert">{checkoutError}</p>}

@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { calculateAllDiscounts } from '@/lib/discount-utils'
+import { isValidPointsSelection } from '@/lib/points-rules'
 import {
   clientIpFromRequest,
   enforceRateLimits,
@@ -14,7 +15,14 @@ import {
  */
 export async function POST(req) {
   try {
-    const { courseId, email, couponCode, pointsToUse } = await req.json()
+    const { courseId, email, couponCode, pointsToUse, paymentMethod = 'stripe' } = await req.json()
+    if (!['stripe', 'whish'].includes(paymentMethod)) {
+      return NextResponse.json({ error: 'Choose a valid payment method.' }, { status: 400 })
+    }
+    const requestedPoints = pointsToUse == null || pointsToUse === '' ? 0 : Number(pointsToUse)
+    if (!isValidPointsSelection(requestedPoints)) {
+      return NextResponse.json({ error: 'Use at least 5,000 points, in steps of 1,000.' }, { status: 400 })
+    }
     const clientIp = clientIpFromRequest(req)
 
     await enforceRateLimits([{
@@ -48,18 +56,20 @@ export async function POST(req) {
       courseId,
       basePriceCents: course.price_cents,
       couponCode,
-      pointsToUse: parseInt(pointsToUse) || 0
+      pointsToUse: requestedPoints,
+      paymentMethod,
     })
 
     // 4. Get user's current points balance (for UI display)
     let userPoints = 0
     if (userId) {
-      const { data: userData } = await supabaseAdmin
+      const { data: userData, error: pointsError } = await supabaseAdmin
         .from('users')
         .select('points')
         .eq('id', userId)
         .single()
-      userPoints = userData?.points || 0
+      if (pointsError || !userData) throw new Error('Unable to load the points balance.')
+      userPoints = userData.points || 0
     }
 
     return NextResponse.json({
@@ -69,8 +79,10 @@ export async function POST(req) {
         originalPrice: course.price_cents
       },
       userPoints,
+      isAuthenticated: Boolean(userId),
       discounts: {
         promotion: discounts.promotion,
+        whishPromotion: discounts.whishPromotion,
         firstPurchase: discounts.firstPurchase,
         points: discounts.points,
         coupon: discounts.coupon,

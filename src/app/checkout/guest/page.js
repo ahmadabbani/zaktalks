@@ -187,6 +187,7 @@ function GuestForm() {
 
           {/* Discount Section */}
           <DiscountSection
+            paymentMethod={method}
             courseId={courseId}
             email={email}
             onDiscountsCalculated={handleDiscountsCalculated}
@@ -196,7 +197,7 @@ function GuestForm() {
             refreshKey={pricingRefresh}
           />
 
-          <PaymentMethodChoice value={method} onChange={value => { setMethod(value); setCheckoutError('') }} disabled={loading} />
+          <PaymentMethodChoice value={method} onChange={value => { setPricingReady(false); setMethod(value); setCheckoutError('') }} disabled={loading} />
 
           {emailExists && (
             <div className={styles.emailExistsWarning}>

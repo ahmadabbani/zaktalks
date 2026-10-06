@@ -147,3 +147,12 @@
 @media (prefers-reduced-motion: reduce) {
   .modalLayer,.confirmLayer,.modal,.confirmModal { animation: none; }
 }
+.createActions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; }
+.toolbar > .createActions { align-items: center; gap: 12px; }
+.createActions > .createButton { height: 3.5rem; min-height: 3.5rem; box-sizing: border-box; white-space: nowrap; }
+.createActions .whishCreateButton { background: #edf6f5; color: #258c9b; border: 1px solid #c6dfdf; }
+.whishCreateButton img { border-radius: 50%; }
+.whishCreateButton img, .whishPromotionCard .cardIcon img, .modalIcon img { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
+.whishPromotionCard { background: #f3faf9; border-color: #b9dcd9; }
+.whishPromotionCard .cardIcon, .modalIcon:has(img) { background: white; }
+@media (max-width: 600px) { .createActions { width: 100%; justify-content: stretch; } .createActions button { flex: 1 1 220px; } }

@@ -7,8 +7,7 @@
 
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 
-// Constants
-const POINTS_PER_PURCHASE = 1000
+import { MIN_POINTS_REDEMPTION, POINTS_REDEMPTION_STEP, pointsDiscountForBalance, purchaseRewardPoints } from '@/lib/points-rules'
 
 /**
  * Resolve the currently applicable scheduled promotion for a course.
@@ -73,6 +72,25 @@ export async function getActiveCoursePromotion(courseId, basePriceCents) {
   return resolveActiveCoursePromotion(supabase, courseId, basePriceCents)
 }
 
+async function getActiveWhishPromotion(courseId, remainingPriceCents) {
+  const empty = emptyCoursePromotion(remainingPriceCents)
+  if (remainingPriceCents <= 0) return empty
+  const supabase = await createAdminClient()
+  const { data, error } = await supabase.rpc('get_active_whish_promotion', {
+    p_course_id: courseId, p_remaining_price_cents: remainingPriceCents,
+  })
+  if (error) throw new Error(`Unable to resolve Whish offer: ${error.message}`)
+  const promotion = Array.isArray(data) ? data[0] : data
+  if (!promotion?.promotion_id) return empty
+  const percent = Number(promotion.discount_percent)
+  if (!Number.isFinite(percent) || percent <= 0 || percent > 100) throw new Error('Invalid Whish offer percentage.')
+  const discountCents = Math.min(remainingPriceCents, Math.max(0, Number(promotion.discount_amount_cents) || 0))
+  return { ...empty, applied: discountCents > 0, promotionId: promotion.promotion_id,
+    name: promotion.promotion_name, discountPercent: percent, discountCents,
+    priceAfterPromotionCents: remainingPriceCents - discountCents,
+    startsAt: promotion.starts_at, endsAt: promotion.ends_at }
+}
+
 /**
  * Resolve live promotion badges for course-card and course-page presentation.
  * Failures deliberately omit badges rather than blocking a public page; the
@@ -124,30 +142,66 @@ export async function getAdminSetting(key) {
   return data?.value
 }
 
+async function getFirstPurchaseDiscountConfig() {
+  const supabase = await createAdminClient()
+  const { data, error } = await supabase
+    .from('admin_settings')
+    .select('key, value')
+    .in('key', ['first_purchase_discount_enabled', 'first_purchase_discount_percent'])
+
+  if (error) throw new Error(`Unable to load first-purchase discount settings: ${error.message}`)
+
+  const settings = Object.fromEntries((data || []).map(({ key, value }) => [key, value]))
+  return {
+    // The switch is on by default so existing installations retain today's behavior.
+    enabled: settings.first_purchase_discount_enabled === undefined
+      || settings.first_purchase_discount_enabled === 'true',
+    percent: parseInt(settings.first_purchase_discount_percent, 10) || 0,
+  }
+}
+
 /**
  * Get first purchase discount percentage (from admin settings)
  * Returns: { eligible: boolean, discountPercent: number, discountCents: number }
  */
-export async function calculateFirstPurchaseDiscount(userId, basePriceCents) {
+export async function calculateFirstPurchaseDiscount(userId, basePriceCents, config = null) {
+  const { enabled, percent: discountPercent } = config || await getFirstPurchaseDiscountConfig()
+  if (!enabled || discountPercent <= 0) {
+    return { eligible: false, discountPercent: 0, discountCents: 0 }
+  }
+
   const supabase = await createAdminClient()
   
   // Check if user is eligible (hasn't used first purchase discount)
-  const { data: user } = await supabase
+  const { data: user, error: userError } = await supabase
     .from('users')
     .select('first_purchase_discount_used')
     .eq('id', userId)
     .single()
+
+  if (userError || !user) throw new Error('Unable to verify first-purchase eligibility.')
   
   // If user already used first purchase discount, not eligible
   if (user?.first_purchase_discount_used) {
     return { eligible: false, discountPercent: 0, discountCents: 0 }
   }
-  
-  // Get discount percentage from admin settings
-  const discountPercentStr = await getAdminSetting('first_purchase_discount_percent')
-  const discountPercent = parseInt(discountPercentStr) || 0
-  
-  if (discountPercent <= 0) {
+
+  // A purchase made while this offer is disabled still counts as the buyer's
+  // first purchase. Retained payment records also cover removed courses.
+  const [{ data: enrollments, error: enrollmentError },
+    { data: stripeOrders, error: stripeError },
+    { data: whishOrders, error: whishError }] = await Promise.all([
+    supabase.from('user_enrollments').select('id').eq('user_id', userId)
+      .eq('payment_status', 'completed').limit(1),
+    supabase.from('checkout_sessions').select('id').eq('user_id', userId)
+      .eq('status', 'completed').limit(1),
+    supabase.from('whish_orders').select('id').eq('user_id', userId)
+      .eq('status', 'confirmed').limit(1),
+  ])
+  if (enrollmentError || stripeError || whishError) {
+    throw new Error('Unable to verify first-purchase eligibility.')
+  }
+  if (enrollments?.length || stripeOrders?.length || whishOrders?.length) {
     return { eligible: false, discountPercent: 0, discountCents: 0 }
   }
   
@@ -243,7 +297,7 @@ export async function validateCoupon(code, userId, courseId, priceAfterOtherDisc
  * Returns: { eligible: boolean, discountPercent: number, discountCents: number, pointsToUse: number }
  * @param {string} userId - User ID
  * @param {number} priceAfterOtherDiscounts - Price in cents after other discounts
- * @param {number} requestedPoints - Points the user wants to use (must be in 1000 increments)
+ * @param {number} requestedPoints - Zero or at least 5000, in 1000 increments
  */
 export async function calculatePointsDiscount(userId, priceAfterOtherDiscounts, requestedPoints = 0) {
   if (!userId || requestedPoints <= 0) {
@@ -253,47 +307,17 @@ export async function calculatePointsDiscount(userId, priceAfterOtherDiscounts, 
   const supabase = await createAdminClient()
   
   // Get user's current points
-  const { data: user } = await supabase
+  const { data: user, error } = await supabase
     .from('users')
     .select('points')
     .eq('id', userId)
     .single()
   
-  const userPoints = user?.points || 0
-  
-  // Need at least 1000 points to use, and requested must be in 1000 increments
-  if (userPoints < 1000 || requestedPoints < 1000) {
-    return { eligible: false, discountPercent: 0, discountCents: 0, pointsToUse: 0 }
-  }
-  
-  // Cap requested points to user's actual balance (in 1000 increments)
-  const maxUsablePoints = Math.floor(userPoints / 1000) * 1000
-  const pointsToUse = Math.min(requestedPoints, maxUsablePoints)
-  
-  // Get base points discount percentage from admin settings (per 1000 points)
+  if (error || !user) throw new Error('Unable to verify the points balance.')
+  // Convert the selected points to USD at this rate; not a percentage of price.
   const discountPercentStr = await getAdminSetting('points_discount_percent')
-  const baseDiscountPercent = parseInt(discountPercentStr) || 10
-  
-  if (baseDiscountPercent <= 0) {
-    return { eligible: false, discountPercent: 0, discountCents: 0, pointsToUse: 0 }
-  }
-  
-  // Calculate total discount percent based on points used (e.g., 2000 pts = 20% if base is 10%)
-  const multiplier = pointsToUse / 1000
-  const discountPercent = baseDiscountPercent * multiplier
-  
-  // Cap discount at remaining price
-  const discountCents = Math.min(
-    Math.floor(priceAfterOtherDiscounts * (discountPercent / 100)),
-    priceAfterOtherDiscounts
-  )
-  
-  return {
-    eligible: true,
-    discountPercent,
-    discountCents,
-    pointsToUse
-  }
+  if (discountPercentStr === null) throw new Error('Unable to load the points discount setting.')
+  return pointsDiscountForBalance(user.points || 0, priceAfterOtherDiscounts, requestedPoints, Number(discountPercentStr))
 }
 
 /**
@@ -325,9 +349,9 @@ export async function spendPoints(userId, points, referenceId, description) {
 /**
  * Earn points for a user (after successful payment)
  */
-export async function earnPoints(userId, referenceId, description) {
+export async function earnPoints(userId, referenceId, description, amountPaidCents) {
   const supabase = await createAdminClient()
-  const points = POINTS_PER_PURCHASE
+  const points = purchaseRewardPoints(amountPaidCents)
   
   // Atomically add points (single DB call, no race condition)
   const { data: newBalance } = await supabase
@@ -393,11 +417,15 @@ export async function calculateAllDiscounts({
   courseId,
   basePriceCents,
   couponCode,
-  pointsToUse = 0
+  pointsToUse = 0,
+  paymentMethod = 'stripe'
 }) {
   let remainingPrice = basePriceCents
   const breakdown = {
     basePriceCents,
+    pointsRedemptionStep: POINTS_REDEMPTION_STEP,
+    pointsMinimum: MIN_POINTS_REDEMPTION,
+    whishPromotion: emptyCoursePromotion(basePriceCents),
     promotion: {
       applied: false,
       promotionId: null,
@@ -419,32 +447,35 @@ export async function calculateAllDiscounts({
     breakdown.promotion = promotion
     remainingPrice -= promotion.discountCents
   }
+
+  // An additional offer only for Whish, after the general course promotion.
+  if (paymentMethod === 'whish' && remainingPrice > 0) {
+    breakdown.whishPromotion = await getActiveWhishPromotion(courseId, remainingPrice)
+    remainingPrice -= breakdown.whishPromotion.discountCents
+  }
   
   // 2. First Purchase Discount
   // For new guests (no userId), they ARE eligible for first-purchase
   // For existing users, check if they've used it before
-  if (remainingPrice > 0 && userId) {
-    const fpDiscount = await calculateFirstPurchaseDiscount(userId, remainingPrice)
-    if (fpDiscount.eligible) {
-      breakdown.firstPurchase = {
-        eligible: true,
-        discountPercent: fpDiscount.discountPercent,
-        discountCents: fpDiscount.discountCents
+  if (remainingPrice > 0) {
+    const firstPurchaseConfig = await getFirstPurchaseDiscountConfig()
+    if (firstPurchaseConfig.enabled) {
+      if (userId) {
+        const fpDiscount = await calculateFirstPurchaseDiscount(userId, remainingPrice, firstPurchaseConfig)
+        if (fpDiscount.eligible) {
+          breakdown.firstPurchase = fpDiscount
+          remainingPrice -= fpDiscount.discountCents
+        }
+      } else if (firstPurchaseConfig.percent > 0) {
+        // The guest account is created after payment, so the offer is quoted here.
+        const discountCents = Math.floor(remainingPrice * (firstPurchaseConfig.percent / 100))
+        breakdown.firstPurchase = {
+          eligible: true,
+          discountPercent: firstPurchaseConfig.percent,
+          discountCents
+        }
+        remainingPrice -= discountCents
       }
-      remainingPrice -= fpDiscount.discountCents
-    }
-  } else if (remainingPrice > 0) {
-    // New guest - always eligible for first purchase discount
-    const discountPercentStr = await getAdminSetting('first_purchase_discount_percent')
-    const discountPercent = parseInt(discountPercentStr) || 0
-    if (discountPercent > 0) {
-      const discountCents = Math.floor(remainingPrice * (discountPercent / 100))
-      breakdown.firstPurchase = {
-        eligible: true,
-        discountPercent,
-        discountCents
-      }
-      remainingPrice -= discountCents
     }
   }
   
@@ -486,6 +517,7 @@ export async function calculateAllDiscounts({
   // Calculate totals
   breakdown.totalDiscountCents = 
     breakdown.promotion.discountCents +
+    breakdown.whishPromotion.discountCents +
     breakdown.firstPurchase.discountCents + 
     breakdown.points.discountCents + 
     breakdown.coupon.discountCents
@@ -494,6 +526,3 @@ export async function calculateAllDiscounts({
   
   return breakdown
 }
-
-// Export constants
-export { POINTS_PER_PURCHASE }

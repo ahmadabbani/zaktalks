@@ -3,6 +3,7 @@ import { isValidPhoneNumber } from 'libphonenumber-js'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@/lib/supabase/admin'
 import { calculateAllDiscounts } from '@/lib/discount-utils'
+import { isValidPointsSelection } from '@/lib/points-rules'
 import { whishConfiguration } from '@/lib/payments/whish-config'
 import { sendWhishEmail, WHISH_UUID } from '@/lib/payments/whish'
 import { clientIpFromRequest,enforceRateLimits,verifyTurnstileToken,PublicSecurityError } from '@/lib/security/abuse-protection'
@@ -27,7 +28,7 @@ export async function POST(request) {
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length>320 || !isValidPhoneNumber(phone) ||
       (!user&&(!firstName||!lastName))) return NextResponse.json({error:'Enter your name, a valid email, and a valid phone number including country code.'},{status:400})
     const points=Number(body.pointsToUse || 0)
-    if(!Number.isSafeInteger(points) || points<0 || points%1000 || (!user&&points)) return NextResponse.json({error:'The selected points are invalid.'},{status:400})
+    if(!isValidPointsSelection(points) || (!user&&points)) return NextResponse.json({error:'Use at least 5,000 points, in steps of 1,000.'},{status:400})
     const ip=clientIpFromRequest(request)
     await enforceRateLimits([{action:'whish_request_ip',value:ip,limit:12,windowSeconds:3600},
       {action:'whish_request_email',value:email,limit:5,windowSeconds:3600}])
@@ -51,7 +52,7 @@ export async function POST(request) {
         if(enrollment) return NextResponse.json({error:'You already have access to this course.'},{status:409})
       }
       const discounts=await calculateAllDiscounts({userId:user?.id||null,courseId:course.id,basePriceCents:course.price_cents,
-        couponCode:String(body.couponCode||'').trim().slice(0,100)||null,pointsToUse:points})
+        couponCode:String(body.couponCode||'').trim().slice(0,100)||null,pointsToUse:points,paymentMethod:'whish'})
       if(body.couponCode&&!discounts.coupon.valid) return NextResponse.json({error:discounts.coupon.error||'This coupon is no longer available.'},{status:409})
       if(discounts.points.pointsToUse!==points || discounts.finalPriceCents!==Number(body.quotedAmountCents))
         return NextResponse.json({error:'Your price or points balance has changed. Review the refreshed price before confirming again.',refreshPricing:true},{status:409})
